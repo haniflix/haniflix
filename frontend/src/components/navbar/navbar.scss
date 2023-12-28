@@ -1,0 +1,122 @@
+.navbar {
+    width: 100%;
+    color: white;
+    font-size: 14px;
+    position: fixed;
+    top: 0;
+    z-index: 999;
+    background: linear-gradient(
+        to top,
+        transparent 0%,
+        rgb(0, 0, 0, 0.3) 50%
+    );
+
+    &.scrolled {
+        background-color: var(--main-color);
+    }
+
+    .container {
+        padding: 0px 50px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 90px;
+
+        .left {
+            display: flex;
+            align-items: center;
+
+            img {
+                margin-right: 40px;
+            }
+
+            span {
+                margin-right: 20px;
+                cursor: pointer;
+            }
+        }
+
+        .right {
+            display: flex;
+            align-items: center;
+
+            .icon {
+                margin: 0px 15px;
+                cursor: pointer;
+            }
+
+            img {
+                border-radius: 5px;
+                object-fit: cover;
+                cursor: pointer;
+            }
+
+            .profile {
+                .options {
+                    display: none;
+                    background-color: var(--main-color);
+                    border-radius: 5px;
+                }
+
+                span {
+                    padding: 10px;
+                    cursor: pointer;
+                }
+
+                &:hover {
+                    .options {
+                        display: flex;
+                        flex-direction: column;
+                        position: absolute;
+                    }
+                }
+            }
+        }
+    }
+    #mobile-header-list{
+        display: none;
+        background-image: linear-gradient(to bottom right, #0dee95, #059cf2);
+        color: #000;
+        padding: 10px;
+    }
+    .mobile-header-list-item{
+        padding: 5px 0;
+        cursor: pointer;
+    }
+    .mobile-header-list-item .link{
+        color: #000;
+        text-decoration: none;
+        display: block;
+    }
+    .mobile-header-list-item .link:hover{
+        font-weight: bolder;
+    }
+    .mobile-header-list-active{
+        display: block;
+    }
+    .mobile-header{
+        display: none;
+    }
+    @media screen and (max-width: 768px){
+        #nav-desktop-container{
+            display: none;
+        }
+        .mobile-header{
+            display: grid;
+            grid-template-columns: auto 50px;
+        }
+        .mobile-logo-cont img{
+            width: 90px;
+        }
+        .menu-toggle-container{
+            background-image: linear-gradient(to bottom right, #0dee95, #059cf2);
+            border: 1px solid #999;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 17px;
+            margin: auto;
+            padding: 10px 10px 5px 10px;
+            text-align: center;
+        }
+    }
+}

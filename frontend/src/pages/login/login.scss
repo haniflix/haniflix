@@ -1,0 +1,97 @@
+.loginNew{
+    background-size: cover;
+    background-attachment: fixed;
+
+    .top{
+        position: fixed;
+        top: 10px;
+        left: 10px;
+    }
+
+    .section {
+        box-sizing: border-box;
+        height: 100vh;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.75);        
+        border-bottom: solid 1px #555;
+        color: #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .intro-section{
+        max-width: 95%;
+        border-radius: 10px;
+        width: 500px;
+        padding: 50px 30px;
+        background-color: #fffd;
+        box-sizing: border-box;
+    }
+
+    input {
+        height: 40px;
+        border-radius: 5px;
+        background-color: #d1d1d1;
+        color: #000;
+        padding-left: 10px;
+        outline:none;
+        border: none;
+        display: block;
+        margin: 10px auto;
+        width: 100%;
+
+        &::placeholder {
+            color: #000;
+        }
+    }
+
+    .loginButton {
+        height: 40px;
+        width: 200px;
+        margin: 5px auto 10px auto;
+        border-radius: 5px;
+        background: rgb(0, 255, 177);
+        background: -moz-linear-gradient(
+            90deg,
+            rgba(0, 255, 177, 1) 36%,
+            rgba(0, 212, 255, 1) 100%
+        );
+        background: -webkit-linear-gradient(
+            90deg,
+            rgba(0, 255, 177, 1) 36%,
+            rgba(0, 212, 255, 1) 100%
+        );
+        background: linear-gradient(
+            90deg,
+            rgba(0, 255, 177, 1) 36%,
+            rgba(0, 212, 255, 1) 100%
+        );
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#00ffb1",endColorstr="#00d4ff",GradientType=1);
+        color: #ffffff;
+        border: none;
+        font-size: 18px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    span {
+        color: lightgray;
+        b {
+            color: white;
+        }
+    }
+    .link{
+        color: #222;
+    }
+    #scroll-simulator{
+        text-align: center;
+        display: block;
+        margin: 20px auto;
+    }
+}
+
+@media screen and (min-width: 600px) {
+    .form {
+        width: 95%;
+    }
+}

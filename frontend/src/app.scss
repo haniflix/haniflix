@@ -1,0 +1,17 @@
+:root{
+    // --main-color: #0b0b0b
+    --main-color: #fff;
+    --secondary-color: #000;
+    overflow-x: hidden;
+}
+
+.link{
+    color: var(--main-color);
+    text-decoration: none;
+}
+.listTitle{
+    color: var(--secondary-color) !important;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
