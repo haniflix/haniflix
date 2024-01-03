@@ -1,0 +1,38 @@
+{
+  "name": "api-client",
+  "version": "0.1.2",
+  "description": "Api client",
+  "main": "dist/index.js",
+  "module": "dist/index.m.js",
+  "umd:main": "dist/index.umd.js",
+  "source": "src/index.ts",
+  "repository": "github:ilyamkin/dev-to-js",
+  "scripts": {
+    "build": "rm -rf dist && microbundle  --tsconfig tsconfig.json",
+    "dev": "microbundle watch --tsconfig tsconfig.json",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@types/jest": "^25.2.3",
+    "jest": "^25.5.4",
+    "microbundle": "0.13.0",
+    "nock": "^12.0.3"
+  },
+  "keywords": [
+    "dev.to",
+    "javascript",
+    "typescript",
+    "api",
+    "client",
+    "universal"
+  ],
+  "license": "MIT",
+  "files": [
+    "src",
+    "dist"
+  ],
+  "dependencies": {
+    "isomorphic-unfetch": "3.1.0",
+    "querystringify": "2.2.0"
+  }
+}

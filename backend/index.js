@@ -12,21 +12,23 @@ dotenv.config();
 
 mongoose
   .connect(process.env.MONGO_URL, {
-    useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
   })
   .then(() => console.log("DB Connection Successfull"))
   .catch((err) => {
     console.error(err);
   });
 
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const allowed_ips = [
   "http://50.62.182.51:4000",
   "http://admin.haniflix.com:4000",
   "http://haniflix.com",
   "http://localhost:3000",
+  "http://localhost:5173",
 ];
 
 app.use(express.json());

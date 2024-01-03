@@ -3,10 +3,30 @@ const User = require("../models/User");
 
 const CryptoJS = require("crypto-js");
 const verify = require("../verifyToken");
+
+//CREATE
+router.post("/", verify, async (req, res) => {
+  if (req.user.isAdmin) {
+    if (req.body.password) {
+      req.body.password = CryptoJS.AES.encrypt(
+        req.body.password,
+        process.env.SECRET_KEY
+      ).toString();
+    }
+    const newUser = new User(req.body);
+    try {
+      const savedUser = await newUser.save();
+      res.status(201).json(savedUser);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  } else {
+    res.status(403).json("You are not allowed!");
+  }
+});
+
 //UPDATE
-
-
-router.put("/:id", async (req, res) => {
+router.put("/:id", verify, async (req, res) => {
   if (req.user.id === req.params.id || req.user.isAdmin) {
     if (req.body.password) {
       req.body.password = CryptoJS.AES.encrypt(
@@ -47,7 +67,6 @@ router.delete("/:id", verify, async (req, res) => {
 });
 
 //GET
-
 router.get("/find/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -59,17 +78,18 @@ router.get("/find/:id", async (req, res) => {
 });
 
 //GET ALL
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   const query = req.query.new;
   //if(req.user.isAdmin) {
-    try {
-        const users = query ? await User.find().sort({_id: -1}).limit(5) : await User.find();
-        res.status(200).json(users);
-    }
-    catch (err) {
-        //-- throws a 'headers_already_sent' error
-        //res.status(500).json(err);
-    }
+  try {
+    const users = query
+      ? await User.find().sort({ _id: -1 }).limit(5)
+      : await User.find();
+    res.status(200).json(users);
+  } catch (err) {
+    //-- throws a 'headers_already_sent' error
+    //res.status(500).json(err);
+  }
   /*} else {
       res.status(403).json("You are not allowed to see all users!");
   }*/
@@ -94,7 +114,7 @@ router.get("/stats", async (req, res) => {
         },
       },
     ]);
-    res.status(200).json(data)
+    res.status(200).json(data);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -110,7 +130,7 @@ router.put("/updateUserDetails/:id", async (req, res) => {
         {
           $set: {
             fullname: req.body.name,
-            username:req.body.email,
+            username: req.body.email,
             email: req.body.email,
           },
         },
@@ -178,6 +198,5 @@ router.put("/updatePassword/:id", async (req, res) => {
 //     res.status(500).json({ error: 'Subscription failed' });
 //   }
 // });
-
 
 module.exports = router;

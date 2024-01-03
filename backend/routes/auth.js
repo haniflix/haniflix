@@ -10,11 +10,10 @@ const SENDGRID_API_KEY =
 const email_from = "Haniflix <no-reply@haniflix.com>";
 const List = require("../models/List");
 
+dotenv.config();
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
-dotenv.config()
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-
-const demo_url = "http://localhost:3000/"
+const demo_url = "http://localhost:3000/";
 
 sgMail.setApiKey(SENDGRID_API_KEY);
 
@@ -37,12 +36,16 @@ router.get("/send-email", async (req, res) => {
 });
 
 router.post("/register", async (req, res) => {
-  const { user } = req.body
+  const { user } = req.body;
   const email = user.email;
   const password = user.password;
 
   try {
-    const { newUser, defaultList, user } = await registerUser(email, email, password);
+    const { newUser, defaultList, user } = await registerUser(
+      email,
+      email,
+      password
+    );
 
     // Subscription logic
     const { token } = req.body; // Assuming you are passing the token from the frontend
@@ -53,13 +56,16 @@ router.post("/register", async (req, res) => {
       // const verifyUrl = `${demo_url}verify?otp=${newUser.otp}&email=${newUser.username}`;
       // await sendVerificationEmail(email, verifyUrl);
 
-      res.status(201).json({statusText: "Created" });
+      res.status(201).json({ statusText: "Created" });
     } else {
       // Handle subscription error
       console.error("Subscription failed:", response.error);
       // Delete the user and the list
       await deleteUserAndList(newUser, defaultList);
-      res.status(203).json({ error: true, statusText: "Subscription failed. Please try again later." });
+      res.status(203).json({
+        error: true,
+        statusText: "Subscription failed. Please try again later.",
+      });
     }
   } catch (error) {
     console.log(error);
@@ -70,7 +76,7 @@ router.post("/register", async (req, res) => {
 // Add a new function to delete the user and the list
 async function deleteUserAndList(user, list) {
   try {
-    console.log("Delete User",user,list)
+    console.log("Delete User", user, list);
     // Delete the user
     await User.findByIdAndDelete(user._id);
 
@@ -80,7 +86,7 @@ async function deleteUserAndList(user, list) {
     console.log("User and list deleted successfully");
   } catch (error) {
     console.error("Error deleting user and list:", error);
-    throw new Error('Failed to delete user and list');
+    throw new Error("Failed to delete user and list");
   }
 }
 
@@ -96,7 +102,7 @@ async function subscribeUser(newUser, token) {
     // Create a subscription
     const subscription = await stripe.subscriptions.create({
       customer: customer.id,
-      items: [{ price: 'price_1OPzDXH7M6091XYpI3HAP0sc' }], 
+      items: [{ price: "price_1OPzDXH7M6091XYpI3HAP0sc" }],
     });
 
     // Update user subscription status
@@ -108,15 +114,12 @@ async function subscribeUser(newUser, token) {
     return { subscription, user: newUser };
   } catch (error) {
     console.error("Stripe Subscription Error:", error);
-    throw new Error('Subscription failed');
+    throw new Error("Subscription failed");
   }
 }
 
-
-
-
 async function registerUser(username, email, password) {
-  console.log(username, email, password)
+  console.log(username, email, password);
   const newUser = new User({
     username,
     email,
@@ -124,7 +127,10 @@ async function registerUser(username, email, password) {
     password: CryptoJS.AES.encrypt(password, process.env.SECRET_KEY).toString(),
   });
 
-  const defaultList = new List({ title: `${username}'s Watchlist`, user: newUser._id });
+  const defaultList = new List({
+    title: `${username}'s Watchlist`,
+    user: newUser._id,
+  });
 
   newUser.lists.push(defaultList._id);
   const user = await newUser.save();
@@ -151,7 +157,6 @@ async function sendVerificationEmail(email, verifyUrl) {
 
   return sgMail.send(msg);
 }
-
 
 //LOGIN
 router.post("/login", async (req, res) => {
@@ -293,7 +298,7 @@ router.put("/change-password", async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       user._id,
       { password: hashedPassword },
-      { new: true } 
+      { new: true }
     );
 
     // Omit the password field from the response

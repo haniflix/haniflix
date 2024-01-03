@@ -3,7 +3,7 @@ const Movie = require("../models/Movie");
 const verify = require("../verifyToken");
 
 //CREATE
-router.post("/", async (req, res) => {
+router.post("/", verify, async (req, res) => {
   if (req.user) {
     const newMovie = new Movie(req.body);
     try {
@@ -53,7 +53,7 @@ router.delete("/:id", verify, async (req, res) => {
 
 //GET
 router.get("/find/:id", async (req, res) => {
-//router.get("/find/:id", verify, async (req, res) => {
+  //router.get("/find/:id", verify, async (req, res) => {
   try {
     const movie = await Movie.findById(req.params.id);
     res.status(200).json(movie);
@@ -64,7 +64,7 @@ router.get("/find/:id", async (req, res) => {
 
 //GET RANDOM
 router.get("/random", async (req, res) => {
-//router.get("/random", verify, async (req, res) => {
+  //router.get("/random", verify, async (req, res) => {
   const type = req.query.type;
   let movie;
   try {
@@ -73,17 +73,13 @@ router.get("/random", async (req, res) => {
         { $match: { isSeries: true } },
         { $sample: { size: 1 } },
       ]);
-    }
-    else if (type === "movies") {
+    } else if (type === "movies") {
       movie = await Movie.aggregate([
         { $match: { isSeries: false } },
         { $sample: { size: 1 } },
       ]);
-    } 
-    else {
-      movie = await Movie.aggregate([
-        { $sample: { size: 1 } },
-      ]);
+    } else {
+      movie = await Movie.aggregate([{ $sample: { size: 1 } }]);
     }
     res.status(200).json(movie);
   } catch (err) {
@@ -93,16 +89,12 @@ router.get("/random", async (req, res) => {
 
 //GET ALL
 router.get("/", async (req, res) => {
-    try {
-      const movies = await Movie.find();
-      res.status(200).json(movies.reverse());
-    } catch (err) {
-      res.status(500).json(err);
-    }
+  try {
+    const movies = await Movie.find();
+    res.status(200).json(movies.reverse());
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
-
-
-
-
 
 module.exports = router;
