@@ -1,18 +1,36 @@
 import { PlayArrow, AddCircle } from "@material-ui/icons";
-import { useEffect, useState } from "react";
-import axios from "axios"; 
+import { useCallback, useEffect, useMemo, useState } from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
-import Swal from 'sweetalert2'; // Import SweetAlert 2
+import Swal from "sweetalert2"; // Import SweetAlert 2
 import "./featured.scss";
-
-const api_url = process.env.REACT_APP_API_URL;
+import { useAppSelector } from "../../store/hooks";
+import { selectUser } from "../../store/auth";
+import useApiClient from "../../hooks/useApiClient";
 
 export default function Featured({ type }) {
-  const [content, setContent] = useState({});
-  const user = JSON.parse(localStorage.getItem("user"));
+  const [content, setContent] = useState<any>({});
+  const client = useApiClient();
+
+  const getRandomMovie = useCallback(() => {
+    client
+      .getRandomMovies(type)
+      .then((res) => {
+        setContent(res?.[0]);
+      })
+      .catch((err) => {
+        console.error(err);
+        Swal.fire({
+          title: "Error",
+          text: "An error occurred while fetching content.",
+          icon: "error",
+        });
+      });
+  }, [type]);
 
   useEffect(() => {
-    const getRandomContent = async () => {
+    getRandomMovie();
+    /*const getRandomContent = async () => {
       try {
         const res = await axios.get(
           `${api_url}movies/random?type=${type ? type : ""}`,
@@ -33,27 +51,49 @@ export default function Featured({ type }) {
         });
       }
     };
-    getRandomContent();
+    getRandomContent();*/
   }, []);
 
-  const maxLength = 300; // Adjust the maximum length as needed
-  const trimmedDesc = content?.desc
-    ? content.desc.length > maxLength
-      ? content.desc.slice(0, maxLength) + "..."
-      : content.desc
-    : "";
+  const trimmedDesc = useMemo(() => {
+    const maxLength = 300; // Adjust the maximum length as needed
+    return content?.desc
+      ? content.desc.length > maxLength
+        ? content.desc.slice(0, maxLength) + "..."
+        : content.desc
+      : "";
+  }, [content]);
 
   // Function to add a movie to the default list
-  const addMovieToDefaultList = async () => {
-    try {
+  const addMovieToDefaultList = useCallback(() => {
+    if (content?._id) {
+      client
+        .addMovieToDefaultList(content._id)
+        .then(() => {
+          Swal.fire({
+            title: "Movie Added",
+            text: "The movie has been added to your list.",
+            icon: "success",
+          });
+        })
+        .catch((err) => {
+          console.error(err);
+          Swal.fire({
+            title: "Error",
+            text: "An error occurred while adding the movie to your list.",
+            icon: "error",
+          });
+        });
+    }
+
+    /*try {
       const response = await axios.post(
-        `${api_url}lists/add-movie-to-default-list`, 
+        `${api_url}lists/add-movie-to-default-list`,
         {
-          email: user.email || "", 
-          movieId: content._id, 
+          email: user.email || "",
+          movieId: content._id,
         }
       );
-      console.log(content)
+      console.log(content);
       // Display a success Swal popup when the movie is added
       if (response.status === 200) {
         Swal.fire({
@@ -70,8 +110,8 @@ export default function Featured({ type }) {
         text: "An error occurred while adding the movie to your list.",
         icon: "error",
       });
-    }
-  };
+    }*/
+  }, [content]);
 
   return (
     <div className="featured">
@@ -96,16 +136,16 @@ export default function Featured({ type }) {
           </select>
         </div>
       )}
-      <img src={content?.img} alt="" className="bg-img" loading="lazy"/>
+      <img src={content?.img} alt="" className="bg-img" loading="lazy" />
       <div className="info">
-        <img src={content?.imgTitle} alt="" loading="lazy"/>
+        <img src={content?.imgTitle} alt="" loading="lazy" />
         <span className="desc" style={{ color: "#fff" }}>
           <span id="desc-title">{content?.title}</span>
           {trimmedDesc}
         </span>
         <div className="buttons">
           <Link to={{ pathname: "/watch", movie: content }}>
-            <button className="play">
+            <button className="play more">
               <PlayArrow />
               <span>Play</span>
             </button>

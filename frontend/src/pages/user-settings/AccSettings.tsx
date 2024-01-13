@@ -10,11 +10,13 @@ import {
   Typography,
 } from "@material-ui/core";
 import Navbar from "../../components/navbar/Navbar";
+import { useAppSelector } from "../../store/hooks";
+import { selectUser } from "../../store/auth";
 
-const url = process.env.REACT_APP_API_URL;
+const url = import.meta.env.VITE_APP_API_URL;
 
 const AccSettings = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = useAppSelector(selectUser);
   const userId = user?._id;
   const [loading, setLoading] = useState(false);
   const [userDetails, setUserDetails] = useState({
@@ -53,7 +55,10 @@ const AccSettings = () => {
       .required("Email cannot be left blank"),
   });
 
-  const handleSubmitUserDetails = async (values, { resetForm, setSubmitting }) => {
+  const handleSubmitUserDetails = async (
+    values,
+    { resetForm, setSubmitting }
+  ) => {
     setLoading(true);
     try {
       const res = await axios.put(`${url}users/updateUserDetails/${userId}`, {
@@ -80,7 +85,7 @@ const AccSettings = () => {
     <>
       <Navbar />
       <Box
-        sx={{
+        style={{
           marginTop: "20vh",
           display: "flex",
           flexDirection: "column",
@@ -132,11 +137,7 @@ const AccSettings = () => {
                 disabled={isSubmitting || loading}
                 sx={{ mt: 2, mb: 2 }}
               >
-                {loading ? (
-                  <CircularProgress size={24} />
-                ) : (
-                  "Save Changes"
-                )}
+                {loading ? <CircularProgress size={24} /> : "Save Changes"}
               </Button>
             </Form>
           )}

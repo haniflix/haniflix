@@ -1,5 +1,7 @@
 const router = require("express").Router();
+const User = require("../models/User");
 const Movie = require("../models/Movie");
+const MovieLikeDislike = require("../models/MovieLikeDislike");
 const verify = require("../verifyToken");
 
 //CREATE
@@ -87,6 +89,17 @@ router.get("/random", async (req, res) => {
   }
 });
 
+//GET SINGLE
+router.get("/:id", async (req, res) => {
+  //router.get("/find/:id", verify, async (req, res) => {
+  try {
+    const movie = await Movie.findById(req.params.id);
+    res.status(200).json(movie);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 //GET ALL
 router.get("/", async (req, res) => {
   try {
@@ -94,6 +107,62 @@ router.get("/", async (req, res) => {
     res.status(200).json(movies.reverse());
   } catch (err) {
     res.status(500).json(err);
+  }
+});
+
+//Like movie
+router.post("/:id/like", verify, async (req, res) => {
+  const user = await User.findById(req.user.id);
+  const movie = await Movie.findById(req.params.id);
+  const movieLikeDislike = await MovieLikeDislike.findOne({
+    user: user._id,
+    movie: movie._id,
+  });
+  if (movieLikeDislike == null) {
+    const like = new MovieLikeDislike({
+      user: user._id,
+      movie: movie._id,
+      isLike: true,
+    });
+    await like.save();
+  } else {
+    if (movieLikeDislike.isLike) {
+      await MovieLikeDislike.findByIdAndDelete(movieLikeDislike._id);
+    } else {
+      await MovieLikeDislike.findOneAndUpdate(movieLikeDislike._id, {
+        $set: {
+          isLike: true,
+        },
+      });
+    }
+  }
+});
+
+//Dislike movie
+router.post("/:id/dislike", verify, async (req, res) => {
+  const user = await User.findById(req.user.id);
+  const movie = await Movie.findById(req.params.id);
+  const movieLikeDislike = await MovieLikeDislike.findOne({
+    user: user._id,
+    movie: movie._id,
+  });
+  if (movieLikeDislike == null) {
+    const dislike = new MovieLikeDislike({
+      user: user._id,
+      movie: movie._id,
+      isLike: false,
+    });
+    await dislike.save();
+  } else {
+    if (!movieLikeDislike.isLike) {
+      await MovieLikeDislike.findByIdAndDelete(movieLikeDislike._id);
+    } else {
+      await MovieLikeDislike.findOneAndUpdate(movieLikeDislike._id, {
+        $set: {
+          isLike: false,
+        },
+      });
+    }
   }
 });
 

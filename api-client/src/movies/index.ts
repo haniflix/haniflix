@@ -14,6 +14,18 @@ export class Movies extends Base {
     return this.request<Movie[]>(query);
   }
 
+  getRandomMovies(type: string | undefined = undefined) {
+    let query = `${resourceName}/random`;
+    if (type) {
+      query += qs.stringify({ type }, "?");
+    }
+    return this.request<Movie>(query);
+  }
+
+  /*getRandomMovies(id: number | string) {
+    return this.request<Movie>(`${resourceName}/random`);
+  }*/
+
   getMovie(id: number | string) {
     return this.request<Movie>(`${resourceName}/${id}`);
   }
@@ -33,8 +45,20 @@ export class Movies extends Base {
   }
 
   deleteMovie(id: number | string) {
-    return this.request<Movie>(`${resourceName}/${id}`, {
+    return this.request(`${resourceName}/${id}`, {
       method: "DELETE",
+    });
+  }
+
+  likeMovie(id: number | string) {
+    return this.request(`${resourceName}/${id}/like`, {
+      method: "POST",
+    });
+  }
+
+  dislikeMovie(id: number | string) {
+    return this.request(`${resourceName}/${id}/dislike`, {
+      method: "POST",
     });
   }
 }

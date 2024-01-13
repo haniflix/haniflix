@@ -6,11 +6,20 @@
   overflow: hidden;
   cursor: pointer;
   color: white;
+  position: relative;
+
+  .details {
+    display: none;
+    z-index: 3;
+  }
 
   img {
+    z-index: 2;
+    position: absolute;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: all 0.5s ease-out;
   }
 
   video {
@@ -22,7 +31,45 @@
     left: 0;
   }
 
+  .playArrow {
+    display: block;
+    position: absolute;
+    z-index: 5;
+    height: 100%;
+    width: 100%;
+    scale: 0.6;
+  }
+
+  .title {
+    display: block;
+    position: absolute;
+    z-index: 5;
+    bottom: 3px;
+    left: 5px;
+    color: "#fff";
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 90%;
+    font-size: 12px;
+  }
+
   &:hover {
+    img {
+      scale: 1.2;
+    }
+
+    .details {
+      display: block;
+    }
+
+    .playArrow, .title {
+      display: none;
+    }
+
+  }
+
+  /*&:hover {
     width: 325px;
     height: 300px;
     position: absolute;
@@ -77,5 +124,5 @@
         color: lightgray;
       }
     }
-  }
+  }*/
 }

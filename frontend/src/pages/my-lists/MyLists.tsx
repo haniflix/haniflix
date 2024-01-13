@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import {
   Typography,
@@ -18,20 +18,24 @@ import {
   Select,
   FormControl,
   Stack,
-  Chip
+  Chip,
 } from "@mui/material";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
 import Navbar from "../../components/navbar/Navbar";
 import List from "../../components/list/List";
+import useApiClient from "../../hooks/useApiClient";
+import { useAppSelector } from "../../store/hooks";
+import { selectUser } from "../../store/auth";
+import Swal from "sweetalert2";
 
-const api_url = process.env.REACT_APP_API_URL;
+const api_url = import.meta.env.VITE_APP_API_URL;
 const theme = createTheme();
 
 const useStyles = makeStyles((theme) => ({
   root: {
     overflowX: "hidden",
-    maxWidth:"90%"
+    maxWidth: "90%",
   },
   addButton: {
     marginLeft: "auto",
@@ -50,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 600,
     margin: "auto",
     borderRadius: theme.spacing(2),
+    position: "relative",
   },
   contentContainer: {
     marginTop: "12vh",
@@ -63,7 +68,6 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "auto",
     color: "black",
     fontWeight: "bold",
-    
   },
   movieSelect: {
     width: "100%",
@@ -85,22 +89,33 @@ const MyLists = ({ type }) => {
   const [newListTitle, setNewListTitle] = useState("");
   const [movies, setMovies] = useState([]);
   const [selectedMovies, setSelectedMovies] = useState([]);
-  const [selectedMovieTitles,setSelectedMovieTitles] = useState([]); // Store selected movie titles
+  const [selectedMovieTitles, setSelectedMovieTitles] = useState([]); // Store selected movie titles
+  const [toEdit, setToEdit] = useState<any>(null);
+  const [toDelete, setToDelete] = useState<any>(null);
+  const client = useApiClient();
+  const user = useAppSelector(selectUser);
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
     const storedEmail = user?.email;
     document.body.style.overflowX = "hidden";
     setUserEmail(storedEmail);
     if (storedEmail) {
-      getMyLists(storedEmail);
+      getMyLists();
     }
 
     fetchMovies();
   }, []);
 
-  const getMyLists = async (email) => {
-    try {
+  const getMyLists = async () => {
+    client
+      .getMyList()
+      .then((res) => {
+        setMyLists(res);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    /*try {
       const res = await axios.get(`${api_url}lists/my-list/${email}`, {
         headers: {
           token: "",
@@ -109,7 +124,7 @@ const MyLists = ({ type }) => {
       setMyLists(res.data);
     } catch (err) {
       console.log(err);
-    }
+    }*/
   };
 
   const fetchMovies = async () => {
@@ -126,6 +141,7 @@ const MyLists = ({ type }) => {
   };
 
   const handleCloseModal = () => {
+    setToEdit(null);
     setIsModalOpen(false);
   };
 
@@ -159,6 +175,18 @@ const MyLists = ({ type }) => {
     }
   };
 
+  useEffect(() => {
+    if (toEdit) {
+      setNewListTitle(toEdit.title);
+      setSelectedMovies(
+        movies.filter((movie) => toEdit.content.includes(movie._id))
+      );
+    } else {
+      setNewListTitle("");
+      setSelectedMovies([]);
+    }
+  }, [toEdit]);
+
   const handleMovieSelection = (event) => {
     const selectedMovieIds = event.target.value;
 
@@ -175,7 +203,66 @@ const MyLists = ({ type }) => {
     setSelectedMovieTitles(selectedTitles);
   };
 
-  
+  const updateList = useCallback(
+    (id: string, content) => {
+      if (toEdit) {
+        const data = {
+          title: newListTitle,
+          content: selectedMovies.map((movie) => movie._id),
+        };
+        client
+          .updateList(toEdit._id, data)
+          .then(() => {
+            getMyLists();
+            fetchMovies();
+            setToEdit(null);
+
+            Swal.fire({
+              title: "",
+              text: "updated",
+              icon: "success",
+              timer: 1500,
+            });
+          })
+          .catch((err) => {
+            console.error(err);
+            Swal.fire({
+              title: "",
+              text: "failed",
+              icon: "error",
+              timer: 1500,
+            });
+          });
+      }
+    },
+    [toEdit, newListTitle, selectedMovies]
+  );
+
+  const deleteList = (id: string | number) => {
+    client
+      .deleteList(id)
+      .then(() => {
+        getMyLists();
+        fetchMovies();
+        setToDelete(null);
+
+        Swal.fire({
+          title: "",
+          text: "deleted",
+          icon: "success",
+          timer: 1500,
+        });
+      })
+      .then((err) => {
+        console.error(err);
+        Swal.fire({
+          title: "",
+          text: "failed",
+          icon: "error",
+          timer: 1500,
+        });
+      });
+  };
 
   return (
     <>
@@ -188,7 +275,8 @@ const MyLists = ({ type }) => {
 
           <Button
             variant="contained"
-            className={classes.addButton}
+            //className={classes.addButton}
+            className="gradientButton"
             onClick={handleOpenModal}
             startIcon={<AddIcon />}
           >
@@ -197,25 +285,32 @@ const MyLists = ({ type }) => {
         </Paper>
 
         {myLists?.map((list, index) => (
-          <div key={index}>
-            <List key={list._id} list={list} />
+          <div key={list._id}>
+            <List
+              key={list._id}
+              list={list}
+              onDelete={() => setToDelete(list)}
+              onEdit={() => setToEdit(list)}
+            />
           </div>
         ))}
 
         <Modal
-          open={isModalOpen}
+          open={isModalOpen || toEdit != null}
           onClose={handleCloseModal}
           className={classes.modalContainer}
         >
           <Container>
             <Paper className={classes.modalContent}>
-              <Typography variant="h6">Add New List</Typography>
+              <Typography variant="h6" style={{ marginBottom: 30 }}>
+                {toEdit ? "Update List" : "Add New List"}
+              </Typography>
               <IconButton
                 edge="end"
                 color="inherit"
                 onClick={handleCloseModal}
                 aria-label="close"
-                style={{ position: "absolute", top: 10, right: 10 }}
+                style={{ position: "absolute", top: 0, right: 10 }}
               >
                 <CloseIcon />
               </IconButton>
@@ -226,13 +321,16 @@ const MyLists = ({ type }) => {
                     label="List Title"
                     variant="outlined"
                     value={newListTitle}
+                    disabled={toEdit?._id === user?.defaultList}
                     onChange={(e) => setNewListTitle(e.target.value)}
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <FormControl className={classes.movieSelect} >
-                  <InputLabel>Select Movies</InputLabel>
+                  <FormControl className={classes.movieSelect}>
+                    <InputLabel id="select-movies">Select Movies</InputLabel>
                     <Select
+                      label={"Select movies"}
+                      labelId="select-movies"
                       multiple
                       value={selectedMovies.map((movie) => movie._id)}
                       onChange={handleMovieSelection}
@@ -271,14 +369,65 @@ const MyLists = ({ type }) => {
                   </FormControl>
                 </Grid>
                 <Grid item xs={12}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleAddList}
-                  >
-                    Confirm
-                  </Button>
+                  {toEdit ? (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={updateList}
+                    >
+                      Update
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleAddList}
+                    >
+                      Confirm
+                    </Button>
+                  )}
                 </Grid>
+              </Grid>
+            </Paper>
+          </Container>
+        </Modal>
+
+        <Modal
+          open={toDelete != null}
+          onClose={() => setToDelete(null)}
+          className={classes.modalContainer}
+        >
+          <Container>
+            <Paper className={classes.modalContent}>
+              <Typography variant="h6">Delete List</Typography>
+              <p style={{ marginBottom: 50 }}>
+                Are you sure to delete {toDelete?.title} ?
+              </p>
+              <IconButton
+                edge="end"
+                color="inherit"
+                onClick={handleCloseModal}
+                aria-label="close"
+                style={{ position: "absolute", top: 10, right: 10 }}
+              >
+                <CloseIcon />
+              </IconButton>
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => setToDelete(null)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => deleteList(toDelete._id)}
+                  style={{ marginLeft: 10 }}
+                >
+                  Delete
+                </Button>
               </Grid>
             </Paper>
           </Container>

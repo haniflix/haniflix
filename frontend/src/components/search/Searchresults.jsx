@@ -4,7 +4,7 @@ import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 import SearchListItem from "./searchlistItem/SearchListItem";
 
-const api_url = process.env.REACT_APP_API_URL;
+const api_url = import.meta.env.VITE_APP_API_URL;
 
 const useStyles = makeStyles((theme) => ({
   root: {

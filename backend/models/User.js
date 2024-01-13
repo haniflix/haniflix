@@ -11,7 +11,8 @@ const UserSchema = new mongoose.Schema(
     isSubscribed: { type: Boolean, default: false },
     emailVerified: { type: Boolean, default: true },
     otp: { type: String, default: "" },
-    lists: [{ type: mongoose.Schema.Types.ObjectId, ref: 'List' }],
+    lists: [{ type: mongoose.Schema.Types.ObjectId, ref: "List" }],
+    defaultList: { type: mongoose.Schema.Types.ObjectId, ref: "List" }, // Id of user's default list
   },
   { timestamps: true }
 );

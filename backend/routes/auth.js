@@ -133,6 +133,7 @@ async function registerUser(username, email, password) {
   });
 
   newUser.lists.push(defaultList._id);
+  newUser.defaultList = defaultList._id;
   const user = await newUser.save();
   await defaultList.save();
 
