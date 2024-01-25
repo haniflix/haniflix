@@ -6,13 +6,10 @@ import {
   Modal,
   TextField,
   IconButton,
-  makeStyles,
   Paper,
   Grid,
   Container,
   createTheme,
-} from "@material-ui/core";
-import {
   InputLabel,
   MenuItem,
   Select,
@@ -20,8 +17,8 @@ import {
   Stack,
   Chip,
 } from "@mui/material";
-import AddIcon from "@material-ui/icons/Add";
-import CloseIcon from "@material-ui/icons/Close";
+import { makeStyles } from "@mui/styles";
+import { Add, Close } from "@mui/icons-material";
 import Navbar from "../../components/navbar/Navbar";
 import List from "../../components/list/List";
 import useApiClient from "../../hooks/useApiClient";
@@ -32,7 +29,7 @@ import Swal from "sweetalert2";
 const api_url = import.meta.env.VITE_APP_API_URL;
 const theme = createTheme();
 
-const useStyles = makeStyles((theme) => ({
+/*const useStyles = makeStyles((theme) => ({
   root: {
     overflowX: "hidden",
     maxWidth: "90%",
@@ -79,10 +76,61 @@ const useStyles = makeStyles((theme) => ({
   chip: {
     margin: 2,
   },
-}));
+}));*/
 
-const MyLists = ({ type }) => {
-  const classes = useStyles();
+const styles = {
+  root: {
+    overflowX: "hidden",
+    maxWidth: "90%",
+  },
+  addButton: {
+    marginLeft: "auto",
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+    backgroundColor: "#17e990",
+    color: "#fff",
+  },
+  modalContainer: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  modalContent: {
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(2, 4, 3),
+    maxWidth: 600,
+    margin: "auto",
+    borderRadius: theme.spacing(2),
+    position: "relative",
+  },
+  contentContainer: {
+    marginTop: "12vh",
+    padding: theme.spacing(2),
+    //background: "#0495ed",
+    background: "#000",
+    borderRadius: theme.spacing(1),
+    display: "flex",
+    alignItems: "center",
+  },
+  contentHeading: {
+    marginRight: "auto",
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  movieSelect: {
+    width: "100%",
+  },
+  selectedMovies: {
+    marginTop: theme.spacing(1),
+    color: theme.palette.text.secondary,
+  },
+  chip: {
+    margin: 2,
+  },
+};
+
+const MyLists = () => {
+  //const classes = useStyles();
   const [myLists, setMyLists] = useState([]);
   const [userEmail, setUserEmail] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -203,40 +251,37 @@ const MyLists = ({ type }) => {
     setSelectedMovieTitles(selectedTitles);
   };
 
-  const updateList = useCallback(
-    (id: string, content) => {
-      if (toEdit) {
-        const data = {
-          title: newListTitle,
-          content: selectedMovies.map((movie) => movie._id),
-        };
-        client
-          .updateList(toEdit._id, data)
-          .then(() => {
-            getMyLists();
-            fetchMovies();
-            setToEdit(null);
+  const updateList = useCallback(() => {
+    if (toEdit) {
+      const data = {
+        title: newListTitle,
+        content: selectedMovies.map((movie) => movie._id),
+      };
+      client
+        .updateList(toEdit._id, data)
+        .then(() => {
+          getMyLists();
+          fetchMovies();
+          setToEdit(null);
 
-            Swal.fire({
-              title: "",
-              text: "updated",
-              icon: "success",
-              timer: 1500,
-            });
-          })
-          .catch((err) => {
-            console.error(err);
-            Swal.fire({
-              title: "",
-              text: "failed",
-              icon: "error",
-              timer: 1500,
-            });
+          Swal.fire({
+            title: "",
+            text: "updated",
+            icon: "success",
+            timer: 1500,
           });
-      }
-    },
-    [toEdit, newListTitle, selectedMovies]
-  );
+        })
+        .catch((err) => {
+          console.error(err);
+          Swal.fire({
+            title: "",
+            text: "failed",
+            icon: "error",
+            timer: 1500,
+          });
+        });
+    }
+  }, [toEdit, newListTitle, selectedMovies]);
 
   const deleteList = (id: string | number) => {
     client
@@ -267,18 +312,18 @@ const MyLists = ({ type }) => {
   return (
     <>
       <Navbar />
-      <Container className={classes.root}>
-        <Paper className={classes.contentContainer}>
-          <Typography variant="h4" className={classes.contentHeading}>
+      <Container sx={styles.root}>
+        <Paper sx={styles.contentContainer}>
+          <Typography variant="h4" style={styles.contentHeading}>
             My Lists
           </Typography>
 
           <Button
             variant="contained"
-            //className={classes.addButton}
+            sx={styles.addButton}
             className="gradientButton"
             onClick={handleOpenModal}
-            startIcon={<AddIcon />}
+            startIcon={<Add />}
           >
             Add New List
           </Button>
@@ -298,10 +343,10 @@ const MyLists = ({ type }) => {
         <Modal
           open={isModalOpen || toEdit != null}
           onClose={handleCloseModal}
-          className={classes.modalContainer}
+          sx={styles.modalContainer}
         >
           <Container>
-            <Paper className={classes.modalContent}>
+            <Paper sx={{ ...styles.modalContent, color: "#000" }}>
               <Typography variant="h6" style={{ marginBottom: 30 }}>
                 {toEdit ? "Update List" : "Add New List"}
               </Typography>
@@ -312,7 +357,7 @@ const MyLists = ({ type }) => {
                 aria-label="close"
                 style={{ position: "absolute", top: 0, right: 10 }}
               >
-                <CloseIcon />
+                <Close />
               </IconButton>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
@@ -326,7 +371,7 @@ const MyLists = ({ type }) => {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <FormControl className={classes.movieSelect}>
+                  <FormControl sx={styles.movieSelect}>
                     <InputLabel id="select-movies">Select Movies</InputLabel>
                     <Select
                       label={"Select movies"}
@@ -343,7 +388,7 @@ const MyLists = ({ type }) => {
                               <Chip
                                 key={movie._id}
                                 label={movie.title}
-                                className={classes.chip}
+                                sx={styles.chip}
                               />
                             ))}
                         </Stack>
@@ -373,7 +418,9 @@ const MyLists = ({ type }) => {
                     <Button
                       variant="contained"
                       color="primary"
-                      onClick={updateList}
+                      onClick={() => updateList()}
+                      className="gradientButton"
+                      sx={{ color: "#fff" }}
                     >
                       Update
                     </Button>
@@ -382,6 +429,8 @@ const MyLists = ({ type }) => {
                       variant="contained"
                       color="primary"
                       onClick={handleAddList}
+                      className="gradientButton"
+                      sx={{ color: "#fff" }}
                     >
                       Confirm
                     </Button>
@@ -395,10 +444,10 @@ const MyLists = ({ type }) => {
         <Modal
           open={toDelete != null}
           onClose={() => setToDelete(null)}
-          className={classes.modalContainer}
+          sx={styles.modalContainer}
         >
           <Container>
-            <Paper className={classes.modalContent}>
+            <Paper sx={{ ...styles.modalContent, color: "#000" }}>
               <Typography variant="h6">Delete List</Typography>
               <p style={{ marginBottom: 50 }}>
                 Are you sure to delete {toDelete?.title} ?
@@ -406,17 +455,20 @@ const MyLists = ({ type }) => {
               <IconButton
                 edge="end"
                 color="inherit"
-                onClick={handleCloseModal}
+                //onClick={handleCloseModal}
+                onClick={() => setToDelete(null)}
                 aria-label="close"
                 style={{ position: "absolute", top: 10, right: 10 }}
               >
-                <CloseIcon />
+                <Close />
               </IconButton>
               <Grid item xs={12}>
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={() => setToDelete(null)}
+                  className="gradientButton"
+                  sx={{ color: "#fff" }}
                 >
                   Cancel
                 </Button>
@@ -425,6 +477,8 @@ const MyLists = ({ type }) => {
                   color="primary"
                   onClick={() => deleteList(toDelete._id)}
                   style={{ marginLeft: 10 }}
+                  className="gradientButton"
+                  sx={{ color: "#fff" }}
                 >
                   Delete
                 </Button>

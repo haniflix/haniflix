@@ -3,6 +3,7 @@ import {
   AppBar,
   Box,
   Button,
+  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
@@ -36,9 +37,7 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
   const [imageLink, setImageLink] = useState<string>('');
   const [year, setYear] = useState<string>('');
   const [genres, setGenres] = useState<string[]>([]);
-  const [tagToDelete, setTagToDelete] = useState<
-    (Movie & { __toDo?: 'delete' | 'update' | 'create' }) | null
-  >(null);
+  const [isSerie, setIsSerie] = useState<boolean>(false);
   const client = useApiClient();
 
   const reset = () => {
@@ -49,6 +48,7 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
     setYear('');
     setTrailerLink('');
     setGenres([]);
+    setIsSerie(false);
   };
 
   const populate = (movie: Movie) => {
@@ -59,6 +59,7 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
     setYear(movie.year);
     setTrailerLink(movie.trailer);
     setGenres(movie?.genre?.split(',') ?? []);
+    setIsSerie(movie?.isSeries ?? false);
     // setName(tagGroup.name);
     // setDescription(tagGroup.description);
     // setTags(tagGroup?.tags ? [...tagGroup.tags] : []);
@@ -73,7 +74,8 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
       imgTitle: imageLink,
       trailer: trailerLink,
       year,
-      genre: genres.join(',')
+      genre: genres.join(','),
+      isSeries: isSerie
     };
     toast.loading('saving...', { position: 'top-right' });
     client
@@ -88,17 +90,28 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
         toast.error('failed', { position: 'top-right' });
         console.error(err);
       });
-  }, [title, description, videoLink, imageLink, year, trailerLink, genres]);
+  }, [
+    title,
+    description,
+    videoLink,
+    imageLink,
+    year,
+    trailerLink,
+    genres,
+    isSerie
+  ]);
 
   const update = useCallback(() => {
     const data = {
       title,
-      description,
-      videoLink,
-      imageLink,
+      desc: description,
+      video: videoLink,
+      img: imageLink,
+      imgTitle: imageLink,
+      trailer: trailerLink,
       year,
-      trailerLink,
-      genre: genres.join(',')
+      genre: genres.join(','),
+      isSeries: isSerie
     };
     toast.loading('saving...', { position: 'top-right' });
     client
@@ -121,10 +134,9 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
     year,
     trailerLink,
     genres,
-    item
+    item,
+    isSerie
   ]);
-
-  const deleteTag = (movie: Movie) => {};
 
   useEffect(() => {
     if (item != null) {
@@ -218,6 +230,19 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
           <TagsInput value={genres} onChange={(tags) => setGenres(tags)} />
         </Box>
 
+        <Box
+          margin={1}
+          sx={{
+            '& .MuiTextField-root': { m: 1 }
+          }}
+        >
+          <Checkbox
+            checked={isSerie}
+            onClick={() => setIsSerie((cur) => !cur)}
+          />{' '}
+          <Typography component={'span'}>Is serie</Typography>
+        </Box>
+
         <Box marginLeft={1} marginTop={3}>
           {item ? (
             <Button variant="contained" onClick={update}>
@@ -230,28 +255,6 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
           )}
         </Box>
       </Box>
-      <Dialog
-        open={tagToDelete != null}
-        onClose={() => setTagToDelete(null)}
-        aria-labelledby="delete tag"
-        aria-describedby="Dialog displayed to confirm tag delete"
-      >
-        <DialogTitle id="alert-dialog-title">Delete tag</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Are you sure to delete {tagToDelete?.title} ?
-          </DialogContentText>
-          <DialogContentText id="alert-dialog-description" fontWeight={'bold'}>
-            Do not forget to save afterwards.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setTagToDelete(null)}>Cancel</Button>
-          <Button onClick={() => deleteTag(tagToDelete)} autoFocus>
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
     </>
   );
 };

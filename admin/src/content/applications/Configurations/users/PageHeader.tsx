@@ -9,9 +9,9 @@ function PageHeader() {
   return (
     <>
       <Typography variant="h3" component="h3" gutterBottom>
-        Exams
+        Users
       </Typography>
-      <Typography variant="subtitle2">Edit Exams</Typography>
+      <Typography variant="subtitle2">Manage Users</Typography>
     </>
   );
 }

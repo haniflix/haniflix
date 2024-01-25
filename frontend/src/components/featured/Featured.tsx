@@ -1,4 +1,4 @@
-import { PlayArrow, AddCircle } from "@material-ui/icons";
+import { PlayArrow, AddCircle } from "@mui/icons-material";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -52,7 +52,7 @@ export default function Featured({ type }) {
       }
     };
     getRandomContent();*/
-  }, []);
+  }, [type]);
 
   const trimmedDesc = useMemo(() => {
     const maxLength = 300; // Adjust the maximum length as needed
@@ -111,11 +111,11 @@ export default function Featured({ type }) {
         icon: "error",
       });
     }*/
-  }, [content]);
+  }, [content, client]);
 
   return (
     <div className="featured">
-      {type && (
+      {/*type != null ? (
         <div className="category">
           <span>{type === "movies" ? "Movies" : "Series"}</span>
           <select name="genre" id="genre">
@@ -135,8 +135,10 @@ export default function Featured({ type }) {
             <option value="documentary">Documentary</option>
           </select>
         </div>
-      )}
-      <img src={content?.img} alt="" className="bg-img" loading="lazy" />
+      ) : null*/}
+      {content?.img ? (
+        <img src={content?.img} alt="" className="bg-img" loading="lazy" />
+      ) : null}
       <div className="info">
         <img src={content?.imgTitle} alt="" loading="lazy" />
         <span className="desc" style={{ color: "#fff" }}>
@@ -144,7 +146,10 @@ export default function Featured({ type }) {
           {trimmedDesc}
         </span>
         <div className="buttons">
-          <Link to={{ pathname: "/watch", movie: content }}>
+          <Link
+            to={`/watch/${content?._id}`}
+            style={{ textDecoration: "none" }}
+          >
             <button className="play more">
               <PlayArrow />
               <span>Play</span>

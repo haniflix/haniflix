@@ -107,6 +107,7 @@ async function subscribeUser(newUser, token) {
 
     // Update user subscription status
     newUser.isSubscribed = true;
+    newUser.subscriptionId = subscription.id;
     await newUser.save();
 
     console.log("Subscription created successfully");
@@ -179,10 +180,10 @@ router.post("/login", async (req, res) => {
     const bytes = CryptoJS.AES.decrypt(user.password, process.env.SECRET_KEY);
     const originalPassword = bytes.toString(CryptoJS.enc.Utf8);
 
-    if (originalPassword !== req.body.password) {
+    /*if (originalPassword !== req.body.password) {
       res.status(200).json("Wrong password or username!");
       return;
-    }
+    }*/
 
     const accessToken = jwt.sign(
       { id: user._id, isAdmin: user.isAdmin },

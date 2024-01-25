@@ -87,6 +87,10 @@ const Movies = Loader(
   lazy(() => import('src/content/applications/Configurations/movies'))
 );
 
+const Lists = Loader(
+  lazy(() => import('src/content/applications/Configurations/lists'))
+);
+
 const routes: RouteObject[] = [
   {
     path: '',
@@ -161,6 +165,10 @@ const routes: RouteObject[] = [
       {
         path: 'users',
         element: <Users />
+      },
+      {
+        path: 'lists',
+        element: <Lists />
       }
     ]
   }

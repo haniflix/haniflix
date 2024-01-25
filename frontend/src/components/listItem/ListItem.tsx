@@ -6,10 +6,10 @@ import {
   ThumbDownOutlined,
   ThumbUp,
   ThumbDown,
-} from "@material-ui/icons";
+} from "@mui/icons-material";
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useApiClient from "../../hooks/useApiClient";
 const api_url = import.meta.env.VITE_APP_API_URL;
 
@@ -19,13 +19,15 @@ export default function ListItem({ index, item }) {
   const client = useApiClient();
   const [isLike, setIsLike] = useState<boolean | null>(null);
   const [trailer, setTrailer] = useState<string>("");
+  const navigate = useNavigate();
 
   const getMovie = () => {
     client
       .getMovie(item)
-      .then((res) => {
+      .then((res: any) => {
         setMovie(res);
         setTrailer(res.trailer);
+        setIsLike(res.like);
       })
       .then((err) => {
         console.error(err);
@@ -115,14 +117,19 @@ export default function ListItem({ index, item }) {
             }}
           >
             <div style={{ display: "flex" }}>
-              <div style={{ width: "90%" }}>
-                <h4>{movie.title}</h4>
-                <span>
-                  {movie?.desc?.length >= 100
-                    ? movie?.desc?.substring(0, 100) + "..."
-                    : movie?.desc}
-                </span>
-              </div>
+              <Link
+                to={`/watch/${movie._id}`}
+                style={{ textDecoration: "none", color: "#fff" }}
+              >
+                <div style={{ width: "90%" }}>
+                  <h4>{movie.title}</h4>
+                  <span>
+                    {movie?.desc?.length >= 100
+                      ? movie?.desc?.substring(0, 100) + "..."
+                      : movie?.desc}
+                  </span>
+                </div>
+              </Link>
               <div style={{ width: "10%" }}>
                 <div
                   onClick={() => {

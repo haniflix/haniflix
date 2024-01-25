@@ -12,7 +12,7 @@
     );
 
     &.scrolled {
-        background-color: var(--main-color);
+        background-color: #000;//var(--main-color);
     }
 
     .container {
@@ -76,7 +76,7 @@
     #mobile-header-list{
         display: none;
         background-image: linear-gradient(to bottom right, #0dee95, #059cf2);
-        color: #000;
+        color: #fff;
         padding: 10px;
     }
     .mobile-header-list-item{
@@ -84,7 +84,7 @@
         cursor: pointer;
     }
     .mobile-header-list-item .link{
-        color: #000;
+        color: #fff;
         text-decoration: none;
         display: block;
     }

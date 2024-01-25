@@ -1,4 +1,4 @@
-import { ArrowDropDown, Notifications, Search } from "@material-ui/icons";
+import { ArrowDropDown, Notifications, Search } from "@mui/icons-material";
 import { useState } from "react";
 import NavLogo1 from "../../Assets/Images/Nav-logo.png";
 import "./navbar.scss";
@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const user = useAppSelector(selectUser);
-  const userName = user?.fullname;
+  // const userName = user?.fullname;
   const dispatch = useAppDispatch();
 
   window.onscroll = () => {
@@ -22,7 +22,8 @@ const Navbar = () => {
     dispatch(setUser(null));
     // localStorage.removeItem("user");
     // localStorage.removeItem("userEmail");
-    window.location.href = "/login";
+    // window.location.href = "/login";
+    window.location.href = "/";
   };
 
   return (
@@ -56,7 +57,7 @@ const Navbar = () => {
           <div className="profile">
             <ArrowDropDown className="icon" />
             <div className="options">
-              <span style={{ color: "#000" }}>Hello {userName}!</span>
+              <span style={{ color: "#000" }}>Hello {user.fullname}!</span>
               <Link className="link" to="/settings">
                 {" "}
                 <span style={{ color: "#000" }}>Settings</span>
@@ -119,6 +120,20 @@ const Navbar = () => {
           <Link className="link" to="/my-list">
             <span>My List</span>
           </Link>
+        </div>
+        <div className="mobile-header-list-item">
+          <Link className="link" to="/settings">
+            <span>Settings</span>
+          </Link>
+        </div>
+
+        <div
+          className="mobile-header-list-item"
+          onClick={() => {
+            logout();
+          }}
+        >
+          <span>Logout</span>
         </div>
       </div>
     </div>

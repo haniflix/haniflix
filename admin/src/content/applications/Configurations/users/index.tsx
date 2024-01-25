@@ -25,7 +25,7 @@ import {
   IconButton
 } from '@mui/material';
 import AddExamForm from './forms/AddUserForm';
-import { Delete, Edit } from '@mui/icons-material';
+import { Close, Delete, Edit } from '@mui/icons-material';
 import useApiClient from 'src/hooks/useApiClient';
 import { User } from '@api/client/dist/users/types';
 import { useAppSelector } from 'src/store/hooks';
@@ -111,7 +111,7 @@ function Users() {
           </Grid>
           <Grid item xs={12}>
             <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <Table /*sx={{ minWidth: 650 }}*/ aria-label="simple table">
                 <TableHead>
                   <TableRow>
                     <TableCell>Full name</TableCell>
@@ -150,12 +150,13 @@ function Users() {
                         >
                           <Edit />
                         </IconButton>
+			{row._id !== currentUser._id ? (
                         <IconButton
                           sx={{ p: '10px' }}
                           onClick={() => setToDelete(row)}
                         >
                           <Delete />
-                        </IconButton>
+                        </IconButton>) : null}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -180,6 +181,17 @@ function Users() {
               marginTop={3}
             >
               {toEdit ? 'Update a user' : 'Add a user'}
+              <span
+                style={{
+                  position: 'absolute',
+                  top: 10,
+                  right: 5,
+                  cursor: 'pointer'
+                }}
+                onClick={() => setOpenAddModal(false)}
+              >
+                <Close />
+              </span>
             </Typography>
             <Box padding={5}>
               <AddExamForm

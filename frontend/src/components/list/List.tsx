@@ -3,7 +3,7 @@ import {
   ArrowForwardIosOutlined,
   Delete,
   Edit,
-} from "@material-ui/icons";
+} from "@mui/icons-material";
 import { useRef, useState } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
@@ -66,12 +66,12 @@ const List: React.FC<ListProps> = ({ list, onDelete, onEdit }) => {
           <div className="listTitle">{list?.title}</div>
           <div>
             {onEdit ? (
-              <span style={{ cursor: "pointer" }} onClick={onEdit}>
+              <span style={{ cursor: "pointer" }} onClick={() => onEdit()}>
                 <Edit />
               </span>
             ) : null}
             {user.defaultList !== list._id && onDelete ? (
-              <span style={{ cursor: "pointer" }} onClick={onDelete}>
+              <span style={{ cursor: "pointer" }} onClick={() => onDelete()}>
                 <Delete />
               </span>
             ) : null}

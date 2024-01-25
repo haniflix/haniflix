@@ -2,7 +2,16 @@
     // --main-color: #0b0b0b
     --main-color: #fff;
     --secondary-color: #000;
-    overflow-x: hidden;
+    // overflow-x: hidden;
+}
+
+button {
+    text-transform: capitalize !important;
+}
+
+body {
+    background-color: #000;
+    color: #fff;
 }
 
 .link{
@@ -10,7 +19,7 @@
     text-decoration: none;
 }
 .listTitle{
-    color: var(--secondary-color) !important;
+    color: var(--secondary-color); //!important;
     font-size: 1.5rem;
     font-weight: bold;
     margin-bottom: 1rem;
@@ -18,8 +27,8 @@
 
 .gradientButton {
     height: 40px;
-    width: 200px;
-    margin: 5px auto 10px auto;
+    // width: 200px;
+    // margin: 5px auto 10px auto;
     border-radius: 5px;
     background: rgb(0, 255, 177);
     background: -moz-linear-gradient(

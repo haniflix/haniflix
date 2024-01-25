@@ -123,7 +123,8 @@ function Sidebar() {
                   width: 52
                 }}
               >
-                <Logo />
+                {/* <Logo /> */}
+                <img src="/logo.png" style={{ width: '100%' }} />
               </Box>
             </Box>
             <Divider

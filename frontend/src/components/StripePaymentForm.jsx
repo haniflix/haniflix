@@ -34,10 +34,10 @@ function StripePaymentForm({newUser}) {
   return (
     <form onSubmit={handleSubmit} style={{margin:"5px", padding:"0px"}}>
       <h4>
-        Card Details:
+        <div style={{marginBottom: 10}}>Card Details:</div>
         <CardElement />
       </h4>
-      <button style={{marginTop:"20px", marginBottom:"20px"}} type="submit">Subscribe</button>
+      <button style={{marginTop:"20px", marginBottom:"20px", color: "#fff"}} type="submit">Subscribe</button>
     </form>
   );
 }

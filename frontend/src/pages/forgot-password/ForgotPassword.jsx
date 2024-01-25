@@ -68,7 +68,7 @@ export default function ForgotPassword() {
         </div>
       </div>
 
-      <div className="section">
+      {/*<div className="section">
           <div className="intro-section">
               <h1>Welcome to Haniflix</h1><br/>
               <h3>We are the ultimate streaming service offering unlimited award-winning TV shows, movies, and more in 4k on any device ad-free for only $4.99/month!</h3><br/>
@@ -79,15 +79,15 @@ export default function ForgotPassword() {
                 <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512"><path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>
               </div>
           </div>
-      </div>
+  </div>*/}
 
       <div className="section">
           <div className="intro-section">
-              <h2>Recover your account now</h2>
+              <h2>Forgot Password</h2>
               <input type="email" placeholder="Email" style={{color:"#000"}} ref={emailRef}/>
-              <button className="registerButton" onClick={handleStart}>Send Link</button>
+              <button className="registerButton" style={{color: "#fff"}}onClick={handleStart}>Send Link</button>
               <br/>
-              <Link className="link text-dark" to={{ pathname: "/login" }}> Know your password? Login</Link>
+              <Link className="link text-dark" to={{ pathname: "/login" }}> Remember your password? Login</Link>
           </div>
       </div>
 

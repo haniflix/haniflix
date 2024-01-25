@@ -11,13 +11,14 @@ import AccSettings from "./pages/user-settings/AccSettings";
 import CookieConsent from "react-cookie-consent";
 import {
   BrowserRouter as Router,
-  Switch,
   Route,
-  Redirect,
+  Navigate,
+  Routes,
 } from "react-router-dom";
 import MyLists from "./pages/my-lists/MyLists";
 import { useAppSelector } from "./store/hooks";
 import { selectUser } from "./store/auth";
+import Welcome from "./pages/welcome/Welcome";
 
 const App = () => {
   const user = useAppSelector(selectUser);
@@ -25,52 +26,49 @@ const App = () => {
   return (
     <>
       <Router>
-        <Switch>
-          <Route exact path="/">
-            {user ? <Home /> : <Redirect to="/login" />}
-          </Route>
-          <Route path="/register">
-            {user ? <Redirect to="/" /> : <Register />}
-          </Route>
-          <Route path="/forgot-pass">
-            {user ? <Redirect to="/" /> : <ForgotPassword />}
-          </Route>
-          <Route path="/change-password/:id/:email">
-            {user ? <Redirect to="/" /> : <ChangePassword />}
-          </Route>
-          <Route path="/login">{user ? <Redirect to="/" /> : <Login />}</Route>
-          <Route path="/verify">
-            <Verify />
-          </Route>
-
+        <Routes>
+          <Route path="/" element={user ? <Home /> : <Welcome />} />
+          <Route
+            path="/register"
+            element={user ? <Navigate to="/" /> : <Register />}
+          />
+          <Route
+            path="/forgot-pass"
+            element={user ? <Navigate to="/" /> : <ForgotPassword />}
+          />
+          <Route
+            path="/change-password/:id/:email"
+            element={user ? <Navigate to="/" /> : <ChangePassword />}
+          />
+          <Route
+            path="/login"
+            element={user ? <Navigate to="/" /> : <Login />}
+          />
+          <Route path="/verify" element={<Verify />} />
           {user && (
             <>
-              <Route path="/movies">
-                <Home type="movies" />
-              </Route>
-              <Route path="/series">
-                <Home type="series" />
-              </Route>
-              <Route path="/watch">
-                <Watch />
-              </Route>
-              <Route path="/my-list">
-                <MyLists />
-              </Route>
-              <Route path="/new-and-popular">
-                <Home />
-              </Route>
-              <Route path="/search">
-                <SearchPage />
-              </Route>
-              <Route path="/settings">
-                <AccSettings />
-              </Route>
+              <Route path="/movies" element={<Home type="movies" />} />
+
+              <Route path="/series" element={<Home type="series" />} />
+
+              <Route path="/watch/:id" element={<Watch />} />
+
+              <Route path="/my-list" element={<MyLists />} />
+
+              <Route path="/new-and-popular" element={<Home />} />
+
+              <Route path="/search" element={<SearchPage />} />
+
+              <Route path="/settings" element={<AccSettings />} />
             </>
           )}
-        </Switch>
+        </Routes>
       </Router>
-      <CookieConsent disableButtonStyles buttonClasses="gradientButton">
+      <CookieConsent
+        disableButtonStyles
+        buttonClasses="gradientButton"
+        buttonStyle={{ margin: 10 }}
+      >
         This website uses cookies to enhance the user experience.
       </CookieConsent>
     </>

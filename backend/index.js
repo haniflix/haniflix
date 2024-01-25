@@ -26,9 +26,12 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const allowed_ips = [
   "http://50.62.182.51:4000",
   "http://admin.haniflix.com:4000",
-  "http://haniflix.com",
+  "https://admin.haniflix.com",
+  "https://haniflix.com",
+  "https://www.haniflix.com",
   "http://localhost:3000",
   "http://localhost:5173",
+  "http://localhost:5174",
 ];
 
 app.use(express.json());

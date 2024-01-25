@@ -8,10 +8,19 @@ import {
   Button,
   CircularProgress,
   Typography,
-} from "@material-ui/core";
+  Modal,
+  Container,
+  Paper,
+  IconButton,
+  Grid,
+} from "@mui/material";
 import Navbar from "../../components/navbar/Navbar";
-import { useAppSelector } from "../../store/hooks";
-import { selectUser } from "../../store/auth";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { selectUser, setUser } from "../../store/auth";
+import useApiClient from "../../hooks/useApiClient";
+import Swal from "sweetalert2";
+import { Close } from "@mui/icons-material";
+import "./settings.scss";
 
 const url = import.meta.env.VITE_APP_API_URL;
 
@@ -19,18 +28,23 @@ const AccSettings = () => {
   const user = useAppSelector(selectUser);
   const userId = user?._id;
   const [loading, setLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteAccount, setDeleteAccount] = useState(false);
   const [userDetails, setUserDetails] = useState({
     id: userId,
     name: user.fullname,
     email: user.email,
   });
 
+  const client = useApiClient();
+  const dispatch = useAppDispatch();
+
   const fetchUserDetails = useCallback(async () => {
     if (userId) {
       try {
         setLoading(true);
         const response = await axios.get(`${url}users/find/${userId}`);
-        console.log("Data available:", response.data);
+        // console.log("Data available:", response.data);
         setUserDetails({
           id: response.data._id,
           name: response.data.fullname,
@@ -71,6 +85,9 @@ const AccSettings = () => {
         name: res.data.fullname,
         email: res.data.email,
       });
+      dispatch(
+        setUser({ ...user, fullname: res.data.fullname, email: res.data.email })
+      );
       localStorage.setItem("user", JSON.stringify(res.data));
       alert("Details Updated Successfully");
     } catch (error) {
@@ -79,6 +96,32 @@ const AccSettings = () => {
       setLoading(false);
       setSubmitting(false);
     }
+  };
+
+  const onDeleteAccount = () => {
+    setDeleteLoading(true);
+    client
+      .deleteUser(user._id)
+      .then(() => {
+        setDeleteLoading(false);
+        Swal.fire({
+          title: "",
+          text: "Subscription canceled and account deleted successfully.",
+          icon: "success",
+          timer: 1500,
+        }).then(function () {
+          dispatch(setUser(null));
+          window.location.href = "/";
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+        Swal.fire({
+          title: "Error",
+          icon: "error",
+          text: "Failed - try again later",
+        });
+      });
   };
 
   return (
@@ -96,7 +139,7 @@ const AccSettings = () => {
         <Typography
           variant="h4"
           style={{ fontWeight: 700 }}
-          sx={{ mt: 4, mb: 2 }}
+          sx={{ mt: 4, mb: 2, color: "#fff" }}
         >
           Update Account Details
         </Typography>
@@ -107,7 +150,15 @@ const AccSettings = () => {
           onSubmit={handleSubmitUserDetails}
         >
           {({ isSubmitting }) => (
-            <Form style={{ maxWidth: "450px", width: "100%" }}>
+            <Form
+              style={{
+                maxWidth: "450px",
+                width: "100%",
+                background: "#fff",
+                padding: 10,
+                borderRadius: 5,
+              }}
+            >
               <Field
                 as={TextField}
                 fullWidth
@@ -129,6 +180,7 @@ const AccSettings = () => {
               />
 
               <Button
+                className="gradientButton"
                 type="submit"
                 fullWidth
                 variant="contained"
@@ -143,6 +195,89 @@ const AccSettings = () => {
           )}
         </Formik>
       </Box>
+
+      <Box
+        width={"100%"}
+        position={"absolute"}
+        display={"flex"}
+        justifyContent={"center"}
+        bottom={10}
+      >
+        <Button
+          className="gradientButton"
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+          style={{ backgroundColor: "#1976d2" }}
+          sx={{ maxWidth: 450 }}
+          onClick={() => {
+            setDeleteAccount(true);
+          }}
+        >
+          Cancel subscription and delete account
+        </Button>
+      </Box>
+
+      <Modal
+        open={deleteAccount}
+        onClose={() => setDeleteAccount(false)}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Container
+          sx={{
+            // padding: 2,
+            maxWidth: 600,
+            margin: "auto",
+            borderRadius: 3,
+            position: "relative",
+          }}
+        >
+          <Paper sx={{ color: "#000", padding: 5 }}>
+            <Typography variant="h6">
+              Delete account and cancel subscription
+            </Typography>
+            <p style={{ marginBottom: 50 }}>
+              Are you sure to cancel your subscription and delete your account ?
+            </p>
+            <IconButton
+              edge="end"
+              color="inherit"
+              //onClick={handleCloseModal}
+              onClick={() => setDeleteAccount(false)}
+              aria-label="close"
+              style={{ position: "absolute", top: 0, right: 35 }}
+            >
+              <Close />
+            </IconButton>
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setDeleteAccount(false)}
+                className="gradientButton"
+                sx={{ color: "#fff" }}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => onDeleteAccount()}
+                style={{ marginLeft: 10 }}
+                className="gradientButton"
+                sx={{ color: "#fff" }}
+              >
+                {deleteLoading ? <CircularProgress size={24} /> : "Delete"}
+              </Button>
+            </Grid>
+          </Paper>
+        </Container>
+      </Modal>
     </>
   );
 };

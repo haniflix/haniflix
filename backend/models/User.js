@@ -7,6 +7,7 @@ const UserSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     profilePic: { type: String, defaut: "" },
+    subscriptionId: { type: String, defaut: "" },
     isAdmin: { type: Boolean, default: false },
     isSubscribed: { type: Boolean, default: false },
     emailVerified: { type: Boolean, default: true },

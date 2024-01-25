@@ -28,7 +28,7 @@ const OverviewWrapper = styled(Box)(
 
 // U2FsdGVkX19047kDfNolCdiD8n3NRGnah/C1vQ5t7QM=
 
-function Overview() {
+function Login() {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
@@ -117,4 +117,4 @@ function Overview() {
   );
 }
 
-export default Overview;
+export default Login;

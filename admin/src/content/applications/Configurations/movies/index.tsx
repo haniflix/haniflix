@@ -25,7 +25,7 @@ import {
   IconButton
 } from '@mui/material';
 import AddMovieForm from './forms/AddMovieForm';
-import { Delete, Edit } from '@mui/icons-material';
+import { Close, Delete, Edit } from '@mui/icons-material';
 import useApiClient from 'src/hooks/useApiClient';
 import { Movie } from '@api/client/dist/movies/types';
 import toast from 'react-hot-toast';
@@ -47,7 +47,7 @@ function Movies() {
 
   const getItemFromId = useCallback(
     (id: number | string) => {
-      return items.find((item) => item.id === id);
+      return items.find((item) => item._id === id);
     },
     [items]
   );
@@ -76,7 +76,7 @@ function Movies() {
 
   useEffect(() => {
     if (toEdit != null) {
-      const item = getItemFromId(toEdit.id);
+      const item = getItemFromId(toEdit._id);
       if (item) setOpenAddModal(true);
       else setOpenAddModal(false);
     }
@@ -89,7 +89,7 @@ function Movies() {
   return (
     <>
       <Helmet>
-        <title>Tags - Configurations</title>
+        <title>Movies - Configurations</title>
       </Helmet>
       <PageTitleWrapper>
         <PageHeader />
@@ -109,11 +109,12 @@ function Movies() {
           </Grid>
           <Grid item xs={12}>
             <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <Table /*sx={{ minWidth: 650 }}*/ aria-label="simple table">
                 <TableHead>
                   <TableRow>
                     <TableCell>Title</TableCell>
                     <TableCell align="right">Link</TableCell>
+                    <TableCell align="right">is serie</TableCell>
                     <TableCell align="right">Genres</TableCell>
                     <TableCell align="right">Actions</TableCell>
                   </TableRow>
@@ -128,9 +129,10 @@ function Movies() {
                         {row.title}
                       </TableCell>
                       <TableCell align="right">
-                        <a href={row.video} target="_blank">
-                          {row.video}
-                        </a>
+                        <a href={row.video} target="_blank">see</a>
+                      </TableCell>
+                      <TableCell component="th" scope="row">
+                        {row.isSeries ? 'Yes' : 'No'}
                       </TableCell>
                       <TableCell align="right">
                         {row.genre}
@@ -181,11 +183,22 @@ function Movies() {
               marginTop={3}
             >
               {toEdit ? 'Update a movie' : 'Add a movie'}
+              <span
+                style={{
+                  position: 'absolute',
+                  top: 10,
+                  right: 5,
+                  cursor: 'pointer'
+                }}
+                onClick={() => setOpenAddModal(false)}
+              >
+                <Close />
+              </span>
             </Typography>
             <Box padding={5}>
               <AddMovieForm
                 callback={getData}
-                item={toEdit ? getItemFromId(toEdit.id) : null}
+                item={toEdit ? getItemFromId(toEdit._id) : null}
               />
             </Box>
           </Box>

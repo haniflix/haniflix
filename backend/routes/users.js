@@ -3,6 +3,7 @@ const User = require("../models/User");
 
 const CryptoJS = require("crypto-js");
 const verify = require("../verifyToken");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 //CREATE
 router.post("/", verify, async (req, res) => {
@@ -56,6 +57,10 @@ router.put("/:id", verify, async (req, res) => {
 router.delete("/:id", verify, async (req, res) => {
   if (req.user.id === req.params.id || req.user.isAdmin) {
     try {
+      const user = await User.findById(req.params.id);
+      if (user?.subscriptionId) {
+	await stripe.subscriptions.cancel(user?.subscriptionId);
+      }
       await User.findByIdAndDelete(req.params.id);
       res.status(200).json("User has been deleted...");
     } catch (err) {

@@ -9,7 +9,7 @@ import Carousel from "react-multi-carousel";
 import {
   ArrowBackIosOutlined,
   ArrowForwardIosOutlined,
-} from "@material-ui/icons";
+} from "@mui/icons-material";
 import ListItem from "../../components/listItem/ListItem";
 const List = lazy(() => import("../../components/list/List"));
 
@@ -19,21 +19,25 @@ const Home = ({ type = null }) => {
   const [lists, setLists] = useState([]);
   const [genre] = useState(null);
   const client = useApiClient();
-  const [movies, setMovies] = useState([]);
+  //const [movies, setMovies] = useState([]);
 
-  const getRandomLists = (type: string, genre: string) => {
-    client
-      .getRandomLists(type, genre)
-      .then((res) => {
-        const filteredLists = res.filter((list) => !list.user);
-        setLists(filteredLists);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
+  const getRandomLists = useCallback(
+    (type: string, genre: string) => {
+      client
+        .getRandomLists(type, genre)
+        .then((res) => {
+          //const filteredLists = res.filter((list) => !list.user);
+          //setLists(filteredLists);
+          setLists(res);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+    [client]
+  );
 
-  const getRandomMovies = useCallback(
+  /*const getRandomMovies = useCallback(
     (type: string) => {
       client
         .getRandomMovies(type)
@@ -45,11 +49,11 @@ const Home = ({ type = null }) => {
         });
     },
     [client]
-  );
+  );*/
 
   useEffect(() => {
     getRandomLists(type, genre);
-    getRandomMovies(type);
+    // getRandomMovies(type);
     /*const getRandomLists = async () => {
       try {
         const res = await axios.get(
@@ -94,7 +98,7 @@ const Home = ({ type = null }) => {
       <Navbar />
       <Featured type={type} />
 
-      <div className="wrapper">
+      {/*<div className="wrapper">
         <Carousel
           responsive={responsive}
           centerMode={true}
@@ -109,14 +113,14 @@ const Home = ({ type = null }) => {
             <ListItem key={item?._id} index={i} item={item?._id} />
           ))}
         </Carousel>
-      </div>
-      {/*<Suspense
+          </div>*/}
+      <Suspense
         fallback={<div style={{ backgroundColor: "black" }}>Loading...</div>}
       >
         {lists?.map((list) => (
           <List key={list._id} list={list} />
         ))}
-        </Suspense>*/}
+      </Suspense>
     </div>
   );
 };

@@ -11,7 +11,8 @@ import {
 import ViewWeekTwoToneIcon from '@mui/icons-material/ViewWeekTwoTone';
 import TableRowsTwoToneIcon from '@mui/icons-material/TableRowsTwoTone';
 import WatchListColumn from './WatchListColumn';
-import WatchListRow from './WatchListRow';
+import WatchListRow from '../Crypto/WatchListRow';
+//import WatchListRow from './WatchListRow';
 
 const EmptyResultsWrapper = styled('img')(
   ({ theme }) => `

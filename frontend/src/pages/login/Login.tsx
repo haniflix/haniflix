@@ -80,9 +80,6 @@ export default function Login() {
         console.error(err);
       });
   };
-  useEffect(() => {
-    console.log(email, password);
-  }, [email, password]);
 
   const handleStart = useCallback(() => {
     if (email.length < 5) {
@@ -112,11 +109,13 @@ export default function Login() {
   return (
     <div
       className="loginNew"
-      style={{
-        background: `url(${landingBg}) no-repeat center center`,
-        backgroundSize: "cover",
-        minHeight: "100vh",
-      }}
+      style={
+        {
+          // background: `url(${landingBg}) no-repeat center center`,
+          // backgroundSize: "cover",
+          // minHeight: "100vh",
+        }
+      }
     >
       <div className="top">
         <div className="wrapper">
@@ -133,7 +132,7 @@ export default function Login() {
         </div>
       </div>
 
-      <div className="section">
+      {/*<div className="section">
         <div className="intro-section">
           <h1>Welcome to Haniflix</h1>
           <br />
@@ -158,11 +157,11 @@ export default function Login() {
             </svg>
           </div>
         </div>
-      </div>
+    </div>*/}
 
       <div className="section">
         <div className="intro-section">
-          <h2>Login to your account</h2>
+          <h2>Sign In to your account</h2>
           <input
             type="email"
             placeholder="Email"
@@ -187,7 +186,7 @@ export default function Login() {
             <div>
               <span style={{ color: "#222" }}>
                 <Link className="link" to={{ pathname: "/register" }}>
-                  New to Haniflix? Register
+                  New to Haniflix? Sign up now
                 </Link>
               </span>
             </div>

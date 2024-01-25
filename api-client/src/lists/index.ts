@@ -6,8 +6,19 @@ import { List } from "./types";
 const resourceName = "lists";
 
 export class Lists extends Base {
+  getAdminLists() {
+    return this.request<List[]>(`${resourceName}/admin-list`);
+  }
+
   getMyList() {
     return this.request<List[]>(`${resourceName}/my-list`);
+  }
+
+  createList(data: Partial<List>) {
+    return this.request<List>(`${resourceName}`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
   }
 
   updateList(id: number | string, data: Partial<List>) {

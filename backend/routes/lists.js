@@ -4,45 +4,43 @@ const verify = require("../verifyToken");
 const User = require("../models/User");
 
 //CREATE
-router.post("/", async (req, res) => {
-  if (req.body.email) {
-    try {
-      // Find the user by their email address
-      const user = await User.findOne({ email: req.body.email });
+router.post("/", verify, async (req, res) => {
+  try {
+    // Find the user by their email address
+    // const user = await User.findOne({ email: req.body.email });
+    const user = await User.findById(req.user.id);
 
-      if (!user) {
-        return res.status(404).json("User not found");
-      }
-
-      const myList = {
-        user: user._id,
-        title: req.body.title,
-        content: req.body.content,
-        type: req.body.type,
-        genre: req.body.genre,
-      };
-
-      // Create a new list
-      const newList = new List(myList);
-
-      // Set the user for the new list
-      newList.user = user;
-
-      // Save the new list
-      const savedList = await newList.save();
-
-      // Update the user's lists array with the newly created list's ObjectId
-      user.lists.push(savedList._id);
-
-      // Save the updated user
-      await user.save();
-
-      res.status(201).json(savedList);
-    } catch (err) {
-      res.status(500).json(err);
+    if (!user) {
+      return res.status(404).json("User not found");
     }
-  } else {
-    res.status(403).json("You are not allowed!");
+
+    const myList = {
+      user: user._id,
+      title: req.body.title,
+      content: req.body.content,
+      type: req.body.type,
+      genre: req.body.genre,
+      adminList: user.isAdmin,
+    };
+
+    // Create a new list
+    const newList = new List(myList);
+
+    // Set the user for the new list
+    newList.user = user;
+
+    // Save the new list
+    const savedList = await newList.save();
+
+    // Update the user's lists array with the newly created list's ObjectId
+    user.lists.push(savedList._id);
+
+    // Save the updated user
+    await user.save();
+
+    res.status(201).json(savedList);
+  } catch (err) {
+    res.status(500).json(err);
   }
 });
 
@@ -60,6 +58,8 @@ router.put("/:id", verify, async (req, res) => {
           $set: {
             title: req.body.title,
             content: req.body.content,
+            type: req.body.type,
+            genre: req.body.genre,
           },
         });
 
@@ -122,22 +122,43 @@ router.get("/", async (req, res) => {
   try {
     if (typeQuery) {
       if (genreQuery) {
-        list = await List.aggregate([
-          { $sample: { size: 10 } },
-          { $match: { type: typeQuery, genre: genreQuery } },
-        ]);
+        /*list = await List.aggregate([
+          { $sample: { size: 10000 } },
+          { $sort: { _id: 1 }},
+          { $match: { type: typeQuery, genre: genreQuery, adminList: true } },
+        ]);*/
+	list = await List.find({ adminList: true, type: typeQuery, genre: genreQuery }).sort({_id: 1});
       } else {
-        list = await List.aggregate([
-          { $sample: { size: 10 } },
-          { $match: { type: typeQuery } },
-        ]);
+        /*list = await List.aggregate([
+          { $sample: { size: 10000 } },
+          { $sort: { _id: 1 }},
+          { $match: { type: typeQuery, adminList: true } },
+        ]);*/
+	list = await List.find({ adminList: true, type: typeQuery }).sort({_id: 1});
       }
     } else {
-      list = await List.aggregate([{ $sample: { size: 10 } }]);
+      //list = await List.aggregate([{ $sample: { size: 10 } }]);
+	list = await List.find({ adminList: true }).sort({_id: 1});
+      /*list = await List.aggregate([
+          { $sort: { createdAt: 1 }},
+	  { $sample: { size: 10000 } },
+          { $match: { adminList: true } },
+      ]);*/
     }
+    // res.status(200).json(list.filter((l) => l.adminList));
     res.status(200).json(list);
   } catch (err) {
     res.status(500).json(err);
+  }
+});
+
+router.get("/admin-list", verify, async (req, res) => {
+  try {
+    const list = await List.find({ adminList: true }).sort({_id: 1});
+    res.status(200).json(list);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
@@ -168,9 +189,13 @@ router.get("/my-list", verify, async (req, res) => {
 
     res.status(200).json(userLists);*/
     const user = await User.findById(req.user.id);
-    const defaultList = await List.findOne({ _id: user.defaultList });
+    const defaultList = await List.findOne({
+      _id: user.defaultList,
+      //adminList: false,
+    });
     const nonDefaultLists = await List.find({
       user: user._id,
+      //adminList: false,
       _id: { $not: { $eq: user.defaultList } },
     });
     /*const nonDefaultLists = userLists?.filter(
@@ -187,13 +212,14 @@ router.get("/my-list", verify, async (req, res) => {
   }
 });
 
-router.post("/add-movie-to-default-list", async (req, res) => {
+router.post("/add-movie-to-default-list", verify , async (req, res) => {
   try {
     const userEmail = req.body.email;
     const movieId = req.body.movieId; // Assuming you receive the movie ID from the client
 
     // Find the user by their email address
-    const user = await User.findOne({ email: userEmail });
+    // const user = await User.findOne({ email: userEmail });
+    const user = await User.findOne({ _id: req.user.id });
 
     if (!user) {
       return res.status(404).json("User not found");

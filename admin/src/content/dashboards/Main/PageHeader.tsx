@@ -24,7 +24,7 @@ function PageHeader() {
         </Grid>*/}
       <Grid item>
         <Typography variant="h3" component="h3" gutterBottom>
-          Hanilux Administration
+          Haniflix Administration
         </Typography>
         {/*<Typography variant="h3" component="h3" gutterBottom>
           Welcome, {user.name}!

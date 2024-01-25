@@ -90,12 +90,19 @@ router.get("/random", async (req, res) => {
 });
 
 //GET SINGLE
-router.get("/:id", async (req, res) => {
+router.get("/:id", verify, async (req, res) => {
   //router.get("/find/:id", verify, async (req, res) => {
   try {
+    const movieLikeDislike = await MovieLikeDislike.findOne({
+      user: req.user.id,
+      movie: req.params.id,
+    });
     const movie = await Movie.findById(req.params.id);
-    res.status(200).json(movie);
+    const m = movie?.toObject();
+    m.like = movieLikeDislike?.isLike;
+    res.status(200).json(m);
   } catch (err) {
+    console.error(err);
     res.status(500).json(err);
   }
 });
@@ -112,57 +119,65 @@ router.get("/", async (req, res) => {
 
 //Like movie
 router.post("/:id/like", verify, async (req, res) => {
-  const user = await User.findById(req.user.id);
-  const movie = await Movie.findById(req.params.id);
-  const movieLikeDislike = await MovieLikeDislike.findOne({
-    user: user._id,
-    movie: movie._id,
-  });
-  if (movieLikeDislike == null) {
-    const like = new MovieLikeDislike({
+  try {
+    const user = await User.findById(req.user.id);
+    const movie = await Movie.findById(req.params.id);
+    const movieLikeDislike = await MovieLikeDislike.findOne({
       user: user._id,
       movie: movie._id,
-      isLike: true,
     });
-    await like.save();
-  } else {
-    if (movieLikeDislike.isLike) {
-      await MovieLikeDislike.findByIdAndDelete(movieLikeDislike._id);
-    } else {
-      await MovieLikeDislike.findOneAndUpdate(movieLikeDislike._id, {
-        $set: {
-          isLike: true,
-        },
+    if (movieLikeDislike == null) {
+      const like = new MovieLikeDislike({
+        user: user._id,
+        movie: movie._id,
+        isLike: true,
       });
+      await like.save();
+    } else {
+      if (movieLikeDislike.isLike) {
+        await MovieLikeDislike.findByIdAndDelete(movieLikeDislike.id);
+      } else {
+        await MovieLikeDislike.findOneAndUpdate(movieLikeDislike.id, {
+          $set: {
+            isLike: true,
+          },
+        });
+      }
     }
+  } catch (err) {
+    console.error(err);
   }
 });
 
 //Dislike movie
 router.post("/:id/dislike", verify, async (req, res) => {
-  const user = await User.findById(req.user.id);
-  const movie = await Movie.findById(req.params.id);
-  const movieLikeDislike = await MovieLikeDislike.findOne({
-    user: user._id,
-    movie: movie._id,
-  });
-  if (movieLikeDislike == null) {
-    const dislike = new MovieLikeDislike({
+  try {
+    const user = await User.findById(req.user.id);
+    const movie = await Movie.findById(req.params.id);
+    const movieLikeDislike = await MovieLikeDislike.findOne({
       user: user._id,
       movie: movie._id,
-      isLike: false,
     });
-    await dislike.save();
-  } else {
-    if (!movieLikeDislike.isLike) {
-      await MovieLikeDislike.findByIdAndDelete(movieLikeDislike._id);
-    } else {
-      await MovieLikeDislike.findOneAndUpdate(movieLikeDislike._id, {
-        $set: {
-          isLike: false,
-        },
+    if (movieLikeDislike == null) {
+      const dislike = new MovieLikeDislike({
+        user: user._id,
+        movie: movie._id,
+        isLike: false,
       });
+      await dislike.save();
+    } else {
+      if (!movieLikeDislike.isLike) {
+        await MovieLikeDislike.findByIdAndDelete(movieLikeDislike.id);
+      } else {
+        await MovieLikeDislike.findOneAndUpdate(movieLikeDislike.id, {
+          $set: {
+            isLike: false,
+          },
+        });
+      }
     }
+  } catch (err) {
+    console.error(err);
   }
 });
 
