@@ -22,6 +22,7 @@
     "@testing-library/user-event": "^12.1.10",
     "@vitejs/plugin-react": "^4.2.1",
     "@vitejs/plugin-react-swc": "^3.5.0",
+    "api-client": "../api-client",
     "axios": "^1.6.2",
     "dotenv": "^16.3.1",
     "formik": "^2.4.5",
