@@ -22,16 +22,31 @@ import {
   AccordionDetails,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+
 import useApiClient from 'src/hooks/useApiClient';
 import { Movie } from '@api/client/dist/movies/types';
 import { TagsInput } from 'react-tag-input-component';
 import toast from 'react-hot-toast';
 // import { DatePicker } from '@mui/x-date-pickers';
 
+import spinnerSvg from '../../../../../assets/svgs/spinner.svg'
+
 
 interface AddMovieProps {
   callback?: Function | null;
   item?: Movie | null;
+}
+
+interface MovieDetails {
+  title: string;
+  description: string;
+  trailerUrl: string;
+  imageUrl: string;
+  ageRating: string;
+  genre: string;
+  yearOfRelease: string;
+  duration: string;
 }
 
 const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
@@ -48,6 +63,7 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
 
   //url for pulling
   const [scrapeUrl, setScrapeUrl] = React.useState<string>('')
+  const [isScraping, setIsScraping] = React.useState<boolean>(false)
 
   // determine if form is in update movie mode
   const isUpdateMode = item == undefined || item == null
@@ -156,8 +172,32 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
     }
   }, [item]);
 
-  const onSubmitMovieScrapeUrl = () => {
-    setScrapeUrl('')
+  const onSubmitMovieScrapeUrl = async () => {
+    if (!scrapeUrl) {
+      toast.error('Please enter url', { position: 'top-right' })
+      return;
+    }
+
+    const data = {
+      url: scrapeUrl
+    }
+
+    setIsScraping(true);
+    const movieDetails = await client.scrapeWebsite(data);
+
+    if (movieDetails?.title) {
+      let newMovieDetails: MovieDetails = movieDetails
+
+      setTitle(newMovieDetails.title);
+      setDescription(newMovieDetails.description);
+      setImageLink(newMovieDetails.imageUrl);
+      setYear(newMovieDetails.yearOfRelease);
+      setGenres(newMovieDetails?.genre);
+      setScrapeUrl('')
+    }
+
+
+    setIsScraping(false)
   }
 
   const renderAutoPopulateMovieSection = () => {
@@ -178,11 +218,20 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
           <TextField
             label="Movie Url"
             fullWidth
+            focused
             value={scrapeUrl}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              setScrapeUrl(event.target.url)
+              setScrapeUrl(event.target.value)
             }}
           />
+          <div className='flex gap-2'>
+            <Button variant="contained" onClick={onSubmitMovieScrapeUrl}>
+              Pull
+            </Button>
+            {isScraping ?
+              <img src={spinnerSvg} alt="Spinner" />
+              : undefined}
+          </div>
         </AccordionDetails>
       </Accordion>
     )
