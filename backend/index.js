@@ -6,7 +6,10 @@ const authRoute = require("./routes/auth");
 const userRoute = require("./routes/users");
 const movieRoute = require("./routes/movies");
 const listRoute = require("./routes/lists");
+const scraperRoute = require("./routes/scraper");
 const cors = require("cors");
+
+const morganMiddleware = require("./middleware/morgan");
 
 dotenv.config();
 
@@ -36,6 +39,8 @@ const allowed_ips = [
 
 app.use(express.json());
 
+app.use(morganMiddleware);
+
 app.options("*", cors({ origin: allowed_ips, optionsSuccessStatus: 200 }));
 app.use(cors({ origin: allowed_ips, optionsSuccessStatus: 200 }));
 
@@ -43,6 +48,7 @@ app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/movies", movieRoute);
 app.use("/api/lists", listRoute);
+app.use("/api/scraper", scraperRoute);
 
 app.listen(8800, () => {
   console.log("Backend server is running on port 8800!");
