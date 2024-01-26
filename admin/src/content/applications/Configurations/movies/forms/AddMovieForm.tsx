@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   AppBar,
   Box,
@@ -16,13 +16,18 @@ import {
   Paper,
   TextField,
   Typography,
-  generateUtilityClass
+  generateUtilityClass,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import useApiClient from 'src/hooks/useApiClient';
 import { Movie } from '@api/client/dist/movies/types';
 import { TagsInput } from 'react-tag-input-component';
 import toast from 'react-hot-toast';
 // import { DatePicker } from '@mui/x-date-pickers';
+
 
 interface AddMovieProps {
   callback?: Function | null;
@@ -39,6 +44,13 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
   const [genres, setGenres] = useState<string[]>([]);
   const [isSerie, setIsSerie] = useState<boolean>(false);
   const client = useApiClient();
+
+
+  //url for pulling
+  const [scrapeUrl, setScrapeUrl] = React.useState<string>('')
+
+  // determine if form is in update movie mode
+  const isUpdateMode = item == undefined || item == null
 
   const reset = () => {
     setTitle('');
@@ -144,6 +156,38 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
     }
   }, [item]);
 
+  const onSubmitMovieScrapeUrl = () => {
+    setScrapeUrl('')
+  }
+
+  const renderAutoPopulateMovieSection = () => {
+    return (
+      <Accordion className='mb-5 border-b-2  py-2'>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1-content"
+          id="panel1-header"
+          className='font-[600]'
+        >
+          Auto fill movie details?
+        </AccordionSummary>
+        <AccordionDetails>
+          <div className='text-sm font-[600]'>
+            Pull from <span className='underline text-black'><a target='_blank' href="https://reelgood.com/">https://reelgood.com/</a></span>
+          </div>
+          <TextField
+            label="Movie Url"
+            fullWidth
+            value={scrapeUrl}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              setScrapeUrl(event.target.url)
+            }}
+          />
+        </AccordionDetails>
+      </Accordion>
+    )
+  }
+
   return (
     <>
       <Box
@@ -152,6 +196,7 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
           '& .MuiTextField-root': { m: 1 }
         }}
       >
+        {isUpdateMode ? renderAutoPopulateMovieSection() : undefined}
         {imageLink ? (
           <Box
             sx={{
