@@ -1,5 +1,5 @@
 import ApiClient from '@api/client';
-import { selectUser } from 'src/store/auth';
+import { selectUser } from 'src/store/reducers/auth';
 import { useAppSelector } from 'src/store/hooks';
 
 const useApiClient = () => {

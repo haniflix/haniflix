@@ -14,8 +14,11 @@ import Hero from './Hero';
 import { useEffect, useState } from 'react';
 import useApiClient from 'src/hooks/useApiClient';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { selectUser, setUser } from 'src/store/auth';
+import { selectUser, setUser } from 'src/store/reducers/auth';
 import { useNavigate } from 'react-router';
+import { useLoginMutation } from 'src/store/rtk-query/authApi';
+
+import spinnerSvg from 'src/assets/svgs/spinner.svg'
 
 const OverviewWrapper = styled(Box)(
   () => `
@@ -37,36 +40,40 @@ function Login() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+
+  //rtk
+  const [login, loginState] = useLoginMutation()
+
   useEffect(() => {
     if (user != null) {
       navigate('/');
     }
   }, [user]);
 
-  const login = () => {
+  const onLogin = async () => {
     const credentials = {
       email: username,
       password
     };
 
-    client
-      .login(credentials)
-      .then((res) => {
-        console.log(res);
-        if (typeof res == 'string') {
-          setError(res);
-        } else {
-          if (res.isAdmin) {
-            dispatch(setUser(res));
-          } else {
-            setError('Only administrators can login here');
-          }
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        setError(err);
-      });
+    ///
+    try {
+      const res = await login(credentials)
+
+      console.log(res);
+
+      if (res?.data?.isAdmin && res?.data?.isAdmin !== true) {
+        setError('Only administrators can login here');
+      }
+
+      if (!res?.data) {
+        setError("Error encountered during login")
+      }
+    }
+    catch (err) {
+      console.error(err);
+      setError(err);
+    };
   };
 
   return (
@@ -105,10 +112,13 @@ function Login() {
               required
               fullWidth
             />
-            <Box marginLeft={1} marginTop={3}>
-              <Button variant="contained" onClick={login}>
+            <Box className='flex gap-2' marginLeft={1} marginTop={3}>
+              <Button variant="contained" onClick={onLogin}>
                 Login
               </Button>
+              {
+                loginState.isLoading ? <img src={spinnerSvg} /> : undefined
+              }
             </Box>
           </Box>
         </Card>

@@ -23,7 +23,7 @@ import AccountBoxTwoToneIcon from '@mui/icons-material/AccountBoxTwoTone';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
 import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
-import { selectUser, setUser } from 'src/store/auth';
+import { selectUser, setUser } from 'src/store/reducers/auth';
 import useApiClient from 'src/hooks/useApiClient';
 
 const UserBoxButton = styled(Button)(

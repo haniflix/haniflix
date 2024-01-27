@@ -7,7 +7,7 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { CssBaseline } from '@mui/material';
 import ThemeProvider from './theme/ThemeProvider';
 import { useAppSelector } from './store/hooks';
-import { selectUser } from './store/auth';
+import { selectUser } from './store/reducers/auth';
 import { useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 

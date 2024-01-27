@@ -29,7 +29,7 @@ import { Close, Delete, Edit } from '@mui/icons-material';
 import useApiClient from 'src/hooks/useApiClient';
 import { User } from '@api/client/dist/users/types';
 import { useAppSelector } from 'src/store/hooks';
-import { selectUser } from 'src/store/auth';
+import { selectUser } from 'src/store/reducers/auth';
 import toast from 'react-hot-toast';
 
 function Users() {
@@ -150,13 +150,13 @@ function Users() {
                         >
                           <Edit />
                         </IconButton>
-			{row._id !== currentUser._id ? (
-                        <IconButton
-                          sx={{ p: '10px' }}
-                          onClick={() => setToDelete(row)}
-                        >
-                          <Delete />
-                        </IconButton>) : null}
+                        {row._id !== currentUser._id ? (
+                          <IconButton
+                            sx={{ p: '10px' }}
+                            onClick={() => setToDelete(row)}
+                          >
+                            <Delete />
+                          </IconButton>) : null}
                       </TableCell>
                     </TableRow>
                   ))}

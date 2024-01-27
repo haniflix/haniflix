@@ -31,6 +31,7 @@ import toast from 'react-hot-toast';
 // import { DatePicker } from '@mui/x-date-pickers';
 
 import spinnerSvg from '../../../../../assets/svgs/spinner.svg'
+import { useScrapeWebsiteMutation } from 'src/store/rtk-query/scraperApi';
 
 
 interface AddMovieProps {
@@ -56,6 +57,8 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
   const [trailerLink, setTrailerLink] = useState<string>('');
   const [imageLink, setImageLink] = useState<string>('');
   const [year, setYear] = useState<string>('');
+  const [ageRating, setAgeRating] = useState<string>('');
+  const [duration, setDuration] = useState<string>('');
   const [genres, setGenres] = useState<string[]>([]);
   const [isSerie, setIsSerie] = useState<boolean>(false);
   const client = useApiClient();
@@ -64,6 +67,8 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
   //url for pulling
   const [scrapeUrl, setScrapeUrl] = React.useState<string>('')
   const [isScraping, setIsScraping] = React.useState<boolean>(false)
+
+  const [scrapeWebsiteApi, scrapeWebsiteState] = useScrapeWebsiteMutation()
 
   // determine if form is in update movie mode
   const isUpdateMode = item == undefined || item == null
@@ -77,6 +82,8 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
     setTrailerLink('');
     setGenres([]);
     setIsSerie(false);
+    setAgeRating('')
+    setDuration('')
   };
 
   const populate = (movie: Movie) => {
@@ -88,6 +95,8 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
     setTrailerLink(movie.trailer);
     setGenres(movie?.genre?.split(',') ?? []);
     setIsSerie(movie?.isSeries ?? false);
+    setDuration(movie.duration)
+    setAgeRating(movie.ageRating)
     // setName(tagGroup.name);
     // setDescription(tagGroup.description);
     // setTags(tagGroup?.tags ? [...tagGroup.tags] : []);
@@ -182,8 +191,9 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
       url: scrapeUrl
     }
 
-    setIsScraping(true);
-    const movieDetails = await client.scrapeWebsite(data);
+
+    const res = await scrapeWebsiteApi(data);
+    let movieDetails = res?.data
 
     if (movieDetails?.title) {
       let newMovieDetails: MovieDetails = movieDetails
@@ -194,10 +204,10 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
       setYear(newMovieDetails.yearOfRelease);
       setGenres(newMovieDetails?.genre);
       setScrapeUrl('')
+      setAgeRating(newMovieDetails.ageRating)
+      setDuration(newMovieDetails.duration)
     }
 
-
-    setIsScraping(false)
   }
 
   const renderAutoPopulateMovieSection = () => {
@@ -228,7 +238,7 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
             <Button variant="contained" onClick={onSubmitMovieScrapeUrl}>
               Pull
             </Button>
-            {isScraping ?
+            {scrapeWebsiteState.isLoading ?
               <img src={spinnerSvg} alt="Spinner" />
               : undefined}
           </div>
@@ -306,6 +316,22 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
           value={year}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             setYear(event.target.value);
+          }}
+        />
+        <TextField
+          label="Age rating"
+          fullWidth
+          value={ageRating}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            setAgeRating(event.target.value);
+          }}
+        />
+        <TextField
+          label="Duration"
+          fullWidth
+          value={duration}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            setDuration(event.target.value);
           }}
         />
         {/*<DatePicker
