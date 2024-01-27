@@ -6,11 +6,7 @@ const verify = require("../verifyToken");
 //CREATE
 router.post("/scrape", verify, async (req, res) => {
   try {
-    console.log("req.body ", req.body);
-
     const movieUrl = req.body.url;
-
-    console.log("movieUrl ", movieUrl);
 
     const movieDetails = await scrapeMovieDetails(movieUrl);
 
@@ -34,7 +30,7 @@ async function scrapeMovieDetails(url) {
   await page.goto(url, { waitUntil: "domcontentloaded" });
 
   try {
-    const movieDetails = await page.$eval("body", (body) => {
+    let movieDetails = await page.$eval("body", async (body) => {
       const yearOfRelease = body.querySelector(
         ".css-n6mjxq.e1r3wknn10"
       ).textContent;
@@ -70,8 +66,8 @@ async function scrapeMovieDetails(url) {
 
       return {
         title,
+        // trailerUrl,
         description,
-        trailerUrl: "", // Replace with trailer extraction logic if needed
         imageUrl: largestImageUrl.split(" ")[0], // Get the actual URL from srcset
         ageRating,
         genre,

@@ -8,6 +8,8 @@ const MovieSchema = new mongoose.Schema(
     imgTitle: { type: String },
     imgSm: { type: String },
     trailer: { type: String },
+    ageRating: { type: String },
+    duration: { type: String },
     video: { type: String },
     year: { type: String },
     limit: { type: Number },

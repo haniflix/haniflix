@@ -59,7 +59,7 @@ router.delete("/:id", verify, async (req, res) => {
     try {
       const user = await User.findById(req.params.id);
       if (user?.subscriptionId) {
-	await stripe.subscriptions.cancel(user?.subscriptionId);
+        await stripe.subscriptions.cancel(user?.subscriptionId);
       }
       await User.findByIdAndDelete(req.params.id);
       res.status(200).json("User has been deleted...");

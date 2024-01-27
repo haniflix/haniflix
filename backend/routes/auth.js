@@ -257,11 +257,11 @@ router.post("/forgot-pass", async (req, res) => {
           <p>If you didn't request a password reset, please ignore this email.</p>
           <p>This link will expire in 1 day for security reasons.</p>
           <p>Thank you!</p>
-            
+
                 <footer style="color:#888; text-align: center; border-top: 1px solid #ddd; padding-top: 10px">
                     <a href="https://haniflix.com" style="color:#888; text-decoration: none;"">Haniflix.com</a>
                 </footer>
-            
+
             </div>
           `,
       };
