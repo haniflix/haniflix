@@ -7,7 +7,8 @@ export const moviesApi = authApi.injectEndpoints({
       query: (params?: Pagination) => ({
         url: 'movies',
         params
-      })
+      }),
+      providesTags: ['Movies']
     }),
     getRandomMovies: builder.query({
       query: (type: string | undefined) => ({
@@ -25,20 +26,23 @@ export const moviesApi = authApi.injectEndpoints({
         url: 'movies',
         method: 'POST',
         body: data
-      })
+      }),
+      invalidatesTags: ['Movies']
     }),
     updateMovie: builder.mutation({
       query: (id: number | string, data: Partial<Movie>) => ({
         url: `movies/${id}`,
         method: 'PUT',
         body: data
-      })
+      }),
+      invalidatesTags: ['Movies']
     }),
     deleteMovie: builder.mutation({
       query: (id: number | string) => ({
         url: `movies/${id}`,
         method: 'DELETE'
-      })
+      }),
+      invalidatesTags: ['Movies']
     }),
     likeMovie: builder.mutation({
       query: (id: number | string) => ({

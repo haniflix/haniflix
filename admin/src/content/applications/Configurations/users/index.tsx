@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Helmet } from 'react-helmet-async';
 import PageHeader from './PageHeader';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
@@ -32,6 +32,12 @@ import { useAppSelector } from 'src/store/hooks';
 import { selectUser } from 'src/store/reducers/auth';
 import toast from 'react-hot-toast';
 
+import { useFormik } from 'formik';
+import { useDeleteUserMutation, useGetUsersQuery } from 'src/store/rtk-query/usersApi';
+
+import spinnerSvg from 'src/assets/svgs/spinner.svg'
+import UsersSortPopup from 'src/components/SortFilters/UsersSortPopup';
+
 function Users() {
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [items, setItems] = useState<User[]>([]);
@@ -40,6 +46,29 @@ function Users() {
   const client = useApiClient();
   const currentUser = useAppSelector(selectUser);
 
+
+
+  //filter
+  const [showSortFilter, setShowSort] = React.useState(false)
+  const initialFormValues = {
+    activeSort: ''
+  }
+  const formik = useFormik({
+    initialValues: initialFormValues,
+    onSubmit: (values) => {
+    }
+  })
+
+  let queryParams = {
+    ...(formik.values.activeSort && { orderBy: formik.values.activeSort }),
+  }
+
+  const { data: usersData, isLoading: usersLoading } = useGetUsersQuery(queryParams)
+
+  const [deleteUser, deleteUserState] = useDeleteUserMutation()
+
+  console.log('usersData ', usersData)
+
   const getData = useCallback(() => {
     toast.loading('loading...', { position: 'top-right' });
     client.getUsers().then((data) => {
@@ -47,6 +76,8 @@ function Users() {
       setItems(data);
     });
   }, []);
+
+
 
   const getItemFromId = useCallback(
     (id: number | string) => {
@@ -57,12 +88,12 @@ function Users() {
   const deleteItem = useCallback((item) => {
     if (item == null) return;
     toast.loading('loading...', { position: 'top-right' });
-    client
-      .deleteUser(item._id)
+
+    deleteUser(item._id)
       .then(() => {
         toast.dismiss();
         toast.success('deleted', { position: 'top-right' });
-        getData();
+        // getData();
         setToDelete(null);
       })
       .catch((err) => {
@@ -72,9 +103,6 @@ function Users() {
       });
   }, []);
 
-  useEffect(() => {
-    getData();
-  }, []);
 
   useEffect(() => {
     if (toEdit != null) {
@@ -104,11 +132,25 @@ function Users() {
           alignItems="stretch"
           spacing={3}
         >
-          <Grid item xs={12}>
-            <Button variant="contained" onClick={() => setOpenAddModal(true)}>
-              Add user
-            </Button>
-          </Grid>
+          <div className='px-7 flex w-full justify-between'>
+            <div className='flex gap-2'>
+              <Button variant="contained" onClick={() => setOpenAddModal(true)}>
+                Add user
+              </Button>
+              {(usersLoading || deleteUserState.isLoading) ?
+                <img src={spinnerSvg} alt="Spinner" />
+                : undefined}
+            </div>
+
+            <UsersSortPopup
+              open={showSortFilter}
+              onClick={() => setShowSort(!showSortFilter)}
+              initialValues={initialFormValues}
+              formik={formik}
+            />
+
+          </div>
+
           <Grid item xs={12}>
             <TableContainer component={Paper}>
               <Table /*sx={{ minWidth: 650 }}*/ aria-label="simple table">
@@ -121,7 +163,7 @@ function Users() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {items.map((row) => (
+                  {usersData?.map((row) => (
                     <TableRow
                       key={row._id}
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}

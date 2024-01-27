@@ -30,6 +30,7 @@ import { Movie } from '@api/client/dist/movies/types';
 import { TagsInput } from 'react-tag-input-component';
 import toast from 'react-hot-toast';
 import { List } from '@api/client/dist/lists/types';
+import { useCreateListMutation, useUpdateListMutation } from 'src/store/rtk-query/listsApi';
 // import { DatePicker } from '@mui/x-date-pickers';
 
 interface AddMovieProps {
@@ -45,6 +46,9 @@ const AddListForm: React.FC<AddMovieProps> = ({ callback, item }) => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [content, setContent] = useState<Movie[]>([]);
   const client = useApiClient();
+
+  const [updateList, updateListState] = useUpdateListMutation()
+  const [createList, createListState] = useCreateListMutation()
 
   const reset = () => {
     setTitle('');
@@ -85,13 +89,13 @@ const AddListForm: React.FC<AddMovieProps> = ({ callback, item }) => {
       genre
     };
     toast.loading('saving...', { position: 'top-right' });
-    client
-      .createList(data)
+
+    createList(data)
       .then(() => {
         toast.dismiss();
         toast.success('saved', { position: 'top-right' });
         reset();
-        if (callback) callback();
+        // if (callback) callback();
       })
       .catch((err) => {
         toast.dismiss();
@@ -110,12 +114,12 @@ const AddListForm: React.FC<AddMovieProps> = ({ callback, item }) => {
     };
     console.log(data);
     toast.loading('saving...', { position: 'top-right' });
-    client
-      .updateList(item._id, data)
+
+    updateList(item._id, data)
       .then(() => {
         toast.dismiss();
         toast.success('saved', { position: 'top-right' });
-        if (callback) callback();
+        //   if (callback) callback();
       })
       .catch((err) => {
         toast.dismiss();

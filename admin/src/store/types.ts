@@ -46,3 +46,8 @@ export type User = {
   otp: string;
   // lists: [{ type: mongoose.Schema.Types.ObjectId, ref: 'List' }],
 };
+
+export type Pagination = {
+  page?: number;
+  per_page?: number;
+};

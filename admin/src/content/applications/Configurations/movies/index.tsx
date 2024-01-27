@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Helmet } from 'react-helmet-async';
 import PageHeader from './PageHeader';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
@@ -29,6 +29,12 @@ import { Close, Delete, Edit } from '@mui/icons-material';
 import useApiClient from 'src/hooks/useApiClient';
 import { Movie } from '@api/client/dist/movies/types';
 import toast from 'react-hot-toast';
+import { useDeleteMovieMutation, useGetMoviesQuery } from 'src/store/rtk-query/moviesApi';
+import MovieSortPopup from 'src/components/SortFilters/MovieSortPopup';
+
+import { useFormik } from 'formik';
+
+import spinnerSvg from 'src/assets/svgs/spinner.svg'
 
 function Movies() {
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
@@ -37,8 +43,46 @@ function Movies() {
   const [toDelete, setToDelete] = useState<Movie | null>(null);
   const client = useApiClient();
 
+  //filter
+  const [showSortFilter, setShowSort] = React.useState(false)
+  const initialFormValues = {
+    activeSort: ''
+  }
+  const formik = useFormik({
+    initialValues: initialFormValues,
+    onSubmit: (values) => {
+    }
+  })
+
+  let queryParams = {
+    ...(formik.values.activeSort && { orderBy: formik.values.activeSort }),
+  }
+
+  const { data: moviesData, isLoading: moviesLoading } = useGetMoviesQuery(queryParams)
+
+  const [deleteMovie, deleteMovieState] = useDeleteMovieMutation()
+
+  React.useEffect(() => {
+    let getMoviestoastId, deleteMovieToastId;
+
+    if (moviesLoading) {
+      getMoviestoastId = toast.loading('loading...', { position: 'top-right' });
+    }
+
+    if (deleteMovieState.isLoading) {
+      deleteMovieToastId = toast.loading('loading...', { position: 'top-right' });
+    }
+
+    if (!moviesLoading && getMoviestoastId) {
+      toast.dismiss(getMoviestoastId)
+    }
+    if (!deleteMovieState.isLoading && deleteMovieToastId) {
+      toast.dismiss(deleteMovieToastId)
+    }
+  }, [moviesLoading])
+
   const getData = useCallback(() => {
-    toast.loading('loading...', { position: 'top-right' });
+
     client.getMovies().then((data) => {
       toast.dismiss();
       setItems(data);
@@ -53,14 +97,14 @@ function Movies() {
   );
   const deleteItem = useCallback((item) => {
     if (item == null) return;
-    toast.loading('loading...', { position: 'top-right' });
-    client
-      .deleteMovie(item?._id)
+    // toast.loading('loading...', { position: 'top-right' });
+
+    deleteMovie(item?._id)
       .then(() => {
         toast.dismiss();
         toast.success('deleted', { position: 'top-right' });
         setToDelete(null);
-        getData();
+        // getData();
       })
       .catch((err) => {
         toast.dismiss();
@@ -70,9 +114,8 @@ function Movies() {
       });
   }, []);
 
-  useEffect(() => {
-    getData();
-  }, []);
+
+
 
   useEffect(() => {
     if (toEdit != null) {
@@ -102,11 +145,22 @@ function Movies() {
           alignItems="stretch"
           spacing={3}
         >
-          <Grid item xs={12}>
-            <Button variant="contained" onClick={() => setOpenAddModal(true)}>
-              Add movie
-            </Button>
-          </Grid>
+          <div className='px-7 flex w-full justify-between'>
+            <div className='flex gap-2'>
+              <Button variant="contained" onClick={() => setOpenAddModal(true)}>
+                Add movie
+              </Button>
+              {(moviesLoading || deleteMovieState.isLoading) ?
+                <img src={spinnerSvg} alt="Spinner" />
+                : undefined}
+            </div>
+            <MovieSortPopup
+              open={showSortFilter}
+              onClick={() => setShowSort(!showSortFilter)}
+              initialValues={initialFormValues}
+              formik={formik}
+            />
+          </div>
           <Grid item xs={12}>
             <TableContainer component={Paper}>
               <Table /*sx={{ minWidth: 650 }}*/ aria-label="simple table">
@@ -120,7 +174,7 @@ function Movies() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {items.map((row) => (
+                  {moviesData?.map((row) => (
                     <TableRow
                       key={row._id}
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}

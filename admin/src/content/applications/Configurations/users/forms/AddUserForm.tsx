@@ -9,6 +9,7 @@ import {
 import useApiClient from 'src/hooks/useApiClient';
 import { User } from '@api/client/dist/users/types';
 import toast from 'react-hot-toast';
+import { useCreateUserMutation, useUpdateUserMutation } from 'src/store/rtk-query/usersApi';
 
 interface AddTagGroupProps {
   callback?: Function | null;
@@ -21,6 +22,9 @@ const AddUserForm: React.FC<AddTagGroupProps> = ({ callback, item }) => {
   const [password, setPassword] = useState<string>('');
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const client = useApiClient();
+
+  const [createUser, createUserState] = useCreateUserMutation();
+  const [updateUser, updateUserState] = useUpdateUserMutation()
 
   const reset = () => {
     setFullname('');
@@ -35,7 +39,7 @@ const AddUserForm: React.FC<AddTagGroupProps> = ({ callback, item }) => {
     setIsAdmin(user.isAdmin);
   };
 
-  const save = useCallback(() => {
+  const save = useCallback(async () => {
     toast.loading('saving...', { position: 'top-right' });
     const data = {
       fullname,
@@ -44,19 +48,23 @@ const AddUserForm: React.FC<AddTagGroupProps> = ({ callback, item }) => {
       isAdmin,
       password
     };
-    client
-      .createUser(data)
-      .then(() => {
-        callback(data);
-        reset();
-        toast.dismiss();
-        toast.success('saved', { position: 'top-right' });
-      })
-      .catch((err) => {
-        console.error(err);
-        toast.dismiss();
-        toast.error('failed', { position: 'top-right' });
-      });
+
+    const res = await createUser(data)
+
+    console.error("res ", res);
+    // callback(data);
+    if (res?.data) {
+      reset();
+      toast.dismiss();
+      toast.success('saved', { position: 'top-right' });
+    }
+    else {
+
+      toast.dismiss();
+      toast.error('failed', { position: 'top-right' });
+    }
+
+
   }, [fullname, email, password, isAdmin]);
 
   const update = useCallback(() => {
@@ -70,12 +78,12 @@ const AddUserForm: React.FC<AddTagGroupProps> = ({ callback, item }) => {
     };
     if (password.length > 0) data.password = password;
 
-    client
-      .updateUser(item._id, data)
+
+    updateUser(item._id, data)
       .then(() => {
         toast.dismiss();
         toast.success('saved', { position: 'top-right' });
-        callback(data);
+        // callback(data);
         reset();
       })
       .catch((err) => {

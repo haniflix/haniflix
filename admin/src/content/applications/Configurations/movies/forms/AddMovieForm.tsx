@@ -32,6 +32,7 @@ import toast from 'react-hot-toast';
 
 import spinnerSvg from '../../../../../assets/svgs/spinner.svg'
 import { useScrapeWebsiteMutation } from 'src/store/rtk-query/scraperApi';
+import { useCreateMovieMutation, useUpdateMovieMutation } from 'src/store/rtk-query/moviesApi';
 
 
 interface AddMovieProps {
@@ -69,6 +70,9 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
   const [isScraping, setIsScraping] = React.useState<boolean>(false)
 
   const [scrapeWebsiteApi, scrapeWebsiteState] = useScrapeWebsiteMutation()
+
+  const [createMovie, createMovieState] = useCreateMovieMutation()
+  const [updateMovie, updateMovieState] = useUpdateMovieMutation()
 
   // determine if form is in update movie mode
   const isUpdateMode = item == undefined || item == null
@@ -115,12 +119,12 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
       isSeries: isSerie
     };
     toast.loading('saving...', { position: 'top-right' });
-    client
-      .createMovie(data)
+
+    createMovie(data)
       .then(() => {
         toast.dismiss();
         toast.success('saved', { position: 'top-right' });
-        if (callback) callback();
+        //  if (callback) callback();
       })
       .catch((err) => {
         toast.dismiss();
@@ -151,12 +155,12 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
       isSeries: isSerie
     };
     toast.loading('saving...', { position: 'top-right' });
-    client
-      .updateMovie(item._id, data)
+
+    updateMovie(item._id, data)
       .then(() => {
         toast.dismiss();
         toast.success('saved', { position: 'top-right' });
-        if (callback) callback();
+        // if (callback) callback();
       })
       .catch((err) => {
         toast.dismiss();
@@ -374,6 +378,9 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
             </Button>
           )}
         </Box>
+        {(createMovieState.isLoading || updateMovieState.isLoading) ?
+          <img src={spinnerSvg} alt="Spinner" />
+          : undefined}
       </Box>
     </>
   );

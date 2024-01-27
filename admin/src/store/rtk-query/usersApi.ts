@@ -7,7 +7,8 @@ export const usersApi = authApi.injectEndpoints({
       query: (params?: Pagination) => ({
         url: 'users',
         params
-      })
+      }),
+      providesTags: ['Users']
     }),
     getUser: builder.query({
       query: (id: number | string) => ({
@@ -18,15 +19,17 @@ export const usersApi = authApi.injectEndpoints({
       query: (data: Partial<User>) => ({
         url: 'users',
         method: 'POST',
-        body: JSON.stringify(data)
-      })
+        body: data
+      }),
+      invalidatesTags: ['Users']
     }),
     updateUser: builder.mutation({
       query: (id: number | string, data: Partial<User>) => ({
         url: `users/${id}`,
         method: 'PUT',
-        body: JSON.stringify(data)
-      })
+        body: data
+      }),
+      invalidatesTags: ['Users']
     }),
     deleteUser: builder.mutation({
       query: (id: number | string) => ({
