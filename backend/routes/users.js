@@ -5,6 +5,8 @@ const CryptoJS = require("crypto-js");
 const verify = require("../verifyToken");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
+const _ = require("lodash");
+
 //CREATE
 router.post("/", verify, async (req, res) => {
   if (req.user.isAdmin) {
@@ -84,16 +86,39 @@ router.get("/find/:id", async (req, res) => {
 
 //GET ALL
 router.get("/", async (req, res) => {
-  const query = req.query.new;
+  // const query = req.query.new;
   //if(req.user.isAdmin) {
   try {
-    const users = query
-      ? await User.find().sort({ _id: -1 }).limit(5)
-      : await User.find();
+    const params = _.pick(req.query, ["orderBy"]);
+    const orderBy = params.orderBy;
+
+    const aggregationPipeline = []; // Initialize empty pipeline
+
+    // Add sort stage based on "orderBy" parameter
+    switch (orderBy) {
+      case "descAlpha":
+        aggregationPipeline.push({ $sort: { fullname: -1 } });
+        break;
+      case "ascAlpha":
+        aggregationPipeline.push({ $sort: { fullname: 1 } });
+        break;
+    }
+
+    // Ensure at least one pipeline stage
+    if (aggregationPipeline.length === 0) {
+      aggregationPipeline.push({ $match: {} });
+    }
+
+    const users = await User.aggregate(aggregationPipeline);
+
+    console.log("users length", users.length);
+
     res.status(200).json(users);
   } catch (err) {
     //-- throws a 'headers_already_sent' error
-    //res.status(500).json(err);
+    console.log("erro ", err);
+
+    res.status(500).json(err);
   }
   /*} else {
       res.status(403).json("You are not allowed to see all users!");

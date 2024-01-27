@@ -4,6 +4,8 @@ const Movie = require("../models/Movie");
 const MovieLikeDislike = require("../models/MovieLikeDislike");
 const verify = require("../verifyToken");
 
+const _ = require("lodash");
+
 //CREATE
 router.post("/", verify, async (req, res) => {
   if (req.user) {
@@ -110,9 +112,31 @@ router.get("/:id", verify, async (req, res) => {
 //GET ALL
 router.get("/", async (req, res) => {
   try {
-    const movies = await Movie.find();
-    res.status(200).json(movies.reverse());
+    const params = _.pick(req.query, ["orderBy"]);
+    const orderBy = params.orderBy;
+
+    const aggregationPipeline = []; // Initialize empty pipeline
+
+    // Add sort stage based on "orderBy" parameter
+    switch (orderBy) {
+      case "descAlpha":
+        aggregationPipeline.push({ $sort: { title: -1 } });
+        break;
+      case "ascAlpha":
+        aggregationPipeline.push({ $sort: { title: 1 } });
+        break;
+    }
+
+    // Ensure at least one pipeline stage
+    if (aggregationPipeline.length === 0) {
+      aggregationPipeline.push({ $match: {} });
+    }
+
+    const movies = await Movie.aggregate(aggregationPipeline);
+
+    res.status(200).json(movies);
   } catch (err) {
+    console.log("error ", err);
     res.status(500).json(err);
   }
 });

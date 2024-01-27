@@ -3,6 +3,8 @@ const List = require("../models/List");
 const verify = require("../verifyToken");
 const User = require("../models/User");
 
+const _ = require("lodash");
+
 //CREATE
 router.post("/", verify, async (req, res) => {
   try {
@@ -127,18 +129,24 @@ router.get("/", async (req, res) => {
           { $sort: { _id: 1 }},
           { $match: { type: typeQuery, genre: genreQuery, adminList: true } },
         ]);*/
-	list = await List.find({ adminList: true, type: typeQuery, genre: genreQuery }).sort({_id: 1});
+        list = await List.find({
+          adminList: true,
+          type: typeQuery,
+          genre: genreQuery,
+        }).sort({ _id: 1 });
       } else {
         /*list = await List.aggregate([
           { $sample: { size: 10000 } },
           { $sort: { _id: 1 }},
           { $match: { type: typeQuery, adminList: true } },
         ]);*/
-	list = await List.find({ adminList: true, type: typeQuery }).sort({_id: 1});
+        list = await List.find({ adminList: true, type: typeQuery }).sort({
+          _id: 1,
+        });
       }
     } else {
       //list = await List.aggregate([{ $sample: { size: 10 } }]);
-	list = await List.find({ adminList: true }).sort({_id: 1});
+      list = await List.find({ adminList: true }).sort({ _id: 1 });
       /*list = await List.aggregate([
           { $sort: { createdAt: 1 }},
 	  { $sample: { size: 10000 } },
@@ -154,7 +162,29 @@ router.get("/", async (req, res) => {
 
 router.get("/admin-list", verify, async (req, res) => {
   try {
-    const list = await List.find({ adminList: true }).sort({_id: 1});
+    const params = _.pick(req.query, ["orderBy"]);
+    const orderBy = params.orderBy;
+
+    const aggregationPipeline = []; // Initialize empty pipeline
+
+    // match stage
+    aggregationPipeline.push({ $match: { adminList: true } });
+
+    // Add sort stage based on "orderBy" parameter
+    switch (orderBy) {
+      case "descAlpha":
+        aggregationPipeline.push({ $sort: { title: -1 } });
+        break;
+      case "ascAlpha":
+        aggregationPipeline.push({ $sort: { title: 1 } });
+        break;
+      default:
+        aggregationPipeline.push({ $sort: { _id: 1 } });
+        break;
+    }
+
+    const list = await List.aggregate(aggregationPipeline);
+
     res.status(200).json(list);
   } catch (err) {
     console.error(err);
@@ -212,7 +242,7 @@ router.get("/my-list", verify, async (req, res) => {
   }
 });
 
-router.post("/add-movie-to-default-list", verify , async (req, res) => {
+router.post("/add-movie-to-default-list", verify, async (req, res) => {
   try {
     const userEmail = req.body.email;
     const movieId = req.body.movieId; // Assuming you receive the movie ID from the client
