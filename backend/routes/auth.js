@@ -191,6 +191,9 @@ router.post("/login", async (req, res) => {
       { expiresIn: "5d" }
     );
 
+    user.accessToken = accessToken;
+    await user.save();
+
     const { password, ...info } = user._doc;
 
     res.status(200).json({ ...info, accessToken });

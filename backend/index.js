@@ -13,16 +13,11 @@ const morganMiddleware = require("./middleware/morgan");
 
 dotenv.config();
 
-mongoose
-  .connect(process.env.MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-  })
-  .then(() => console.log("DB Connection Successfull"))
-  .catch((err) => {
-    console.error(err);
-  });
+const connectDB = require("./startup/db");
+
+connectDB();
+
+const PORT = process.env.PORT || 8800;
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
@@ -50,6 +45,6 @@ app.use("/api/movies", movieRoute);
 app.use("/api/lists", listRoute);
 app.use("/api/scraper", scraperRoute);
 
-app.listen(8800, () => {
+app.listen(PORT, () => {
   console.log("Backend server is running on port 8800!");
 });

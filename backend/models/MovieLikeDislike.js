@@ -8,7 +8,11 @@ const ListSchema = new mongoose.Schema(
       required: true,
     },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-    isLike: { type: Boolean, required: true },
+    opinion: {
+      type: String,
+      enum: ["dislike", "like", "neutral"],
+      required: true,
+    },
   },
   { timestamps: true }
 );

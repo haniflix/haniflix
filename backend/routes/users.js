@@ -109,6 +109,14 @@ router.get("/", async (req, res) => {
       aggregationPipeline.push({ $match: {} });
     }
 
+    aggregationPipeline.push({
+      $project: {
+        _id: 1,
+        // Exclude accessToken
+        accessToken: 0,
+      },
+    });
+
     const users = await User.aggregate(aggregationPipeline);
 
     console.log("users length", users.length);

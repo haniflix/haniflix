@@ -18,7 +18,15 @@ const popularity = [
     {
         id: "ascAlpha",
         label: 'Ascending Alphabetical'
-    }
+    },
+    {
+        id: 'dateAddedAsc',
+        label: "Date Added Ascending"
+    },
+    {
+        id: 'dateAddedDesc',
+        label: "Date Added Descending"
+    },
 ];
 
 let input_class = 'text-[#03042499] bg-[#fff] focus:text-[#030424] border-2 p-2 px-[20px] font-[400] rounded-[11px] text-[18px] flex items-center h-[44px] min-w-[150px] justify-between'

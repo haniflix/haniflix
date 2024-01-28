@@ -112,10 +112,26 @@ router.get("/:id", verify, async (req, res) => {
 //GET ALL
 router.get("/", async (req, res) => {
   try {
-    const params = _.pick(req.query, ["orderBy"]);
-    const orderBy = params.orderBy;
+    const params = _.pick(req.query, [
+      "orderBy",
+      "perPage",
+      "page",
+      "searchTerm",
+    ]);
+    const { orderBy, perPage = 20, page = 1, searchTerm } = params;
 
-    const aggregationPipeline = []; // Initialize empty pipeline
+    const skip = (parseInt(page) - 1) * perPage; // Calculate skip for pagination
+
+    let aggregationPipeline = [
+      {
+        $match: {
+          title: {
+            $regex: searchTerm, // Match search term in title
+            $options: "i", // Case-insensitive search
+          },
+        },
+      },
+    ]; // Initialize empty pipeline
 
     // Add sort stage based on "orderBy" parameter
     switch (orderBy) {
@@ -127,14 +143,31 @@ router.get("/", async (req, res) => {
         break;
     }
 
-    // Ensure at least one pipeline stage
-    if (aggregationPipeline.length === 0) {
-      aggregationPipeline.push({ $match: {} });
-    }
+    aggregationPipeline = [
+      ...aggregationPipeline,
+      {
+        $lookup: {
+          from: "genres",
+          localField: "genre",
+          foreignField: "_id",
+          as: "genre", // Populate full genre objects
+        },
+      },
+
+      { $skip: skip }, // Apply pagination skip
+      { $limit: parseInt(perPage) }, // Apply pagination limit
+    ];
+
+    const movieCount = await Movie.countDocuments({
+      title: {
+        $regex: searchTerm, // Match search term in title
+        $options: "i", // Case-insensitive search
+      },
+    });
 
     const movies = await Movie.aggregate(aggregationPipeline);
 
-    res.status(200).json(movies);
+    res.status(200).json({ movies, totalMovies: movieCount });
   } catch (err) {
     console.log("error ", err);
     res.status(500).json(err);
@@ -150,24 +183,20 @@ router.post("/:id/like", verify, async (req, res) => {
       user: user._id,
       movie: movie._id,
     });
-    if (movieLikeDislike == null) {
+
+    if (!movieLikeDislike) {
       const like = new MovieLikeDislike({
         user: user._id,
         movie: movie._id,
-        isLike: true,
+        opinion: "like",
       });
       await like.save();
     } else {
-      if (movieLikeDislike.isLike) {
-        await MovieLikeDislike.findByIdAndDelete(movieLikeDislike.id);
-      } else {
-        await MovieLikeDislike.findOneAndUpdate(movieLikeDislike.id, {
-          $set: {
-            isLike: true,
-          },
-        });
-      }
+      movieLikeDislike.opinion = "like";
+      await movieLikeDislike.save();
     }
+
+    res.status(200).json({ success: true });
   } catch (err) {
     console.error(err);
   }
@@ -182,24 +211,20 @@ router.post("/:id/dislike", verify, async (req, res) => {
       user: user._id,
       movie: movie._id,
     });
-    if (movieLikeDislike == null) {
+
+    if (!movieLikeDislike) {
       const dislike = new MovieLikeDislike({
         user: user._id,
         movie: movie._id,
-        isLike: false,
+        opinion: "dislike",
       });
       await dislike.save();
     } else {
-      if (!movieLikeDislike.isLike) {
-        await MovieLikeDislike.findByIdAndDelete(movieLikeDislike.id);
-      } else {
-        await MovieLikeDislike.findOneAndUpdate(movieLikeDislike.id, {
-          $set: {
-            isLike: false,
-          },
-        });
-      }
+      movieLikeDislike.opinion = "dislike";
+      await movieLikeDislike.save();
     }
+
+    res.status(200).json({ success: true });
   } catch (err) {
     console.error(err);
   }

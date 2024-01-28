@@ -13,7 +13,11 @@ const MovieSchema = new mongoose.Schema(
     video: { type: String },
     year: { type: String },
     limit: { type: Number },
-    genre: { type: String },
+    genre: { type: mongoose.Schema.Types.Mixed },
+    //
+    // Use array of Genre references
+    // genre: [{ type: mongoose.Schema.Types.ObjectId, ref: "Genre" }],
+    //
     isSeries: { type: Boolean, default: false },
   },
   { timestamps: true }
