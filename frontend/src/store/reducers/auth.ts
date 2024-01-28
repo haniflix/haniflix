@@ -24,6 +24,7 @@ export const authSlice = createSlice({
       state.user = undefined;
       state.accessToken = undefined;
       state.refreshToken = undefined;
+      state.rememberMe = false;
     },
     updateToken: (state, action) => {
       if (action.payload.accessToken) {
@@ -34,12 +35,13 @@ export const authSlice = createSlice({
   extraReducers: (builder) => {
     builder.addMatcher(
       authApi.endpoints.login.matchFulfilled,
-      (state, { payload }, action) => {
-        if (action?.meta.arg.rememberMe) {
+      (state, action) => {
+        const { payload } = action;
+        state.extras = action;
+        if (action?.meta.arg.originalArgs.rememberMe) {
           state.rememberMe = true;
-          // ... store accessToken and refreshToken if applicable
         }
-        // state.refreshToken = payload.refreshToken;
+
         if (payload.isAdmin == true) {
           state.loggedIn = true;
           state.user = payload;

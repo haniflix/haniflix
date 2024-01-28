@@ -70,7 +70,7 @@ const List: React.FC<ListProps> = ({ list, onDelete, onEdit }) => {
                 <Edit />
               </span>
             ) : null}
-            {user.defaultList !== list._id && onDelete ? (
+            {user?.defaultList !== list?._id && onDelete ? (
               <span style={{ cursor: "pointer" }} onClick={() => onDelete()}>
                 <Delete />
               </span>

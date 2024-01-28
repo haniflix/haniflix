@@ -60,12 +60,15 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
 
   const { dispatch, getState } = api;
 
+  const rememberMe = getState().auth?.rememberMe;
+
   if (result.error && result.error.status === 401) {
     if (result.error.error?.errorName === "loggedElsewhere") {
-      // Handle immediate logout without token refresh
+      dispatch(logoutSuccess());
+    } else if (rememberMe == false) {
       dispatch(logoutSuccess());
     } else {
-      const refreshToken = getState().user?.refreshToken;
+      const refreshToken = getState().auth?.refreshToken;
       await onRefreshToken({ dispatch, refreshToken });
 
       result = await baseQuery(args, api, extraOptions); // Retry with new token

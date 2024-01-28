@@ -11,6 +11,8 @@ import { addClassNames } from "../../store/utils/functions";
 
 import moviePlaceholderSvg from '../../Assets/svgs/moviePlaceholder.svg'
 
+import { useSelector } from 'react-redux'
+import { useGetRandomMoviesMutation } from "../../store/rtk-query/moviesApi";
 
 type MetaInfoItem = {
   text: string
@@ -20,21 +22,29 @@ export default function Featured({ type }) {
   const [content, setContent] = useState<any>({});
   const client = useApiClient();
 
-  const getRandomMovie = useCallback(() => {
-    client
-      .getRandomMovies(type)
-      .then((res) => {
-        setContent(res?.[0]);
-      })
-      .catch((err) => {
-        console.error(err);
-        Swal.fire({
-          title: "Error",
-          text: "An error occurred while fetching content.",
-          icon: "error",
-        });
+  const userReducer = useSelector((state) => state.auth)
+
+  const [getRandomMovieApi, getRandomMovieState] = useGetRandomMoviesMutation()
+
+  const getRandomMovie = useCallback(async () => {
+
+    const res = await getRandomMovieApi(type)
+
+    console.log('res ', res)
+
+    if (Array.isArray(res?.data)) {
+      setContent(res?.data?.[0]);
+    }
+
+    else {
+      Swal.fire({
+        title: "Error",
+        text: "An error occurred while fetching content.",
+        icon: "error",
       });
+    }
   }, [type]);
+
 
   useEffect(() => {
     getRandomMovie();

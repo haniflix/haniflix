@@ -46,6 +46,7 @@ export default function Login() {
   }, [user]);
 
   const onLogin = async (email: string, password: string) => {
+    console.log('{ email, password, rememberMe } ', { email, password, rememberMe })
 
     const res = await login({ email, password, rememberMe })
 
@@ -58,13 +59,13 @@ export default function Login() {
         icon: "success",
         timer: 1500,
       }).then(function () {
-        window.location.href = "/";
+        //   window.location.href = "/";
       });
     }
 
     if (!res?.data) {
       Swal.fire({
-        title: "Error encountered during login",
+        title: res?.error?.data || "Error encountered during login",
         text: res.data,
         icon: "error",
       });
@@ -73,29 +74,21 @@ export default function Login() {
   };
 
   const handleStart = useCallback(() => {
-    if (email.length < 5) {
-      Swal.fire({
-        title: "",
-        icon: "error",
-        text: "Your email is invalid!",
-      }).then((x) => {
-        // emailRef.current.focus();
-      });
-      return false;
-    } else if (!validateEmail(email)) {
+    if (!validateEmail(email)) {
       showSwal("", "Invalid email entered!", "error");
       return false;
-    } else if (password.length < 1) {
+    }
+    if (password.length < 1) {
       showSwal("", "Your passwords is too short!", "error");
       return false;
-    } else {
-      // const user = { email, password };
-      // console.log("user : ", user)
-      // return;
-
-      onLogin(email, password);
     }
-  }, [email, password, emailRef]);
+    // const user = { email, password };
+    // console.log("user : ", user)
+    // return;
+
+    onLogin(email, password);
+
+  }, [email, password, emailRef, rememberMe]);
 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
@@ -129,32 +122,6 @@ export default function Login() {
         </div>
       </div>
 
-      {/*<div className="section">
-        <div className="intro-section">
-          <h1>Welcome to Haniflix</h1>
-          <br />
-          <h3>
-            We are the ultimate streaming service offering unlimited
-            award-winning TV shows, movies, and more in 4k on any device ad-free
-            for only $4.99/month!
-          </h3>
-          <br />
-          Watch anywhere. Cancel anytime.
-          <br />
-          Ready to watch? Scroll down to login.
-          <br></br>
-          <div className="circle pulse arrow-down">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="16"
-              width="12"
-              viewBox="0 0 384 512"
-            >
-              <path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z" />
-            </svg>
-          </div>
-        </div>
-    </div>*/}
 
       <div className="section">
         <div className="intro-section">
@@ -185,7 +152,8 @@ export default function Login() {
               name="rememberMe"
               className="!h-[20px] !w-[20px] rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               checked={rememberMe}
-              onChange={() => setRememberMe(!rememberMe)}
+              onClick={() => setRememberMe(!rememberMe)}
+              onChange={() => { }}
             />
             <label htmlFor="rememberMe" className="text-sm text-gray-600">Remember Me</label>
           </div>

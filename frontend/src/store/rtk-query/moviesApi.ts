@@ -1,72 +1,72 @@
-import { authApi } from './authApi';
-import { Movie } from '../types';
+import { authApi } from "./authApi";
+import { Movie } from "../types";
 
 export const moviesApi = authApi.injectEndpoints({
   endpoints: (builder) => ({
     getMovies: builder.query({
       query: (params?: Pagination) => ({
-        url: 'movies',
-        params
+        url: "movies",
+        params,
       }),
-      providesTags: ['Movies']
+      providesTags: ["Movies"],
     }),
-    getRandomMovies: builder.query({
+    getRandomMovies: builder.mutation({
       query: (type: string | undefined) => ({
-        url: 'movies/random',
-        params: type ? { type } : undefined
-      })
+        url: "movies/random",
+        params: type ? { type } : undefined,
+      }),
     }),
     getMovie: builder.query({
       query: (id: number | string) => ({
-        url: `movies/${id}`
-      })
+        url: `movies/${id}`,
+      }),
     }),
     createMovie: builder.mutation({
       query: (data: Partial<Movie>) => ({
-        url: 'movies',
-        method: 'POST',
-        body: data
+        url: "movies",
+        method: "POST",
+        body: data,
       }),
-      invalidatesTags: ['Movies']
+      invalidatesTags: ["Movies"],
     }),
     updateMovie: builder.mutation({
       query: (id: number | string, data: Partial<Movie>) => ({
         url: `movies/${id}`,
-        method: 'PUT',
-        body: data
+        method: "PUT",
+        body: data,
       }),
-      invalidatesTags: ['Movies']
+      invalidatesTags: ["Movies"],
     }),
     deleteMovie: builder.mutation({
       query: (id: number | string) => ({
         url: `movies/${id}`,
-        method: 'DELETE'
+        method: "DELETE",
       }),
-      invalidatesTags: ['Movies']
+      invalidatesTags: ["Movies"],
     }),
     likeMovie: builder.mutation({
       query: (id: number | string) => ({
         url: `movies/${id}/like`,
-        method: 'POST'
-      })
+        method: "POST",
+      }),
     }),
     dislikeMovie: builder.mutation({
       query: (id: number | string) => ({
         url: `movies/${id}/dislike`,
-        method: 'POST'
-      })
-    })
+        method: "POST",
+      }),
+    }),
   }),
-  overrideExisting: false
+  overrideExisting: false,
 });
 
 export const {
   useGetMoviesQuery,
-  useGetRandomMoviesQuery,
+  useGetRandomMoviesMutation,
   useGetMovieQuery,
   useCreateMovieMutation,
   useUpdateMovieMutation,
   useDeleteMovieMutation,
   useLikeMovieMutation,
-  useDislikeMovieMutation
+  useDislikeMovieMutation,
 } = moviesApi;

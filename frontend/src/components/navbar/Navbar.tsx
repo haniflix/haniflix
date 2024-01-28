@@ -54,13 +54,13 @@ const Navbar = () => {
           <Link className="link" to="/search">
             <Search className="icon" />
           </Link>
-          <span>{user.fullname}</span>
+          <span>{user?.fullname}</span>
           <Notifications className="icon" />
           <img src={NavLogo1} alt="" width="50px" height="50px" />
           <div className="profile">
             <ArrowDropDown className="icon" />
             <div className="options">
-              <span style={{ color: "#000" }}>Hello {user.fullname}!</span>
+              <span style={{ color: "#000" }}>Hello {user?.fullname}!</span>
               <Link className="link" to="/settings">
                 {" "}
                 <span style={{ color: "#000" }}>Settings</span>

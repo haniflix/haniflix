@@ -20,7 +20,7 @@ import { useAppSelector } from "./store/hooks";
 import { selectUser } from "./store/reducers/auth";
 import Welcome from "./pages/welcome/Welcome";
 
-import AppRouter from "./AppRouter";
+import AppRouter from "./router/AppRouter";
 
 import './index.css'
 
