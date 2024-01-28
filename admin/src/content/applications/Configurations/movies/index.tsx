@@ -35,12 +35,19 @@ import MovieSortPopup from 'src/components/SortFilters/MovieSortPopup';
 import { useFormik } from 'formik';
 
 import spinnerSvg from 'src/assets/svgs/spinner.svg'
+import Pagination from 'src/components/Pagination';
+
+import { BiSearch } from "react-icons/bi";
+
 
 function Movies() {
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [items, setItems] = useState<Movie[]>([]);
   const [toEdit, setToEdit] = useState<Movie | null>(null);
   const [toDelete, setToDelete] = useState<Movie | null>(null);
+
+  const [searchTerm, setSearchTerm] = React.useState<string>('')
+
   const client = useApiClient();
 
   //filter
@@ -54,32 +61,25 @@ function Movies() {
     }
   })
 
+  const itemsPerPage = 20;
+  const [page, setPage] = React.useState(1);
+
+
   let queryParams = {
     ...(formik.values.activeSort && { orderBy: formik.values.activeSort }),
+    perPage: itemsPerPage,
+    page,
+    searchTerm
   }
 
   const { data: moviesData, isLoading: moviesLoading } = useGetMoviesQuery(queryParams)
 
   const [deleteMovie, deleteMovieState] = useDeleteMovieMutation()
 
-  React.useEffect(() => {
-    let getMoviestoastId, deleteMovieToastId;
+  const pageCount = moviesData?.totalMovies
+    ? Math.ceil(moviesData.totalMovies / queryParams.perPage)
+    : 0;
 
-    if (moviesLoading) {
-      getMoviestoastId = toast.loading('loading...', { position: 'top-right' });
-    }
-
-    if (deleteMovieState.isLoading) {
-      deleteMovieToastId = toast.loading('loading...', { position: 'top-right' });
-    }
-
-    if (!moviesLoading && getMoviestoastId) {
-      toast.dismiss(getMoviestoastId)
-    }
-    if (!deleteMovieState.isLoading && deleteMovieToastId) {
-      toast.dismiss(deleteMovieToastId)
-    }
-  }, [moviesLoading])
 
   const getData = useCallback(() => {
 
@@ -119,7 +119,8 @@ function Movies() {
 
   useEffect(() => {
     if (toEdit != null) {
-      const item = getItemFromId(toEdit._id);
+      const item = toEdit;
+
       if (item) setOpenAddModal(true);
       else setOpenAddModal(false);
     }
@@ -128,6 +129,23 @@ function Movies() {
   useEffect(() => {
     if (!openAddModal) setToEdit(null);
   }, [openAddModal]);
+
+  const handlePageChange = (data) => {
+    const selectedPage = data?.selected || 0;
+    setPage(selectedPage)
+  };
+
+  // Function to handle changes in searchTerm
+  const handleSearch = (event) => {
+    const term = event.target.value;
+    setSearchTerm(term);
+    setPage(1)
+  };
+
+  let input_class =
+    "text-[#030424] max-w-[400px] mx-4 bg-[#fff] border-2 border-[#E7E7E7] hover:border-[#AAAAAA] focus-within:border-[#AAAAAA] p-2 pl-[22px] font-medium rounded-[11px] text-[18px] flex items-center h-[44px] min-w-[150px] justify-between";
+
+
 
   return (
     <>
@@ -145,14 +163,21 @@ function Movies() {
           alignItems="stretch"
           spacing={3}
         >
-          <div className='px-7 flex w-full justify-between'>
+          <div className='px-7 flex flex-wrap sm:flex-nowrap w-full '>
             <div className='flex gap-2'>
               <Button variant="contained" onClick={() => setOpenAddModal(true)}>
                 Add movie
               </Button>
-              {(moviesLoading || deleteMovieState.isLoading) ?
-                <img src={spinnerSvg} alt="Spinner" />
-                : undefined}
+
+            </div>
+            <div className={`${input_class} flex-1`}>
+              <input
+                placeholder="e.g Spiderman"
+                className="w-full h-full"
+                value={searchTerm ? searchTerm : ""}
+                onChange={handleSearch}
+              />
+              <BiSearch size={22} color="#B3B3B3" />
             </div>
             <MovieSortPopup
               open={showSortFilter}
@@ -160,6 +185,9 @@ function Movies() {
               initialValues={initialFormValues}
               formik={formik}
             />
+            {(moviesLoading || deleteMovieState.isLoading) ?
+              <img src={spinnerSvg} alt="Spinner" />
+              : undefined}
           </div>
           <Grid item xs={12}>
             <TableContainer component={Paper}>
@@ -174,7 +202,7 @@ function Movies() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {moviesData?.map((row) => (
+                  {moviesData?.movies?.map((row) => (
                     <TableRow
                       key={row._id}
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -189,7 +217,11 @@ function Movies() {
                         {row.isSeries ? 'Yes' : 'No'}
                       </TableCell>
                       <TableCell align="right">
-                        {row.genre}
+                        {row.genre?.map((_genre, index) => {
+                          return <span>
+                            {' '}{_genre?.title}{row.genre.length != (index + 1) ? ',' : undefined}
+                          </span>
+                        })}
                         {/*row.tags?.map((tag) => (
                           <Chip
                             key={tag.id}
@@ -219,6 +251,13 @@ function Movies() {
                 </TableBody>
               </Table>
             </TableContainer>
+            <div className={"flex items-center justify-center"}>
+              <Pagination
+                onPageChange={handlePageChange}
+                pageCount={pageCount}
+                itemsPerPage={itemsPerPage}
+              />
+            </div>
           </Grid>
         </Grid>
         <Drawer
@@ -252,7 +291,7 @@ function Movies() {
             <Box padding={5}>
               <AddMovieForm
                 callback={getData}
-                item={toEdit ? getItemFromId(toEdit._id) : null}
+                item={toEdit ? toEdit : null}
               />
             </Box>
           </Box>

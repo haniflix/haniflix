@@ -106,7 +106,7 @@ function Users() {
 
   useEffect(() => {
     if (toEdit != null) {
-      const item = getItemFromId(toEdit._id);
+      const item = toEdit
       if (item) setOpenAddModal(true);
       else setOpenAddModal(false);
     }
@@ -238,7 +238,7 @@ function Users() {
             <Box padding={5}>
               <AddExamForm
                 callback={getData}
-                item={toEdit ? getItemFromId(toEdit._id) : null}
+                item={toEdit ? toEdit : null}
               />
             </Box>
           </Box>

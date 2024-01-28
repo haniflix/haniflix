@@ -97,10 +97,19 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
     setImageLink(movie.img);
     setYear(movie.year);
     setTrailerLink(movie.trailer);
-    setGenres(movie?.genre?.split(',') ?? []);
+
     setIsSerie(movie?.isSeries ?? false);
     setDuration(movie.duration)
     setAgeRating(movie.ageRating)
+
+    const movieGenresStringArr = []
+    movie.genre?.forEach((_genre) => {
+      movieGenresStringArr.push(_genre?.title)
+    })
+
+    setGenres(movieGenresStringArr || []);
+
+
     // setName(tagGroup.name);
     // setDescription(tagGroup.description);
     // setTags(tagGroup?.tags ? [...tagGroup.tags] : []);
@@ -115,7 +124,7 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
       imgTitle: imageLink,
       trailer: trailerLink,
       year,
-      genre: genres.join(','),
+      // genre: genres.join(','),
       isSeries: isSerie
     };
     toast.loading('saving...', { position: 'top-right' });
@@ -151,7 +160,7 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
       imgTitle: imageLink,
       trailer: trailerLink,
       year,
-      genre: genres.join(','),
+      //genre: genres.join(','),
       isSeries: isSerie
     };
     toast.loading('saving...', { position: 'top-right' });
@@ -206,7 +215,7 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
       setDescription(newMovieDetails.description);
       setImageLink(newMovieDetails.imageUrl);
       setYear(newMovieDetails.yearOfRelease);
-      setGenres(newMovieDetails?.genre);
+      // setGenres(newMovieDetails?.genre);
       setScrapeUrl('')
       setAgeRating(newMovieDetails.ageRating)
       setDuration(newMovieDetails.duration)
