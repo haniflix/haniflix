@@ -166,13 +166,13 @@ router.post("/login", async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
 
     if (!user) {
-      res.status(200).json("Wrong email provided!");
+      res.status(400).json("Wrong email provided!");
       return;
     }
 
     if (user.emailVerified === false) {
       res
-        .status(200)
+        .status(400)
         .json("Your email address is not verified! Check your inbox.");
       return;
     }
@@ -181,7 +181,7 @@ router.post("/login", async (req, res) => {
     const originalPassword = bytes.toString(CryptoJS.enc.Utf8);
 
     if (originalPassword !== req.body.password) {
-      res.status(200).json("Wrong password or username!");
+      res.status(400).json("Wrong password or username!");
       return;
     }
 
