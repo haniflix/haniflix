@@ -1,31 +1,40 @@
 const User = require("../../models/User");
 const Movie = require("../../models/Movie");
-const MovieLikeDislike = require("../../models/MovieLikeDislike");
+const MovieLike = require("../../models/MovieLikes");
 
 const likeMovie = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
     const movie = await Movie.findById(req.params.id);
-    const movieLikeDislike = await MovieLikeDislike.findOne({
+    let movieLike = await MovieLike.findOne({
       user: user._id,
       movie: movie._id,
     });
 
-    if (!movieLikeDislike) {
-      const like = new MovieLikeDislike({
+    if (!movieLike) {
+      // If the user has not expressed any opinion yet, create a new MovieLike document
+      movieLike = new MovieLike({
         user: user._id,
         movie: movie._id,
-        opinion: "like",
+        like: true,
+        dislike: false,
       });
-      await like.save();
+      await movieLike.save();
     } else {
-      movieLikeDislike.opinion = "like";
-      await movieLikeDislike.save();
+      // Toggle the like field if it's true, otherwise set like to true and dislike to false
+      if (movieLike.like) {
+        movieLike.like = false;
+      } else {
+        movieLike.like = true;
+        movieLike.dislike = false;
+      }
+      await movieLike.save();
     }
 
     res.status(200).json({ success: true });
   } catch (err) {
     console.error(err);
+    res.status(500).json({ success: false, error: "Internal Server Error" });
   }
 };
 

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const ListSchema = new mongoose.Schema(
+const MovieLikeSchema = new mongoose.Schema(
   {
     movie: {
       type: mongoose.Schema.Types.ObjectId,
@@ -8,13 +8,18 @@ const ListSchema = new mongoose.Schema(
       required: true,
     },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-    opinion: {
-      type: String,
-      enum: ["dislike", "like", "neutral"],
+    like: {
+      type: Boolean,
+      required: true,
+    },
+    dislike: {
+      type: Boolean,
       required: true,
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("MovieLikeDislike", ListSchema);
+MovieLikeSchema.index({ movie: 1, user: 1 }, { unique: true });
+
+module.exports = mongoose.model("MovieLike", MovieLikeSchema);

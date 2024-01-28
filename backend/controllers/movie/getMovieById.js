@@ -1,17 +1,21 @@
 const Movie = require("../../models/Movie");
-const MovieLikeDislike = require("../../models/MovieLikeDislike");
+const MovieLike = require("../../models/MovieLikes");
 
 const getMovieById = async (req, res) => {
   //router.get("/find/:id", verify, async (req, res) => {
   try {
-    const movieLikeDislike = await MovieLikeDislike.findOne({
-      user: req.user.id,
-      movie: req.params.id,
-    });
     const movie = await Movie.findById(req.params.id);
-    const m = movie?.toObject();
-    m.like = movieLikeDislike?.isLike;
-    res.status(200).json(m);
+
+    // Count likes and dislikes using aggregation
+    const [likesCount, dislikesCount] = await Promise.all([
+      MovieLike.countDocuments({ movie: movie._id, like: true }),
+      MovieLike.countDocuments({ movie: movie._id, dislike: true }),
+    ]);
+
+    // Add likesCount and dislikesCount to the movie object
+    const responseMovie = { ...movie.toObject(), likesCount, dislikesCount };
+
+    res.status(200).json(responseMovie);
   } catch (err) {
     console.error(err);
     res.status(500).json(err);
