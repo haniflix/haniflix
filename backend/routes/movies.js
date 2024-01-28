@@ -122,16 +122,18 @@ router.get("/", async (req, res) => {
 
     const skip = (parseInt(page) - 1) * perPage; // Calculate skip for pagination
 
-    let aggregationPipeline = [
-      {
+    let aggregationPipeline = []; // Initialize empty pipeline
+
+    if (searchTerm) {
+      aggregationPipeline.push({
         $match: {
           title: {
             $regex: searchTerm, // Match search term in title
             $options: "i", // Case-insensitive search
           },
         },
-      },
-    ]; // Initialize empty pipeline
+      });
+    }
 
     // Add sort stage based on "orderBy" parameter
     switch (orderBy) {
@@ -140,6 +142,12 @@ router.get("/", async (req, res) => {
         break;
       case "ascAlpha":
         aggregationPipeline.push({ $sort: { title: 1 } });
+        break;
+      case "dateAddedAsc":
+        aggregationPipeline.push({ $sort: { createdAt: 1 } }); // Sort by createdAt in ascending order
+        break;
+      case "dateAddedDesc":
+        aggregationPipeline.push({ $sort: { createdAt: -1 } }); // Sort by createdAt in descending order
         break;
     }
 
