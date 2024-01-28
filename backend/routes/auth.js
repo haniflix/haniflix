@@ -188,7 +188,12 @@ router.post("/login", async (req, res) => {
     const accessToken = jwt.sign(
       { id: user._id, isAdmin: user.isAdmin },
       process.env.SECRET_KEY,
-      { expiresIn: "5d" }
+      { expiresIn: "1d" } // Adjust access token expiration time
+    );
+    const refreshToken = jwt.sign(
+      { id: user._id },
+      process.env.REFRESH_TOKEN_SECRET,
+      { expiresIn: "30d" } // Adjust refresh token expiration time
     );
 
     user.accessToken = accessToken;
@@ -196,9 +201,46 @@ router.post("/login", async (req, res) => {
 
     const { password, ...info } = user._doc;
 
-    res.status(200).json({ ...info, accessToken });
+    res.status(200).json({ ...info, accessToken, refreshToken });
   } catch (err) {
     res.status(201).json(err);
+  }
+});
+
+//refresh token
+router.post("/refreshToken", async (req, res) => {
+  try {
+    // 1. Verify refresh token
+    const refreshToken = req.body.refreshToken;
+    if (!refreshToken) {
+      return res.status(400).json({ error: "Refresh token is required" });
+    }
+
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const userId = decoded.id;
+
+    // 2. Find user and check for valid refresh token
+    const user = await User.findById(userId);
+    if (!user || user.accessToken !== refreshToken) {
+      return res.status(401).json({ error: "Invalid refresh token" });
+    }
+
+    // 3. Generate new access token
+    const accessToken = jwt.sign(
+      { id: user._id, isAdmin: user.isAdmin },
+      process.env.SECRET_KEY,
+      { expiresIn: "5d" } // Adjust expiration time as needed
+    );
+
+    // 4. Update accessToken in user document
+    user.accessToken = accessToken;
+    await user.save();
+
+    // 5. Send response with new access token
+    res.json({ accessToken });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
   }
 });
 

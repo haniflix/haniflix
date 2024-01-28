@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const List = require("../models/List");
-const verify = require("../verifyToken");
+const verify = require("../middleware/verifyToken");
 const User = require("../models/User");
 
 const _ = require("lodash");

@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const puppeteer = require("puppeteer");
 
-const verify = require("../verifyToken");
+const verify = require("../middleware/verifyToken");
 
 //CREATE
 router.post("/scrape", verify, async (req, res) => {

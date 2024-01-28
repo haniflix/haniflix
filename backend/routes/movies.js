@@ -2,7 +2,7 @@ const router = require("express").Router();
 const User = require("../models/User");
 const Movie = require("../models/Movie");
 const MovieLikeDislike = require("../models/MovieLikeDislike");
-const verify = require("../verifyToken");
+const verify = require("../middleware/verifyToken");
 
 const _ = require("lodash");
 
@@ -168,7 +168,7 @@ router.get("/", async (req, res) => {
 
     const movieCount = await Movie.countDocuments({
       title: {
-        $regex: searchTerm, // Match search term in title
+        $regex: searchTerm || "", // Match search term in title
         $options: "i", // Case-insensitive search
       },
     });

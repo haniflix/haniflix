@@ -2,7 +2,7 @@ const router = require("express").Router();
 const User = require("../models/User");
 
 const CryptoJS = require("crypto-js");
-const verify = require("../verifyToken");
+const verify = require("../middleware/verifyToken");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const _ = require("lodash");
