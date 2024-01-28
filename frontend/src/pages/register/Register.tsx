@@ -63,6 +63,12 @@ const Register = () => {
     setShowPaymentForm(true);
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleStart(); // Trigger login on Enter key press
+    }
+  }
+
   const showSwal = (title, message, type) => {
     Swal.fire({
       title: title ?? "",
@@ -124,10 +130,10 @@ const Register = () => {
               name="email"
               value={values.email}
               onChange={handleChange}
-              //error={touched.email && Boolean(errors.email)}
-              //helpertext={touched.email && errors.email}
-              //margin="normal"
-              //variant="outlined"
+            //error={touched.email && Boolean(errors.email)}
+            //helpertext={touched.email && errors.email}
+            //margin="normal"
+            //variant="outlined"
             />
 
             <input
@@ -138,10 +144,10 @@ const Register = () => {
               placeholder="Password"
               value={values.password}
               onChange={handleChange}
-              //error={touched.password && Boolean(errors.password)}
-              //helpertext={touched.password && errors.password}
-              //margin="normal"
-              //variant="outlined"
+            //error={touched.password && Boolean(errors.password)}
+            //helpertext={touched.password && errors.password}
+            //margin="normal"
+            //variant="outlined"
             />
 
             <input
@@ -156,6 +162,7 @@ const Register = () => {
               //helpertext={touched.repeatPassword && errors.repeatPassword}
               //margin="normal"
               //variant="outlined"
+              onKeyDown={handleKeyDown}
             />
 
             <button

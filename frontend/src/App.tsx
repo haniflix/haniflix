@@ -17,53 +17,19 @@ import {
 } from "react-router-dom";
 import MyLists from "./pages/my-lists/MyLists";
 import { useAppSelector } from "./store/hooks";
-import { selectUser } from "./store/auth";
+import { selectUser } from "./store/reducers/auth";
 import Welcome from "./pages/welcome/Welcome";
+
+import AppRouter from "./AppRouter";
+
+import './index.css'
 
 const App = () => {
   const user = useAppSelector(selectUser);
 
   return (
     <>
-      <Router>
-        <Routes>
-          <Route path="/" element={user ? <Home /> : <Welcome />} />
-          <Route
-            path="/register"
-            element={user ? <Navigate to="/" /> : <Register />}
-          />
-          <Route
-            path="/forgot-pass"
-            element={user ? <Navigate to="/" /> : <ForgotPassword />}
-          />
-          <Route
-            path="/change-password/:id/:email"
-            element={user ? <Navigate to="/" /> : <ChangePassword />}
-          />
-          <Route
-            path="/login"
-            element={user ? <Navigate to="/" /> : <Login />}
-          />
-          <Route path="/verify" element={<Verify />} />
-          {user && (
-            <>
-              <Route path="/movies" element={<Home type="movies" />} />
-
-              <Route path="/series" element={<Home type="series" />} />
-
-              <Route path="/watch/:id" element={<Watch />} />
-
-              <Route path="/my-list" element={<MyLists />} />
-
-              <Route path="/new-and-popular" element={<Home />} />
-
-              <Route path="/search" element={<SearchPage />} />
-
-              <Route path="/settings" element={<AccSettings />} />
-            </>
-          )}
-        </Routes>
-      </Router>
+      <AppRouter />
       <CookieConsent
         disableButtonStyles
         buttonClasses="gradientButton"

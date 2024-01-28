@@ -23,7 +23,7 @@ import Navbar from "../../components/navbar/Navbar";
 import List from "../../components/list/List";
 import useApiClient from "../../hooks/useApiClient";
 import { useAppSelector } from "../../store/hooks";
-import { selectUser } from "../../store/auth";
+import { selectUser } from "../../store/reducers/auth";
 import Swal from "sweetalert2";
 
 const api_url = import.meta.env.VITE_APP_API_URL;

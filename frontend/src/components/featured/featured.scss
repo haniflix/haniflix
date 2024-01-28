@@ -1,7 +1,7 @@
 .featured {
     height: 100vh;
     position: relative;
-    background: #000;
+    //background: #000;
 
     .category {
         position: absolute;
@@ -39,7 +39,6 @@
         display: flex;
         flex-direction: column;
         background: #000b;
-        padding: 15px;
         line-height: 1.2;
         box-sizing: border-box;
         border-radius: 50px;
@@ -69,7 +68,7 @@
             margin: auto;
 
             button {
-                padding: 10px 20px;
+                padding: 7px 14px;
                 border: none;
                 border-radius: 5px;
                 display: flex;
@@ -115,9 +114,7 @@
 }
 
 @media only screen and (max-width: 768px) {
-    .featured .info img{
-        display: none !important;
-    }
+
 
     .featured .info .desc {
         color: #ddd !important;
@@ -134,7 +131,7 @@
         padding: 20px 10px;
     }
     .desc-title{
-        font-weight: bolder;   
+        font-weight: bolder;
         display: block;
         text-align: center;
     }

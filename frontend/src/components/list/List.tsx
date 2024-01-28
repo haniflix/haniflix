@@ -10,7 +10,7 @@ import "react-multi-carousel/lib/styles.css";
 import ListItem from "../listItem/ListItem";
 import "./list.scss";
 import { useAppSelector } from "../../store/hooks";
-import { selectUser } from "../../store/auth";
+import { selectUser } from "../../store/reducers/auth";
 
 interface ListProps {
   list: any;

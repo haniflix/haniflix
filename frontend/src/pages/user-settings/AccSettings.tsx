@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import Navbar from "../../components/navbar/Navbar";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { selectUser, setUser } from "../../store/auth";
+import { selectUser, setUser } from "../../store/reducers/auth";
 import useApiClient from "../../hooks/useApiClient";
 import Swal from "sweetalert2";
 import { Close } from "@mui/icons-material";

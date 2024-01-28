@@ -8,7 +8,7 @@ import "../../Assets/css/styles.scss";
 import landingBg from "../../Assets/Images/landing-bg.png";
 import useApiClient from "../../hooks/useApiClient";
 import { useDispatch } from "react-redux";
-import { selectUser, setUser } from "../../store/auth";
+import { selectUser, setUser } from "../../store/reducers/auth";
 import { useAppSelector } from "../../store/hooks";
 
 export default function Login() {
@@ -106,6 +106,12 @@ export default function Login() {
     }
   }, [email, password, emailRef]);
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      handleStart(); // Trigger login on Enter key press
+    }
+  };
+
   return (
     <div
       className="loginNew"
@@ -177,6 +183,7 @@ export default function Login() {
             // ref={passwordRef}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
           <button className="loginButton" onClick={handleStart}>
             Sign In

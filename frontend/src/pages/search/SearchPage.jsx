@@ -5,7 +5,7 @@ import Navbar from "../../components/navbar/Navbar";
 const SearchPage = () => {
   return (
     <div>
-      <Navbar/>
+      <Navbar />
       <Searchresults />
     </div>
   );

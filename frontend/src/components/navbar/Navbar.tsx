@@ -4,14 +4,18 @@ import NavLogo1 from "../../Assets/Images/Nav-logo.png";
 import "./navbar.scss";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { selectUser, setUser } from "../../store/auth";
+import { selectUser, setUser } from "../../store/reducers/auth";
 import { useDispatch } from "react-redux";
+
+import { useNavigate } from 'react-router-dom'
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const user = useAppSelector(selectUser);
   // const userName = user?.fullname;
   const dispatch = useAppDispatch();
+
+  const navigate = useNavigate()
 
   window.onscroll = () => {
     setIsScrolled(window.pageYOffset === 0 ? false : true);
@@ -20,9 +24,8 @@ const Navbar = () => {
 
   const logout = () => {
     dispatch(setUser(null));
-    // localStorage.removeItem("user");
-    // localStorage.removeItem("userEmail");
-    // window.location.href = "/login";
+
+
     window.location.href = "/";
   };
 
@@ -70,7 +73,9 @@ const Navbar = () => {
         </div>
       </div>
       <div className="mobile-header">
-        <div className="mobile-logo-cont">
+        <div
+          onClick={() => navigate('/')}
+          className="mobile-logo-cont cursor-pointer">
           <img src={NavLogo1} alt="" className="mobile-logo" />
         </div>
         <div
@@ -90,6 +95,7 @@ const Navbar = () => {
             xmlns="http://www.w3.org/2000/svg"
             height="1em"
             viewBox="0 0 448 512"
+            fill='#fff'
           >
             <path d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z" />
           </svg>

@@ -1,6 +1,6 @@
 import ApiClient from "@api/client";
 import { useAppSelector } from "../store/hooks";
-import { selectUser } from "../store/auth";
+import { selectUser } from "../store/reducers/auth";
 
 const useApiClient = () => {
   const user = useAppSelector(selectUser);

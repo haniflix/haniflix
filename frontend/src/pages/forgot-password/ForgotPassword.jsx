@@ -1,59 +1,58 @@
 import { useRef } from "react";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 import Logo from "../../Assets/Images/Nav-logo.png";
 import "../../Assets/css/styles.scss";
 import "./forgot.scss";
 import { forgot } from "../../context/forgot/apiCalls";
 import { Link } from "react-router-dom";
 
-const validateEmail = email => {
+const validateEmail = (email) => {
   var emailReg = /^([\w-.]+@([\w-]+\.)+[\w-]{2,6})?$/;
-  return emailReg.test( email );
-}
+  return emailReg.test(email);
+};
 
 const showSwal = (title, message, type) => {
   Swal.fire({
-    title: title ?? '',
+    title: title ?? "",
     text: message,
     icon: type,
   });
-}
+};
 
 export default function ForgotPassword() {
   const emailRef = useRef();
 
-
   const handleStart = () => {
-
-    if ( emailRef.current.value.length < 5 ){
-      Swal.fire({ title: '', icon: "error", text: "Your email is invalid!"  }).then(x => { emailRef.current.focus(); });
+    if (emailRef.current.value.length < 5) {
+      Swal.fire({
+        title: "",
+        icon: "error",
+        text: "Your email is invalid!",
+      }).then((x) => {
+        emailRef.current.focus();
+      });
       return false;
-    }
-
-
-    else if ( !validateEmail(emailRef.current.value) ) {
+    } else if (!validateEmail(emailRef.current.value)) {
       showSwal("", "Invalid email entered!", "error");
       return false;
-    }
-
-
-    else{
-
+    } else {
       const user = {
         username: emailRef.current.value,
         email: emailRef.current.value,
-      }
+      };
 
       forgot(user);
-
     }
-
   };
- 
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleStart(); // Trigger login on Enter key press
+    }
+  };
 
   return (
     <div className="loginNew">
-
       <div className="top">
         <div className="wrapper">
           <a href={"/"} className="link">
@@ -82,16 +81,28 @@ export default function ForgotPassword() {
   </div>*/}
 
       <div className="section">
-          <div className="intro-section">
-              <h2>Forgot Password</h2>
-              <input type="email" placeholder="Email" style={{color:"#000"}} ref={emailRef}/>
-              <button className="registerButton" style={{color: "#fff"}}onClick={handleStart}>Send Link</button>
-              <br/>
-              <Link className="link text-dark" to={{ pathname: "/login" }}> Remember your password? Login</Link>
-          </div>
+        <div className="intro-section">
+          <h2>Forgot Password</h2>
+          <input
+            type="email"
+            placeholder="Email"
+            style={{ color: "#000" }}
+            ref={emailRef}
+            onKeyDown={handleKeyDown}
+          />
+          <button
+            className="registerButton"
+            style={{ color: "#fff" }}
+            onClick={handleStart}
+          >
+            Send Link
+          </button>
+          <br />
+          <Link className="link text-dark" to={{ pathname: "/login" }}>
+            Remember your password? Login
+          </Link>
+        </div>
       </div>
-
     </div>
-    
   );
 }

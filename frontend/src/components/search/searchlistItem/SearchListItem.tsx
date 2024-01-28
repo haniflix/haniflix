@@ -14,6 +14,8 @@ import {
 } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 
+import moviePlaceHolderSvg from '../../../Assets/svgs/moviePlaceholder.svg'
+
 export default function SearchListItem({ movie }) {
   // Trim the description to a maximum of 100 characters
   const trimmedDesc =
@@ -21,16 +23,27 @@ export default function SearchListItem({ movie }) {
       ? `${movie.desc.slice(0, 80)}...`
       : movie?.desc;
 
+  const renderGenres = () => {
+
+    return (<div>
+      {movie?.genre?.map((_genre) => {
+        return <span>{_genre}</span>
+      })}
+    </div>)
+  }
+
   return (
     <Card>
       <Link to={`/watch/${movie._id}`}>
-        <CardMedia
-          component="img"
-          alt={movie?.title}
-          height="200"
-          image={movie?.img}
-          title={movie?.title}
-        />
+        <div className='h-[200px]'>
+          <CardMedia
+            component="img"
+            className='h-full'
+            alt={movie?.title}
+            image={movie?.img ? movie?.img : moviePlaceHolderSvg}
+            title={movie?.title}
+          />
+        </div>
       </Link>
       <CardContent>
         <Typography variant="h6" component="div">
@@ -43,7 +56,9 @@ export default function SearchListItem({ movie }) {
           {trimmedDesc}
         </Typography>
         <Typography variant="body2" color="textSecondary">
-          Genre: {movie?.genre}
+          Genre: {
+            renderGenres()
+          }
         </Typography>
       </CardContent>
       <CardActions>
