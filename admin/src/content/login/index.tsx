@@ -11,7 +11,7 @@ import { Helmet } from 'react-helmet-async';
 import { styled } from '@mui/material/styles';
 import Logo from 'src/components/LogoSign';
 import Hero from './Hero';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import useApiClient from 'src/hooks/useApiClient';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import { selectUser, setUser } from 'src/store/reducers/auth';
@@ -39,6 +39,8 @@ function Login() {
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const passwordInputRef = useRef(null);
 
 
   //rtk
@@ -76,6 +78,12 @@ function Login() {
     };
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      onLogin();
+    }
+  };
+
   return (
     <OverviewWrapper>
       <Helmet>
@@ -101,6 +109,12 @@ function Login() {
               label="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              onKeyDown={(event) => {
+                console.log('evn ', passwordInputRef.current)
+                if (event.key === 'Enter') {
+                  passwordInputRef.current?.focus()
+                }
+              }}
               required
               fullWidth
             />
@@ -109,6 +123,8 @@ function Login() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              inputRef={passwordInputRef}
+              onKeyDown={handleKeyDown}
               required
               fullWidth
             />
