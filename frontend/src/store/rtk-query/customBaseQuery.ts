@@ -1,23 +1,45 @@
 // @ts-nocheck
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-import { updateToken } from '../reducers/auth';
+import { updateToken } from "../reducers/auth";
 
 const BASE_URL =
-  import.meta.env.VITE_BASE_API_URL || 'http://localhost:8800/api/';
+  import.meta.env.VITE_BASE_API_URL || "http://localhost:8800/api/";
 
 const logoutSuccess = () => {
   return {
-    type: 'user/logout'
+    type: "user/logout",
   };
 };
 
-const onRefreshToken = async (dispatch) => {
-  // dispatch(
-  //   updateToken({
-  //     accessToken: ''
-  //   })
-  // );
+const onRefreshToken = async ({ dispatch, refreshToken }) => {
+  try {
+    const refreshToken = localStorage.getItem("refreshToken"); // Retrieve refresh token from storage
+
+    if (!refreshToken) {
+      return dispatch(logoutSuccess()); // Handle missing refresh token
+    }
+
+    const response = await fetch(`${BASE_URL}auth/refreshToken`, {
+      method: "POST",
+      body: JSON.stringify({ refreshToken }),
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      dispatch(
+        updateToken({
+          accessToken: data?.accessToken,
+        })
+      ); // Update access token in store
+    } else {
+      dispatch(logoutSuccess()); // Handle refresh token failure
+    }
+  } catch (error) {
+    console.error("Error refreshing token:", error);
+    dispatch(logoutSuccess()); // Logout on error
+  }
 };
 
 const baseQuery = fetchBaseQuery({
@@ -27,10 +49,10 @@ const baseQuery = fetchBaseQuery({
     const accessToken = authState?.user?.accessToken;
 
     if (accessToken) {
-      headers.set('token', `Bearer ${accessToken}`);
+      headers.set("token", `Bearer ${accessToken}`);
     }
     return headers;
-  }
+  },
 });
 
 export const baseQueryWithReauth = async (args, api, extraOptions) => {
@@ -39,8 +61,15 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
   const { dispatch, getState } = api;
 
   if (result.error && result.error.status === 401) {
-    // dispatch(logoutSuccess());
-    await onRefreshToken(dispatch);
+    if (result.error.error?.errorName === "loggedElsewhere") {
+      // Handle immediate logout without token refresh
+      dispatch(logoutSuccess());
+    } else {
+      const refreshToken = getState().user?.refreshToken;
+      await onRefreshToken({ dispatch, refreshToken });
+
+      result = await baseQuery(args, api, extraOptions); // Retry with new token
+    }
   }
   return result;
 };

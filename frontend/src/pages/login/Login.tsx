@@ -10,6 +10,7 @@ import useApiClient from "../../hooks/useApiClient";
 import { useDispatch } from "react-redux";
 import { selectUser, setUser } from "../../store/reducers/auth";
 import { useAppSelector } from "../../store/hooks";
+import { useLoginMutation } from "../../store/rtk-query/authApi";
 
 export default function Login() {
   const emailRef = useRef();
@@ -19,6 +20,10 @@ export default function Login() {
   const client = useApiClient();
   const dispatch = useDispatch();
   const user = useAppSelector(selectUser);
+
+  const [rememberMe, setRememberMe] = useState(false);
+
+  const [login, loginState] = useLoginMutation()
 
   const showSwal = (title, message, type) => {
     Swal.fire({
@@ -40,45 +45,31 @@ export default function Login() {
     }
   }, [user]);
 
-  const login = (email: string, password: string) => {
-    client
-      .login({ email, password })
-      .then((res) => {
-        try {
-          if (
-            res === "Wrong email provided!" ||
-            res === "Wrong password or username!" ||
-            res === "Your email address is not verified! Check your inbox."
-          ) {
-            Swal.fire({
-              title: "Oops",
-              text: res.data,
-              icon: "error",
-            });
-          }
+  const onLogin = async (email: string, password: string) => {
 
-          if (res.accessToken) {
-            console.log("user : ", res);
-            dispatch(setUser(res));
-            // localStorage.setItem("user", JSON.stringify(res.data));
-            // console.log(res.data);
+    const res = await login({ email, password, rememberMe })
 
-            Swal.fire({
-              title: "",
-              text: "Login successful. Redirecting..",
-              icon: "success",
-              timer: 1500,
-            }).then(function () {
-              window.location.href = "/";
-            });
-          }
-        } catch (err) {
-          return err;
-        }
-      })
-      .catch((err) => {
-        console.error(err);
+    console.log('res ', res)
+
+    if (res?.data) {
+      Swal.fire({
+        title: "",
+        text: "Login successful. Redirecting..",
+        icon: "success",
+        timer: 1500,
+      }).then(function () {
+        window.location.href = "/";
       });
+    }
+
+    if (!res?.data) {
+      Swal.fire({
+        title: "Error encountered during login",
+        text: res.data,
+        icon: "error",
+      });
+    }
+
   };
 
   const handleStart = useCallback(() => {
@@ -102,7 +93,7 @@ export default function Login() {
       // console.log("user : ", user)
       // return;
 
-      login(email, password);
+      onLogin(email, password);
     }
   }, [email, password, emailRef]);
 
@@ -188,6 +179,16 @@ export default function Login() {
           <button className="loginButton" onClick={handleStart}>
             Sign In
           </button>
+          <div className='flex items-center gap-2 w-[fit-content]'>
+            <input
+              type="checkbox"
+              name="rememberMe"
+              className="!h-[20px] !w-[20px] rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              checked={rememberMe}
+              onChange={() => setRememberMe(!rememberMe)}
+            />
+            <label htmlFor="rememberMe" className="text-sm text-gray-600">Remember Me</label>
+          </div>
           <br />
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>

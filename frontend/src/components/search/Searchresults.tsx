@@ -73,8 +73,6 @@ const Searchresults = () => {
     setSearch(searchString);
   };
 
-  console.log('moviesData ', moviesData)
-
   const filteredMovies = React.useMemo(() => {
     if (search?.trim() == '') return []
 
