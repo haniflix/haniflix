@@ -79,7 +79,7 @@ const AddUserForm: React.FC<AddTagGroupProps> = ({ callback, item }) => {
     if (password.length > 0) data.password = password;
 
 
-    updateUser(item._id, data)
+    updateUser({ itemId: item._id, data })
       .then(() => {
         toast.dismiss();
         toast.success('saved', { position: 'top-right' });

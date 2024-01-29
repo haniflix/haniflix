@@ -115,7 +115,7 @@ const AddListForm: React.FC<AddMovieProps> = ({ callback, item }) => {
     console.log(data);
     toast.loading('saving...', { position: 'top-right' });
 
-    updateList(item._id, data)
+    updateList({ itemId: item._id, data })
       .then(() => {
         toast.dismiss();
         toast.success('saved', { position: 'top-right' });

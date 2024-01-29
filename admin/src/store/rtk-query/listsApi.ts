@@ -25,7 +25,7 @@ export const listsApi = authApi.injectEndpoints({
       invalidatesTags: ['Lists']
     }),
     updateList: builder.mutation({
-      query: (id: number | string, data: Partial<List>) => ({
+      query: ({ itemId, data }) => ({
         url: `lists/${id}`,
         method: 'PUT',
         body: data
