@@ -24,10 +24,10 @@ function verify(req, res, next) {
         .then((user) => {
           if (!user || user.accessToken !== token) {
             // User logged in on another device
-            return res.status(401).json({
-              error: "User logged in on another device",
-              errorName: "loggedElsewhere",
-            });
+            // return res.status(401).json({
+            //   error: "User logged in on another device",
+            //   errorName: "loggedElsewhere",
+            // });
           }
           req.user = user;
           next();
