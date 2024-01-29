@@ -45,7 +45,7 @@ connectDB();
 
 const PORT = process.env.PORT || 8800;
 
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+// const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 app.use(express.json());
 

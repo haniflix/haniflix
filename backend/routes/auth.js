@@ -203,7 +203,7 @@ router.post("/login", async (req, res) => {
 
     res.status(200).json({ ...info, accessToken, refreshToken });
   } catch (err) {
-    res.status(201).json(err);
+    res.status(400).json(err);
   }
 });
 

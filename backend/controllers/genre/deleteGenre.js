@@ -2,7 +2,7 @@ const Genre = require("../../models/Genre");
 
 const deleteGenre = async (req, res) => {
   try {
-    await Genre.findByIdAndDelete(req.params.id);
+    const deletedGenre = await Genre.findByIdAndDelete(req.params.id);
     res.status(200).json({
       message: "The genre has been deleted...",
     });
