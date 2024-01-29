@@ -33,6 +33,7 @@ import toast from 'react-hot-toast';
 import spinnerSvg from '../../../../../assets/svgs/spinner.svg'
 import { useScrapeWebsiteMutation } from 'src/store/rtk-query/scraperApi';
 import { useCreateMovieMutation, useUpdateMovieMutation } from 'src/store/rtk-query/moviesApi';
+import GenresDropdown from 'src/components/GenresDropdown';
 
 
 interface AddMovieProps {
@@ -74,6 +75,9 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
   const [createMovie, createMovieState] = useCreateMovieMutation()
   const [updateMovie, updateMovieState] = useUpdateMovieMutation()
 
+  //genres
+  const [genreObjs, setGenreObjs] = React.useState<any[]>([])
+
   // determine if form is in update movie mode
   const isUpdateMode = item == undefined || item == null
 
@@ -102,12 +106,12 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
     setDuration(movie.duration)
     setAgeRating(movie.ageRating)
 
-    const movieGenresStringArr = []
-    movie.genre?.forEach((_genre) => {
-      movieGenresStringArr.push(_genre?.title)
-    })
+    // const movieGenresStringArr = []
+    // movie.genre?.forEach((_genre) => {
+    //   movieGenresStringArr.push(_genre?.title)
+    // })
 
-    setGenres(movieGenresStringArr || []);
+    setGenreObjs(movie.genre);
 
 
     // setName(tagGroup.name);
@@ -152,6 +156,9 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
   ]);
 
   const update = useCallback(() => {
+
+    const genreIds = genreObjs?.map((genreObj) => genreObj?._id)
+
     const data = {
       title,
       desc: description,
@@ -160,7 +167,9 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
       imgTitle: imageLink,
       trailer: trailerLink,
       year,
-      //genre: genres.join(','),
+      genre: [
+        ...genreIds
+      ],
       isSeries: isSerie
     };
     toast.loading('saving...', { position: 'top-right' });
@@ -215,10 +224,27 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
       setDescription(newMovieDetails.description);
       setImageLink(newMovieDetails.imageUrl);
       setYear(newMovieDetails.yearOfRelease);
-      // setGenres(newMovieDetails?.genre);
+
       setScrapeUrl('')
       setAgeRating(newMovieDetails.ageRating)
       setDuration(newMovieDetails.duration)
+
+      //genres
+      if (typeof newMovieDetails?.genre == string) {
+        let newGenres = []
+
+        let strToArry = newMovieDetails?.genre?.split(',')
+
+        strToArry?.forEach((_str) => {
+          newGenres.push({
+            id: Date.now(),
+            type: 'new',
+            title: _str
+          })
+        })
+
+        setGenreObjs(newGenres);
+      }
     }
 
   }
@@ -353,6 +379,7 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
           value={year}
           onChange={(date) => setYear(date)}
         />*/}
+
         <Box
           margin={1}
           sx={{
@@ -360,7 +387,10 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
           }}
         >
           <Typography>Genres</Typography>
-          <TagsInput value={genres} onChange={(tags) => setGenres(tags)} />
+          <GenresDropdown
+            setGenres={setGenreObjs}
+            genres={genreObjs}
+          />
         </Box>
 
         <Box

@@ -110,7 +110,6 @@ function Login() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               onKeyDown={(event) => {
-                console.log('evn ', passwordInputRef.current)
                 if (event.key === 'Enter') {
                   passwordInputRef.current?.focus()
                 }
