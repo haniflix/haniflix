@@ -4,9 +4,11 @@ const http = require("http");
 const dotenv = require("dotenv");
 const authRoute = require("./routes/auth");
 const userRoute = require("./routes/users");
+const genreRoute = require("./routes/genres");
 const movieRoute = require("./routes/movies");
 const listRoute = require("./routes/lists");
 const scraperRoute = require("./routes/scraper");
+
 const cors = require("cors");
 
 const socketio = require("socket.io");
@@ -55,6 +57,7 @@ app.use(cors({ origin: allowed_ips, optionsSuccessStatus: 200 }));
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/movies", movieRoute);
+app.use("/api/genre", genreRoute);
 app.use("/api/lists", listRoute);
 app.use("/api/scraper", scraperRoute);
 
