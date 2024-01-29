@@ -30,8 +30,8 @@ export const moviesApi = authApi.injectEndpoints({
       invalidatesTags: ['Movies']
     }),
     updateMovie: builder.mutation({
-      query: (id: number | string, data: Partial<Movie>) => ({
-        url: `movies/${id}`,
+      query: ({ itemId, data }) => ({
+        url: `movies/${itemId}`,
         method: 'PUT',
         body: data
       }),

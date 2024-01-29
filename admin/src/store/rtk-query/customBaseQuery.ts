@@ -8,7 +8,7 @@ const BASE_URL =
 
 const logoutSuccess = () => {
   return {
-    type: 'user/logout'
+    type: 'auth/logout'
   };
 };
 

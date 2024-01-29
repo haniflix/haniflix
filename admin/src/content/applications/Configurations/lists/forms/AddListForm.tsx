@@ -74,7 +74,7 @@ const AddListForm: React.FC<AddMovieProps> = ({ callback, item }) => {
     client
       .getMovies()
       .then((res) => {
-        setMovies(res);
+        setMovies(res?.movies);
       })
       .catch((err) => {
         console.error(err);

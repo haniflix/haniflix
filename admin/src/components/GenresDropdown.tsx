@@ -2,6 +2,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 import React, { useState } from 'react';
 import { useCreateGenreMutation, useDeleteGenreMutation, useGetGenresQuery } from 'src/store/rtk-query/genresApi';
 
+import toast from 'react-hot-toast';
 
 type Props = {
     setGenres: React.Dispatch<any>;
@@ -45,8 +46,6 @@ function GenresDropdown(props: Props) {
     const handleAddGenre = async () => {
         const newGenre = { id: Date.now(), type: 'new', title: searchTerm };
 
-        console.log('newGenre ', newGenre)
-
         // Create the genre on the server using createGenreMutation
         const res = await createGenreMutation(newGenre)
 
@@ -66,14 +65,21 @@ function GenresDropdown(props: Props) {
     };
 
     const handleDeleteGenre = async (genreId) => {
+
         // Delete the genre on the server using deleteGenreMutation
         const res = await deleteGenreMutation(genreId)
 
         if (res?.data) {
-            alert('genre deleted')
+            toast.success('Genre deleted', { position: 'top-right' });
+
+            //update Genres tags selection
+            let newGenres = [...genres]
+            newGenres = newGenres.filter((genre) => genre?._id != genreId)
+            setGenres(newGenres)
 
         } else {
-            alert('Error deleting genre')
+            toast.error('Error deleting genre', { position: 'top-right' });
+
         }
 
         setGenreToDelete(null)
@@ -93,7 +99,7 @@ function GenresDropdown(props: Props) {
             <div className='flex flex-wrap gap-2'>
                 {genres?.map((_genre) => {
                     return (
-                        <div key={_genre?.id} className='flex items-center gap-2 bg-[#e5e7eb] text-sm p-2 rounded-[20px] text-black  '>
+                        <div key={_genre?._id} className='flex items-center gap-2 bg-[#e5e7eb] text-sm p-2 rounded-[20px] text-black  '>
                             <div> {_genre?.title}</div>
                             <div
                                 onClick={() => onRemoveFromeSelected(_genre?._id)}
@@ -104,9 +110,6 @@ function GenresDropdown(props: Props) {
             </div>
         )
     }
-
-    console.log('isDropdownOpen ', isDropdownOpen)
-
 
     return (
         <div className="relative">

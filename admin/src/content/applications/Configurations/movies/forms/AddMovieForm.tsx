@@ -111,6 +111,8 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
     //   movieGenresStringArr.push(_genre?.title)
     // })
 
+    console.log('movie ', movie)
+
     setGenreObjs(movie.genre);
 
 
@@ -119,7 +121,7 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
     // setTags(tagGroup?.tags ? [...tagGroup.tags] : []);
   };
 
-  const save = useCallback(() => {
+  const save = useCallback(async () => {
     const data = {
       title,
       desc: description,
@@ -128,22 +130,24 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
       imgTitle: imageLink,
       trailer: trailerLink,
       year,
-      // genre: genres.join(','),
+      genre: genreObjs,
       isSeries: isSerie
     };
     toast.loading('saving...', { position: 'top-right' });
 
-    createMovie(data)
-      .then(() => {
-        toast.dismiss();
-        toast.success('saved', { position: 'top-right' });
-        //  if (callback) callback();
-      })
-      .catch((err) => {
-        toast.dismiss();
-        toast.error('failed', { position: 'top-right' });
-        console.error(err);
-      });
+    const res = await createMovie(data)
+    // .then(() => {
+    if (res?.data) {
+      toast.dismiss();
+      toast.success('saved', { position: 'top-right' });
+    }
+
+    else {
+      toast.dismiss();
+      toast.error('failed', { position: 'top-right' });
+      console.error(res);
+    }
+    // });
   }, [
     title,
     description,
@@ -152,10 +156,11 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
     year,
     trailerLink,
     genres,
-    isSerie
+    isSerie,
+    genreObjs
   ]);
 
-  const update = useCallback(() => {
+  const update = async () => {
 
     const genreIds = genreObjs?.map((genreObj) => genreObj?._id)
 
@@ -172,30 +177,28 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
       ],
       isSeries: isSerie
     };
+
+
     toast.loading('saving...', { position: 'top-right' });
 
-    updateMovie(item._id, data)
-      .then(() => {
-        toast.dismiss();
-        toast.success('saved', { position: 'top-right' });
-        // if (callback) callback();
-      })
-      .catch((err) => {
-        toast.dismiss();
-        toast.error('failed', { position: 'top-right' });
-        console.error(err);
-      });
-  }, [
-    title,
-    description,
-    videoLink,
-    imageLink,
-    year,
-    trailerLink,
-    genres,
-    item,
-    isSerie
-  ]);
+    const res = await updateMovie({ itemId: item._id, data })
+
+    console.log('genreObjs ', genreObjs)
+
+    console.log('item._id, data ', item._id, data)
+
+    if (res?.data) {
+      toast.dismiss();
+      toast.success('saved', { position: 'top-right' });
+    }
+
+    else {
+      toast.dismiss();
+      toast.error('failed', { position: 'top-right' });
+      console.error(res);
+    }
+  }
+
 
   useEffect(() => {
     if (item != null) {
@@ -229,15 +232,16 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
       setAgeRating(newMovieDetails.ageRating)
       setDuration(newMovieDetails.duration)
 
+
       //genres
-      if (typeof newMovieDetails?.genre == string) {
+      if (Array.isArray(newMovieDetails?.genre)) {
         let newGenres = []
 
-        let strToArry = newMovieDetails?.genre?.split(',')
+        let strToArry = newMovieDetails?.genre
 
         strToArry?.forEach((_str) => {
           newGenres.push({
-            id: Date.now(),
+            _id: `${Date.now()}${Math.random() * 1000}`,
             type: 'new',
             title: _str
           })
