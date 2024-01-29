@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import "./login.scss";
 import Swal from "sweetalert2";
 import Logo from "../../Assets/Images/Nav-logo.png";
@@ -12,6 +12,8 @@ import { selectUser, setUser } from "../../store/reducers/auth";
 import { useAppSelector } from "../../store/hooks";
 import { useLoginMutation } from "../../store/rtk-query/authApi";
 
+import SocketContext from "../../context/SocketContext";
+
 export default function Login() {
   const emailRef = useRef();
   // const passwordRef = useRef();
@@ -24,6 +26,8 @@ export default function Login() {
   const [rememberMe, setRememberMe] = useState(false);
 
   const [login, loginState] = useLoginMutation()
+
+  const { handleUserLogin } = React.useContext(SocketContext)
 
   const showSwal = (title, message, type) => {
     Swal.fire({
@@ -46,13 +50,11 @@ export default function Login() {
   }, [user]);
 
   const onLogin = async (email: string, password: string) => {
-    console.log('{ email, password, rememberMe } ', { email, password, rememberMe })
-
     const res = await login({ email, password, rememberMe })
 
-    console.log('res ', res)
 
     if (res?.data) {
+
       Swal.fire({
         title: "",
         text: "Login successful. Redirecting..",

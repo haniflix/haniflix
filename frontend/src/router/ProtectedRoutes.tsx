@@ -4,12 +4,13 @@ import { useAppSelector } from "../store/hooks";
 import { selectUser } from "../store/reducers/auth";
 
 const ProtectedRoutes = () => {
-
     const user = useAppSelector(selectUser);
 
 
     return (
-        user ? <Outlet /> : <Navigate to="/login" />
+        user ?
+            <Outlet />
+            : <Navigate to="/login" />
     )
 }
 

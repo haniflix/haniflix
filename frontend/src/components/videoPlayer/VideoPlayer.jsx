@@ -1,21 +1,54 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactPlayer from "react-player";
 
+import io from "socket.io-client";
+import { useSelector } from "react-redux";
+import SocketContext from "../../context/SocketContext";
+
 const VideoPlayer = ({ videoId, videoUrl }) => {
   const [playtime, setPlaytime] = useState(0);
   const [seekTime, setSeekTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const playerRef = useRef(null);
 
+  const authReducer = useSelector((state) => state.auth);
+
+  const { socket } = React.useContext(SocketContext);
+
   // Load saved playtime from localStorage on component mount
   useEffect(() => {
-    const savedPlaytime = parseFloat(localStorage.getItem(`videoPlaytime_${videoId}`));
+    const savedPlaytime = parseFloat(
+      localStorage.getItem(`videoPlaytime_${videoId}`)
+    );
     if (!isNaN(savedPlaytime) && savedPlaytime <= duration) {
       setPlaytime(savedPlaytime);
       setSeekTime(savedPlaytime);
       playerRef.current.seekTo(savedPlaytime);
     }
   }, [videoId, duration]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const watchedPercentage = Math.floor((playtime / duration) * 100);
+      socket?.emit("updateMovieProgress", {
+        movieId: videoId,
+        watchedPercentage,
+        userId: authReducer?.user?._id,
+      }); // Emit event using Socket.IO
+    }, 10000);
+
+    return () => {
+      clearInterval(intervalId);
+
+      const watchedPercentage = Math.floor((playtime / duration) * 100);
+
+      socket?.emit("updateMovieProgress", {
+        movieId: videoId,
+        watchedPercentage,
+        userId: authReducer?.user?._id,
+      });
+    };
+  }, [playtime, duration]);
 
   // Set the video duration once it's available
   const handleDuration = (videoDuration) => {
@@ -28,7 +61,10 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
 
     if (!playerRef.current.isSeeking) {
       setSeekTime(playedSeconds);
-      localStorage.setItem(`videoPlaytime_${videoId}`, playedSeconds.toString());
+      localStorage.setItem(
+        `videoPlaytime_${videoId}`,
+        playedSeconds.toString()
+      );
     }
   };
 

@@ -21,6 +21,7 @@ import { selectUser } from "../store/reducers/auth";
 import Welcome from "../pages/welcome/Welcome";
 import ProtectedRoutes from "./ProtectedRoutes";
 import GuestRoutes from "./GuestRoutes";
+import { SocketProvider } from "../context/SocketContext";
 
 
 
@@ -29,30 +30,32 @@ const AppRouter = (props) => {
     const user = useAppSelector(selectUser);
 
     return (
-        <Router>
-            <Routes>
-                <Route element={<ProtectedRoutes />}>
-                    <Route index element={<Home />} />
-                    <Route path="movies" element={<Home type="movies" />} />
-                    <Route path="series" element={<Home type="series" />} />
-                    <Route path="new-and-popular" element={<Home />} />
-                    <Route path="watch/:id" element={<Watch />} />
-                    <Route path="my-list" element={<MyLists />} />
-                    <Route path="search" element={<SearchPage />} />
-                    <Route path="settings" element={<AccSettings />} />
-                </Route>
+        <SocketProvider>
+            <Router>
+                <Routes>
+                    <Route element={<ProtectedRoutes />}>
+                        <Route index element={<Home />} />
+                        <Route path="movies" element={<Home type="movies" />} />
+                        <Route path="series" element={<Home type="series" />} />
+                        <Route path="new-and-popular" element={<Home />} />
+                        <Route path="watch/:id" element={<Watch />} />
+                        <Route path="my-list" element={<MyLists />} />
+                        <Route path="search" element={<SearchPage />} />
+                        <Route path="settings" element={<AccSettings />} />
+                    </Route>
 
-                <Route element={<GuestRoutes />}>
-                    <Route index element={<Welcome />} />
-                    <Route path="register" element={<Register />} />
-                    <Route path="forgot-pass" element={<ForgotPassword />} />
-                    <Route path="change-password/:id/:email" element={<ChangePassword />} />
-                    <Route path="login" element={<Login />} />
-                    <Route path="verify" element={<Verify />} />
-                </Route>
+                    <Route element={<GuestRoutes />}>
+                        <Route index element={<Welcome />} />
+                        <Route path="register" element={<Register />} />
+                        <Route path="forgot-pass" element={<ForgotPassword />} />
+                        <Route path="change-password/:id/:email" element={<ChangePassword />} />
+                        <Route path="login" element={<Login />} />
+                        <Route path="verify" element={<Verify />} />
+                    </Route>
 
-            </Routes>
-        </Router>
+                </Routes>
+            </Router>
+        </SocketProvider>
     )
 }
 

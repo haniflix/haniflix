@@ -8,7 +8,7 @@ const BASE_URL =
 
 const logoutSuccess = () => {
   return {
-    type: "user/logout",
+    type: "auth/logout",
   };
 };
 
@@ -63,7 +63,8 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
   const rememberMe = getState().auth?.rememberMe;
 
   if (result.error && result.error.status === 401) {
-    if (result.error.error?.errorName === "loggedElsewhere") {
+    if (result.error?.data?.errorName === "loggedElsewhere") {
+      alert("You are logged in on another device");
       dispatch(logoutSuccess());
     } else if (rememberMe == false) {
       dispatch(logoutSuccess());

@@ -11,7 +11,8 @@ export default function Watch() {
   const [movie, setMovie] = useState<any>(null);
   const client = useApiClient();
   const params = useParams();
-  console.log(movie);
+
+
   const getMovie = (id: string) => {
     client
       .getMovie(id)

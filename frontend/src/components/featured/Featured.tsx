@@ -135,9 +135,6 @@ export default function Featured({ type }) {
     }*/
   }, [content, client]);
 
-  console.log('content ', content)
-
-
   const renderLikeContainer = () => {
 
     return (
@@ -180,7 +177,9 @@ export default function Featured({ type }) {
       >
         {metaInfo?.map((info) => {
           return (
-            <div className='px-3 py-2 bg-[#ffffff29] rounded-[30px] text-sm'>
+            <div
+              key={info?.text}
+              className='px-3 py-2 bg-[#ffffff29] rounded-[30px] text-sm'>
               {info.text}
             </div>
           )
