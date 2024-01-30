@@ -32,6 +32,7 @@ import { logout } from '../store/reducers/auth'
 import { useDispatch } from 'react-redux'
 
 import Swal from 'sweetalert2'
+import GenrePage from '../pages/genres/GenrePage';
 
 
 const AppRouter = (props) => {
@@ -73,6 +74,7 @@ const AppRouter = (props) => {
                     <Route path="watch/:id" element={<Watch />} />
                     <Route path="my-list" element={<MyLists />} />
                     <Route path="search" element={<SearchPage />} />
+                    <Route path="genre/:id" element={<GenrePage />} />
                     <Route path="settings" element={<AccSettings />} />
                 </Route>
 

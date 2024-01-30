@@ -3,6 +3,8 @@ const Movie = require("../../models/Movie");
 
 const _ = require("lodash");
 
+const mongoose = require("mongoose");
+
 const getMovies = async (req, res) => {
   try {
     const params = _.pick(req.query, [
@@ -10,9 +12,9 @@ const getMovies = async (req, res) => {
       "perPage",
       "page",
       "searchTerm",
-      "genre",
+      "genreId",
     ]);
-    const { orderBy, perPage = 20, page = 1, searchTerm, genre } = params;
+    const { orderBy, perPage = 20, page = 1, searchTerm, genreId } = params;
 
     const skip = (parseInt(page) - 1) * perPage; // Calculate skip for pagination
 
@@ -25,6 +27,15 @@ const getMovies = async (req, res) => {
             $regex: searchTerm, // Match search term in title
             $options: "i", // Case-insensitive search
           },
+        },
+      });
+    }
+
+    // Filter by genre if genreId is provided
+    if (genreId) {
+      aggregationPipeline.push({
+        $match: {
+          genre: mongoose.Types.ObjectId(genreId),
         },
       });
     }
@@ -103,20 +114,36 @@ const getMovies = async (req, res) => {
         },
       },
 
+      // Calculate total count before limit
+      {
+        $group: {
+          _id: null,
+          total: { $sum: 1 },
+          movies: { $push: "$$ROOT" },
+        },
+      },
+
+      // Unwind the movies array to restore the original structure
+      { $unwind: "$movies" },
+
       //
       //PAGINATION
       { $skip: skip }, // Apply pagination skip
       { $limit: parseInt(perPage) }, // Apply pagination limit
     ];
 
-    const movieCount = await Movie.countDocuments({
-      title: {
-        $regex: searchTerm || "", // Match search term in title
-        $options: "i", // Case-insensitive search
-      },
-    });
+    // const movieCount = await Movie.countDocuments({
+    //   title: {
+    //     $regex: searchTerm || "", // Match search term in title
+    //     $options: "i", // Case-insensitive search
+    //   },
+    // });
 
-    const movies = await Movie.aggregate(aggregationPipeline);
+    const result = await Movie.aggregate(aggregationPipeline);
+
+    // Extract total count and movies array from the result
+    const totalCountWithQuery = result[0] ? result[0].total : 0;
+    const movies = result.map((item) => item.movies);
 
     const currentUser = req.user;
 
@@ -146,7 +173,7 @@ const getMovies = async (req, res) => {
       delete movie.dislikesData;
     });
 
-    res.status(200).json({ movies, totalMovies: movieCount });
+    res.status(200).json({ movies, totalMovies: totalCountWithQuery });
   } catch (err) {
     console.log("error ", err);
     res.status(500).json(err);

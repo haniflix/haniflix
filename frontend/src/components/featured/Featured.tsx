@@ -69,6 +69,8 @@ export default function Featured({ type }) {
     //     "imgTitle": "https://img.yts.mx/assets/images/movies/Twilight_New_Moon_2009/medium-cover.jpg",
     //     "trailer": "",
     //     "year": "2009",
+    //     "duration": '3hrs 30m',
+    //     "ageRating": "PG 13",
     //     "genre": [
     //       "65b66808f4c51c32d74acc53",
     //       "65b6689a5d44d7333eca29ab",
@@ -258,18 +260,25 @@ export default function Featured({ type }) {
   return (
     <div className={
       addClassNames(
-        "featured ",
+        "featured relative",
+        "h-[105vh] flex flex-col justify-center",
         movieData?.img ? '' : 'bg-gradient-to-b from-teal-500 to-gray-900'
       )
     }>
 
       {movieData?.img ? (
         <img src={movieData?.img} alt=""
-          className=" w-full h-full"
+          className="w-full h-full absolute top-0 bottom-0 right-0 left-0"
           loading="lazy" />
       ) : null}
-      <div className="info p-[13px] sm:p-[20px] min-h-[400px]">
-        <div className="w-[150px] h-[250px] ">
+      <div className={
+        addClassNames(
+          "info z-[100] p-[13px] sm:p-[20px] min-h-[400px]",
+          'mt-[100px] sm:w-[43vw]',
+          'sm:ml-[70px]'
+        )
+      }>
+        <div className="w-[150px] h-[250px]">
           <img
             className="w-full h-full"
             src={movieData?.imgTitle ? movieData?.imgTitle : moviePlaceholderSvg}
@@ -282,7 +291,7 @@ export default function Featured({ type }) {
           <span id="desc-title">{movieData?.title}</span>
           {trimmedDesc}
         </span>
-        <div className="flex justify-between">
+        <div className="flex justify-between flex-wrap">
           <div className="buttons">
             <Link
               to={`/watch/${movieData?._id}`}

@@ -57,7 +57,6 @@ const setupSocket = (io) => {
 
     socket.on("updateMovieProgress", async (data) => {
       const { movieId, watchedPercentage, userId } = data;
-      console.log('"updateMovieProgress" called ');
       // check every progress update
       checkLoginElsewhere(socket);
 
