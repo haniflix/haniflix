@@ -6,6 +6,7 @@ const SearchPage = () => {
   return (
     <div>
       <Navbar />
+      <div className="sm:h-[60px]" />
       <Searchresults />
     </div>
   );

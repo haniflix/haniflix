@@ -269,6 +269,9 @@ const MyLists = () => {
   return (
     <>
       <Navbar />
+      <div
+        className='sm:h-[60px]'
+      />
       <Container sx={styles.root}>
         <Paper sx={styles.contentContainer}>
           <Typography variant="h4" style={styles.contentHeading}>
