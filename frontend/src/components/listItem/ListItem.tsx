@@ -65,7 +65,7 @@ export default function ListItem({ index, item }) {
   const like = useCallback(() => {
     client
       .likeMovie(item)
-      .then(() => {})
+      .then(() => { })
       .catch((err) => {
         console.error(err);
       });
@@ -74,7 +74,7 @@ export default function ListItem({ index, item }) {
   const dislike = useCallback(() => {
     client
       .dislikeMovie(item)
-      .then(() => {})
+      .then(() => { })
       .catch((err) => {
         console.error(err);
       });

@@ -11,6 +11,7 @@ import {
   ArrowForwardIosOutlined,
 } from "@mui/icons-material";
 import ListItem from "../../components/listItem/ListItem";
+import { useGetContinueWatchingListQuery } from "../../store/rtk-query/listsApi";
 const List = lazy(() => import("../../components/list/List"));
 
 const api_url = import.meta.env.VITE_APP_API_URL;
@@ -21,6 +22,8 @@ const Home = ({ type = null }) => {
   const client = useApiClient();
   //const [movies, setMovies] = useState([]);
 
+  const { data: continueWatchingListData, isLoading: continueWatchingLoading } = useGetContinueWatchingListQuery()
+  console.log('continueWatchingListData ', continueWatchingListData)
   const getRandomLists = useCallback(
     (type: string, genre: string) => {
       client
@@ -54,24 +57,7 @@ const Home = ({ type = null }) => {
   useEffect(() => {
     getRandomLists(type, genre);
     // getRandomMovies(type);
-    /*const getRandomLists = async () => {
-      try {
-        const res = await axios.get(
-          `${api_url}lists${type ? '?type=' + type : ''}${genre ? '&genre=' + genre : ''}`,
-          {
-            headers: {
-              token: '',
-            },
-          }
-        );
-        // Filter out lists with a user property
-        const filteredLists = res.data.filter((list) => !list.user);
-        setLists(filteredLists);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getRandomLists();*/
+
   }, [type, genre]);
 
   const responsive = {
@@ -117,6 +103,16 @@ const Home = ({ type = null }) => {
       <Suspense
         fallback={<div style={{ backgroundColor: "black" }}>Loading...</div>}
       >
+        {
+          continueWatchingListData ?
+            <div>
+              <div className="text-white font-bold text-2xl mt-6">
+                Continue Watching
+              </div>
+              <List list={continueWatchingListData?.list} />
+            </div>
+            : undefined
+        }
         {lists?.map((list) => (
           <List key={list._id} list={list} />
         ))}

@@ -57,6 +57,7 @@ const setupSocket = (io) => {
     socket.on("updateMovieProgress", async (data) => {
       const { movieId, watchedPercentage, userId } = data;
 
+      console.log("movie ", watchedPercentage);
       // check every progress update
       checkLoginElsewhere(socket);
 
@@ -68,6 +69,7 @@ const setupSocket = (io) => {
             content: movieId,
           });
         } else {
+          console.log("movieId ", movieId);
           // Find or create the user's ContinueWatchingList document
           const continueWatchingList =
             await ContinueWatchingList.findOneAndUpdate(
@@ -78,6 +80,8 @@ const setupSocket = (io) => {
               },
               { upsert: true, new: true }
             );
+
+          console.log("continueWatchingList ", continueWatchingList);
         }
       } catch (error) {
         console.error("Error updating progress:", error);

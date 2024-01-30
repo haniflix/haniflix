@@ -88,9 +88,11 @@ const List: React.FC<ListProps> = ({ list, onDelete, onEdit }) => {
               <ArrowForwardIosOutlined className="sliderArrow right" />
             }
           >
-            {list?.content?.map((item, i) => (
-              <ListItem key={i} index={i} item={item} />
-            ))}
+            {list?.content?.map((item, i) => {
+
+              if (!item) return;
+              return <ListItem key={i} index={i} item={item} />
+            })}
           </Carousel>
         </div>
       </div>

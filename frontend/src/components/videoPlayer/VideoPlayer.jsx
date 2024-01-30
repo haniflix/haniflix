@@ -15,6 +15,9 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
 
   const { socket } = React.useContext(SocketContext);
 
+  //time tracker for emitter
+  const lastEmitTimeRef = useRef(0);
+
   // Load saved playtime from localStorage on component mount
   useEffect(() => {
     const savedPlaytime = parseFloat(
@@ -28,27 +31,38 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
   }, [videoId, duration]);
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      const watchedPercentage = Math.floor((playtime / duration) * 100);
-      socket?.emit("updateMovieProgress", {
-        movieId: videoId,
-        watchedPercentage,
-        userId: authReducer?.user?._id,
-      }); // Emit event using Socket.IO
-    }, 10000);
+    if (!socket) return;
+
+    const watchedPercentage = Math.floor((playtime / duration) * 100);
+
+    const currentTime = Date.now();
+    const timeDifference = currentTime - lastEmitTimeRef.current;
+
+    if (!isNaN(watchedPercentage)) {
+      // Check if the last emit was more than 5 seconds ago
+      if (timeDifference > 5 * 1000) {
+        socket?.emit("updateMovieProgress", {
+          movieId: videoId,
+          watchedPercentage,
+          userId: authReducer?.user?._id,
+        });
+        // Update the last emit time
+        lastEmitTimeRef.current = currentTime;
+      }
+    }
 
     return () => {
-      clearInterval(intervalId);
-
       const watchedPercentage = Math.floor((playtime / duration) * 100);
 
-      socket?.emit("updateMovieProgress", {
-        movieId: videoId,
-        watchedPercentage,
-        userId: authReducer?.user?._id,
-      });
+      if (!isNaN(watchedPercentage)) {
+        socket?.emit("updateMovieProgress", {
+          movieId: videoId,
+          watchedPercentage,
+          userId: authReducer?.user?._id,
+        });
+      }
     };
-  }, [playtime, duration]);
+  }, [playtime, duration, socket]);
 
   // Set the video duration once it's available
   const handleDuration = (videoDuration) => {

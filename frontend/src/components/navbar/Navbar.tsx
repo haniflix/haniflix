@@ -30,6 +30,7 @@ const Navbar = () => {
 
   React.useEffect(() => {
     socket?.on("forceLogout", (message) => {
+      console.log('logout force')
       showSwal("You were logged out", 'Your account was logged into, in another device', 'success')
 
       logout()
