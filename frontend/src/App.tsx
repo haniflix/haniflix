@@ -23,20 +23,23 @@ import Welcome from "./pages/welcome/Welcome";
 import AppRouter from "./router/AppRouter";
 
 import './index.css'
+import { SocketProvider } from "./context/SocketContext";
 
 const App = () => {
   const user = useAppSelector(selectUser);
 
   return (
     <>
-      <AppRouter />
-      <CookieConsent
-        disableButtonStyles
-        buttonClasses="gradientButton"
-        buttonStyle={{ margin: 10 }}
-      >
-        This website uses cookies to enhance the user experience.
-      </CookieConsent>
+      <SocketProvider>
+        <AppRouter />
+        <CookieConsent
+          disableButtonStyles
+          buttonClasses="gradientButton"
+          buttonStyle={{ margin: 10 }}
+        >
+          This website uses cookies to enhance the user experience.
+        </CookieConsent>
+      </SocketProvider>
     </>
   );
 };

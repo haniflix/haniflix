@@ -6,26 +6,57 @@ const SocketContext = createContext();
 
 export const SocketProvider = ({ children }) => {
     const [socket, setSocket] = useState(null);
+    const [isReconnecting, setIsReconnecting] = useState(false);
+    const [reconnectAttempts, setReconnectAttempts] = useState(0);
 
     const authReducer = useSelector((state) => state.auth);
     const accessToken = authReducer?.user?.accessToken;
 
+    const MAX_RETRY_ATTEMPTS = 10
+
     useEffect(() => {
 
-        if (!accessToken) return
-        //
 
-        const newSocket = io(import.meta.env.VITE_APP_WEBSOCKETS_URL, {
-            withCredentials: true,
-            extraHeaders: {
-                token: accessToken,
-            },
-        });
+        if (!accessToken) return;
 
-        setSocket(newSocket);
+        const createSocket = () => {
+            const newSocket = io(import.meta.env.VITE_APP_WEBSOCKETS_URL, {
+                withCredentials: true,
+                extraHeaders: {
+                    token: accessToken,
+                },
+            });
 
-        // Cleanup on unmount
-        return () => newSocket.disconnect();
+            setSocket(newSocket);
+
+            // Handle disconnects and reconnects
+            newSocket.on("disconnect", () => {
+                setIsReconnecting(true);
+                setReconnectAttempts((prevAttempts) => prevAttempts + 1);
+
+                const reconnect = () => {
+                    if (reconnectAttempts < MAX_RETRY_ATTEMPTS) { // Adjust max attempts as needed
+                        setTimeout(() => {
+                            createSocket();
+                        }, reconnectAttempts * 1000); // Exponential backoff
+                    } else {
+                        // Handle excessive reconnect attempts (e.g., notify user)
+                    }
+                };
+
+                reconnect();
+            });
+
+            newSocket.on("connect", () => {
+                setIsReconnecting(false);
+                setReconnectAttempts(0); // Reset attempts on successful connection
+            });
+
+            // Cleanup on unmount
+            return () => newSocket.disconnect();
+        };
+
+        createSocket();
     }, [accessToken]);
 
 

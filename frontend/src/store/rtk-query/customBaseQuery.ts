@@ -6,10 +6,20 @@ import { updateToken } from "../reducers/auth";
 const BASE_URL =
   import.meta.env.VITE_BASE_API_URL || "http://localhost:8800/api/";
 
+import Swal from "sweetalert2";
+
 const logoutSuccess = () => {
   return {
     type: "auth/logout",
   };
+};
+
+const showSwal = (title, message, type) => {
+  Swal.fire({
+    title: title ?? "",
+    text: message,
+    icon: type,
+  });
 };
 
 const onRefreshToken = async ({ dispatch, refreshToken }) => {
@@ -63,9 +73,14 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
   const rememberMe = getState().auth?.rememberMe;
 
   if (result.error && result.error.status === 401) {
+    console.log("result.error?.data ", result.error?.data);
     if (result.error?.data?.errorName === "loggedElsewhere") {
-      alert("You are logged in on another device");
       dispatch(logoutSuccess());
+      showSwal(
+        "You were logged out",
+        "Your account was logged into, in another device",
+        "success"
+      );
     } else if (rememberMe == false) {
       dispatch(logoutSuccess());
     } else {

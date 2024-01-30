@@ -4,11 +4,10 @@ import NavLogo1 from "../../Assets/Images/Nav-logo.png";
 import "./navbar.scss";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { selectUser, setUser } from "../../store/reducers/auth";
+import { selectUser, setUser, logout } from "../../store/reducers/auth";
 import { useDispatch } from "react-redux";
 
 import { useNavigate } from 'react-router-dom'
-import SocketContext from "../../context/SocketContext";
 
 import { useSelector } from 'react-redux'
 import Swal from 'sweetalert2'
@@ -22,22 +21,8 @@ const Navbar = () => {
   const navigate = useNavigate()
 
   const [loginCalled, setLoginCalled] = useState(false)
-  // const [socketId, setSocketId] = useState<any>()
 
-  const authReducer = useSelector((state) => state.auth);
-
-  const { socket, handleUserLogin } = React.useContext(SocketContext);
-
-  React.useEffect(() => {
-    socket?.on("forceLogout", (message) => {
-      console.log('logout force')
-      showSwal("You were logged out", 'Your account was logged into, in another device', 'success')
-
-      logout()
-    });
-
-
-  }, [socket])
+  const authReducer = useAppSelector((state) => state.auth);
 
 
   const showSwal = (title, message, type) => {
@@ -53,8 +38,8 @@ const Navbar = () => {
     return () => (window.onscroll = null);
   };
 
-  const logout = () => {
-    dispatch(setUser(null));
+  const onLogout = () => {
+    dispatch(logout());
 
     window.location.href = "/";
   };
@@ -95,7 +80,7 @@ const Navbar = () => {
                 {" "}
                 <span style={{ color: "#000" }}>Settings</span>
               </Link>
-              <span style={{ color: "#000" }} onClick={logout}>
+              <span style={{ color: "#000" }} onClick={onLogout}>
                 Logout
               </span>
             </div>

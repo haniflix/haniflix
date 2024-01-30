@@ -69,6 +69,7 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
 
     if (!isNaN(watchedPercentage)) {
       // Check if the last emit was more than 5 seconds ago
+
       if (timeDifference > 5 * 1000) {
         socket?.emit("updateMovieProgress", {
           movieId: videoId,
@@ -146,31 +147,33 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
   };
 
   const onLikeMovie = async () => {
-    const res = await likeMovie(movie?._id);
+    const res = await likeMovie(movieData?._id);
 
     if (!res?.data) {
       showSwal("Error Liking movie", "", "error");
       return;
     }
+    refetch({ force: true });
   };
 
   const onDislikeMovie = async () => {
-    const res = await dislikeMovie(movie?._id);
+    const res = await dislikeMovie(movieData?._id);
 
     if (!res?.data) {
       showSwal("Error disliking movie", "", "error");
       return;
     }
+    refetch({ force: true });
   };
 
   const onAddToList = async () => {
-    const res = await addToMyList(movie?._id);
+    const res = await addToMyList(movieData?._id);
 
     if (!res?.data) {
       showSwal("Error encountered", "", "error");
       return;
     }
-
+    refetch({ force: true });
     // showSwal("Added to list", "", "success");
   };
 
@@ -225,17 +228,7 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
         playbackRate={1.0}
         progressInterval={1000}
       />
-      <div className="px-3">
-        {renderExtraButtons()}
-        {/* <input
-          type="range"
-          min={0}
-          max={duration}
-          value={seekTime}
-          onChange={handleSeekChange}
-          onMouseUp={handleSeek}
-        /> */}
-      </div>
+      <div className="px-3">{renderExtraButtons()}</div>
     </div>
   );
 };

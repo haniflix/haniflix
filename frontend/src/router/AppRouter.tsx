@@ -1,3 +1,5 @@
+import * as React from 'react'
+
 import Home from "../pages/home/Home";
 import Register from "../pages/register/Register";
 import Watch from "../pages/watch/Watch";
@@ -21,41 +23,70 @@ import { selectUser } from "../store/reducers/auth";
 import Welcome from "../pages/welcome/Welcome";
 import ProtectedRoutes from "./ProtectedRoutes";
 import GuestRoutes from "./GuestRoutes";
-import { SocketProvider } from "../context/SocketContext";
 
+//
+import SocketContext from "../context/SocketContext";
 
+import { logout } from '../store/reducers/auth'
+
+import { useDispatch } from 'react-redux'
+
+import Swal from 'sweetalert2'
 
 
 const AppRouter = (props) => {
     const user = useAppSelector(selectUser);
 
+    const dispatch = useDispatch()
+
+    const { socket, handleUserLogin } = React.useContext(SocketContext);
+
+    React.useEffect(() => {
+        socket?.on("forceLogout", (message) => {
+            showSwal("You were logged out", 'Your account was logged into, in another device', 'success')
+
+            onLogout()
+        });
+    }, [socket])
+
+    const onLogout = () => {
+        dispatch(logout())
+    }
+
+    const showSwal = (title, message, type) => {
+        Swal.fire({
+            title: title ?? "",
+            text: message,
+            icon: type,
+        });
+    };
+
     return (
-        <SocketProvider>
-            <Router>
-                <Routes>
-                    <Route element={<ProtectedRoutes />}>
-                        <Route index element={<Home />} />
-                        <Route path="movies" element={<Home type="movies" />} />
-                        <Route path="series" element={<Home type="series" />} />
-                        <Route path="new-and-popular" element={<Home />} />
-                        <Route path="watch/:id" element={<Watch />} />
-                        <Route path="my-list" element={<MyLists />} />
-                        <Route path="search" element={<SearchPage />} />
-                        <Route path="settings" element={<AccSettings />} />
-                    </Route>
 
-                    <Route element={<GuestRoutes />}>
-                        <Route index element={<Welcome />} />
-                        <Route path="register" element={<Register />} />
-                        <Route path="forgot-pass" element={<ForgotPassword />} />
-                        <Route path="change-password/:id/:email" element={<ChangePassword />} />
-                        <Route path="login" element={<Login />} />
-                        <Route path="verify" element={<Verify />} />
-                    </Route>
+        <Router>
+            <Routes>
+                <Route element={<ProtectedRoutes />}>
+                    <Route index element={<Home />} />
+                    <Route path="movies" element={<Home type="movies" />} />
+                    <Route path="series" element={<Home type="series" />} />
+                    <Route path="new-and-popular" element={<Home />} />
+                    <Route path="watch/:id" element={<Watch />} />
+                    <Route path="my-list" element={<MyLists />} />
+                    <Route path="search" element={<SearchPage />} />
+                    <Route path="settings" element={<AccSettings />} />
+                </Route>
 
-                </Routes>
-            </Router>
-        </SocketProvider>
+                <Route element={<GuestRoutes />}>
+                    <Route index element={<Welcome />} />
+                    <Route path="register" element={<Register />} />
+                    <Route path="forgot-pass" element={<ForgotPassword />} />
+                    <Route path="change-password/:id/:email" element={<ChangePassword />} />
+                    <Route path="login" element={<Login />} />
+                    <Route path="verify" element={<Verify />} />
+                </Route>
+
+            </Routes>
+        </Router>
     )
 }
 
