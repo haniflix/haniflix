@@ -1,0 +1,18 @@
+#!/bin/sh
+DEPLOY_DIR=/root/haniflix-app
+GIT_DIR=/root/haniflix.git
+BRANCH_NAME=master
+
+# Ensure the deployment directory exists
+mkdir -p "$DEPLOY_DIR"
+
+# Update the deployment folder with the latest changes
+git --work-tree="$DEPLOY_DIR" --git-dir="$GIT_DIR" checkout -f "$BRANCH_NAME"
+
+# Navigate to the deployment folder
+cd "$DEPLOY_DIR"
+
+# Install production dependencies
+npm install --production
+
+node index.js
