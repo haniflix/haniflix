@@ -5,6 +5,7 @@ const deleteList = require("./deleteList");
 const getAdminLists = require("./getAdminLists");
 const getLists = require("./getLists");
 const getMyLists = require("./getMyLists");
+const getContinueWatching = require("./getContinueWatching");
 
 module.exports = {
   createList,
@@ -14,4 +15,5 @@ module.exports = {
   getAdminLists,
   getLists,
   getMyLists,
+  getContinueWatching,
 };

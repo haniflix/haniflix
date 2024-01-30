@@ -21,6 +21,13 @@ router.get("/", verify, listControllers.getLists);
 
 router.get("/admin-list", verify, listControllers.getAdminLists);
 
+//continue watching
+router.get(
+  "/continue-watching-list",
+  verify,
+  listControllers.getContinueWatching
+);
+
 // router.get("/my-list/:email", verify,async (req, res) => {
 router.get("/my-list", verify, listControllers.getMyLists);
 

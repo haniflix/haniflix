@@ -3,33 +3,13 @@ const User = require("../../models/User");
 
 const addMovieToDefaultList = async (req, res) => {
   try {
-    const userEmail = req.body.email;
     const movieId = req.body.movieId; // Assuming you receive the movie ID from the client
 
-    // Find the user by their email address
-    // const user = await User.findOne({ email: userEmail });
     const user = await User.findOne({ _id: req.user.id });
 
     if (!user) {
       return res.status(404).json("User not found");
     }
-
-    // Find the default list associated with the user
-    /*const defaultList = await List.findOne({
-        user: user._id, // Match the user's ID
-        title: `${user.email}'s Watchlist`, // Assuming the default list has a title "Default"
-      });*/
-
-    const createDefaultList = async function (user) {
-      let list = new List({
-        title: `${user.username}'s Watchlist`,
-        user: user._id,
-      });
-      list = await list.save();
-      user.defaultList = list._id;
-      await user.save();
-      return list;
-    };
 
     let defaultList;
 
@@ -61,6 +41,17 @@ const addMovieToDefaultList = async (req, res) => {
     console.error(err);
     res.status(500).json({ message: "Internal Server Error" });
   }
+};
+
+const createDefaultList = async function (user) {
+  let list = new List({
+    title: `${user.username}'s Watchlist`,
+    user: user._id,
+  });
+  list = await list.save();
+  user.defaultList = list._id;
+  await user.save();
+  return list;
 };
 
 module.exports = addMovieToDefaultList;

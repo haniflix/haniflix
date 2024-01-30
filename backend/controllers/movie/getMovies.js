@@ -9,8 +9,9 @@ const getMovies = async (req, res) => {
       "perPage",
       "page",
       "searchTerm",
+      "genre",
     ]);
-    const { orderBy, perPage = 20, page = 1, searchTerm } = params;
+    const { orderBy, perPage = 20, page = 1, searchTerm, genre } = params;
 
     const skip = (parseInt(page) - 1) * perPage; // Calculate skip for pagination
 
@@ -45,6 +46,7 @@ const getMovies = async (req, res) => {
 
     aggregationPipeline = [
       ...aggregationPipeline,
+      //
       {
         $lookup: {
           from: "genres",
@@ -54,6 +56,54 @@ const getMovies = async (req, res) => {
         },
       },
 
+      // add likes and dislike counts
+      {
+        $lookup: {
+          from: "movielikes",
+          let: { movieId: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$movie", "$$movieId"] },
+                    { $eq: ["$like", true] },
+                  ],
+                },
+              },
+            },
+          ],
+          as: "likesData",
+        },
+      },
+      {
+        $lookup: {
+          from: "movielikes",
+          let: { movieId: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$movie", "$$movieId"] },
+                    { $eq: ["$dislike", true] },
+                  ],
+                },
+              },
+            },
+          ],
+          as: "dislikesData",
+        },
+      },
+      {
+        $addFields: {
+          likesCount: { $size: "$likesData" },
+          dislikesCount: { $size: "$dislikesData" },
+        },
+      },
+
+      //
+      //PAGINATION
       { $skip: skip }, // Apply pagination skip
       { $limit: parseInt(perPage) }, // Apply pagination limit
     ];
@@ -66,6 +116,24 @@ const getMovies = async (req, res) => {
     });
 
     const movies = await Movie.aggregate(aggregationPipeline);
+
+    const currentUser = req.user;
+
+    // Populate the likes and dislikes information for the current user
+    movies.forEach((movie) => {
+      const userLikes = movie.likesData.filter((like) =>
+        like.user.equals(currentUser._id)
+      );
+      const userDislikes = movie.dislikesData.filter((dislike) =>
+        dislike.user.equals(currentUser._id)
+      );
+
+      movie.currentUserLiked = userLikes.length > 0;
+      movie.currentUserDisliked = userDislikes.length > 0;
+
+      delete movie.likesData;
+      delete movie.dislikesData;
+    });
 
     res.status(200).json({ movies, totalMovies: movieCount });
   } catch (err) {
