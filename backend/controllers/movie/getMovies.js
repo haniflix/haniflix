@@ -1,3 +1,4 @@
+const List = require("../../models/List");
 const Movie = require("../../models/Movie");
 
 const _ = require("lodash");
@@ -119,6 +120,11 @@ const getMovies = async (req, res) => {
 
     const currentUser = req.user;
 
+    //
+    const defaultList = await List.findOne({
+      _id: currentUser.defaultList,
+    });
+
     // Populate the likes and dislikes information for the current user
     movies.forEach((movie) => {
       const userLikes = movie.likesData.filter((like) =>
@@ -130,6 +136,11 @@ const getMovies = async (req, res) => {
 
       movie.currentUserLiked = userLikes.length > 0;
       movie.currentUserDisliked = userDislikes.length > 0;
+
+      // Check if the movie is in the user's default list
+      movie.isInDefaultList = defaultList
+        ? defaultList.content.includes(movie._id)
+        : false;
 
       delete movie.likesData;
       delete movie.dislikesData;
