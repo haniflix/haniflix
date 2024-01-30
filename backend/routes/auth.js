@@ -188,7 +188,7 @@ router.post("/login", async (req, res) => {
     const accessToken = jwt.sign(
       { id: user._id, isAdmin: user.isAdmin },
       process.env.SECRET_KEY,
-      { expiresIn: "1d" } // Adjust access token expiration time
+      { expiresIn: "24h" }
     );
     const refreshToken = jwt.sign(
       { id: user._id },
@@ -221,7 +221,8 @@ router.post("/refreshToken", async (req, res) => {
 
     // 2. Find user and check for valid refresh token
     const user = await User.findById(userId);
-    if (!user || user.accessToken !== refreshToken) {
+
+    if (!user) {
       return res.status(401).json({ error: "Invalid refresh token" });
     }
 
@@ -229,7 +230,7 @@ router.post("/refreshToken", async (req, res) => {
     const accessToken = jwt.sign(
       { id: user._id, isAdmin: user.isAdmin },
       process.env.SECRET_KEY,
-      { expiresIn: "5d" } // Adjust expiration time as needed
+      { expiresIn: "24h" } // Adjust expiration time as needed
     );
 
     // 4. Update accessToken in user document

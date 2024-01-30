@@ -48,7 +48,12 @@ const Navbar = () => {
     <div className={isScrolled ? "navbar scrolled" : "navbar"}>
       <div className="container" id="nav-desktop-container">
         <div className="left" style={{ width: "100%", height: "100px" }}>
-          <img src={NavLogo1} alt="" width={100} height={100} loading="lazy" />
+          <div
+            onClick={() => navigate('/')}
+            className='cursor-pointer'
+          >
+            <img src={NavLogo1} alt="" width={100} height={100} loading="lazy" />
+          </div>
           <Link className="link" to="/">
             <span>Home</span>
           </Link>
@@ -151,7 +156,7 @@ const Navbar = () => {
         <div
           className="mobile-header-list-item"
           onClick={() => {
-            logout();
+            onLogout();
           }}
         >
           <span>Logout</span>

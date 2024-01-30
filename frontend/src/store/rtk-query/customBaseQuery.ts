@@ -24,8 +24,6 @@ const showSwal = (title, message, type) => {
 
 const onRefreshToken = async ({ dispatch, refreshToken }) => {
   try {
-    const refreshToken = localStorage.getItem("refreshToken"); // Retrieve refresh token from storage
-
     if (!refreshToken) {
       return dispatch(logoutSuccess()); // Handle missing refresh token
     }
@@ -38,6 +36,7 @@ const onRefreshToken = async ({ dispatch, refreshToken }) => {
 
     if (response.ok) {
       const data = await response.json();
+
       dispatch(
         updateToken({
           accessToken: data?.accessToken,
@@ -73,7 +72,6 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
   const rememberMe = getState().auth?.rememberMe;
 
   if (result.error && result.error.status === 401) {
-    console.log("result.error?.data ", result.error?.data);
     if (result.error?.data?.errorName === "loggedElsewhere") {
       dispatch(logoutSuccess());
       showSwal(
@@ -84,7 +82,7 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
     } else if (rememberMe == false) {
       dispatch(logoutSuccess());
     } else {
-      const refreshToken = getState().auth?.refreshToken;
+      const refreshToken = getState().auth?.user?.refreshToken;
       await onRefreshToken({ dispatch, refreshToken });
 
       result = await baseQuery(args, api, extraOptions); // Retry with new token
