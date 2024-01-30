@@ -11,12 +11,63 @@ import {
   Add,
   ThumbUpAltOutlined,
   ThumbDownOutlined,
+  ThumbUp,
+  ThumbDown
 } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 
 import moviePlaceHolderSvg from '../../../Assets/svgs/moviePlaceholder.svg'
+import { addClassNames } from "../../../store/utils/functions";
+import { useDislikeMovieMutation, useLikeMovieMutation } from "../../../store/rtk-query/moviesApi";
+
+import Swal from 'sweetalert2'
+import { useAddMovieToDefaultListMutation } from "../../../store/rtk-query/listsApi";
 
 export default function SearchListItem({ movie }) {
+
+
+  const [likeMovie, likeMovieState] = useLikeMovieMutation()
+  const [dislikeMovie, dislikeMovieState] = useDislikeMovieMutation()
+  const [addToMyList, addToMyListState] = useAddMovieToDefaultListMutation()
+
+  // showSwal("Validation Error", errors.repeatPassword, "error");
+  const showSwal = (title, message, type) => {
+    Swal.fire({
+      title: title ?? "",
+      text: message,
+      icon: type,
+    });
+  };
+
+  const onLikeMovie = async () => {
+    const res = await likeMovie(movie?._id)
+
+    if (!res?.data) {
+      showSwal("Error Liking movie", '', "error");
+      return
+    }
+  }
+
+  const onDislikeMovie = async () => {
+    const res = await dislikeMovie(movie?._id)
+
+    if (!res?.data) {
+      showSwal("Error disliking movie", '', "error");
+      return
+    }
+  }
+
+  const onAddToList = async () => {
+    const res = await likeMovie(movie?._id)
+
+    if (!res?.data) {
+      showSwal("Error adding to list", '', "error");
+      return
+    }
+
+    showSwal("Added to list", '', 'success')
+  }
+
   // Trim the description to a maximum of 100 characters
   const trimmedDesc =
     movie?.desc && movie.desc.length > 80
@@ -26,11 +77,25 @@ export default function SearchListItem({ movie }) {
   const renderGenres = () => {
 
     return (<div>
-      {movie?.genre?.map((_genre) => {
-        return <span>{_genre}</span>
+      {movie?.genre?.map((_genre, index) => {
+        return <span
+
+          key={_genre?._id}>{_genre?.title}{index + 1 != movie?.genre?.length ? ', ' : ''}</span>
       })}
     </div>)
   }
+
+  function formatNumber(number) {
+
+    if (number < 1000) {
+      return number.toString(); // No abbreviation for numbers less than 1000
+    } else if (number < 1000000) {
+      return `${(number / 1000).toFixed(1)}k`; // Abbreviate thousands with "k"
+    } else {
+      return `${(number / 1000000).toFixed(1)}M`; // Abbreviate millions with "M"
+    }
+  }
+
 
   return (
     <Card>
@@ -62,17 +127,34 @@ export default function SearchListItem({ movie }) {
         </Typography>
       </CardContent>
       <CardActions>
-        <IconButton aria-label="play">
+        <IconButton
+
+          aria-label="play">
           <PlayArrow />
         </IconButton>
-        <IconButton aria-label="add">
+        <IconButton
+          onClick={onAddToList}
+          aria-label="add">
           <Add />
         </IconButton>
-        <IconButton aria-label="thumb up">
-          <ThumbUpAltOutlined />
+        <IconButton
+          onClick={onLikeMovie}
+          className='flex gap-1'
+          aria-label="thumb up">
+          {
+            movie?.currentUserLiked ? <ThumbUp /> : <ThumbUpAltOutlined />
+          }
+          <div className='text-sm'>{formatNumber(movie?.likesCount)}</div>
         </IconButton>
-        <IconButton aria-label="thumb down">
-          <ThumbDownOutlined />
+        <IconButton
+          onClick={onDislikeMovie}
+          className='flex gap-1'
+          aria-label="thumb down">
+          {
+            movie?.currentUserDisliked ? <ThumbDown /> : <ThumbDownOutlined />
+          }
+          <div className='text-sm'>{formatNumber(movie?.dislikesCount)}</div>
+
         </IconButton>
       </CardActions>
     </Card>

@@ -40,33 +40,7 @@ const Searchresults = () => {
   const { data: moviesData, isLoading: moviesLoading } = useGetMoviesQuery(queryParams)
 
 
-  // useEffect(() => {
-  //   let isMounted = true; // Add this variable
-
-  //   const getSearchMovies = async () => {
-  //     try {
-  //       const res = await axios.get(api_url + "movies/");
-
-  //       if (isMounted) {
-  //         // Check if the component is still mounted
-  //         setMovies(res.data);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching movies:", error);
-  //     }
-  //   };
-
-  //   if (search !== "") {
-  //     getSearchMovies();
-  //   } else {
-  //     setMovies([]);
-  //   }
-
-  //   // Cleanup function to be called when the component is unmounted
-  //   return () => {
-  //     isMounted = false;
-  //   };
-  // }, [search]);
+  console.log('moviesData ', moviesData)
 
   const handleSearch = (e) => {
     const searchString = e.target.value.trimStart().toLowerCase();
@@ -79,7 +53,7 @@ const Searchresults = () => {
     return moviesData?.movies?.filter((movie) =>
       search.split(" ").every((word) => movie.title.toLowerCase().includes(word))
     );
-  }, [search])
+  }, [search, moviesData])
 
   return (
     <Container className={classes.root}>

@@ -30,8 +30,7 @@ export const SocketProvider = ({ children }) => {
 
 
     const handleUserLogin = (userId, _socket, socketId) => {
-        _socket.emit("userLoggedIn", userId, socketId);
-        console.log('emited login ', userId, ' + ', socketId)
+        //  _socket.emit("userLoggedIn", userId, socketId);
     };
 
     const handleUserLogout = (userId) => {

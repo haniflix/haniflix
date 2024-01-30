@@ -30,8 +30,6 @@ export default function Featured({ type }) {
 
     const res = await getRandomMovieApi(type)
 
-    console.log('res ', res)
-
     if (Array.isArray(res?.data)) {
       setContent(res?.data?.[0]);
     }

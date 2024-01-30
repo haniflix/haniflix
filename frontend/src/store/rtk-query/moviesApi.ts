@@ -49,12 +49,14 @@ export const moviesApi = authApi.injectEndpoints({
         url: `movies/${id}/like`,
         method: "POST",
       }),
+      invalidatesTags: ["Movies"],
     }),
     dislikeMovie: builder.mutation({
       query: (id: number | string) => ({
         url: `movies/${id}/dislike`,
         method: "POST",
       }),
+      invalidatesTags: ["Movies"],
     }),
   }),
   overrideExisting: false,

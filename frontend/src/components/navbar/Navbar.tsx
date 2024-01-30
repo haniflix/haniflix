@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom'
 import SocketContext from "../../context/SocketContext";
 
 import { useSelector } from 'react-redux'
+import Swal from 'sweetalert2'
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -21,42 +22,30 @@ const Navbar = () => {
   const navigate = useNavigate()
 
   const [loginCalled, setLoginCalled] = useState(false)
-  const [socketId, setSocketId] = useState<any>()
+  // const [socketId, setSocketId] = useState<any>()
 
   const authReducer = useSelector((state) => state.auth);
 
   const { socket, handleUserLogin } = React.useContext(SocketContext);
 
   React.useEffect(() => {
-    socket?.on("forceLogout", (reason) => {
-      alert('Your account was logged into, in another device')
+    socket?.on("forceLogout", (message) => {
+      showSwal("You were logged out", 'Your account was logged into, in another device', 'success')
+
+      logout()
     });
-    socket?.on('connect', () => {
-      console.log(socket.id); // an alphanumeric id...
-      setSocketId(socket.id)
-    });
+
+
   }, [socket])
 
 
-  React.useEffect(() => {
-    if (!socket) return
-    if (!socketId) return
-    if (loginCalled) return
-
-
-    const userId = authReducer?.user?._id;
-    // console.log('userId ', userId)
-
-    if (userId && (loginCalled == false)) {
-      console.log('abt to call')
-      handleUserLogin(userId, socket, socketId)
-      setLoginCalled(true)
-    }
-  }, [socket, socketId, loginCalled])
-
-  // console.log('login called ', loginCalled)
-  // console.log('socket ', socket?.id)
-
+  const showSwal = (title, message, type) => {
+    Swal.fire({
+      title: title ?? "",
+      text: message,
+      icon: type,
+    });
+  };
 
   window.onscroll = () => {
     setIsScrolled(window.pageYOffset === 0 ? false : true);
