@@ -23,14 +23,15 @@ import { useDislikeMovieMutation, useLikeMovieMutation } from "../../../store/rt
 import Swal from 'sweetalert2'
 import { useAddMovieToDefaultListMutation } from "../../../store/rtk-query/listsApi";
 
-export default function SearchListItem({ movie }) {
+import { useNavigate } from 'react-router-dom'
 
+export default function SearchListItem({ movie }) {
+  const navigate = useNavigate()
 
   const [likeMovie, likeMovieState] = useLikeMovieMutation()
   const [dislikeMovie, dislikeMovieState] = useDislikeMovieMutation()
   const [addToMyList, addToMyListState] = useAddMovieToDefaultListMutation()
 
-  // showSwal("Validation Error", errors.repeatPassword, "error");
   const showSwal = (title, message, type) => {
     Swal.fire({
       title: title ?? "",
@@ -58,14 +59,14 @@ export default function SearchListItem({ movie }) {
   }
 
   const onAddToList = async () => {
-    const res = await likeMovie(movie?._id)
+    const res = await addToMyList(movie?._id)
 
     if (!res?.data) {
-      showSwal("Error adding to list", '', "error");
+      showSwal("Error encountered", '', "error");
       return
     }
 
-    showSwal("Added to list", '', 'success')
+    //  showSwal("Added to list", '', 'success')
   }
 
   // Trim the description to a maximum of 100 characters
@@ -128,14 +129,14 @@ export default function SearchListItem({ movie }) {
       </CardContent>
       <CardActions>
         <IconButton
-
+          onClick={() => navigate(`/watch/${movie?._id}`)}
           aria-label="play">
           <PlayArrow />
         </IconButton>
         <IconButton
           onClick={onAddToList}
           aria-label="add">
-          <Add />
+          {movie?.isInDefaultList ? <Check /> : <Add />}
         </IconButton>
         <IconButton
           onClick={onLikeMovie}

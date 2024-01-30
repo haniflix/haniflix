@@ -20,6 +20,7 @@ export const moviesApi = authApi.injectEndpoints({
       query: (id: number | string) => ({
         url: `movies/${id}`,
       }),
+      providesTags: ["Movie"],
     }),
     createMovie: builder.mutation({
       query: (data: Partial<Movie>) => ({
@@ -35,7 +36,7 @@ export const moviesApi = authApi.injectEndpoints({
         method: "PUT",
         body: data,
       }),
-      invalidatesTags: ["Movies"],
+      invalidatesTags: ["Movies", "Movie"],
     }),
     deleteMovie: builder.mutation({
       query: (id: number | string) => ({
@@ -49,14 +50,14 @@ export const moviesApi = authApi.injectEndpoints({
         url: `movies/${id}/like`,
         method: "POST",
       }),
-      invalidatesTags: ["Movies"],
+      invalidatesTags: ["Movies", "Movie"],
     }),
     dislikeMovie: builder.mutation({
       query: (id: number | string) => ({
         url: `movies/${id}/dislike`,
         method: "POST",
       }),
-      invalidatesTags: ["Movies"],
+      invalidatesTags: ["Movies", "Movie"],
     }),
   }),
   overrideExisting: false,

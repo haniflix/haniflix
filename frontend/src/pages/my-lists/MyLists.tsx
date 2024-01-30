@@ -25,58 +25,11 @@ import useApiClient from "../../hooks/useApiClient";
 import { useAppSelector } from "../../store/hooks";
 import { selectUser } from "../../store/reducers/auth";
 import Swal from "sweetalert2";
+import { useGetMoviesQuery } from "../../store/rtk-query/moviesApi";
 
 const api_url = import.meta.env.VITE_APP_API_URL;
 const theme = createTheme();
 
-/*const useStyles = makeStyles((theme) => ({
-  root: {
-    overflowX: "hidden",
-    maxWidth: "90%",
-  },
-  addButton: {
-    marginLeft: "auto",
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-    backgroundColor: "#17e990",
-  },
-  modalContainer: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  modalContent: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(2, 4, 3),
-    maxWidth: 600,
-    margin: "auto",
-    borderRadius: theme.spacing(2),
-    position: "relative",
-  },
-  contentContainer: {
-    marginTop: "12vh",
-    padding: theme.spacing(2),
-    background: "#0495ed",
-    borderRadius: theme.spacing(1),
-    display: "flex",
-    alignItems: "center",
-  },
-  contentHeading: {
-    marginRight: "auto",
-    color: "black",
-    fontWeight: "bold",
-  },
-  movieSelect: {
-    width: "100%",
-  },
-  selectedMovies: {
-    marginTop: theme.spacing(1),
-    color: theme.palette.text.secondary,
-  },
-  chip: {
-    margin: 2,
-  },
-}));*/
 
 const styles = {
   root: {
@@ -135,13 +88,22 @@ const MyLists = () => {
   const [userEmail, setUserEmail] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newListTitle, setNewListTitle] = useState("");
-  const [movies, setMovies] = useState([]);
+
   const [selectedMovies, setSelectedMovies] = useState([]);
   const [selectedMovieTitles, setSelectedMovieTitles] = useState([]); // Store selected movie titles
   const [toEdit, setToEdit] = useState<any>(null);
   const [toDelete, setToDelete] = useState<any>(null);
   const client = useApiClient();
   const user = useAppSelector(selectUser);
+
+  const [movies, setMovies] = useState([]);
+
+  let queryParams = {
+    perPage: 10000,
+  }
+
+  const { data: moviesData, isLoading: moviesLoading } = useGetMoviesQuery(queryParams)
+
 
   useEffect(() => {
     const storedEmail = user?.email;
@@ -176,12 +138,7 @@ const MyLists = () => {
   };
 
   const fetchMovies = async () => {
-    try {
-      const res = await axios.get(`${api_url}movies`);
-      setMovies(res.data);
-    } catch (err) {
-      console.log(err);
-    }
+    setMovies(moviesData?.movies)
   };
 
   const handleOpenModal = () => {

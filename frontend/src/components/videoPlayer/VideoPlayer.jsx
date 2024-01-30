@@ -1,15 +1,44 @@
 import React, { useState, useEffect, useRef } from "react";
 import ReactPlayer from "react-player";
 
-import io from "socket.io-client";
 import { useSelector } from "react-redux";
 import SocketContext from "../../context/SocketContext";
+
+import { IconButton } from "@mui/material";
+import {
+  Add,
+  ThumbUpAltOutlined,
+  ThumbDownOutlined,
+  ThumbUp,
+  ThumbDown,
+  Check,
+} from "@mui/icons-material";
+import {
+  useDislikeMovieMutation,
+  useGetMovieQuery,
+  useLikeMovieMutation,
+} from "../../store/rtk-query/moviesApi";
+
+import Swal from "sweetalert2";
+import { useAddMovieToDefaultListMutation } from "../../store/rtk-query/listsApi";
 
 const VideoPlayer = ({ videoId, videoUrl }) => {
   const [playtime, setPlaytime] = useState(0);
   const [seekTime, setSeekTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const playerRef = useRef(null);
+
+  const [likeMovie, likeMovieState] = useLikeMovieMutation();
+  const [dislikeMovie, dislikeMovieState] = useDislikeMovieMutation();
+  const [addToMyList, addToMyListState] = useAddMovieToDefaultListMutation();
+
+  const {
+    data: movieData,
+    isLoading: movieDataLoading,
+    refetch,
+  } = useGetMovieQuery(videoId, {
+    refetchOnMountOrArgChange: true,
+  });
 
   const authReducer = useSelector((state) => state.auth);
 
@@ -64,6 +93,16 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
     };
   }, [playtime, duration, socket]);
 
+  function formatNumber(number) {
+    if (number < 1000) {
+      return number.toString(); // No abbreviation for numbers less than 1000
+    } else if (number < 1000000) {
+      return `${(number / 1000).toFixed(1)}k`; // Abbreviate thousands with "k"
+    } else {
+      return `${(number / 1000000).toFixed(1)}M`; // Abbreviate millions with "M"
+    }
+  }
+
   // Set the video duration once it's available
   const handleDuration = (videoDuration) => {
     setDuration(videoDuration);
@@ -98,6 +137,79 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
     localStorage.setItem(`videoPlaytime_${videoId}`, playtime.toString());
   };
 
+  const showSwal = (title, message, type) => {
+    Swal.fire({
+      title: title ?? "",
+      text: message,
+      icon: type,
+    });
+  };
+
+  const onLikeMovie = async () => {
+    const res = await likeMovie(movie?._id);
+
+    if (!res?.data) {
+      showSwal("Error Liking movie", "", "error");
+      return;
+    }
+  };
+
+  const onDislikeMovie = async () => {
+    const res = await dislikeMovie(movie?._id);
+
+    if (!res?.data) {
+      showSwal("Error disliking movie", "", "error");
+      return;
+    }
+  };
+
+  const onAddToList = async () => {
+    const res = await addToMyList(movie?._id);
+
+    if (!res?.data) {
+      showSwal("Error encountered", "", "error");
+      return;
+    }
+
+    // showSwal("Added to list", "", "success");
+  };
+
+  const renderExtraButtons = () => {
+    return (
+      <div className=" flex mb-2">
+        <IconButton
+          className="!text-white"
+          onClick={onAddToList}
+          aria-label="add"
+        >
+          {movieData?.isInDefaultList ? <Check /> : <Add />}
+        </IconButton>
+        <IconButton
+          onClick={onLikeMovie}
+          className="flex gap-1 !text-white "
+          aria-label="thumb up"
+        >
+          {movieData?.currentUserLiked ? <ThumbUp /> : <ThumbUpAltOutlined />}
+          <div className="text-sm">{formatNumber(movieData?.likesCount)}</div>
+        </IconButton>
+        <IconButton
+          onClick={onDislikeMovie}
+          className="flex gap-1 !text-white"
+          aria-label="thumb down "
+        >
+          {movieData?.currentUserDisliked ? (
+            <ThumbDown />
+          ) : (
+            <ThumbDownOutlined />
+          )}
+          <div className="text-sm">
+            {formatNumber(movieData?.dislikesCount)}
+          </div>
+        </IconButton>
+      </div>
+    );
+  };
+
   return (
     <div className="video-player-container">
       <ReactPlayer
@@ -113,14 +225,17 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
         playbackRate={1.0}
         progressInterval={1000}
       />
-      <input
-        type="range"
-        min={0}
-        max={duration}
-        value={seekTime}
-        onChange={handleSeekChange}
-        onMouseUp={handleSeek}
-      />
+      <div className="px-3">
+        {renderExtraButtons()}
+        {/* <input
+          type="range"
+          min={0}
+          max={duration}
+          value={seekTime}
+          onChange={handleSeekChange}
+          onMouseUp={handleSeek}
+        /> */}
+      </div>
     </div>
   );
 };

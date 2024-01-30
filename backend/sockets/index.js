@@ -21,10 +21,6 @@ const decodeAndVerifyToken = async (socket, next) => {
       return next(new Error("User not found"));
     }
 
-    // if (user.accessToken !== token) {
-    //   // Access token mismatch, emit "forceLogout" event to the current client
-    //   return next(new Error("Invalid or mismatched access token"));
-    // }
     // Attach the user object to the socket for later use
     socket.user = user;
 
@@ -35,10 +31,15 @@ const decodeAndVerifyToken = async (socket, next) => {
   }
 };
 
-const checkLoginElsewhere = (socket) => {
+const checkLoginElsewhere = async (socket) => {
+  //token from frontend
   const token = socket.handshake.headers.token;
 
-  if (token !== socket.user.accessToken) {
+  const decoded = jwt.verify(token, process.env.SECRET_KEY);
+
+  const user = await User.findById(decoded.id);
+
+  if (token !== user.accessToken) {
     socket.emit("forceLogout", "Logged in from another location");
   }
 };
@@ -56,8 +57,7 @@ const setupSocket = (io) => {
 
     socket.on("updateMovieProgress", async (data) => {
       const { movieId, watchedPercentage, userId } = data;
-
-      console.log("movie ", watchedPercentage);
+      console.log('"updateMovieProgress" called ');
       // check every progress update
       checkLoginElsewhere(socket);
 
@@ -69,7 +69,6 @@ const setupSocket = (io) => {
             content: movieId,
           });
         } else {
-          console.log("movieId ", movieId);
           // Find or create the user's ContinueWatchingList document
           const continueWatchingList =
             await ContinueWatchingList.findOneAndUpdate(
@@ -80,8 +79,6 @@ const setupSocket = (io) => {
               },
               { upsert: true, new: true }
             );
-
-          console.log("continueWatchingList ", continueWatchingList);
         }
       } catch (error) {
         console.error("Error updating progress:", error);

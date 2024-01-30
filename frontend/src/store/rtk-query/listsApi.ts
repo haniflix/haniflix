@@ -51,6 +51,7 @@ export const listsApi = authApi.injectEndpoints({
         method: "POST",
         body: { movieId },
       }),
+      invalidatesTags: ["Movies", "Movie"],
     }),
     getRandomLists: builder.query({
       query: (type: string | undefined, genre: string | undefined) => ({

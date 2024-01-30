@@ -22,8 +22,9 @@ const Home = ({ type = null }) => {
   const client = useApiClient();
   //const [movies, setMovies] = useState([]);
 
-  const { data: continueWatchingListData, isLoading: continueWatchingLoading } = useGetContinueWatchingListQuery()
-  console.log('continueWatchingListData ', continueWatchingListData)
+  const { data: continueWatchingListData, isLoading: continueWatchingLoading } = useGetContinueWatchingListQuery({})
+
+
   const getRandomLists = useCallback(
     (type: string, genre: string) => {
       client
@@ -84,22 +85,7 @@ const Home = ({ type = null }) => {
       <Navbar />
       <Featured type={type} />
 
-      {/*<div className="wrapper">
-        <Carousel
-          responsive={responsive}
-          centerMode={true}
-          customLeftArrow={
-            <ArrowBackIosOutlined className="sliderArrow left" />
-          }
-          customRightArrow={
-            <ArrowForwardIosOutlined className="sliderArrow right" />
-          }
-        >
-          {movies?.map((item, i) => (
-            <ListItem key={item?._id} index={i} item={item?._id} />
-          ))}
-        </Carousel>
-          </div>*/}
+
       <Suspense
         fallback={<div style={{ backgroundColor: "black" }}>Loading...</div>}
       >

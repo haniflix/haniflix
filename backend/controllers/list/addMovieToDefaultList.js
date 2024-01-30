@@ -28,7 +28,13 @@ const addMovieToDefaultList = async (req, res) => {
     }
 
     // Add the movie ID to the default list's content array
-    if (!defaultList.content.includes(movieId)) {
+    if (defaultList.content.includes(movieId)) {
+      //remove if its already present
+      let newContent = [...defaultList.content];
+
+      newContent = newContent.filter((_movieId) => _movieId != movieId);
+      defaultList.content = newContent;
+    } else {
       // only add if it is not yet in the list
       defaultList.content.push(movieId);
     }

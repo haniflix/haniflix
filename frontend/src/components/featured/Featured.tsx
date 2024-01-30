@@ -12,7 +12,22 @@ import { addClassNames } from "../../store/utils/functions";
 import moviePlaceholderSvg from '../../Assets/svgs/moviePlaceholder.svg'
 
 import { useSelector } from 'react-redux'
-import { useGetRandomMoviesMutation } from "../../store/rtk-query/moviesApi";
+import { useDislikeMovieMutation, useGetMovieQuery, useGetRandomMoviesMutation, useLikeMovieMutation } from "../../store/rtk-query/moviesApi";
+import { useAddMovieToDefaultListMutation } from "../../store/rtk-query/listsApi";
+
+import {
+  IconButton,
+  Typography,
+} from "@mui/material";
+
+import {
+  Check,
+  ThumbUpAltOutlined,
+  ThumbDownOutlined,
+  ThumbUp,
+  ThumbDown
+} from "@mui/icons-material";
+import { useGetGenresQuery } from "../../store/rtk-query/genresApi";
 
 type MetaInfoItem = {
   text: string
@@ -25,23 +40,18 @@ export default function Featured({ type }) {
   const userReducer = useSelector((state) => state.auth)
 
   const [getRandomMovieApi, getRandomMovieState] = useGetRandomMoviesMutation()
+  const { data: movieData, isLoading: movieDataLoading, refetch } = useGetMovieQuery(content?._id, {
+    refetchOnMountOrArgChange: true,
+  })
 
-  const getRandomMovie = useCallback(async () => {
 
-    const res = await getRandomMovieApi(type)
+  const { data: genresData, isLoading: genresLoading } = useGetGenresQuery()
 
-    if (Array.isArray(res?.data)) {
-      setContent(res?.data?.[0]);
-    }
 
-    else {
-      Swal.fire({
-        title: "Error",
-        text: "An error occurred while fetching content.",
-        icon: "error",
-      });
-    }
-  }, [type]);
+  const [likeMovie, likeMovieState] = useLikeMovieMutation()
+  const [dislikeMovie, dislikeMovieState] = useDislikeMovieMutation()
+  const [addToMyList, addToMyListState] = useAddMovieToDefaultListMutation()
+
 
 
   useEffect(() => {
@@ -74,100 +84,159 @@ export default function Featured({ type }) {
     // )
   }, [type]);
 
-  const trimmedDesc = useMemo(() => {
-    const maxLength = 300; // Adjust the maximum length as needed
-    return content?.desc
-      ? content.desc.length > maxLength
-        ? content.desc.slice(0, maxLength) + "..."
-        : content.desc
-      : "";
-  }, [content]);
+  const showSwal = (title, message, type) => {
+    Swal.fire({
+      title: title ?? "",
+      text: message,
+      icon: type,
+    });
+  };
 
-  // Function to add a movie to the default list
-  const addMovieToDefaultList = useCallback(() => {
-    if (content?._id) {
-      client
-        .addMovieToDefaultList(content._id)
-        .then(() => {
-          Swal.fire({
-            title: "Movie Added",
-            text: "The movie has been added to your list.",
-            icon: "success",
-          });
-        })
-        .catch((err) => {
-          console.error(err);
-          Swal.fire({
-            title: "Error",
-            text: "An error occurred while adding the movie to your list.",
-            icon: "error",
-          });
-        });
+  const onLikeMovie = async () => {
+    const res = await likeMovie(content?._id)
+
+    if (!res?.data) {
+      showSwal("Error Liking movie", '', "error");
+      return
+    }
+    refetch({ force: true });
+  }
+
+  const onDislikeMovie = async () => {
+    const res = await dislikeMovie(content?._id)
+
+    if (!res?.data) {
+      showSwal("Error disliking movie", '', "error");
+      return
+    }
+    refetch({ force: true });
+  }
+
+  const onAddToList = async () => {
+    const res = await addToMyList(content?._id)
+
+    if (!res?.data) {
+      showSwal("Error encountered", '', "error");
+      return
     }
 
-    /*try {
-      const response = await axios.post(
-        `${api_url}lists/add-movie-to-default-list`,
-        {
-          email: user.email || "",
-          movieId: content._id,
-        }
-      );
-      console.log(content);
-      // Display a success Swal popup when the movie is added
-      if (response.status === 200) {
-        Swal.fire({
-          title: "Movie Added",
-          text: "The movie has been added to your list.",
-          icon: "success",
-        });
-      }
-    } catch (error) {
-      console.error(error);
-      // Handle error and display an error Swal popup if needed
+    // showSwal("Added to list", '', 'success')
+    refetch({ force: true });
+  }
+
+  const getRandomMovie = useCallback(async () => {
+
+    const res = await getRandomMovieApi(type)
+
+    if (Array.isArray(res?.data)) {
+      setContent(res?.data?.[0]);
+    }
+
+    else {
       Swal.fire({
         title: "Error",
-        text: "An error occurred while adding the movie to your list.",
+        text: "An error occurred while fetching content.",
         icon: "error",
       });
-    }*/
-  }, [content, client]);
+    }
+  }, [type]);
+
+
+  function formatNumber(number) {
+
+    if (isNaN(number)) return 0
+
+    if (number < 1000) {
+      return number.toString(); // No abbreviation for numbers less than 1000
+    } else if (number < 1000000) {
+      return `${(number / 1000).toFixed(1)}k`; // Abbreviate thousands with "k"
+    } else {
+      return `${(number / 1000000).toFixed(1)}M`; // Abbreviate millions with "M"
+    }
+  }
+
+
+
+  const trimmedDesc = useMemo(() => {
+    const maxLength = 300; // Adjust the maximum length as needed
+    return movieData?.desc
+      ? movieData.desc.length > maxLength
+        ? movieData.desc.slice(0, maxLength) + "..."
+        : movieData.desc
+      : "";
+  }, [movieData]);
+
 
   const renderLikeContainer = () => {
 
     return (
-      <div></div>
+      <div className=" flex">
+        <IconButton
+          onClick={onLikeMovie}
+          className='flex gap-1 !text-white '
+          aria-label="thumb up">
+          {
+            movieData?.currentUserLiked ? <ThumbUp /> : <ThumbUpAltOutlined />
+          }
+          <div className='text-sm'>{formatNumber(movieData?.likesCount)}</div>
+        </IconButton>
+        <IconButton
+          onClick={onDislikeMovie}
+          className='flex gap-1 !text-white'
+          aria-label="thumb down ">
+          {
+            movieData?.currentUserDisliked ? <ThumbDown /> : <ThumbDownOutlined />
+          }
+          <div className='text-sm'>{formatNumber(movieData?.dislikesCount)}</div>
+
+        </IconButton>
+      </div>
     )
   }
 
   const renderMetaInfo = () => {
     const metaInfo: MetaInfoItem[] = []
 
-    if (content?.genre) {
 
+    if (movieData?.genre && Array.isArray(movieData?.genre)) {
+      let genreTextArr = movieData?.genre?.map((genreId) => {
+        const genreObj = genresData?.genres?.find((_genre) => {
+          return genreId == _genre?._id
+        })
+
+        return genreObj?.title
+      }).filter((text) => text != undefined)
+
+      if (genreTextArr.length > 0) {
+        metaInfo.push({
+          text: genreTextArr?.join(', ')
+        })
+      }
     }
 
-    if (content?.ageRating) {
+    if (movieData?.ageRating) {
       metaInfo.push({
         text: content?.ageRating
       })
     }
 
-    if (content?.year) {
+    if (movieData?.year) {
       metaInfo.push({
         text: content?.year
       })
     }
 
-    if (content?.duration) {
+    if (movieData?.duration) {
       metaInfo.push({
         text: content?.duration
       })
     }
 
+
     if (metaInfo.length == 0) return
 
     //build tsx
+
 
     return (
       <div
@@ -190,12 +259,12 @@ export default function Featured({ type }) {
     <div className={
       addClassNames(
         "featured ",
-        content?.img ? '' : 'bg-gradient-to-b from-teal-500 to-gray-900'
+        movieData?.img ? '' : 'bg-gradient-to-b from-teal-500 to-gray-900'
       )
     }>
 
-      {content?.img ? (
-        <img src={content?.img} alt=""
+      {movieData?.img ? (
+        <img src={movieData?.img} alt=""
           className=" w-full h-full"
           loading="lazy" />
       ) : null}
@@ -203,20 +272,20 @@ export default function Featured({ type }) {
         <div className="w-[150px] h-[250px] ">
           <img
             className="w-full h-full"
-            src={content?.imgTitle ? content?.imgTitle : moviePlaceholderSvg}
+            src={movieData?.imgTitle ? movieData?.imgTitle : moviePlaceholderSvg}
             alt="" loading="lazy" />
         </div>
         <div>
           {renderMetaInfo()}
         </div>
         <span className="desc" style={{ color: "#fff" }}>
-          <span id="desc-title">{content?.title}</span>
+          <span id="desc-title">{movieData?.title}</span>
           {trimmedDesc}
         </span>
-        <div>
+        <div className="flex justify-between">
           <div className="buttons">
             <Link
-              to={`/watch/${content?._id}`}
+              to={`/watch/${movieData?._id}`}
               style={{ textDecoration: "none" }}
             >
               <button className="play more">
@@ -224,8 +293,8 @@ export default function Featured({ type }) {
                 <span className='uppercase text-[13px]'>Play</span>
               </button>
             </Link>
-            <button className="more" onClick={addMovieToDefaultList}>
-              <AddCircle />
+            <button className="more" onClick={onAddToList}>
+              {movieData?.isInDefaultList ? <Check /> : <AddCircle />}
               <span className='uppercase text-[13px]'>My List</span>
             </button>
           </div>
