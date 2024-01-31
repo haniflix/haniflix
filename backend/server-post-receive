@@ -8,31 +8,29 @@ BRANCH_NAME=master
 mkdir -p "$DEPLOY_DIR"
 
 # Set the GIT_WORK_TREE environment variable
-export GIT_WORK_TREE="$DEPLOY_DIR"
+GIT_WORK_TREE="$DEPLOY_DIR"
 
 # Update the deployment folder with the latest changes
 git --work-tree="$DEPLOY_DIR" --git-dir="$GIT_DIR" checkout -f "$BRANCH_NAME"
 
-# Check for changes in backend
-if git diff --name-only "$PREVIOUS_COMMIT" "$CURRENT_COMMIT" | grep -q "backend"; then
-    # Navigate to the deployment folder
-    cd "$SERVER_DEPLOY_DIR"
+# Navigate to the deployment folder
+cd "$SERVER_DEPLOY_DIR"
 
-    # Install production dependencies
-    npm install --production
+# Install production dependencies
+npm install --production
 
-    # Rebuild Docker containers
-    docker compose up -d --build
-fi
+# Rebuild Docker containers
+docker compose up -d --build
 
-# Check for changes in frontend (building, but not rebuilding Docker)
-if git diff --name-only "$PREVIOUS_COMMIT" "$CURRENT_COMMIT" | grep -q "frontend"; then
-    cd /root/haniflix-app/frontend
-    npm install && npm run build
-fi
 
-# Check for changes in admin (building, but not rebuilding Docker)
-if git diff --name-only "$PREVIOUS_COMMIT" "$CURRENT_COMMIT" | grep -q "admin"; then
-    cd /root/haniflix-app/admin
-    npm install && npm run build
-fi
+# # Check for changes in frontend (building, but not rebuilding Docker)
+# if git diff --name-only "$PREVIOUS_COMMIT" "$CURRENT_COMMIT" | grep -q "frontend"; then
+#     cd /root/haniflix-app/frontend
+#     npm install && npm run build
+# fi
+
+# # Check for changes in admin (building, but not rebuilding Docker)
+# if git diff --name-only "$PREVIOUS_COMMIT" "$CURRENT_COMMIT" | grep -q "admin"; then
+#     cd /root/haniflix-app/admin
+#     npm install && npm run build
+# fi
