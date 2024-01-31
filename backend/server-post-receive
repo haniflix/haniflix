@@ -1,6 +1,6 @@
 #!/bin/sh
-DEPLOY_DIR=/root/haniflix-app
-SERVER_DEPLOY_DIR=/root/haniflix-app/backend
+DEPLOY_DIR=/var/www/html/haniflix-app
+SERVER_DEPLOY_DIR=/var/www/html/haniflix-app/backend
 GIT_DIR=/root/haniflix.git
 BRANCH_NAME=master
 
