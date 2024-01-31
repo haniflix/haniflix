@@ -10,10 +10,29 @@ mkdir -p "$DEPLOY_DIR"
 # Update the deployment folder with the latest changes
 git --work-tree="$DEPLOY_DIR" --git-dir="$GIT_DIR" checkout -f "$BRANCH_NAME"
 
-# Navigate to the deployment folder
-cd "$SERVER_DEPLOY_DIR"
 
-# Install production dependencies
-npm install --production
 
-node index.js
+# Check for changes in backend
+if [[ $(git diff --name-only $PREVIOUS_COMMIT $CURRENT_COMMIT | grep "backend") ]]; then
+    # Navigate to the deployment folder
+    cd "$SERVER_DEPLOY_DIR"
+
+    # Install production dependencies
+    npm install --production
+
+    # Rebuild Docker containers
+    docker compose up -d --build
+fi
+
+# Check for changes in frontend (building, but not rebuilding Docker)
+if [[ $(git diff --name-only $PREVIOUS_COMMIT $CURRENT_COMMIT | grep "frontend") ]]; then
+    cd /root/haniflix-app/frontend
+    npm install && npm run build
+fi
+
+# Check for changes in admin (building, but not rebuilding Docker)
+if [[ $(git diff --name-only $PREVIOUS_COMMIT $CURRENT_COMMIT | grep "admin") ]]; then
+    cd /root/haniflix-app/admin
+    npm install && npm run build
+fi
+
