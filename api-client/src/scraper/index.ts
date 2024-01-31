@@ -1,7 +1,7 @@
 import qs from "querystringify";
 
 import { Base, Pagination } from "../base";
-import { MovieDetails, ScraperPostBody } from "./types";
+import { ScraperPostBody } from "./types";
 
 const resourceName = "scraper";
 
