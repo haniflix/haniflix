@@ -95,6 +95,7 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
   }, [playtime, duration, socket]);
 
   function formatNumber(number) {
+    if (isNaN(number)) return;
     if (number < 1000) {
       return number.toString(); // No abbreviation for numbers less than 1000
     } else if (number < 1000000) {

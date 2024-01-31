@@ -66,6 +66,7 @@ const AppRouter = (props) => {
 
         <Router>
             <Routes>
+
                 <Route element={<ProtectedRoutes />}>
                     <Route index element={<Home />} />
                     <Route path="movies" element={<Home type="movies" />} />

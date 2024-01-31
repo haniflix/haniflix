@@ -6,11 +6,12 @@ import { selectUser } from "../store/reducers/auth";
 const ProtectedRoutes = () => {
     const user = useAppSelector(selectUser);
 
+    if (!user) {
+        return <Navigate to="/login" />
+    }
 
     return (
-        user ?
-            <Outlet />
-            : <Navigate to="/login" />
+        <Outlet />
     )
 }
 

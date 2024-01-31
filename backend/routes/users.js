@@ -119,8 +119,6 @@ router.get("/", async (req, res) => {
 
     const users = await User.aggregate(aggregationPipeline);
 
-    console.log("users length", users.length);
-
     res.status(200).json(users);
   } catch (err) {
     //-- throws a 'headers_already_sent' error

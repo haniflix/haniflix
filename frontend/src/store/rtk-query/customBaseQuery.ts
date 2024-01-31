@@ -9,6 +9,8 @@ const BASE_URL =
 import Swal from "sweetalert2";
 
 const logoutSuccess = () => {
+  //window.location.href = "/";
+
   return {
     type: "auth/logout",
   };
@@ -71,7 +73,7 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
 
   const rememberMe = getState().auth?.rememberMe;
 
-  if (result.error && result.error.status === 401) {
+  if (result.error && result.error?.status === 401) {
     if (result.error?.data?.errorName === "loggedElsewhere") {
       dispatch(logoutSuccess());
       showSwal(

@@ -23,11 +23,14 @@ function verify(req, res, next) {
       User.findById(userId)
         .then((user) => {
           if (!user || user.accessToken !== token) {
-            // User logged in on another device
-            return res.status(401).json({
-              error: "User logged in on another device",
-              errorName: "loggedElsewhere",
-            });
+            //exclude admins from this check
+            if (!user.isAdmin) {
+              // User logged in on another device
+              return res.status(401).json({
+                error: "User logged in on another device",
+                errorName: "loggedElsewhere",
+              });
+            }
           }
           req.user = user;
           next();

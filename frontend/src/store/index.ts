@@ -4,6 +4,8 @@ import storage from "redux-persist/lib/storage";
 import authReducer from "./reducers/auth";
 import { authApi } from "./rtk-query/authApi";
 
+import { setupListeners } from "@reduxjs/toolkit/query";
+
 const rootPersistConfig = {
   key: "root",
   storage,
@@ -35,5 +37,7 @@ export const persistor = persistStore(store);
 export type RootState = ReturnType<typeof store.getState>;
 
 export type AppDispatch = typeof store.dispatch;
+
+setupListeners(store.dispatch);
 
 export default store;

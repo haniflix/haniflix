@@ -24,7 +24,6 @@ const Home = ({ type = null }) => {
 
   const { data: continueWatchingListData, isLoading: continueWatchingLoading } = useGetContinueWatchingListQuery({})
 
-
   const getRandomLists = useCallback(
     (type: string, genre: string) => {
       client
@@ -89,16 +88,18 @@ const Home = ({ type = null }) => {
       <Suspense
         fallback={<div style={{ backgroundColor: "black" }}>Loading...</div>}
       >
-        {
-          continueWatchingListData ?
-            <div>
-              <div className="text-white font-bold text-2xl mt-6">
-                Continue Watching
-              </div>
+
+        <div>
+          <div className="text-white font-bold text-2xl mt-6">
+            Continue Watching
+          </div>
+          {
+            continueWatchingListData?.list ?
               <List list={continueWatchingListData?.list} />
-            </div>
-            : undefined
-        }
+              : undefined
+          }
+        </div>
+
         {lists?.map((list) => (
           <List key={list._id} list={list} />
         ))}

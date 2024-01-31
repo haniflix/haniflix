@@ -63,18 +63,19 @@ function Users() {
     ...(formik.values.activeSort && { orderBy: formik.values.activeSort }),
   }
 
-  const { data: usersData, isLoading: usersLoading } = useGetUsersQuery(queryParams)
+  const { data: usersData, isLoading: usersLoading, refetch } = useGetUsersQuery(queryParams)
 
   const [deleteUser, deleteUserState] = useDeleteUserMutation()
 
   console.log('usersData ', usersData)
 
   const getData = useCallback(() => {
-    toast.loading('loading...', { position: 'top-right' });
-    client.getUsers().then((data) => {
-      toast.dismiss();
-      setItems(data);
-    });
+    refetch()
+    //toast.loading('loading...', { position: 'top-right' });
+    // client.getUsers().then((data) => {
+    //   toast.dismiss();
+    //   setItems(data);
+    // });
   }, []);
 
 
@@ -93,7 +94,7 @@ function Users() {
       .then(() => {
         toast.dismiss();
         toast.success('deleted', { position: 'top-right' });
-        // getData();
+        getData();
         setToDelete(null);
       })
       .catch((err) => {

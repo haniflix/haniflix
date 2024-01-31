@@ -5,6 +5,7 @@ import type { RootState } from "../store";
 interface AuthState {
   user: any;
   rememberMe: boolean;
+  extras: any;
 }
 
 const initialState: AuthState = {
@@ -37,15 +38,14 @@ export const authSlice = createSlice({
       authApi.endpoints.login.matchFulfilled,
       (state, action) => {
         const { payload } = action;
+
         state.extras = action;
         if (action?.meta.arg.originalArgs.rememberMe) {
           state.rememberMe = true;
         }
 
-        if (payload.isAdmin == true) {
-          state.loggedIn = true;
-          state.user = payload;
-        }
+        state.loggedIn = true;
+        state.user = payload;
       }
     );
   },

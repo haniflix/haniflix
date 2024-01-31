@@ -63,7 +63,7 @@ const List: React.FC<ListProps> = ({ list, onDelete, onEdit }) => {
     <>
       <div className="list">
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <div className="listTitle">{list?.title}</div>
+          <div className="listTitle text-white font-bold !text-2xl mt-6">{list?.title}</div>
           <div>
             {onEdit ? (
               <span style={{ cursor: "pointer" }} onClick={() => onEdit()}>

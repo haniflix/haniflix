@@ -140,6 +140,7 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
     if (res?.data) {
       toast.dismiss();
       toast.success('saved', { position: 'top-right' });
+      callback?.()
     }
 
     else {
@@ -183,13 +184,11 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
 
     const res = await updateMovie({ itemId: item._id, data })
 
-    console.log('genreObjs ', genreObjs)
-
-    console.log('item._id, data ', item._id, data)
-
     if (res?.data) {
       toast.dismiss();
       toast.success('saved', { position: 'top-right' });
+
+      callback?.()
     }
 
     else {

@@ -49,7 +49,7 @@ export const authSlice = createSlice({
   }
 });
 
-export const { setUser } = authSlice.actions;
+export const { setUser, updateToken, logout } = authSlice.actions;
 
 export const selectUser = (state: RootState) => state.auth.user;
 

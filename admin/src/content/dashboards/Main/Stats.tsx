@@ -16,6 +16,7 @@ import { useEffect, useState } from 'react';
 import useApiClient from 'src/hooks/useApiClient';
 import { Movie } from '@api/client/dist/movies/types';
 import { User } from '@api/client/dist/users/types';
+import { useGetMoviesQuery } from 'src/store/rtk-query/moviesApi';
 
 const AvatarWrapper = styled(Avatar)(
   ({ theme }) => `
@@ -28,12 +29,11 @@ const AvatarWrapper = styled(Avatar)(
     border-radius: 60px;
     height: ${theme.spacing(5.5)};
     width: ${theme.spacing(5.5)};
-    background: ${
-      theme.palette.mode === 'dark'
-        ? theme.colors.alpha.trueWhite[30]
-        : alpha(theme.colors.alpha.black[100], 0.07)
+    background: ${theme.palette.mode === 'dark'
+      ? theme.colors.alpha.trueWhite[30]
+      : alpha(theme.colors.alpha.black[100], 0.07)
     };
-  
+
     img {
       background: ${theme.colors.alpha.trueWhite[100]};
       padding: ${theme.spacing(0.5)};
@@ -60,18 +60,18 @@ const CardAddAction = styled(Card)(
         height: 100%;
         color: ${theme.colors.primary.main};
         transition: ${theme.transitions.create(['all'])};
-        
+
         .MuiCardActionArea-root {
           height: 100%;
           justify-content: center;
           align-items: center;
           display: flex;
         }
-        
+
         .MuiTouchRipple-root {
           opacity: .2;
         }
-        
+
         &:hover {
           border-color: ${theme.colors.alpha.black[70]};
         }
@@ -81,6 +81,15 @@ const CardAddAction = styled(Card)(
 function Stats() {
   const [users, setUsers] = useState<User[]>([]);
   const [movies, setMovies] = useState<Movie[]>([]);
+
+  let queryParams = {
+    perPage: 100000,
+  }
+
+  const { data: moviesData, isLoading: moviesLoading } = useGetMoviesQuery(queryParams)
+
+  const totalMovies = moviesData?.totalMovies;
+
   const client = useApiClient();
   const getMovies = () => {
     client
@@ -178,7 +187,7 @@ function Stats() {
                 }}
               >
                 <Typography variant="h3" gutterBottom noWrap>
-                  {movies?.length}
+                  {totalMovies || 0}
                 </Typography>
               </Box>
             </CardContent>

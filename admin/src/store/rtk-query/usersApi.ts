@@ -25,7 +25,7 @@ export const usersApi = authApi.injectEndpoints({
     }),
     updateUser: builder.mutation({
       query: ({ itemId, data }) => ({
-        url: `users/${id}`,
+        url: `users/${itemId}`,
         method: 'PUT',
         body: data
       }),

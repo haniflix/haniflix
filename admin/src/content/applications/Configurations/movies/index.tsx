@@ -72,7 +72,7 @@ function Movies() {
     searchTerm
   }
 
-  const { data: moviesData, isLoading: moviesLoading } = useGetMoviesQuery(queryParams)
+  const { data: moviesData, isLoading: moviesLoading, refetch } = useGetMoviesQuery(queryParams)
 
   const [deleteMovie, deleteMovieState] = useDeleteMovieMutation()
 
@@ -82,11 +82,12 @@ function Movies() {
 
 
   const getData = useCallback(() => {
-
-    client.getMovies().then((data) => {
-      toast.dismiss();
-      setItems(data);
-    });
+    console.log('callback')
+    refetch()
+    // client.getMovies().then((data) => {
+    //   toast.dismiss();
+    //   setItems(data);
+    // });
   }, []);
 
   const getItemFromId = useCallback(
@@ -104,6 +105,8 @@ function Movies() {
         toast.dismiss();
         toast.success('deleted', { position: 'top-right' });
         setToDelete(null);
+
+        refetch()
         // getData();
       })
       .catch((err) => {
@@ -131,7 +134,7 @@ function Movies() {
   }, [openAddModal]);
 
   const handlePageChange = (data) => {
-    const selectedPage = data?.selected || 0;
+    const selectedPage = (parseInt(data?.selected) + 1) || 0;
     setPage(selectedPage)
   };
 

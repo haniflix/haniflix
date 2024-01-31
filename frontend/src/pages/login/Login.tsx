@@ -12,10 +12,14 @@ import { selectUser, setUser } from "../../store/reducers/auth";
 import { useAppSelector } from "../../store/hooks";
 import { useLoginMutation } from "../../store/rtk-query/authApi";
 
+import { useNavigate } from 'react-router-dom'
+
 import SocketContext from "../../context/SocketContext";
 
 export default function Login() {
   const emailRef = useRef();
+
+  const navigate = useNavigate()
   // const passwordRef = useRef();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -43,11 +47,11 @@ export default function Login() {
     return emailReg.test(email);
   };
 
-  useEffect(() => {
-    if (user != null) {
-      window.location.href = "/";
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user != null) {
+  //     window.location.href = "/";
+  //   }
+  // }, [user]);
 
   const onLogin = async (email: string, password: string) => {
     const res = await login({ email, password, rememberMe })
@@ -61,7 +65,8 @@ export default function Login() {
         icon: "success",
         timer: 1500,
       }).then(function () {
-        //   window.location.href = "/";
+        // window.location.href = "/";
+        navigate('/')
       });
     }
 

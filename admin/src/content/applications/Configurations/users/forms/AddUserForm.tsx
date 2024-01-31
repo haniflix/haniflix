@@ -57,6 +57,7 @@ const AddUserForm: React.FC<AddTagGroupProps> = ({ callback, item }) => {
       reset();
       toast.dismiss();
       toast.success('saved', { position: 'top-right' });
+      callback?.()
     }
     else {
 
@@ -84,6 +85,7 @@ const AddUserForm: React.FC<AddTagGroupProps> = ({ callback, item }) => {
         toast.dismiss();
         toast.success('saved', { position: 'top-right' });
         // callback(data);
+        callback?.()
         reset();
       })
       .catch((err) => {

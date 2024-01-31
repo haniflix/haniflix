@@ -68,7 +68,7 @@ const GenreResults = () => {
 
 
   const handlePageChange = (data) => {
-    const selectedPage = data?.selected || 0;
+    const selectedPage = (parseInt(data?.selected) + 1) || 0;
     setPage(selectedPage)
   };
 

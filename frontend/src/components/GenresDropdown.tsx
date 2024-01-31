@@ -7,7 +7,7 @@ import { MdOutlineArrowDropDown } from "react-icons/md";
 
 function GenresDropdown() {
     const { data: genresData, isLoading, error } = useGetGenresQuery();
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
 
     const dropdownContentRef = useRef(null);
     const dropdownButtonRef = useRef(null);
@@ -16,7 +16,6 @@ function GenresDropdown() {
 
     useEffect(() => {
         const handleClickOutside = (event) => {
-            console.log('event ', event)
             if (
                 event.target !== dropdownButtonRef.current &&
                 !dropdownContentRef.current.contains(event.target)

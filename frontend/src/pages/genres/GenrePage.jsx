@@ -5,6 +5,7 @@ const GenrePage = () => {
   return (
     <div>
       <Navbar />
+      <div className="sm:h-[60px]" />
       <GenreResults />
     </div>
   );

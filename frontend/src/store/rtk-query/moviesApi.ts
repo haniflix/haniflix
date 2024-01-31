@@ -8,7 +8,16 @@ export const moviesApi = authApi.injectEndpoints({
         url: "movies",
         params,
       }),
-      providesTags: ["Movies"],
+      providesTags: (result, error, arg) =>
+        result
+          ? [
+              ...result?.movies?.map(({ _id }) => ({
+                type: "Movies" as const,
+                id: _id,
+              })),
+              "Movies",
+            ]
+          : ["Movies"],
     }),
     getRandomMovies: builder.mutation({
       query: (type: string | undefined) => ({
@@ -20,7 +29,16 @@ export const moviesApi = authApi.injectEndpoints({
       query: (id: number | string) => ({
         url: `movies/${id}`,
       }),
-      providesTags: ["Movie"],
+      providesTags: (result, error, arg) =>
+        result
+          ? [
+              {
+                type: "Movie" as const,
+                id: result?._id,
+              },
+              "Movie",
+            ]
+          : ["Movie"],
     }),
     createMovie: builder.mutation({
       query: (data: Partial<Movie>) => ({
@@ -36,7 +54,10 @@ export const moviesApi = authApi.injectEndpoints({
         method: "PUT",
         body: data,
       }),
-      invalidatesTags: ["Movies", "Movie"],
+      invalidatesTags: (result, error, arg) => [
+        { type: "Movies", id: arg.id },
+        { type: "Movie", id: arg.id },
+      ],
     }),
     deleteMovie: builder.mutation({
       query: (id: number | string) => ({
@@ -50,14 +71,20 @@ export const moviesApi = authApi.injectEndpoints({
         url: `movies/${id}/like`,
         method: "POST",
       }),
-      invalidatesTags: ["Movies", "Movie"],
+      invalidatesTags: (result, error, arg) => [
+        { type: "Movies", id: arg.id },
+        { type: "Movie", id: arg.id },
+      ],
     }),
     dislikeMovie: builder.mutation({
       query: (id: number | string) => ({
         url: `movies/${id}/dislike`,
         method: "POST",
       }),
-      invalidatesTags: ["Movies", "Movie"],
+      invalidatesTags: (result, error, arg) => [
+        { type: "Movies", id: arg.id },
+        { type: "Movie", id: arg.id },
+      ],
     }),
   }),
   overrideExisting: false,

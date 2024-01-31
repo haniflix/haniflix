@@ -58,18 +58,19 @@ function Lists() {
     ...(formik.values.activeSort && { orderBy: formik.values.activeSort }),
   }
 
-  const { data: adminListData, isLoading, adminListsLoading } = useGetAdminListsQuery(queryParams)
+  const { data: adminListData, isLoading: adminListsLoading, refetch } = useGetAdminListsQuery(queryParams)
 
   const [deleteList, deleteListState] = useDeleteListMutation()
 
 
   const getData = useCallback(() => {
-    toast.loading('loading...', { position: 'top-right' });
-    client.getAdminLists().then((data) => {
-      toast.dismiss();
-      console.log(data);
-      setItems(data);
-    });
+    refetch()
+    // toast.loading('loading...', { position: 'top-right' });
+    // client.getAdminLists().then((data) => {
+    //   toast.dismiss();
+    //   console.log(data);
+    //   setItems(data);
+    // });
   }, []);
 
   const getItemFromId = useCallback(

@@ -40,9 +40,10 @@ export default function Featured({ type }) {
   const userReducer = useSelector((state) => state.auth)
 
   const [getRandomMovieApi, getRandomMovieState] = useGetRandomMoviesMutation()
-  const { data: movieData, isLoading: movieDataLoading, refetch } = useGetMovieQuery(content?._id, {
-    refetchOnMountOrArgChange: true,
-  })
+  const { data: movieData, isLoading: movieDataLoading, refetch, isFetching: fetchingMovies } = useGetMovieQuery(content?._id)
+
+  console.log('fetchingMovies ', fetchingMovies)
+  // console.log('movieData ', movieData)
 
 
   const { data: genresData, isLoading: genresLoading } = useGetGenresQuery()
@@ -101,7 +102,7 @@ export default function Featured({ type }) {
       showSwal("Error Liking movie", '', "error");
       return
     }
-    refetch({ force: true });
+    // refetch({ force: true });
   }
 
   const onDislikeMovie = async () => {
@@ -111,7 +112,7 @@ export default function Featured({ type }) {
       showSwal("Error disliking movie", '', "error");
       return
     }
-    refetch({ force: true });
+    // refetch({ force: true });
   }
 
   const onAddToList = async () => {
@@ -123,7 +124,7 @@ export default function Featured({ type }) {
     }
 
     // showSwal("Added to list", '', 'success')
-    refetch({ force: true });
+    // refetch({ force: true });
   }
 
   const getRandomMovie = useCallback(async () => {
@@ -266,52 +267,62 @@ export default function Featured({ type }) {
       )
     }>
 
-      {movieData?.img ? (
-        <img src={movieData?.img} alt=""
-          className="w-full h-full absolute top-0 bottom-0 right-0 left-0"
-          loading="lazy" />
-      ) : null}
-      <div className={
-        addClassNames(
-          "info z-[100] p-[13px] sm:p-[20px] min-h-[400px]",
-          'mt-[100px] sm:w-[43vw]',
-          'sm:ml-[70px]'
-        )
-      }>
-        <div className="w-[150px] h-[250px]">
-          <img
-            className="w-full h-full"
-            src={movieData?.imgTitle ? movieData?.imgTitle : moviePlaceholderSvg}
-            alt="" loading="lazy" />
-        </div>
-        <div>
-          {renderMetaInfo()}
-        </div>
-        <span className="desc" style={{ color: "#fff" }}>
-          <span id="desc-title">{movieData?.title}</span>
-          {trimmedDesc}
-        </span>
-        <div className="flex justify-between flex-wrap">
-          <div className="buttons">
-            <Link
-              to={`/watch/${movieData?._id}`}
-              style={{ textDecoration: "none" }}
-            >
-              <button className="play more">
-                <PlayArrow />
-                <span className='uppercase text-[13px]'>Play</span>
-              </button>
-            </Link>
-            <button className="more" onClick={onAddToList}>
-              {movieData?.isInDefaultList ? <Check /> : <AddCircle />}
-              <span className='uppercase text-[13px]'>My List</span>
-            </button>
+      <div className="h-screen w-full relative flex flex-col justify-center">
+        {/* Image div */}
+        <div
+          className="absolute top-0 left-0 right-0 bottom-0 bg-cover bg-teal-500 bg-no-repeat"
+          style={{ backgroundImage: `url(${movieData?.img})` }}
+        ></div>
+
+        {/* Overlay div */}
+        <div
+          className="absolute top-[-20px] left-0 right-0 bottom-[-20px] bg-gradient-to-r from-black to-transparent opacity-[100%]"
+        ></div>
+
+        <div className={
+          addClassNames(
+            "info z-[100] relative p-[13px] sm:p-[20px] min-h-[400px]",
+            'mt-[100px] sm:w-[43vw]',
+            'sm:ml-[70px]'
+          )
+        }>
+          <div className="w-[150px] h-[250px]">
+            <img
+              className="w-full h-full"
+              src={movieData?.imgTitle ? movieData?.imgTitle : moviePlaceholderSvg}
+              alt="" loading="lazy" />
           </div>
-          {
-            renderLikeContainer()
-          }
+          <div>
+            {renderMetaInfo()}
+          </div>
+          <span className="desc" style={{ color: "#fff" }}>
+            <span id="desc-title">{movieData?.title}</span>
+            {trimmedDesc}
+          </span>
+          <div className="flex justify-between flex-wrap">
+            <div className="buttons">
+              <Link
+                to={`/watch/${movieData?._id}`}
+                style={{ textDecoration: "none" }}
+              >
+                <button className="play more">
+                  <PlayArrow />
+                  <span className='uppercase text-[13px]'>Play</span>
+                </button>
+              </Link>
+              <button className="more" onClick={onAddToList}>
+                {movieData?.isInDefaultList ? <Check /> : <AddCircle />}
+                <span className='uppercase text-[13px]'>My List</span>
+              </button>
+            </div>
+            {
+              renderLikeContainer()
+            }
+          </div>
         </div>
       </div>
+
+
     </div>
   );
 }

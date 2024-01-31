@@ -96,6 +96,7 @@ const AddListForm: React.FC<AddMovieProps> = ({ callback, item }) => {
         toast.success('saved', { position: 'top-right' });
         reset();
         // if (callback) callback();
+        callback?.()
       })
       .catch((err) => {
         toast.dismiss();
@@ -120,6 +121,7 @@ const AddListForm: React.FC<AddMovieProps> = ({ callback, item }) => {
         toast.dismiss();
         toast.success('saved', { position: 'top-right' });
         //   if (callback) callback();
+        callback?.()
       })
       .catch((err) => {
         toast.dismiss();

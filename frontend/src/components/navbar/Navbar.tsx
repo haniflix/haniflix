@@ -45,7 +45,9 @@ const Navbar = () => {
   const onLogout = () => {
     dispatch(logout());
 
-    window.location.href = "/";
+    console.log('cliecked')
+
+    // window.location.href = "/";
   };
 
   const renderMobileMenuList = () => {
