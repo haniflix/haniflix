@@ -26,7 +26,7 @@ import { useAddMovieToDefaultListMutation } from "../../../store/rtk-query/lists
 
 import { useNavigate } from 'react-router-dom'
 
-export default function SearchListItem({ movie }) {
+export default function SearchListItem({ movie, refetch }) {
   const navigate = useNavigate()
 
   const [likeMovie, likeMovieState] = useLikeMovieMutation()
@@ -48,6 +48,7 @@ export default function SearchListItem({ movie }) {
       showSwal("Error Liking movie", '', "error");
       return
     }
+    refetch?.()
   }
 
   const onDislikeMovie = async () => {
@@ -57,6 +58,7 @@ export default function SearchListItem({ movie }) {
       showSwal("Error disliking movie", '', "error");
       return
     }
+    refetch?.()
   }
 
   const onAddToList = async () => {
@@ -66,7 +68,7 @@ export default function SearchListItem({ movie }) {
       showSwal("Error encountered", '', "error");
       return
     }
-
+    refetch?.()
     //  showSwal("Added to list", '', 'success')
   }
 

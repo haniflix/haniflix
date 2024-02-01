@@ -34,7 +34,8 @@ export const moviesApi = authApi.injectEndpoints({
           ? [
               {
                 type: "Movie" as const,
-                id: result?._id,
+                //arg is movie Id
+                id: arg,
               },
               "Movie",
             ]
@@ -72,8 +73,9 @@ export const moviesApi = authApi.injectEndpoints({
         method: "POST",
       }),
       invalidatesTags: (result, error, arg) => [
-        { type: "Movies", id: arg.id },
-        { type: "Movie", id: arg.id },
+        //arg is id
+        { type: "Movies", id: arg },
+        { type: "Movie", id: arg },
       ],
     }),
     dislikeMovie: builder.mutation({
@@ -82,8 +84,9 @@ export const moviesApi = authApi.injectEndpoints({
         method: "POST",
       }),
       invalidatesTags: (result, error, arg) => [
-        { type: "Movies", id: arg.id },
-        { type: "Movie", id: arg.id },
+        //arg is id
+        { type: "Movies", id: arg },
+        { type: "Movie", id: arg },
       ],
     }),
   }),

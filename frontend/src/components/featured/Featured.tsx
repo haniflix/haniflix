@@ -42,7 +42,7 @@ export default function Featured({ type }) {
   const [getRandomMovieApi, getRandomMovieState] = useGetRandomMoviesMutation()
   const { data: movieData, isLoading: movieDataLoading, refetch, isFetching: fetchingMovies } = useGetMovieQuery(content?._id)
 
-  console.log('fetchingMovies ', fetchingMovies)
+  // console.log('fetchingMovies ', fetchingMovies)
   // console.log('movieData ', movieData)
 
 
@@ -102,7 +102,7 @@ export default function Featured({ type }) {
       showSwal("Error Liking movie", '', "error");
       return
     }
-    // refetch({ force: true });
+    refetch({ force: true });
   }
 
   const onDislikeMovie = async () => {
@@ -112,7 +112,7 @@ export default function Featured({ type }) {
       showSwal("Error disliking movie", '', "error");
       return
     }
-    // refetch({ force: true });
+    refetch({ force: true });
   }
 
   const onAddToList = async () => {
@@ -124,7 +124,7 @@ export default function Featured({ type }) {
     }
 
     // showSwal("Added to list", '', 'success')
-    // refetch({ force: true });
+    refetch({ force: true });
   }
 
   const getRandomMovie = useCallback(async () => {

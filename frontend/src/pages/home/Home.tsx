@@ -12,7 +12,7 @@ import {
 } from "@mui/icons-material";
 import ListItem from "../../components/listItem/ListItem";
 import { useGetContinueWatchingListQuery } from "../../store/rtk-query/listsApi";
-const List = lazy(() => import("../../components/list/List"));
+import List from "../../components/list/List"
 
 const api_url = import.meta.env.VITE_APP_API_URL;
 

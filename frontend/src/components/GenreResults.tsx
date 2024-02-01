@@ -51,7 +51,7 @@ const GenreResults = () => {
     page,
   }
 
-  const { data: moviesData, isLoading: moviesLoading } = useGetMoviesQuery(queryParams)
+  const { data: moviesData, isLoading: moviesLoading, isFetching, refetch } = useGetMoviesQuery(queryParams)
 
   const pageCount = moviesData?.totalMovies
     ? Math.ceil(moviesData.totalMovies / queryParams.perPage)
@@ -89,7 +89,9 @@ const GenreResults = () => {
       <Grid container spacing={2} className='!mt-3'>
         {moviesData?.movies?.map((movie, index) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-            <SearchListItem movie={movie} />
+            <SearchListItem
+              refetch={refetch}
+              movie={movie} />
           </Grid>
         ))}
       </Grid>

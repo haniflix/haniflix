@@ -37,10 +37,7 @@ const Searchresults = () => {
     searchTerm: search
   }
 
-  const { data: moviesData, isLoading: moviesLoading } = useGetMoviesQuery(queryParams)
-
-
-  console.log('moviesData ', moviesData)
+  const { data: moviesData, isLoading: moviesLoading, refetch, isFetching } = useGetMoviesQuery(queryParams)
 
   const handleSearch = (e) => {
     const searchString = e.target.value.trimStart().toLowerCase();
@@ -85,7 +82,9 @@ const Searchresults = () => {
       <Grid container spacing={2} className='!mt-3'>
         {filteredMovies?.map((movie, index) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-            <SearchListItem movie={movie} />
+            <SearchListItem
+              refetch={refetch}
+              movie={movie} />
           </Grid>
         ))}
       </Grid>
