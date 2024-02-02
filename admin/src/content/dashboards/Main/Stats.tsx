@@ -17,6 +17,7 @@ import useApiClient from 'src/hooks/useApiClient';
 import { Movie } from '@api/client/dist/movies/types';
 import { User } from '@api/client/dist/users/types';
 import { useGetMoviesQuery } from 'src/store/rtk-query/moviesApi';
+import { useGetStatsQuery } from 'src/store/rtk-query/statsApi';
 
 const AvatarWrapper = styled(Avatar)(
   ({ theme }) => `
@@ -82,40 +83,35 @@ function Stats() {
   const [users, setUsers] = useState<User[]>([]);
   const [movies, setMovies] = useState<Movie[]>([]);
 
-  let queryParams = {
-    perPage: 100000,
-  }
+  const { data: statsData, isLoading: statsLoading } = useGetStatsQuery({})
 
-  const { data: moviesData, isLoading: moviesLoading } = useGetMoviesQuery(queryParams)
 
-  const totalMovies = moviesData?.totalMovies;
+  // const client = useApiClient();
+  // const getMovies = () => {
+  //   client
+  //     .getMovies()
+  //     .then((data) => {
+  //       setMovies(data);
+  //     })
+  //     .catch((err) => {
+  //       console.error(err);
+  //     });
+  // };
 
-  const client = useApiClient();
-  const getMovies = () => {
-    client
-      .getMovies()
-      .then((data) => {
-        setMovies(data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
-
-  const getUsers = () => {
-    client
-      .getUsers()
-      .then((data) => {
-        setUsers(data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
+  // const getUsers = () => {
+  //   client
+  //     .getUsers()
+  //     .then((data) => {
+  //       setUsers(data);
+  //     })
+  //     .catch((err) => {
+  //       console.error(err);
+  //     });
+  // };
 
   useEffect(() => {
-    getMovies();
-    getUsers();
+    // getMovies();
+    // getUsers();
   }, []);
   return (
     <>
@@ -159,7 +155,7 @@ function Stats() {
                 }}
               >
                 <Typography variant="h3" gutterBottom noWrap>
-                  {users?.length}
+                  {statsData?.userCount}
                 </Typography>
               </Box>
             </CardContent>
@@ -187,7 +183,7 @@ function Stats() {
                 }}
               >
                 <Typography variant="h3" gutterBottom noWrap>
-                  {totalMovies || 0}
+                  {statsData?.movieCount}
                 </Typography>
               </Box>
             </CardContent>

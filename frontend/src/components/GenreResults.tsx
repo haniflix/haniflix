@@ -11,6 +11,7 @@ import { useGetMoviesQuery } from "../store/rtk-query/moviesApi";
 import { useParams } from "react-router-dom";
 import Pagination from "./Pagination";
 import { useGetGenresQuery } from "../store/rtk-query/genresApi";
+import MovieListItem from "./MovieListItem/index";
 
 
 const api_url = import.meta.env.VITE_APP_API_URL;
@@ -40,7 +41,9 @@ const GenreResults = () => {
   const [search, setSearch] = useState("");
 
   const { id: genreId } = useParams();
-  const { data: genresData, isLoading: genresLoading } = useGetGenresQuery()
+  const { data: genresData, isLoading: genresLoading } = useGetGenresQuery({}, {
+    refetchOnMountOrArgChange: true,
+  })
 
   const itemsPerPage = 20;
   const [page, setPage] = React.useState(1);
@@ -51,7 +54,10 @@ const GenreResults = () => {
     page,
   }
 
-  const { data: moviesData, isLoading: moviesLoading, isFetching, refetch } = useGetMoviesQuery(queryParams)
+  const { data: moviesData, isLoading: moviesLoading, isFetching, refetch } = useGetMoviesQuery(queryParams, {
+    pollingInterval: 10000,
+    refetchOnMountOrArgChange: true,
+  })
 
   const pageCount = moviesData?.totalMovies
     ? Math.ceil(moviesData.totalMovies / queryParams.perPage)
@@ -82,16 +88,20 @@ const GenreResults = () => {
         <h1 className='text-white'>No Movies Found...</h1>
       )}
 
-      <div className='text-4xl font-bold mt-2 capitalize'>
+      <div className='text-4xl font-bold mt-11 sm:mt-2 capitalize'>
         {selectedGenre?.title} genre
       </div>
 
-      <Grid container spacing={2} className='!mt-3'>
+      <Grid container spacing={2} className='!mt-3 sm:!mx-[20px] relative'>
         {moviesData?.movies?.map((movie, index) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-            <SearchListItem
-              refetch={refetch}
-              movie={movie} />
+          <Grid item xs={6} sm={6} md={4} lg={3} key={index}>
+            <div className='relative hover:z-[200] shadow-md'>
+              <MovieListItem
+                movieObj={movie}
+                refetchFn={refetch}
+                layoutType="grid"
+              />
+            </div>
           </Grid>
         ))}
       </Grid>

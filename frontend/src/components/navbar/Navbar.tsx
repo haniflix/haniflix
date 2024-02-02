@@ -45,8 +45,6 @@ const Navbar = () => {
   const onLogout = () => {
     dispatch(logout());
 
-    console.log('cliecked')
-
     // window.location.href = "/";
   };
 

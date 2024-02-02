@@ -33,7 +33,7 @@ const theme = createTheme();
 
 const styles = {
   root: {
-    overflowX: "hidden",
+    // overflowX: "hidden",
     maxWidth: "90%",
   },
   addButton: {

@@ -7,6 +7,7 @@ const userRoute = require("./routes/users");
 const genreRoute = require("./routes/genres");
 const movieRoute = require("./routes/movies");
 const listRoute = require("./routes/lists");
+const statsRoute = require("./routes/stats");
 const scraperRoute = require("./routes/scraper");
 
 const cors = require("cors");
@@ -60,6 +61,7 @@ app.use("/api/movies", movieRoute);
 app.use("/api/genre", genreRoute);
 app.use("/api/lists", listRoute);
 app.use("/api/scraper", scraperRoute);
+app.use("/api/stats", statsRoute);
 
 // Import and call the socket setup function
 const setupSockets = require("./sockets");

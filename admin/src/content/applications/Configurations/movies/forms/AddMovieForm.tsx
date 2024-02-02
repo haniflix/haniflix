@@ -131,7 +131,9 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
       trailer: trailerLink,
       year,
       genre: genreObjs,
-      isSeries: isSerie
+      isSeries: isSerie,
+      ageRating: ageRating,
+      duration: duration
     };
     toast.loading('saving...', { position: 'top-right' });
 
@@ -176,7 +178,9 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
       genre: [
         ...genreIds
       ],
-      isSeries: isSerie
+      isSeries: isSerie,
+      ageRating: ageRating,
+      duration: duration
     };
 
 

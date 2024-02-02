@@ -27,6 +27,7 @@ import {
   ThumbUp,
   ThumbDown
 } from "@mui/icons-material";
+import CircularProgress from '@mui/material-next/CircularProgress';
 import { useGetGenresQuery } from "../../store/rtk-query/genresApi";
 
 type MetaInfoItem = {
@@ -34,16 +35,11 @@ type MetaInfoItem = {
 }
 
 export default function Featured({ type }) {
-  const [content, setContent] = useState<any>({});
   const client = useApiClient();
 
   const userReducer = useSelector((state) => state.auth)
 
-  const [getRandomMovieApi, getRandomMovieState] = useGetRandomMoviesMutation()
-  const { data: movieData, isLoading: movieDataLoading, refetch, isFetching: fetchingMovies } = useGetMovieQuery(content?._id)
-
-  // console.log('fetchingMovies ', fetchingMovies)
-  // console.log('movieData ', movieData)
+  const [skipInitialCall, setSkipInitial] = useState(true)
 
 
   const { data: genresData, isLoading: genresLoading } = useGetGenresQuery()
@@ -53,13 +49,38 @@ export default function Featured({ type }) {
   const [dislikeMovie, dislikeMovieState] = useDislikeMovieMutation()
   const [addToMyList, addToMyListState] = useAddMovieToDefaultListMutation()
 
+  const [getRandomMovie, getRandomMovieState] = useGetRandomMoviesMutation()
+
+  //frontend like
+  const [isLike, setIsLike] = useState<boolean | null>(null);
+
+
+
+  const [movieData, setMovieData] = useState<any>()
+
+  const { data: getMovieData, isLoading: getMovieLoading, refetch } = useGetMovieQuery(movieData?._id, {
+    skip: skipInitialCall
+  })
 
 
   useEffect(() => {
-    getRandomMovie();
+    if (getRandomMovieState?.data) {
+      setMovieData(getRandomMovieState?.data)
+    }
+  }, [getRandomMovieState?.data])
+
+  useEffect(() => {
+    if (getMovieData) {
+      setMovieData(getMovieData)
+    }
+  }, [getMovieData])
+
+
+  useEffect(() => {
+    onGetRandomMovie();
 
     //DUmmy content
-    // setContent(
+    // setMovieData(
     //   {
     //     "_id": "65aeffab0358caeb152fc9b4",
     //     "title": "The Twilight Saga: New Moon",
@@ -95,47 +116,70 @@ export default function Featured({ type }) {
     });
   };
 
+  const applyLikeInFrontend = (action: "like" | "dislike") => {
+    setIsLike((cur) => {
+      if (cur == null && action == "like") return true;
+      if (cur == null && action == "dislike") return false;
+      if (cur == true && action == "like") return null;
+      if (cur == true && action == "dislike") return false;
+      if (cur == false && action == "like") return true;
+      if (cur == false && action == "dislike") return null;
+    });
+  };
+
   const onLikeMovie = async () => {
-    const res = await likeMovie(content?._id)
+    const res = await likeMovie(movieData?._id)
 
     if (!res?.data) {
       showSwal("Error Liking movie", '', "error");
       return
     }
-    refetch({ force: true });
+    applyLikeInFrontend("like");
+    if (skipInitialCall) {
+      setSkipInitial(false)
+    }
+    else {
+      refetch({ force: true });
+    }
   }
 
   const onDislikeMovie = async () => {
-    const res = await dislikeMovie(content?._id)
+    const res = await dislikeMovie(movieData?._id)
 
     if (!res?.data) {
       showSwal("Error disliking movie", '', "error");
       return
     }
-    refetch({ force: true });
+    applyLikeInFrontend("dislike");
+    if (skipInitialCall) {
+      setSkipInitial(false)
+    }
+    else {
+      refetch({ force: true });
+    }
   }
 
   const onAddToList = async () => {
-    const res = await addToMyList(content?._id)
+    const res = await addToMyList(movieData?._id)
 
     if (!res?.data) {
       showSwal("Error encountered", '', "error");
       return
     }
 
-    // showSwal("Added to list", '', 'success')
-    refetch({ force: true });
+    if (skipInitialCall) {
+      setSkipInitial(false)
+    }
+    else {
+      refetch({ force: true });
+    }
   }
 
-  const getRandomMovie = useCallback(async () => {
+  const onGetRandomMovie = useCallback(async () => {
 
-    const res = await getRandomMovieApi(type)
+    const res = await getRandomMovie(type)
 
-    if (Array.isArray(res?.data)) {
-      setContent(res?.data?.[0]);
-    }
-
-    else {
+    if (!res?.data) {
       Swal.fire({
         title: "Error",
         text: "An error occurred while fetching content.",
@@ -178,8 +222,10 @@ export default function Featured({ type }) {
           onClick={onLikeMovie}
           className='flex gap-1 !text-white '
           aria-label="thumb up">
-          {
-            movieData?.currentUserLiked ? <ThumbUp /> : <ThumbUpAltOutlined />
+          {likeMovieState?.isLoading ? <CircularProgress color="inherit" size={18} /> :
+            <>
+              {movieData?.currentUserLiked ? <ThumbUp /> : <ThumbUpAltOutlined />}
+            </>
           }
           <div className='text-sm'>{formatNumber(movieData?.likesCount)}</div>
         </IconButton>
@@ -187,8 +233,11 @@ export default function Featured({ type }) {
           onClick={onDislikeMovie}
           className='flex gap-1 !text-white'
           aria-label="thumb down ">
-          {
-            movieData?.currentUserDisliked ? <ThumbDown /> : <ThumbDownOutlined />
+
+          {dislikeMovieState?.isLoading ? <CircularProgress color="inherit" size={18} /> :
+            <>
+              {movieData?.currentUserDisliked ? <ThumbDown /> : <ThumbDownOutlined />}
+            </>
           }
           <div className='text-sm'>{formatNumber(movieData?.dislikesCount)}</div>
 
@@ -219,19 +268,19 @@ export default function Featured({ type }) {
 
     if (movieData?.ageRating) {
       metaInfo.push({
-        text: content?.ageRating
+        text: movieData?.ageRating
       })
     }
 
     if (movieData?.year) {
       metaInfo.push({
-        text: content?.year
+        text: movieData?.year
       })
     }
 
     if (movieData?.duration) {
       metaInfo.push({
-        text: content?.duration
+        text: movieData?.duration
       })
     }
 
@@ -262,7 +311,7 @@ export default function Featured({ type }) {
     <div className={
       addClassNames(
         "featured relative",
-        "h-[105vh] flex flex-col justify-center",
+        "h-[100vh] flex flex-col justify-center",
         movieData?.img ? '' : 'bg-gradient-to-b from-teal-500 to-gray-900'
       )
     }>
@@ -276,13 +325,13 @@ export default function Featured({ type }) {
 
         {/* Overlay div */}
         <div
-          className="absolute top-[-20px] left-0 right-0 bottom-[-20px] bg-gradient-to-r from-black to-transparent opacity-[100%]"
+          className="absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-r from-black to-transparent opacity-[100%]"
         ></div>
 
         <div className={
           addClassNames(
             "info z-[100] relative p-[13px] sm:p-[20px] min-h-[400px]",
-            'mt-[100px] sm:w-[43vw]',
+            '!top-[100px] sm:!top-[60px] sm:w-[43vw]',
             'sm:ml-[70px]'
           )
         }>
@@ -296,7 +345,7 @@ export default function Featured({ type }) {
             {renderMetaInfo()}
           </div>
           <span className="desc" style={{ color: "#fff" }}>
-            <span id="desc-title">{movieData?.title}</span>
+            <span id="desc-title">{movieData?.title ? movieData?.title : <div><CircularProgress color="inherit" size={18} /><span>Loading..</span></div>}</span>
             {trimmedDesc}
           </span>
           <div className="flex justify-between flex-wrap">
@@ -311,7 +360,11 @@ export default function Featured({ type }) {
                 </button>
               </Link>
               <button className="more" onClick={onAddToList}>
-                {movieData?.isInDefaultList ? <Check /> : <AddCircle />}
+                {addToMyListState?.isLoading ? <CircularProgress color="inherit" size={18} /> :
+                  <>
+                    {movieData?.isInDefaultList ? <Check /> : <AddCircle />}
+                  </>
+                }
                 <span className='uppercase text-[13px]'>My List</span>
               </button>
             </div>

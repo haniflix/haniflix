@@ -62,13 +62,35 @@ const AppRouter = (props) => {
         });
     };
 
+
     return (
 
         <Router>
             <Routes>
 
+                <Route element={<GuestRoutes />}>
+                    <Route path="/" element={user ? <Home /> : <Welcome />} />
+                    <Route
+                        path="/register"
+                        element={user ? <Navigate to="/" /> : <Register />}
+                    />
+                    <Route
+                        path="/forgot-pass"
+                        element={user ? <Navigate to="/" /> : <ForgotPassword />}
+                    />
+                    <Route
+                        path="/change-password/:id/:email"
+                        element={user ? <Navigate to="/" /> : <ChangePassword />}
+                    />
+                    <Route
+                        path="/login"
+                        element={user ? <Navigate to="/" /> : <Login />}
+                    />
+                    <Route path="/verify" element={<Verify />} />
+                </Route>
+
                 <Route element={<ProtectedRoutes />}>
-                    <Route index element={<Home />} />
+                    {/* <Route index element={<Home />} /> */}
                     <Route path="movies" element={<Home type="movies" />} />
                     <Route path="series" element={<Home type="series" />} />
                     <Route path="new-and-popular" element={<Home />} />
@@ -77,15 +99,6 @@ const AppRouter = (props) => {
                     <Route path="search" element={<SearchPage />} />
                     <Route path="genre/:id" element={<GenrePage />} />
                     <Route path="settings" element={<AccSettings />} />
-                </Route>
-
-                <Route element={<GuestRoutes />}>
-                    <Route index element={<Welcome />} />
-                    <Route path="register" element={<Register />} />
-                    <Route path="forgot-pass" element={<ForgotPassword />} />
-                    <Route path="change-password/:id/:email" element={<ChangePassword />} />
-                    <Route path="login" element={<Login />} />
-                    <Route path="verify" element={<Verify />} />
                 </Route>
 
             </Routes>

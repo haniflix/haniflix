@@ -73,7 +73,6 @@ export const moviesApi = authApi.injectEndpoints({
         method: "POST",
       }),
       invalidatesTags: (result, error, arg) => [
-        //arg is id
         { type: "Movies", id: arg },
         { type: "Movie", id: arg },
       ],

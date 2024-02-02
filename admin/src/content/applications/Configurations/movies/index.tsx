@@ -221,7 +221,7 @@ function Movies() {
                       </TableCell>
                       <TableCell align="right">
                         {row.genre?.map((_genre, index) => {
-                          return <span>
+                          return <span key={_genre?._id}>
                             {' '}{_genre?.title}{row.genre.length != (index + 1) ? ',' : undefined}
                           </span>
                         })}

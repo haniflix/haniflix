@@ -40,6 +40,8 @@ export default function Welcome() {
   const [email, setEmail] = useState("");
   const [expanded, setExpanded] = useState<string | false>("none");
 
+  // const authReducer = useAppSelector(state = state.auth)
+
   const navigate = useNavigate();
 
   const onSignUp = useCallback(() => {
@@ -49,6 +51,8 @@ export default function Welcome() {
   const handleExpand = (panel: string) => {
     setExpanded((curr) => (curr == panel ? "none" : panel));
   };
+
+
 
   return (
     <div className="welcomePage">

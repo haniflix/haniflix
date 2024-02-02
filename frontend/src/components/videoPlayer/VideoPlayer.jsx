@@ -38,6 +38,7 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
     refetch,
   } = useGetMovieQuery(videoId, {
     refetchOnMountOrArgChange: true,
+    skip: !videoId,
   });
 
   const authReducer = useSelector((state) => state.auth);

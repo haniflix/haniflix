@@ -11,6 +11,9 @@ import ListItem from "../listItem/ListItem";
 import "./list.scss";
 import { useAppSelector } from "../../store/hooks";
 import { selectUser } from "../../store/reducers/auth";
+import MovieListItem from "../MovieListItem/index";
+import { addClassNames } from "../../store/utils/functions";
+import useResponsive from "../../hooks/useResponsive";
 
 interface ListProps {
   list: any;
@@ -20,34 +23,17 @@ interface ListProps {
 
 const List: React.FC<ListProps> = ({ list, onDelete, onEdit }) => {
   const user = useAppSelector(selectUser);
-  // const [isMoved, setIsMoved] = useState<boolean>(false);
-  // const [slideNumber, setSlideNumber] = useState<number>(0);
 
-  /*const listRef: any = useRef();
-
-  const handleClick = (direction: "left" | "right") => {
-    if (listRef.current) {
-      setIsMoved(true);
-      let distance = listRef?.current?.getBoundingClientRect().x - 50;
-      if (direction === "left" && slideNumber > 0) {
-        setSlideNumber(slideNumber - 1);
-        listRef.current.style.transform = `translateX(${230 + distance}px)`;
-      }
-      if (direction === "right" && slideNumber < 5) {
-        setSlideNumber(slideNumber + 1);
-        listRef.current.style.transform = `translateX(${-230 + distance}px)`;
-      }
-    }
-  };*/
+  const carouselRef = useRef();
 
   const responsive = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 3000 },
-      items: 6,
+      items: 4,
     },
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
-      items: 5,
+      items: 4,
     },
     tablet: {
       breakpoint: { max: 1024, min: 464 },
@@ -58,6 +44,13 @@ const List: React.FC<ListProps> = ({ list, onDelete, onEdit }) => {
       items: 1,
     },
   };
+
+  const { isMobile } = useResponsive()
+
+
+  const onHoverMovie = (movieId: string) => {
+    const movieIndex = list?.content?.findIndex(id => id == movieId)
+  }
 
   return (
     <>
@@ -77,44 +70,40 @@ const List: React.FC<ListProps> = ({ list, onDelete, onEdit }) => {
             ) : null}
           </div>
         </div>
-        <div className="wrapper">
+        <div className="wrapper ">
           <Carousel
+            ref={carouselRef}
             responsive={responsive}
             centerMode={true}
+            containerClass={
+              addClassNames(
+                isMobile ? '' : 'overflow-visible'
+              )
+            }
             customLeftArrow={
               <ArrowBackIosOutlined className="sliderArrow left" />
             }
             customRightArrow={
               <ArrowForwardIosOutlined className="sliderArrow right" />
             }
+            itemClass={
+              addClassNames(
+                ' !w-[225px]',
+                `mr-[15px] carousel-item`
+              )
+            }
           >
-            {list?.content?.map((item, i) => {
-
-              if (!item) return;
-              return <ListItem key={i} index={i} item={item} />
+            {list?.content?.map((movieId, i) => {
+              if (!movieId) return;
+              return <MovieListItem
+                key={i} index={i} movieId={movieId}
+                onHover={onHoverMovie}
+              />
             })}
           </Carousel>
         </div>
       </div>
-      {/*<div className="list">
-        <span className="listTitle">{list?.title}</span>
-        <div className="wrapper">
-          <ArrowBackIosOutlined
-            className="sliderArrow left"
-            onClick={() => handleClick("left")}
-            style={{ display: !isMoved && "none" }}
-          />
-          <div className="container" ref={listRef}>
-            {list?.content?.map((item, i) => (
-              <ListItem key={i} index={i} item={item} />
-            ))}
-          </div>
-          <ArrowForwardIosOutlined
-            className="sliderArrow right"
-            onClick={() => handleClick("right")}
-          />
-        </div>
-            </div>*/}
+
     </>
   );
 };

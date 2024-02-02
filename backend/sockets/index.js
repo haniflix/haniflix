@@ -57,16 +57,23 @@ const setupSocket = (io) => {
 
     socket.on("updateMovieProgress", async (data) => {
       const { movieId, watchedPercentage, userId } = data;
+
       // check every progress update
       checkLoginElsewhere(socket);
+
+      console.log("watchedPercentage ", watchedPercentage);
 
       try {
         if (watchedPercentage > 97) {
           // If watchedPercentage is above 97%, remove the entry
-          await ContinueWatchingList.findOneAndRemove({
+          const continueWatchingList = await ContinueWatchingList.findOne({
             user: userId,
-            content: movieId,
           });
+
+          let newContent = [...continueWatchingList.content];
+          newContent = newContent.filter((_movieId) => _movieId != movieId);
+          continueWatchingList.content = newContent;
+          await continueWatchingList.save();
         } else {
           // Find or create the user's ContinueWatchingList document
           const continueWatchingList =
@@ -78,6 +85,8 @@ const setupSocket = (io) => {
               },
               { upsert: true, new: true }
             );
+
+          console.log("find or update ", continueWatchingList);
         }
       } catch (error) {
         console.error("Error updating progress:", error);

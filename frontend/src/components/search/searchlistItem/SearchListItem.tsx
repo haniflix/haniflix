@@ -33,6 +33,7 @@ export default function SearchListItem({ movie, refetch }) {
   const [dislikeMovie, dislikeMovieState] = useDislikeMovieMutation()
   const [addToMyList, addToMyListState] = useAddMovieToDefaultListMutation()
 
+
   const showSwal = (title, message, type) => {
     Swal.fire({
       title: title ?? "",

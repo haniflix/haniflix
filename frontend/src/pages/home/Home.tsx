@@ -22,7 +22,13 @@ const Home = ({ type = null }) => {
   const client = useApiClient();
   //const [movies, setMovies] = useState([]);
 
-  const { data: continueWatchingListData, isLoading: continueWatchingLoading } = useGetContinueWatchingListQuery({})
+  const { data: continueWatchingListData, isLoading: continueWatchingLoading, refetch: refetchContinueWatching } = useGetContinueWatchingListQuery({}, {
+    refetchOnMountOrArgChange: true,
+  })
+
+  // React.useEffect(() => {
+
+  // },[])
 
   const getRandomLists = useCallback(
     (type: string, genre: string) => {
@@ -79,6 +85,7 @@ const Home = ({ type = null }) => {
     },
   };
 
+
   return (
     <div className="home">
       <Navbar />
@@ -88,21 +95,25 @@ const Home = ({ type = null }) => {
       <Suspense
         fallback={<div style={{ backgroundColor: "black" }}>Loading...</div>}
       >
-
-        <div>
-          <div className="text-white font-bold text-2xl mt-6">
-            Continue Watching
+        <div className='mx-[20px] sm:mx-[50px]'>
+          <div>
+            {/* <div className="text-white font-bold text-2xl mt-6">
+              Continue Watching
+            </div> */}
+            {
+              continueWatchingListData?.list ?
+                <List list={{
+                  ...continueWatchingListData?.list,
+                  title: "Continue Watching"
+                }} />
+                : undefined
+            }
           </div>
-          {
-            continueWatchingListData?.list ?
-              <List list={continueWatchingListData?.list} />
-              : undefined
-          }
-        </div>
 
-        {lists?.map((list) => (
-          <List key={list._id} list={list} />
-        ))}
+          {lists?.map((list) => (
+            <List key={list._id} list={list} />
+          ))}
+        </div>
       </Suspense>
     </div>
   );

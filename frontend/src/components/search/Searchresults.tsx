@@ -5,6 +5,7 @@ import axios from "axios";
 import SearchListItem from "./searchlistItem/SearchListItem";
 import { addClassNames } from "../../store/utils/functions";
 import { useGetMoviesQuery } from "../../store/rtk-query/moviesApi";
+import MovieListItem from "../MovieListItem/index";
 
 const api_url = import.meta.env.VITE_APP_API_URL;
 
@@ -37,7 +38,10 @@ const Searchresults = () => {
     searchTerm: search
   }
 
-  const { data: moviesData, isLoading: moviesLoading, refetch, isFetching } = useGetMoviesQuery(queryParams)
+  const { data: moviesData, isLoading: moviesLoading, refetch, isFetching } = useGetMoviesQuery(queryParams, {
+    pollingInterval: 10000,
+    refetchOnMountOrArgChange: true,
+  })
 
   const handleSearch = (e) => {
     const searchString = e.target.value.trimStart().toLowerCase();
@@ -59,7 +63,7 @@ const Searchresults = () => {
         className={
           addClassNames(
             classes.input,
-            'bg-white'
+            'bg-white !mt-11 sm:!mt-2'
           )
         }
         variant="outlined"
@@ -79,12 +83,16 @@ const Searchresults = () => {
         <h1 className='text-white'>Search your movies!</h1>
       )}
 
-      <Grid container spacing={2} className='!mt-3'>
+      <Grid container spacing={2} className='sm:!mx-[20px] !mt-3'>
         {filteredMovies?.map((movie, index) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-            <SearchListItem
-              refetch={refetch}
-              movie={movie} />
+          <Grid item xs={6} sm={6} md={4} lg={3} key={index}>
+            <div className='relative hover:z-[200] shadow-md'>
+              <MovieListItem
+                movieObj={movie}
+                refetchFn={refetch}
+                layoutType="grid"
+              />
+            </div>
           </Grid>
         ))}
       </Grid>
