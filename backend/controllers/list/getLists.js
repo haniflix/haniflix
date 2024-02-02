@@ -3,6 +3,10 @@ const List = require("../../models/List");
 const getLists = async (req, res) => {
   const typeQuery = req.query.type;
   const genreQuery = req.query.genre;
+
+  console.log("genreQuery ", genreQuery);
+  console.log("typeQuery ", typeQuery);
+
   let list = [];
   try {
     if (typeQuery) {
@@ -37,6 +41,7 @@ const getLists = async (req, res) => {
         ]);*/
     }
     // res.status(200).json(list.filter((l) => l.adminList));
+    console.log("list ", list);
     res.status(200).json(list);
   } catch (err) {
     res.status(500).json(err);

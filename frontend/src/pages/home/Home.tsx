@@ -11,7 +11,7 @@ import {
   ArrowForwardIosOutlined,
 } from "@mui/icons-material";
 import ListItem from "../../components/listItem/ListItem";
-import { useGetContinueWatchingListQuery } from "../../store/rtk-query/listsApi";
+import { useGetContinueWatchingListQuery, useGetRandomListsQuery } from "../../store/rtk-query/listsApi";
 import List from "../../components/list/List"
 
 const api_url = import.meta.env.VITE_APP_API_URL;
@@ -26,25 +26,34 @@ const Home = ({ type = null }) => {
     refetchOnMountOrArgChange: true,
   })
 
+  const { data: randomListData, isLoading: randomListLoading } = useGetRandomListsQuery({
+    // type,
+    // genre
+  }, {
+    refetchOnMountOrArgChange: true,
+  })
+
   // React.useEffect(() => {
 
   // },[])
 
-  const getRandomLists = useCallback(
-    (type: string, genre: string) => {
-      client
-        .getRandomLists(type, genre)
-        .then((res) => {
-          //const filteredLists = res.filter((list) => !list.user);
-          //setLists(filteredLists);
-          setLists(res);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    },
-    [client]
-  );
+  // const getRandomLists = useCallback(
+  //   (type: string, genre: string) => {
+  //     console.log('type, genre ', { type, genre })
+  //     client
+  //       .getRandomLists(type, genre)
+  //       .then((res) => {
+  //         console.log('res ', res)
+  //         //const filteredLists = res.filter((list) => !list.user);
+  //         //setLists(filteredLists);
+  //         setLists(res);
+  //       })
+  //       .catch((err) => {
+  //         console.error(err);
+  //       });
+  //   },
+  //   [client]
+  // );
 
   /*const getRandomMovies = useCallback(
     (type: string) => {
@@ -61,10 +70,13 @@ const Home = ({ type = null }) => {
   );*/
 
   useEffect(() => {
-    getRandomLists(type, genre);
+    // getRandomLists(type, genre);
     // getRandomMovies(type);
 
-  }, [type, genre]);
+    setLists(randomListData);
+
+
+  }, [type, genre, randomListData]);
 
   const responsive = {
     superLargeDesktop: {

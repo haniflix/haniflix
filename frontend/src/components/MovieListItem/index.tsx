@@ -150,7 +150,7 @@ export default function MovieListItem({
         return (
             <div className='flex text-[9px] flex-wrap gap-[3px]'>
                 {genreTextArr?.map((text, index) => {
-                    return <div className='flex'>
+                    return <div key={index} className='flex'>
                         <div className='capitalize'>{text}</div>
                         <div className='ml-[3px]'>
                             {(
@@ -302,7 +302,7 @@ export default function MovieListItem({
 
                                 <div style={{}}>
                                     <div className='font-[500] text-[11.5px] mt-[4px] mb-[1px]'>{movie.title}</div>
-                                    <div className='flex items-center gap-[3px]'>
+                                    <div className='flex items-center gap-[5px]'>
                                         <div>
                                             {movie?.year}
                                         </div>
