@@ -90,7 +90,7 @@ function HeaderUserbox() {
   return (
     <>
       <UserBoxButton color="secondary" ref={ref} onClick={handleOpen}>
-        <Avatar variant="rounded" alt={user?.fullname} src={user.avatar} />
+        <Avatar variant="rounded" alt={user?.fullname} src={user?.avatar} />
         <Hidden mdDown>
           <UserBoxText>
             <UserBoxLabel variant="body1">{user?.fullname}</UserBoxLabel>
@@ -121,7 +121,7 @@ function HeaderUserbox() {
           <UserBoxText>
             <UserBoxLabel variant="body1">{user?.fullname}</UserBoxLabel>
             <UserBoxDescription variant="body2">
-              {user.email}
+              {user?.email}
             </UserBoxDescription>
           </UserBoxText>
         </MenuUserBox>

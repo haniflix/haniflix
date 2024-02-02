@@ -18,13 +18,13 @@ function PageHeader() {
             height: theme.spacing(8)
           }}
           variant="rounded"
-          alt={user.name}
-          src={user.avatar}
+          alt={user?.name}
+          src={user?.avatar}
         />
       </Grid>
       <Grid item>
         <Typography variant="h3" component="h3" gutterBottom>
-          Welcome, {user.name}!
+          Welcome, {user?.name}!
         </Typography>
         <Typography variant="subtitle2">
           Today is a good day to start trading crypto assets!

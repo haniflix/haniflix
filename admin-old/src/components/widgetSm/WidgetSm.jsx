@@ -12,8 +12,9 @@ export default function WidgetSm() {
       try {
         const res = await axios.get(api_url + "/users?new=true", {
           headers: {
-            token: "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
-      },
+            token:
+              "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken,
+          },
         });
         setNewUsers(res.data);
       } catch (err) {
@@ -22,7 +23,7 @@ export default function WidgetSm() {
     };
     getNewUsers();
   }, []);
-  
+
   return (
     <div className="widgetSm">
       <span className="widgetSmTitle">New Join Members</span>
@@ -31,14 +32,14 @@ export default function WidgetSm() {
           <li className="widgetSmListItem">
             <img
               src={
-                user.profilePic ||
+                user?.profilePic ||
                 "https://pbs.twimg.com/media/D8tCa48VsAA4lxn.jpg"
               }
               alt=""
               className="widgetSmImg"
             />
             <div className="widgetSmUser">
-              <span className="widgetSmUsername">{user.username}</span>
+              <span className="widgetSmUsername">{user?.username}</span>
             </div>
             <button className="widgetSmButton">
               <Visibility className="widgetSmIcon" />

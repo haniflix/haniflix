@@ -170,8 +170,8 @@ function Users() {
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     >
                       <TableCell component="th" scope="row">
-                        {row.fullname}{' '}
-                        {row._id == currentUser._id ? (
+                        {row?.fullname}{' '}
+                        {row?._id == currentUser?._id ? (
                           <Chip
                             label="current user"
                             color="warning"
@@ -179,9 +179,9 @@ function Users() {
                           />
                         ) : null}
                       </TableCell>
-                      <TableCell align="right">{row.email}</TableCell>
+                      <TableCell align="right">{row?.email}</TableCell>
                       <TableCell align="right">
-                        {row.isAdmin ? (
+                        {row?.isAdmin ? (
                           <Chip label="admin" color="success" />
                         ) : null}
                       </TableCell>
@@ -193,7 +193,7 @@ function Users() {
                         >
                           <Edit />
                         </IconButton>
-                        {row._id !== currentUser._id ? (
+                        {row._id !== currentUser?._id ? (
                           <IconButton
                             sx={{ p: '10px' }}
                             onClick={() => setToDelete(row)}

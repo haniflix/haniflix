@@ -12,7 +12,7 @@ function PageHeader() {
         User Settings
       </Typography>
       <Typography variant="subtitle2">
-        {user.name}, this could be your user settings panel.
+        {user?.name}, this could be your user settings panel.
       </Typography>
     </>
   );

@@ -34,9 +34,9 @@ const AddUserForm: React.FC<AddTagGroupProps> = ({ callback, item }) => {
   };
 
   const populate = (user: User) => {
-    setFullname(user.fullname);
-    setEmail(user.email);
-    setIsAdmin(user.isAdmin);
+    setFullname(user?.fullname);
+    setEmail(user?.email);
+    setIsAdmin(user?.isAdmin);
   };
 
   const save = useCallback(async () => {

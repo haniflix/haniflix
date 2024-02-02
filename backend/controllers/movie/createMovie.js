@@ -50,6 +50,7 @@ const createMovie = async (req, res) => {
       if (Array.isArray(genre)) {
         for (let itemIndex = 0; itemIndex < genre.length; itemIndex++) {
           const genreItem = genre[itemIndex];
+          //genreItem can be obj for {new} or _id for already existing
 
           //uncreated
           if (genreItem.type === "new") {
@@ -73,9 +74,9 @@ const createMovie = async (req, res) => {
             genreIds.push(savedGenre._id); // Assuming _id is the generated ID
             //
           } else {
-            //
+            // therefore genreItem is an _id
             const findGenreMatch = await Genre.findOne({
-              _id: genreItem?._id,
+              _id: genreItem,
             });
 
             if (findGenreMatch) {
@@ -86,8 +87,6 @@ const createMovie = async (req, res) => {
           }
         }
       }
-
-      console.log("genre ids ", genreIds);
 
       const newMovie = new Movie({
         title,

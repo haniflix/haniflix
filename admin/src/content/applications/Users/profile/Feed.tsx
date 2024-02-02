@@ -60,16 +60,16 @@ function Feed() {
           {feed.map((_feed) => (
             <Grid key={_feed.name} item xs={12} sm={6} lg={4}>
               <Box p={3} display="flex" alignItems="flex-start">
-                <Avatar src={_feed.avatar} />
+                <Avatar src={_feed?.avatar} />
                 <Box pl={2}>
                   <Typography gutterBottom variant="subtitle2">
-                    {_feed.company}
+                    {_feed?.company}
                   </Typography>
                   <Typography variant="h4" gutterBottom>
-                    {_feed.name}
+                    {_feed?.name}
                   </Typography>
                   <Typography color="text.primary" sx={{ pb: 2 }}>
-                    {_feed.jobtitle}
+                    {_feed?.jobtitle}
                   </Typography>
                   <Button
                     variant="outlined"

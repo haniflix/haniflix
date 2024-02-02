@@ -32,8 +32,8 @@ const AccSettings = () => {
   const [deleteAccount, setDeleteAccount] = useState(false);
   const [userDetails, setUserDetails] = useState({
     id: userId,
-    name: user.fullname,
-    email: user.email,
+    name: user?.fullname,
+    email: user?.email,
   });
 
   const client = useApiClient();
@@ -101,7 +101,7 @@ const AccSettings = () => {
   const onDeleteAccount = () => {
     setDeleteLoading(true);
     client
-      .deleteUser(user._id)
+      .deleteUser(user?._id)
       .then(() => {
         setDeleteLoading(false);
         Swal.fire({

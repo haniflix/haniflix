@@ -122,6 +122,7 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
   };
 
   const save = useCallback(async () => {
+
     const data = {
       title,
       desc: description,
@@ -165,7 +166,18 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
 
   const update = async () => {
 
-    const genreIds = genreObjs?.map((genreObj) => genreObj?._id)
+    const genreIds = genreObjs?.map((genreObj) => {
+      if (genreObj?.type == "new") {
+        return genreObj;
+      }
+      return genreObj?._id
+    })
+
+    //mix of object and genre ids
+    const genre = [
+      ...genreIds
+    ]
+
 
     const data = {
       title,
@@ -175,9 +187,7 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
       imgTitle: imageLink,
       trailer: trailerLink,
       year,
-      genre: [
-        ...genreIds
-      ],
+      genre,
       isSeries: isSerie,
       ageRating: ageRating,
       duration: duration
@@ -301,7 +311,7 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
           '& .MuiTextField-root': { m: 1 }
         }}
       >
-        {isUpdateMode ? renderAutoPopulateMovieSection() : undefined}
+        {renderAutoPopulateMovieSection()}
         {imageLink ? (
           <Box
             sx={{
