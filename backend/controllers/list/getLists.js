@@ -41,7 +41,6 @@ const getLists = async (req, res) => {
         ]);*/
     }
     // res.status(200).json(list.filter((l) => l.adminList));
-    console.log("list ", list);
     res.status(200).json(list);
   } catch (err) {
     res.status(500).json(err);
