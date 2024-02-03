@@ -11,12 +11,13 @@
   transition: all 0.3s ease-out;
 
   &:hover {
-    .side-buttons{
-      display:flex
-    }
+
 
     @media only screen and (min-width: 768px) {
-      scale: 1.25;
+      .side-buttons{
+        display:flex
+      }
+      // scale: 1.25;
 
     .details {
       display: block;

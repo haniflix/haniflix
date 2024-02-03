@@ -249,6 +249,7 @@ export default function MovieListItem({
                     addClassNames(
                         "listItem relative",
                         "h-[130px] sm:w-[225px] rounded-[3px]",
+                        isMobile ? '' : 'hover:scale-[1.25]',
                         layoutType == 'grid' ? '!w-full' : 'w-[225px]'
                     )
                 }
