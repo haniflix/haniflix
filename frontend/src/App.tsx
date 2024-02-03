@@ -27,7 +27,6 @@ import { SocketProvider } from "./context/SocketContext";
 
 const App = () => {
   const user = useAppSelector(selectUser);
-  console.log('env ', import.meta.env)
 
   return (
     <>

@@ -7,8 +7,6 @@ import BaseLayout from 'src/layouts/BaseLayout';
 
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
-console.log('env ', import.meta.env)
-
 const Loader = (Component) => (props) =>
 (
   <Suspense fallback={<SuspenseLoader />}>
