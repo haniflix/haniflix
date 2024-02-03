@@ -4,6 +4,7 @@ import { useGetGenresQuery } from '../store/rtk-query/genresApi';
 import { addClassNames } from '../store/utils/functions';
 
 import { MdOutlineArrowDropDown } from "react-icons/md";
+import useResponsive from '../hooks/useResponsive';
 
 function GenresDropdown() {
     const { data: genresData, isLoading, error } = useGetGenresQuery({}, {
@@ -13,6 +14,8 @@ function GenresDropdown() {
 
     const dropdownContentRef = useRef(null);
     const dropdownButtonRef = useRef(null);
+
+    const { isMobile } = useResponsive()
 
     const genres = genresData?.genres
 
@@ -30,7 +33,10 @@ function GenresDropdown() {
     }, [isOpen]);
 
 
-    const numOfGridRows = Math.ceil(genres?.length / 3) || 3
+    let numOfGridRows = Math.ceil(genres?.length / 3)
+    if (isMobile) {
+        numOfGridRows = Math.ceil(genres?.length / 2)
+    }
 
     return (
         <div className="relative w-[fit-content] bg-[black] ml-3 sm:ml-[50px] mb-1">
@@ -58,7 +64,7 @@ function GenresDropdown() {
                             "absolute grid ",
                             `grid-rows-${numOfGridRows}  grid-flow-col`,
                             'bg-black w-[52vw] sm:w-[270px] md:w-[400px]',
-                            'p-3 '
+                            'p-3 gap-y-2 sm:gap-y-[0px]'
                         )
                     }>
                         {genres?.map((genre) => (
