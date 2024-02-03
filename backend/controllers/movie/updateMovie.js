@@ -51,10 +51,13 @@ const updateMovie = async (req, res) => {
           if (genreItem.type === "new") {
             const genreTitle = genreItem.title?.toLowerCase();
 
+            console.log("genreTitle ", genreTitle);
+
             //can only be reached in a hypothetical case (debugging)
             const findGenreMatch = await Genre.findOne({
               title: genreTitle,
             });
+            console.log("findGenreMatch ", findGenreMatch);
 
             if (findGenreMatch) {
               // already stored in db
@@ -63,7 +66,7 @@ const updateMovie = async (req, res) => {
             }
 
             //create new genre, if none is found
-            const newGenre = new Genre({ title: genreItem.title });
+            const newGenre = new Genre({ title: genreTitle });
 
             const savedGenre = await newGenre.save();
             genreIds.push(savedGenre._id); // Assuming _id is the generated ID
@@ -111,6 +114,7 @@ const updateMovie = async (req, res) => {
 
       res.status(200).json(updatedMovie);
     } catch (err) {
+      console.log("err ", err);
       res.status(500).json(err);
     }
   } else {

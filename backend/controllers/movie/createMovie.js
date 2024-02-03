@@ -68,7 +68,7 @@ const createMovie = async (req, res) => {
             }
 
             //create new genre, if none is found
-            const newGenre = new Genre({ title: genreItem.title });
+            const newGenre = new Genre({ title: genreTitle });
 
             const savedGenre = await newGenre.save();
             genreIds.push(savedGenre._id); // Assuming _id is the generated ID

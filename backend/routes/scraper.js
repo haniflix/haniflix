@@ -37,30 +37,30 @@ async function scrapeMovieDetails(url) {
       const yearOfRelease = body.querySelector(
         ".css-n6mjxq.e1r3wknn10"
       ).textContent;
-      const title = body.querySelector(".css-xuu3cf.e3sx6uc7").textContent;
+      const title = body.querySelector(".css-xuu3cf.e3sx6uc7")?.textContent;
       const description = body.querySelector(
         ".css-49lcwn.e1qij4j11 p"
-      ).textContent;
+      )?.textContent;
       const ageRating = body
         .querySelector('span[title="Maturity rating"]')
-        .textContent.trim();
+        ?.textContent?.trim();
       let genre = Array.from(
         body.querySelectorAll(".css-1szmslw.e1r3wknn1 a")
-      ).map((link) => link.textContent);
+      ).map((link) => link?.textContent);
       const duration = body.querySelector(
         ".css-1szmslw.e1r3wknn1:last-child"
-      ).textContent;
+      )?.textContent;
 
       //last item is not a genre
       genre = genre.slice(0, -1);
 
       const imageSources = Array.from(body.querySelectorAll("picture source"));
-      const largestImageUrl = imageSources.reduce(
+      const largestImageUrl = imageSources?.reduce(
         (largest, source) => {
           const currentSize = parseInt(
-            source.getAttribute("srcset").split(" ")[1]
+            source.getAttribute("srcset")?.split(" ")?.[1]
           );
-          return currentSize > largest.size
+          return currentSize > largest?.size
             ? { srcset: source.getAttribute("srcset"), size: currentSize }
             : largest;
         },
@@ -71,7 +71,7 @@ async function scrapeMovieDetails(url) {
         title,
         // trailerUrl,
         description,
-        imageUrl: largestImageUrl.split(" ")[0], // Get the actual URL from srcset
+        imageUrl: largestImageUrl?.split(" ")?.[0], // Get the actual URL from srcset
         ageRating,
         genre,
         yearOfRelease,
