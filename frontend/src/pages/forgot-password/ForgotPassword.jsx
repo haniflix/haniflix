@@ -46,7 +46,7 @@ export default function ForgotPassword() {
   };
 
   const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
+    if (event.key === "Enter" || event.keyCode === 13) {
       handleStart(); // Trigger login on Enter key press
     }
   };

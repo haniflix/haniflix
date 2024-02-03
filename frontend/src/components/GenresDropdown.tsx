@@ -58,15 +58,19 @@ function GenresDropdown() {
                 ref={dropdownContentRef}
                 className='relative'>
                 {isOpen && numOfGridRows !== undefined && (
-                    <ul className={
-                        addClassNames(
-                            // 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3',
-                            "absolute grid ",
-                            `grid-rows-${numOfGridRows}  grid-flow-col`,
-                            'bg-black w-[52vw] sm:w-[270px] md:w-[400px]',
-                            'p-3 gap-y-2 sm:gap-y-[0px]'
-                        )
-                    }>
+                    <ul
+                        style={{
+                            ...(numOfGridRows && { gridTemplateRows: `repeat(${numOfGridRows}, auto)` }),
+                        }}
+                        className={
+                            addClassNames(
+                                // 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3',
+                                "absolute grid ",
+                                `  grid-flow-col`,
+                                'bg-black w-[52vw] sm:w-[270px] md:w-[400px]',
+                                'p-3 gap-y-2 sm:gap-y-[0px]'
+                            )
+                        }>
                         {genres?.map((genre) => (
                             <li
                                 className='hover:underline h-[35px] capitalize'

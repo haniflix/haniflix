@@ -98,7 +98,7 @@ export default function Login() {
   }, [email, password, emailRef, rememberMe]);
 
   const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' || event.keyCode === 13) {
       handleStart(); // Trigger login on Enter key press
     }
   };
