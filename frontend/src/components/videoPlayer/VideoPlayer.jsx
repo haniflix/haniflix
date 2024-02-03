@@ -241,11 +241,7 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
           aria-label="thumb down "
         >
           {dislikeMovieState?.isLoading ? (
-            <CircularProgress
-              color="inherit"
-              className="w-[26px] border"
-              size={14}
-            />
+            <CircularProgress color="inherit" className="w-[26px]" size={14} />
           ) : (
             <>
               {movieData?.currentUserDisliked ? (
