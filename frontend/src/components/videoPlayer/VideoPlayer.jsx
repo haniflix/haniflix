@@ -22,6 +22,8 @@ import {
 import Swal from "sweetalert2";
 import { useAddMovieToDefaultListMutation } from "../../store/rtk-query/listsApi";
 
+import CircularProgress from "@mui/material-next/CircularProgress";
+
 const VideoPlayer = ({ videoId, videoUrl }) => {
   const [playtime, setPlaytime] = useState(0);
   const [seekTime, setSeekTime] = useState(0);
@@ -187,25 +189,75 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
           onClick={onAddToList}
           aria-label="add"
         >
-          {movieData?.isInDefaultList ? <Check /> : <Add />}
+          {addToMyListState?.isLoading ? (
+            <CircularProgress
+              color="inherit"
+              // style={{ marginRight: -10 }}
+              size={14}
+            />
+          ) : (
+            <>
+              {movieData?.isInDefaultList ? (
+                <div className="icon-circle">
+                  <Check className="" />
+                </div>
+              ) : (
+                <div className="icon-circle">
+                  <Add className=" " />
+                </div>
+              )}
+            </>
+          )}
         </IconButton>
         <IconButton
           onClick={onLikeMovie}
-          className="flex gap-1 !text-white "
+          className="flex gap-1 !text-white items-center"
           aria-label="thumb up"
         >
-          {movieData?.currentUserLiked ? <ThumbUp /> : <ThumbUpAltOutlined />}
+          {likeMovieState?.isLoading ? (
+            <CircularProgress
+              color="inherit"
+              // style={{ marginRight: -10 }}
+              size={14}
+            />
+          ) : (
+            <>
+              {movieData?.currentUserLiked ? (
+                <div className="icon-circle">
+                  <ThumbUp className="" />
+                </div>
+              ) : (
+                <div className="icon-circle">
+                  <ThumbUpAltOutlined className="" />
+                </div>
+              )}
+            </>
+          )}
           <div className="text-sm">{formatNumber(movieData?.likesCount)}</div>
         </IconButton>
         <IconButton
           onClick={onDislikeMovie}
-          className="flex gap-1 !text-white"
+          className="flex items-center gap-1 !text-white"
           aria-label="thumb down "
         >
-          {movieData?.currentUserDisliked ? (
-            <ThumbDown />
+          {dislikeMovieState?.isLoading ? (
+            <CircularProgress
+              color="inherit"
+              className="w-[26px] border"
+              size={14}
+            />
           ) : (
-            <ThumbDownOutlined />
+            <>
+              {movieData?.currentUserDisliked ? (
+                <div className="icon-circle">
+                  <ThumbDown className="" />
+                </div>
+              ) : (
+                <div className="icon-circle">
+                  <ThumbDownOutlined className=" " />
+                </div>
+              )}
+            </>
           )}
           <div className="text-sm">
             {formatNumber(movieData?.dislikesCount)}

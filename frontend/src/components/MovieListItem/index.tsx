@@ -173,6 +173,7 @@ export default function MovieListItem({
                     onClick={() => {
                         onLikeMovie()
                     }}
+                    className='cursor-pointer'
                 >
                     {likeMovieState?.isLoading ? <CircularProgress color="inherit" style={{ marginRight: -10 }} size={14} /> :
                         <>
@@ -198,6 +199,7 @@ export default function MovieListItem({
                     onClick={() => {
                         onDislikeMovie()
                     }}
+                    className='cursor-pointer'
                 >
                     {dislikeMovieState?.isLoading ? <CircularProgress color="inherit" style={{ marginRight: -10 }} size={14} /> :
                         <>
@@ -220,7 +222,9 @@ export default function MovieListItem({
                     }
 
                 </div>
-                <div onClick={onAddToList}>
+                <div
+                    className='cursor-pointer'
+                    onClick={onAddToList}>
                     {addToMyListState?.isLoading ? <CircularProgress color="inherit" style={{ marginRight: -10 }} size={14} /> :
                         <>
                             {movie?.isInDefaultList ? <div className='icon-circle'><Check

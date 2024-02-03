@@ -38,12 +38,21 @@ async function scrapeMovieDetails(url) {
         ".css-n6mjxq.e1r3wknn10"
       ).textContent;
       const title = body.querySelector(".css-xuu3cf.e3sx6uc7")?.textContent;
-      const description = body.querySelector(
+
+      let fullDescription = body.querySelector(
         ".css-49lcwn.e1qij4j11 p"
       )?.textContent;
-      const ageRating = body
+
+      //split desc based on movie title
+      let movieDescParts = fullDescription?.split?.(title);
+
+      let description = movieDescParts[0]?.trim();
+
+      let ageRating = body
         .querySelector('span[title="Maturity rating"]')
         ?.textContent?.trim();
+      ageRating = ageRating?.replace("Rated:", "");
+
       let genre = Array.from(
         body.querySelectorAll(".css-1szmslw.e1r3wknn1 a")
       ).map((link) => link?.textContent);
