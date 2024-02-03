@@ -6,7 +6,9 @@ import { addClassNames } from '../store/utils/functions';
 import { MdOutlineArrowDropDown } from "react-icons/md";
 
 function GenresDropdown() {
-    const { data: genresData, isLoading, error } = useGetGenresQuery();
+    const { data: genresData, isLoading, error } = useGetGenresQuery({}, {
+        refetchOnMountOrArgChange: true,
+    });
     const [isOpen, setIsOpen] = useState(false);
 
     const dropdownContentRef = useRef(null);
@@ -28,6 +30,7 @@ function GenresDropdown() {
     }, [isOpen]);
 
 
+    const numOfGridRows = Math.ceil(genres?.length / 3) || 3
 
     return (
         <div className="relative w-[fit-content] bg-[black] ml-3 sm:ml-[50px] mb-1">
@@ -51,14 +54,16 @@ function GenresDropdown() {
                 {isOpen && (
                     <ul className={
                         addClassNames(
-                            "absolute grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3",
-                            'bg-black w-[52vw] sm:w-[270px] md:w-[350px]',
-                            'p-3 gap-y-2'
+                            // 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3',
+                            "absolute grid ",
+                            `grid-rows-${numOfGridRows}  grid-flow-col`,
+                            'bg-black w-[52vw] sm:w-[270px] md:w-[400px]',
+                            'p-3 '
                         )
                     }>
                         {genres?.map((genre) => (
                             <li
-                                className='hover:underline'
+                                className='hover:underline h-[35px] capitalize'
                                 key={genre._id}>
                                 <Link to={`/genre/${genre._id}`}>{genre.title}</Link>
                             </li>

@@ -9,11 +9,11 @@ type Props = {
     genres: any
 }
 
-function GenresDropdown(props: Props) {
+const GenresDropdown = React.forwardRef((props, ref) => {
     const [searchTerm, setSearchTerm] = useState('');
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const { data: genresData, isLoading, isError } = useGetGenresQuery();
+    const { data: genresData, isLoading, isError, refetch: refetchGenres } = useGetGenresQuery();
 
     const [createGenreMutation, createGenreState] = useCreateGenreMutation();
     const [deleteGenreMutation, deleteGenreState] = useDeleteGenreMutation();
@@ -21,6 +21,13 @@ function GenresDropdown(props: Props) {
     const [genreToDelete, setGenreToDelete] = useState<any | null>(null);
 
     const { genres, setGenres } = props
+
+
+    React.useImperativeHandle(ref, () => ({
+        refetchGenresFn() {
+            refetchGenres()
+        }
+    }));
 
 
     // React.useEffect(() => {
@@ -62,6 +69,7 @@ function GenresDropdown(props: Props) {
 
         setSearchTerm('');
         setIsDropdownOpen(false);
+        refetchGenres()
     };
 
     const handleDeleteGenre = async (genreId) => {
@@ -76,10 +84,10 @@ function GenresDropdown(props: Props) {
             let newGenres = [...genres]
             newGenres = newGenres.filter((genre) => genre?._id != genreId)
             setGenres(newGenres)
+            refetchGenres()
 
         } else {
             toast.error('Error deleting genre', { position: 'top-right' });
-
         }
 
         setGenreToDelete(null)
@@ -100,7 +108,7 @@ function GenresDropdown(props: Props) {
                 {genres?.map((_genre) => {
                     return (
                         <div key={_genre?._id} className='flex items-center gap-2 bg-[#e5e7eb] text-sm p-2 rounded-[20px] text-black  '>
-                            <div> {_genre?.title}</div>
+                            <div className="capitalize"> {_genre?.title}</div>
                             <div
                                 onClick={() => onRemoveFromeSelected(_genre?._id)}
                                 className='cursor-pointer  '>x</div>
@@ -182,6 +190,6 @@ function GenresDropdown(props: Props) {
             </Dialog>
         </div>
     )
-}
+})
 
 export default GenresDropdown;

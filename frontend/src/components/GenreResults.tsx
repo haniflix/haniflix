@@ -89,7 +89,7 @@ const GenreResults = () => {
       )}
 
       <div className='text-4xl font-bold mt-11 sm:mt-2 capitalize'>
-        {selectedGenre?.title} genre
+        {selectedGenre?.title}
       </div>
 
       <Grid container spacing={2} className='!mt-3 sm:!mx-[20px] relative'>

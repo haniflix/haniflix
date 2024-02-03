@@ -44,7 +44,12 @@ async function scrapeMovieDetails(url) {
       )?.textContent;
 
       //split desc based on movie title
-      let movieDescParts = fullDescription?.split?.(title);
+      let movieDescParts = [];
+      if (fullDescription?.includes(`${title} featuring`)) {
+        movieDescParts = fullDescription?.split?.(`${title} featuring`);
+      } else {
+        movieDescParts = fullDescription?.split?.(title);
+      }
 
       let description = movieDescParts[0]?.trim();
 
@@ -63,24 +68,13 @@ async function scrapeMovieDetails(url) {
       //last item is not a genre
       genre = genre.slice(0, -1);
 
-      const imageSources = Array.from(body.querySelectorAll("picture source"));
-      const largestImageUrl = imageSources?.reduce(
-        (largest, source) => {
-          const currentSize = parseInt(
-            source.getAttribute("srcset")?.split(" ")?.[1]
-          );
-          return currentSize > largest?.size
-            ? { srcset: source.getAttribute("srcset"), size: currentSize }
-            : largest;
-        },
-        { srcset: "", size: 0 }
-      ).srcset;
+      const imageUrl = body.querySelector(".css-18pmxw3.edbh37f1")?.src;
 
       return {
         title,
         // trailerUrl,
         description,
-        imageUrl: largestImageUrl?.split(" ")?.[0], // Get the actual URL from srcset
+        imageUrl,
         ageRating,
         genre,
         yearOfRelease,

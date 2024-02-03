@@ -78,6 +78,8 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
   //genres
   const [genreObjs, setGenreObjs] = React.useState<any[]>([])
 
+  const genreDropDownRef = React.useRef()
+
   // determine if form is in update movie mode
   const isUpdateMode = item == undefined || item == null
 
@@ -111,7 +113,6 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
     //   movieGenresStringArr.push(_genre?.title)
     // })
 
-    console.log('movie ', movie)
 
     setGenreObjs(movie.genre);
 
@@ -144,6 +145,9 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
       toast.dismiss();
       toast.success('saved', { position: 'top-right' });
       callback?.()
+
+      //just incase there are new genres
+      genreDropDownRef?.current?.refetchGenresFn()
     }
 
     else {
@@ -203,6 +207,9 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
       toast.success('saved', { position: 'top-right' });
 
       callback?.()
+
+      //just incase there are new genres
+      genreDropDownRef?.current?.refetchGenresFn()
     }
 
     else {
@@ -407,6 +414,7 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
           <GenresDropdown
             setGenres={setGenreObjs}
             genres={genreObjs}
+            ref={genreDropDownRef}
           />
         </Box>
 

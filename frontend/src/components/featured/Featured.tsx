@@ -217,7 +217,7 @@ export default function Featured({ type }) {
   const renderLikeContainer = () => {
 
     return (
-      <div className=" flex">
+      <div className="flex">
         <IconButton
           onClick={onLikeMovie}
           className='flex gap-1 !text-white '
@@ -298,7 +298,7 @@ export default function Featured({ type }) {
           return (
             <div
               key={info?.text}
-              className='px-3 py-2 bg-[#ffffff29] rounded-[30px] text-sm'>
+              className='px-3 capitalize py-2 bg-[#ffffff29] rounded-[30px] text-sm'>
               {info.text}
             </div>
           )
@@ -348,8 +348,8 @@ export default function Featured({ type }) {
             <span id="desc-title">{movieData?.title ? movieData?.title : <div><CircularProgress color="inherit" size={18} /><span>Loading..</span></div>}</span>
             {trimmedDesc}
           </span>
-          <div className="flex justify-between flex-wrap">
-            <div className="buttons">
+          <div className="flex flex-wrap">
+            <div className="buttons ">
               <Link
                 to={`/watch/${movieData?._id}`}
                 style={{ textDecoration: "none" }}

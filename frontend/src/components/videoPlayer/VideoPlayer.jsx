@@ -24,6 +24,8 @@ import { useAddMovieToDefaultListMutation } from "../../store/rtk-query/listsApi
 
 import CircularProgress from "@mui/material-next/CircularProgress";
 
+import { useNavigate } from "react-router-dom";
+
 const VideoPlayer = ({ videoId, videoUrl }) => {
   const [playtime, setPlaytime] = useState(0);
   const [seekTime, setSeekTime] = useState(0);
@@ -33,6 +35,8 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
   const [likeMovie, likeMovieState] = useLikeMovieMutation();
   const [dislikeMovie, dislikeMovieState] = useDislikeMovieMutation();
   const [addToMyList, addToMyListState] = useAddMovieToDefaultListMutation();
+
+  const navigate = useNavigate();
 
   const {
     data: movieData,
@@ -135,6 +139,12 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
     playerRef.current.seekTo(seekTime);
     setPlaytime(seekTime);
     localStorage.setItem(`videoPlaytime_${videoId}`, seekTime.toString());
+  };
+
+  const handleEnded = () => {
+    setTimeout(() => {
+      navigate("/"); // Redirect to homepage after 2 seconds
+    }, 2000);
   };
 
   // Handle pause
@@ -269,6 +279,7 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
         ref={playerRef}
         url={videoUrl}
         controls
+        onEnded={handleEnded}
         onDuration={handleDuration}
         onProgress={handleProgress}
         onPause={handlePause}
