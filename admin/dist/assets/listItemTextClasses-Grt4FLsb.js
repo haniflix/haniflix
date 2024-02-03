@@ -1,1 +1,0 @@
-import{i as e,k as s}from"./index-RN40GIN3.js";function l(t){return s("MuiListItemText",t)}const i=e("MuiListItemText",["root","multiline","dense","inset","primary","secondary"]),n=i;export{l as g,n as l};

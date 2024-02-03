@@ -4,7 +4,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { updateToken } from "../reducers/auth";
 
 const BASE_URL =
-  import.meta.env.VITE_BASE_API_URL || "http://localhost:8800/api/";
+  import.meta.env.VITE_APP_API_URL || "http://localhost:8800/api/";
 
 import Swal from "sweetalert2";
 

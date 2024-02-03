@@ -18,7 +18,7 @@ const morganMiddleware = require("./middleware/morgan");
 
 dotenv.config();
 
-const allowed_ips = [
+const allowed_origins = [
   "http://50.62.182.51:4000",
   "http://admin.haniflix.com:4000",
   "https://admin.haniflix.com",
@@ -33,7 +33,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server, {
   cors: {
-    origin: allowed_ips,
+    origin: allowed_origins,
     methods: ["GET", "POST"],
     allowedHeaders: ["token"],
     credentials: true,
@@ -48,12 +48,11 @@ const PORT = process.env.PORT || 8800;
 
 // const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
+app.options("*", cors({ origin: allowed_origins, optionsSuccessStatus: 200 }));
+app.use(cors({ origin: allowed_origins, optionsSuccessStatus: 200 }));
+
 app.use(express.json());
-
 app.use(morganMiddleware);
-
-app.options("*", cors({ origin: allowed_ips, optionsSuccessStatus: 200 }));
-app.use(cors({ origin: allowed_ips, optionsSuccessStatus: 200 }));
 
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
