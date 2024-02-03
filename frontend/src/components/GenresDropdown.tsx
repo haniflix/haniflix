@@ -57,7 +57,7 @@ function GenresDropdown() {
             <div
                 ref={dropdownContentRef}
                 className='relative'>
-                {isOpen && (
+                {isOpen && numOfGridRows !== undefined && (
                     <ul className={
                         addClassNames(
                             // 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3',
