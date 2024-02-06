@@ -11,6 +11,8 @@ import { selectUser } from './store/reducers/auth';
 import { useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 
+import { SocketProvider } from "./contexts/SocketContext";
+
 function App() {
   const user = useAppSelector(selectUser);
   const content = useRoutes(router);
@@ -25,8 +27,10 @@ function App() {
   return (
     <ThemeProvider>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <CssBaseline />
-        {content}
+        <SocketProvider>
+          <CssBaseline />
+          {content}
+        </SocketProvider>
       </LocalizationProvider>
       <Toaster />
     </ThemeProvider>

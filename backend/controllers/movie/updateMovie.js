@@ -51,13 +51,10 @@ const updateMovie = async (req, res) => {
           if (genreItem.type === "new") {
             const genreTitle = genreItem.title?.toLowerCase();
 
-            console.log("genreTitle ", genreTitle);
-
             //can only be reached in a hypothetical case (debugging)
             const findGenreMatch = await Genre.findOne({
               title: genreTitle,
             });
-            console.log("findGenreMatch ", findGenreMatch);
 
             if (findGenreMatch) {
               // already stored in db

@@ -59,8 +59,11 @@ app.use("/api/users", userRoute);
 app.use("/api/movies", movieRoute);
 app.use("/api/genre", genreRoute);
 app.use("/api/lists", listRoute);
-app.use("/api/scraper", scraperRoute);
 app.use("/api/stats", statsRoute);
+
+const scraperRouteWithIO = scraperRoute(io);
+
+app.use("/api/scraper", scraperRouteWithIO);
 
 // Import and call the socket setup function
 const setupSockets = require("./sockets");

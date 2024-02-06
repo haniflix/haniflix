@@ -9,9 +9,17 @@ export const scraperApi = authApi.injectEndpoints({
         method: 'POST',
         body: data
       })
+    }),
+    scrapeAllMovies: builder.mutation({
+      query: () => ({
+        url: 'scraper/scrape-all',
+        method: 'POST'
+        // body: data
+      })
     })
   }),
   overrideExisting: false
 });
 
-export const { useScrapeWebsiteMutation } = scraperApi;
+export const { useScrapeWebsiteMutation, useScrapeAllMoviesMutation } =
+  scraperApi;

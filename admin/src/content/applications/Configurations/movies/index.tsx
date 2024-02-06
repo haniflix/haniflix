@@ -39,6 +39,9 @@ import Pagination from 'src/components/Pagination';
 
 import { BiSearch } from "react-icons/bi";
 
+import { SocketContext } from 'src/contexts/SocketContext'
+import { useScrapeAllMoviesMutation } from 'src/store/rtk-query/scraperApi';
+
 
 function Movies() {
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
@@ -49,6 +52,12 @@ function Movies() {
   const [searchTerm, setSearchTerm] = React.useState<string>('')
 
   const client = useApiClient();
+
+  const [totalMoviesProcessed, setTotalProcessed] = React.useState<undefined | number>(undefined)
+  const [totalMoviesToProcess, setTotalToProcess] = React.useState<undefined | number>(undefined)
+  const [lastMovieProcessed, setLastMovie] = React.useState<undefined | any>(undefined)
+
+  const { socket } = React.useContext(SocketContext)
 
   //filter
   const [showSortFilter, setShowSort] = React.useState(false)
@@ -75,11 +84,21 @@ function Movies() {
   const { data: moviesData, isLoading: moviesLoading, refetch } = useGetMoviesQuery(queryParams)
 
   const [deleteMovie, deleteMovieState] = useDeleteMovieMutation()
+  const [scrapeAllMovies, scrapeAllMoviesState] = useScrapeAllMoviesMutation()
 
   const pageCount = moviesData?.totalMovies
     ? Math.ceil(moviesData.totalMovies / queryParams.perPage)
     : 0;
 
+  React.useEffect(() => {
+    socket?.on("scrapeDetails", (message) => {
+      setTotalProcessed(message?.processed)
+      setTotalToProcess(message?.total)
+      if (message?.movie) {
+        setLastMovie(message?.movie)
+      }
+    });
+  }, [socket])
 
   const getData = useCallback(() => {
     console.log('callback')
@@ -117,6 +136,17 @@ function Movies() {
       });
   }, []);
 
+  const onScrapeAllMovies = async () => {
+
+    const res = await scrapeAllMovies()
+
+    if (res?.data) {
+      toast.success('Scraping completed successfully', { position: 'top-right' });
+    }
+    else {
+      toast.error('Error encountered during scraping', { position: 'top-right' });
+    }
+  }
 
 
 
@@ -144,6 +174,46 @@ function Movies() {
     setSearchTerm(term);
     setPage(1)
   };
+
+
+  const renderScraperInfo = () => {
+
+    return (
+      <div className='w-full px-7 mt-2 flex gap-4 items-start'>
+        <Button variant="contained" onClick={onScrapeAllMovies}>
+          Scrape All
+        </Button>
+        <div className='text-sm'>
+          {
+            totalMoviesProcessed || totalMoviesToProcess ?
+              <div>
+                <div>
+                  {totalMoviesProcessed} of {totalMoviesToProcess} movies processed
+                </div>
+                <div className='mt-1 text-xs'>
+                  {lastMovieProcessed ?
+                    <>
+                      <div >
+                        {lastMovieProcessed?.title}
+                      </div>
+                      <div
+                      >success: <span style={{
+                        color: lastMovieProcessed?.success == true ? 'green' : 'red'
+                      }}>{lastMovieProcessed?.success?.toString()}</span></div>
+                    </>
+                    : undefined
+                  }
+                </div>
+              </div>
+              : undefined
+          }
+          {/* <div></div>  */}
+
+        </div>
+        {scrapeAllMoviesState.isLoading && <img src={spinnerSvg} alt="Spinner" />}
+      </div>
+    )
+  }
 
   let input_class =
     "text-[#030424] max-w-[400px] mx-4 bg-[#fff] border-2 border-[#E7E7E7] hover:border-[#AAAAAA] focus-within:border-[#AAAAAA] p-2 pl-[22px] font-medium rounded-[11px] text-[18px] flex items-center h-[44px] min-w-[150px] justify-between";
@@ -192,6 +262,7 @@ function Movies() {
               <img src={spinnerSvg} alt="Spinner" />
               : undefined}
           </div>
+          {renderScraperInfo()}
           <Grid item xs={12}>
             <TableContainer component={Paper}>
               <Table /*sx={{ minWidth: 650 }}*/ aria-label="simple table">
