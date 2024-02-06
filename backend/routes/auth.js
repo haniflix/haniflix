@@ -166,14 +166,16 @@ router.post("/login", async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
 
     if (!user) {
-      res.status(400).json("Wrong email provided!");
+      res.status(400).json({ message: "Wrong email provided!" });
       return;
     }
 
     if (user.emailVerified === false) {
       res
         .status(400)
-        .json("Your email address is not verified! Check your inbox.");
+        .json({
+          message: "Your email address is not verified! Check your inbox.",
+        });
       return;
     }
 
@@ -203,7 +205,10 @@ router.post("/login", async (req, res) => {
 
     res.status(200).json({ ...info, accessToken, refreshToken });
   } catch (err) {
-    res.status(400).json(err);
+    console.log("error ", err);
+    res.status(400).json({
+      message: err?.message ? err?.message : err,
+    });
   }
 });
 
