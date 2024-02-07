@@ -1,5 +1,6 @@
 const multer = require("multer");
 const sharp = require("sharp");
+const fs = require("fs");
 
 // Define file filter function
 const fileFilter = (req, file, cb) => {
@@ -11,23 +12,38 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
+// Improved storage function with better error handling:
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    try {
+      const destination =
+        req.body.type === "avatar" ? "uploads/avatars/" : "uploads/";
+      // Ensure that the directory exists, create it if it doesn't
+      fs.mkdir(destination, { recursive: true }, (err) => {
+        if (err) {
+          return cb(err);
+        }
+        cb(null, destination);
+      });
+    } catch (err) {
+      cb(err); // Handle errors gracefully
+    }
+  },
+  filename: (req, file, cb) => {
+    // Generate a shorter ID for the filename
+    const fileId = Math.random().toString(36).substring(7);
+    const newFilename = `${fileId}.${file.originalname.split(".").pop()}`;
+    cb(null, newFilename);
+  },
+});
+
 // Middleware for parsing FormData
 const upload = multer({
   limits: {
     fileSize: 1024 * 1024, // 1MB file size limit
   },
   fileFilter: fileFilter,
-  storage: multer.diskStorage({
-    destination: (req, file, cb) => {
-      // Determine the destination directory based on the value of 'type'
-      const destination =
-        req.body.type === "avatar" ? "uploads/avatars/" : "uploads/";
-      cb(null, destination);
-    },
-    filename: (req, file, cb) => {
-      cb(null, file.originalname); // Use the original filename
-    },
-  }),
+  storage,
 });
 
 // Middleware for compressing images (for avatars)
