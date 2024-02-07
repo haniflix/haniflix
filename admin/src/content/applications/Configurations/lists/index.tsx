@@ -88,7 +88,7 @@ function Lists() {
         toast.dismiss();
         toast.success('deleted', { position: 'top-right' });
         setToDelete(null);
-        //  getData();
+        getData();
       })
       .catch((err) => {
         toast.dismiss();
@@ -178,7 +178,6 @@ function Lists() {
                           aria-label="menu"
                           onClick={() => {
                             setToEdit(row);
-                            console.log('hey : ', row);
                           }}
                         >
                           <Edit />

@@ -86,22 +86,24 @@ function Users() {
     },
     [items]
   );
-  const deleteItem = useCallback((item) => {
+  const deleteItem = useCallback(async (item) => {
     if (item == null) return;
     toast.loading('loading...', { position: 'top-right' });
 
-    deleteUser(item._id)
-      .then(() => {
-        toast.dismiss();
-        toast.success('deleted', { position: 'top-right' });
-        getData();
-        setToDelete(null);
-      })
-      .catch((err) => {
-        toast.dismiss();
-        toast.error('failed', { position: 'top-right' });
-        console.error(err);
-      });
+    const res = await deleteUser(item._id)
+
+    if (res?.data) {
+      toast.dismiss();
+      toast.success('deleted', { position: 'top-right' });
+      getData();
+      setToDelete(null);
+    }
+
+    else {
+      toast.dismiss();
+      toast.error('failed', { position: 'top-right' });
+      console.error(res);
+    }
   }, []);
 
 

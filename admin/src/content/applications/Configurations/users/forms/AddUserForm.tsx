@@ -68,7 +68,7 @@ const AddUserForm: React.FC<AddTagGroupProps> = ({ callback, item }) => {
 
   }, [fullname, email, password, isAdmin]);
 
-  const update = useCallback(() => {
+  const update = useCallback(async () => {
     toast.loading('saving...', { position: 'top-right' });
     const data = {
       fullname,
@@ -80,19 +80,21 @@ const AddUserForm: React.FC<AddTagGroupProps> = ({ callback, item }) => {
     if (password.length > 0) data.password = password;
 
 
-    updateUser({ itemId: item._id, data })
-      .then(() => {
-        toast.dismiss();
-        toast.success('saved', { position: 'top-right' });
-        // callback(data);
-        callback?.()
-        reset();
-      })
-      .catch((err) => {
-        console.error(err);
-        toast.dismiss();
-        toast.error('failed', { position: 'top-right' });
-      });
+    const res = await updateUser({ itemId: item._id, data })
+
+    if (res?.data) {
+      toast.dismiss();
+      toast.success('saved', { position: 'top-right' });
+      // callback(data);
+      callback?.()
+      reset();
+    }
+
+    else {
+      console.error(err);
+      toast.dismiss();
+      toast.error('failed', { position: 'top-right' });
+    }
   }, [item, fullname, email, password, isAdmin]);
 
   useEffect(() => {

@@ -30,7 +30,8 @@ import { Movie } from '@api/client/dist/movies/types';
 import { TagsInput } from 'react-tag-input-component';
 import toast from 'react-hot-toast';
 import { List } from '@api/client/dist/lists/types';
-import { useCreateListMutation, useUpdateListMutation } from 'src/store/rtk-query/listsApi';
+import { useCreateListMutation, useGetListByIdQuery, useUpdateListMutation } from 'src/store/rtk-query/listsApi';
+import { useGetMovieQuery, useGetMoviesQuery } from 'src/store/rtk-query/moviesApi';
 // import { DatePicker } from '@mui/x-date-pickers';
 
 interface AddMovieProps {
@@ -49,6 +50,28 @@ const AddListForm: React.FC<AddMovieProps> = ({ callback, item }) => {
 
   const [updateList, updateListState] = useUpdateListMutation()
   const [createList, createListState] = useCreateListMutation()
+
+  const { data: listData, isLoading: listLoading, refetch: refetchListData } = useGetListByIdQuery(item?._id, {
+    skip: !item?._id
+  })
+
+  // const moviesData = listData?.list?.content
+
+  const itemsPerPage = 100000;
+
+
+  let queryParams = {
+    perPage: itemsPerPage,
+  }
+
+  const { data: moviesData, isLoading: moviesLoading, refetch } = useGetMoviesQuery(queryParams)
+
+  useEffect(() => {
+    if (moviesData) {
+      setMovies(moviesData?.movies)
+    }
+  }, [moviesData])
+
 
   const reset = () => {
     setTitle('');
@@ -70,18 +93,18 @@ const AddListForm: React.FC<AddMovieProps> = ({ callback, item }) => {
     [movies]
   );
 
-  const getMovies = () => {
-    client
-      .getMovies()
-      .then((res) => {
-        setMovies(res?.movies);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
+  // const getMovies = () => {
+  //   client
+  //     .getMovies()
+  //     .then((res) => {
+  //       setMovies(res?.movies);
+  //     })
+  //     .catch((err) => {
+  //       console.error(err);
+  //     });
+  // };
 
-  const save = useCallback(() => {
+  const save = useCallback(async () => {
     const data = {
       title,
       content: content.map((c) => c._id) as any,
@@ -90,22 +113,21 @@ const AddListForm: React.FC<AddMovieProps> = ({ callback, item }) => {
     };
     toast.loading('saving...', { position: 'top-right' });
 
-    createList(data)
-      .then(() => {
-        toast.dismiss();
-        toast.success('saved', { position: 'top-right' });
-        reset();
-        // if (callback) callback();
-        callback?.()
-      })
-      .catch((err) => {
-        toast.dismiss();
-        toast.error('failed', { position: 'top-right' });
-        console.error(err);
-      });
+    const res = await createList(data)
+
+    if (res?.data) {
+      toast.dismiss();
+      toast.success('saved', { position: 'top-right' });
+      callback?.()
+    }
+    else {
+      toast.dismiss();
+      toast.error('failed', { position: 'top-right' });
+      console.error(res);
+    }
   }, [title, description, type, genre, content]);
 
-  const update = useCallback(() => {
+  const update = useCallback(async () => {
     const data = {
       title,
       description,
@@ -116,18 +138,19 @@ const AddListForm: React.FC<AddMovieProps> = ({ callback, item }) => {
     console.log(data);
     toast.loading('saving...', { position: 'top-right' });
 
-    updateList({ itemId: item._id, data })
-      .then(() => {
-        toast.dismiss();
-        toast.success('saved', { position: 'top-right' });
-        //   if (callback) callback();
-        callback?.()
-      })
-      .catch((err) => {
-        toast.dismiss();
-        toast.error('failed', { position: 'top-right' });
-        console.error(err);
-      });
+    const res = await updateList({ itemId: item._id, data })
+
+    if (res?.data) {
+      toast.dismiss();
+      toast.success('saved', { position: 'top-right' });
+      callback?.()
+    }
+
+    else {
+      toast.dismiss();
+      toast.error('failed', { position: 'top-right' });
+      console.error(res);
+    }
   }, [title, description, type, genre, item, content]);
 
   const selectItems = useMemo(() => {
@@ -145,7 +168,7 @@ const AddListForm: React.FC<AddMovieProps> = ({ callback, item }) => {
   }, [movies, content]);
 
   useEffect(() => {
-    getMovies();
+    // getMovies();
     if (item != null) {
       populate(item);
     }

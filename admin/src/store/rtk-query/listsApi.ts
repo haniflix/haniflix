@@ -16,6 +16,11 @@ export const listsApi = authApi.injectEndpoints({
         params
       })
     }),
+    getListById: builder.query({
+      query: (listId) => ({
+        url: `lists/single/${listId}`
+      })
+    }),
     createList: builder.mutation({
       query: (data: Partial<List>) => ({
         url: 'lists',
@@ -57,6 +62,7 @@ export const listsApi = authApi.injectEndpoints({
 });
 
 export const {
+  useGetListByIdQuery,
   useGetAdminListsQuery,
   useGetMyListQuery,
   useCreateListMutation,

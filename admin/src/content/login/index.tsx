@@ -64,12 +64,13 @@ function Login() {
 
       console.log(res);
 
+
       if (res?.data?.isAdmin && res?.data?.isAdmin !== true) {
         setError('Only administrators can login here');
       }
 
       if (!res?.data) {
-        setError("Error encountered during login")
+        setError(res?.error?.data?.message || "Error encountered during login")
       }
     }
     catch (err) {

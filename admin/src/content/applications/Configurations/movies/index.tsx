@@ -199,7 +199,11 @@ function Movies() {
                       <div
                       >success: <span style={{
                         color: lastMovieProcessed?.success == true ? 'green' : 'red'
-                      }}>{lastMovieProcessed?.success?.toString()}</span></div>
+                      }}>{lastMovieProcessed?.success?.toString()}</span>
+                      </div>
+                      <div
+                      >Retries: <span >{lastMovieProcessed?.retryCount}</span>
+                      </div>
                     </>
                     : undefined
                   }
