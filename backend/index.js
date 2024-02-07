@@ -2,6 +2,8 @@ const express = require("express");
 
 const http = require("http");
 const dotenv = require("dotenv");
+
+//routes
 const authRoute = require("./routes/auth");
 const userRoute = require("./routes/users");
 const genreRoute = require("./routes/genres");
@@ -9,6 +11,7 @@ const movieRoute = require("./routes/movies");
 const listRoute = require("./routes/lists");
 const statsRoute = require("./routes/stats");
 const scraperRoute = require("./routes/scraper");
+const imagesRoute = require("./routes/images");
 
 const cors = require("cors");
 
@@ -60,9 +63,9 @@ app.use("/api/movies", movieRoute);
 app.use("/api/genre", genreRoute);
 app.use("/api/lists", listRoute);
 app.use("/api/stats", statsRoute);
+app.use("/api/image", imagesRoute);
 
 const scraperRouteWithIO = scraperRoute(io);
-
 app.use("/api/scraper", scraperRouteWithIO);
 
 // Import and call the socket setup function

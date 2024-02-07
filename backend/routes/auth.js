@@ -163,7 +163,10 @@ async function sendVerificationEmail(email, verifyUrl) {
 //LOGIN
 router.post("/login", async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.body.email });
+    const userEmail = req.body.email.toLowerCase(); // Convert user input to lowercase
+    const user = await User.findOne({
+      email: { $regex: new RegExp("^" + userEmail + "$", "i") },
+    });
 
     if (!user) {
       res.status(400).json({ message: "Wrong email provided!" });
@@ -171,11 +174,9 @@ router.post("/login", async (req, res) => {
     }
 
     if (user.emailVerified === false) {
-      res
-        .status(400)
-        .json({
-          message: "Your email address is not verified! Check your inbox.",
-        });
+      res.status(400).json({
+        message: "Your email address is not verified! Check your inbox.",
+      });
       return;
     }
 
@@ -183,7 +184,9 @@ router.post("/login", async (req, res) => {
     const originalPassword = bytes.toString(CryptoJS.enc.Utf8);
 
     if (originalPassword !== req.body.password) {
-      res.status(400).json("Wrong password or username!");
+      res.status(400).json({
+        message: "Wrong password or username!",
+      });
       return;
     }
 

@@ -14,11 +14,8 @@ const MovieSchema = new mongoose.Schema(
     year: { type: String },
     limit: { type: Number },
     genre: [{ type: mongoose.Schema.Types.ObjectId, ref: "Genre" }],
-    //
-    // Use array of Genre references
-    // genre: [{ type: mongoose.Schema.Types.ObjectId, ref: "Genre" }],
-    //
     isSeries: { type: Boolean, default: false },
+    failedDuringScrape: { type: Boolean },
   },
   { timestamps: true }
 );

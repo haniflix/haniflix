@@ -146,7 +146,7 @@ async function searchAndScrapeMovies(movieInfos, io, totalCount, currentCount) {
   const processedMoviesData = [];
 
   const browser = await puppeteer.launch({
-    headless: "new", // Set to true for headless mode
+    headless: "new",
     // devtools: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
@@ -177,7 +177,7 @@ async function searchAndScrapeMovies(movieInfos, io, totalCount, currentCount) {
     // Use Promise.race to either wait for input clearing or timeout
     await Promise.race([
       waitForInputClear(),
-      new Promise((resolve) => setTimeout(resolve, 3500)),
+      new Promise((resolve) => setTimeout(resolve, 2000)),
     ]);
 
     // Define an asynchronous function to handle each movie search and scrape
@@ -208,16 +208,12 @@ async function searchAndScrapeMovies(movieInfos, io, totalCount, currentCount) {
       let addedMovie;
       let retryCount = 0;
       const RETRY_ATTEMPTS = 3;
+      countInCurrentBatch++;
 
       while (!addedMovie && retryCount < RETRY_ATTEMPTS) {
         try {
           // Process the movie
           await processMovie(movieInfo);
-
-          //when a movie is retrying its count must not be updated
-          if (retryCount == 0) {
-            countInCurrentBatch++;
-          }
 
           addedMovie = processedMoviesData?.find(
             (processedMovieData) =>
@@ -276,6 +272,7 @@ async function searchAndScrapeMovies(movieInfos, io, totalCount, currentCount) {
             movie: {
               title: movieInfo?.movieName,
               success: !!addedMovie,
+              retryCount: retryCount,
             },
           });
         } catch (error) {
@@ -284,7 +281,29 @@ async function searchAndScrapeMovies(movieInfos, io, totalCount, currentCount) {
             `Retry count for movie:${movieInfo?.movieId} is ${retryCount}`
           );
 
-          console.error(error);
+          console.error("error :", error);
+
+          io.emit("scrapeDetails", {
+            total: totalCount,
+            processed: countInCurrentBatch + currentCount,
+            movie: {
+              title: movieInfo?.movieName,
+              success: false,
+              retryCount: retryCount,
+            },
+          });
+
+          if (retryCount == RETRY_ATTEMPTS - 1) {
+            const updatedMovie = await Movie.findByIdAndUpdate(
+              movieInfo?.movieId,
+              {
+                $set: {
+                  failedDuringScrape: true,
+                },
+              },
+              { new: true }
+            );
+          }
 
           // Retry the same movie
           retryCount++;
@@ -305,6 +324,8 @@ async function searchAndScrapeMovies(movieInfos, io, totalCount, currentCount) {
  */
 async function searchAndScrapeMovie(page, movieName, movieYear) {
   try {
+    // page.waitForNetworkIdle({ idleTime: 600 });
+
     // Type the search term into the input field
     // Check if input field is already filled (optimization)
     const isInputFilled = await page.$eval(
@@ -321,73 +342,89 @@ async function searchAndScrapeMovie(page, movieName, movieYear) {
     }
 
     // Type the movie name and year into the input field
-    await page.type(
-      'input[data-testid="search-input"]',
-      `${movieName} ${movieYear}`
-      //   { delay: 30 }
+    await Promise.all([
+      page.type(
+        'input[data-testid="search-input"]',
+        `${movieName} ${movieYear}`
+      ),
+    ]);
+
+    await page.waitForSelector("#search_dropdown_results", {
+      timeout: 60 * 1000 * 2,
+    });
+    await page.waitForSelector("#search_dropdown_results a"),
+      { timeout: 60 * 1000 * 2 };
+
+    // Query all result links
+    const resultLinks = await page.$$eval(
+      "#search_dropdown_results a",
+      (links) =>
+        links.map((link) => ({
+          title: link.getAttribute("title"),
+          href: link.getAttribute("href"),
+          titleWithYear: link
+            .querySelector(".css-bddqzz.e121vwr03")
+            .textContent.trim(),
+        }))
     );
 
-    // Wait for the autocomplete list to be rendered
-    await page.waitForSelector("#search_dropdown_results");
-    // console.log("results loading icon showing, now waiting for links");
-    await page.waitForSelector("#search_dropdown_results a");
-    //console.log("link results found");
+    // Filter the result links based on your criteria
+    const matchingResult = resultLinks.find((link) => {
+      const title = link.title.toLowerCase();
+      const titleWithYear = link.titleWithYear.toLowerCase();
+      const sanitizedTitle = title.replace(/[^\w\s]/gi, "");
 
-    // Check if the first item matches the criteria
-    const firstResult = await page.$("#search_dropdown_results a");
+      const href = link.href;
 
-    if (!firstResult) {
-      console.log("No search results found.");
-      throw {
-        message: "No search results found.",
-      };
-    }
+      const sanitizedMovieName = movieName
+        .replace(/[^\w\s]/gi, "")
+        .toLowerCase();
 
-    const title = await page.$eval("#search_dropdown_results a", (link) =>
-      link.getAttribute("title")
-    );
-    const href = await page.$eval("#search_dropdown_results a", (link) =>
-      link.getAttribute("href")
-    );
+      const allWordsIncluded = sanitizedMovieName
+        .split(" ")
+        .every((word) => sanitizedTitle.includes(word));
 
-    // Check if all words in the movieName are present in the title
-    const allWordsIncluded = movieName
-      ?.toLowerCase()
-      .split(" ")
-      .every((word) => title.toLowerCase().includes(word));
+      const matchesYear =
+        href.includes(movieYear) ||
+        titleWithYear?.includes(`(${movieYear?.trim()})`);
 
-    // console.log("title ", title);
-    // console.log("movieName ", movieName);
-    // console.log("allWordsIncluded check", allWordsIncluded);
-    // console.log("allWordsIncluded", movieName?.toLowerCase().split(" "));
-    // console.log("href ", href);
-    // console.log("movieYear ", movieYear);
+      return allWordsIncluded && matchesYear;
+    });
 
-    // Check if the title and href contain the movieName and movieYear
-    if (allWordsIncluded && href.includes(movieYear)) {
-      // Click on the first result
-
-      // Wait for the page to load
-      await Promise.all([
-        page.waitForNavigation({
-          waitUntil: ["domcontentloaded", "load", "networkidle0"],
-        }),
-        page.goto(`${SEARCH_PAGE_URL}${href}`),
-        // page.click("#search_dropdown_results a"),
-      ]);
-
-      await page.waitForSelector(".css-n6mjxq.e1r3wknn10");
-
-      // Use the scrapeMovieDetails function to extract movie details
-      const movieDetails = await scrapeMovieDetails({ _page: page });
-
-      return movieDetails;
-    } else {
+    if (!matchingResult) {
       console.log("No matching result found.");
       throw {
         message: "No matching result found.",
       };
     }
+
+    // console.log("matchingResult ", matchingResult);
+    // console.log("movieYear ", movieYear);
+    // console.log("allWordsIncluded", movieName?.toLowerCase().split(" "));
+
+    // Wait for the page to load
+    await Promise.all([
+      page.waitForNavigation({
+        waitUntil: ["domcontentloaded", "load", "networkidle2"],
+      }),
+      page.goto(`${SEARCH_PAGE_URL}${matchingResult.href}`),
+    ]);
+
+    await page.waitForSelector(".css-n6mjxq.e1r3wknn10", {
+      timeout: 60 * 1000 * 2,
+    });
+
+    // Use the scrapeMovieDetails function to extract movie details
+    const movieDetails = await scrapeMovieDetails({ _page: page });
+
+    return movieDetails;
+
+    // } else {
+    //   console.log("No matching result found.");
+    //   throw {
+    //     message: "No matching result found.",
+    //   };
+    // }
   } catch (error) {
     console.error("Error searching and scraping movie:", error);
 

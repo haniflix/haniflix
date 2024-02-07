@@ -13,8 +13,16 @@ const getMovies = async (req, res) => {
       "page",
       "searchTerm",
       "genreId",
+      "movieYear",
     ]);
-    const { orderBy, perPage = 20, page = 1, searchTerm, genreId } = params;
+    const {
+      orderBy,
+      perPage = 20,
+      page = 1,
+      searchTerm,
+      genreId,
+      movieYear,
+    } = params;
 
     const skip = (parseInt(page) - 1) * perPage; // Calculate skip for pagination
 
@@ -36,6 +44,15 @@ const getMovies = async (req, res) => {
       aggregationPipeline.push({
         $match: {
           genre: mongoose.Types.ObjectId(genreId),
+        },
+      });
+    }
+
+    //filter by movie year if present
+    if (movieYear) {
+      aggregationPipeline.push({
+        $match: {
+          year: movieYear?.trim(),
         },
       });
     }

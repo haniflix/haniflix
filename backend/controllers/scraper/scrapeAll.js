@@ -11,7 +11,6 @@ const BATCH_SIZE = 5;
 //CREATE
 const scrapeAllMovies = async (io, req, res) => {
   try {
-    console.log("scrape all called");
     // Get the total count of movies that match the filter
     const totalCount = await Movie.countDocuments({
       $or: [
@@ -28,6 +27,7 @@ const scrapeAllMovies = async (io, req, res) => {
     let page = 1;
     let totalPages = Math.ceil(totalCount / BATCH_SIZE);
     let processedCount = 0;
+    let batchCount = 1;
 
     // Emit details and progress at start
     io.emit("scrapeDetails", {
@@ -37,6 +37,7 @@ const scrapeAllMovies = async (io, req, res) => {
 
     while (page < totalPages + 1) {
       const skip = (page - 1) * BATCH_SIZE;
+      Logger.info(`Batch ${batchCount} starting -----`);
 
       const moviesToProcess = await Movie.find({
         $or: [
@@ -55,8 +56,6 @@ const scrapeAllMovies = async (io, req, res) => {
       const batch = moviesToProcess;
       const movieInfos = [];
 
-      console.log("batch length ", batch?.length);
-
       for (const movie of batch) {
         const cdnUrl = movie.video; // Update with the correct field containing CDN URL
         const movieInfo = extractMovieInfoFromCdnUrl(cdnUrl, movie?._id);
@@ -67,8 +66,6 @@ const scrapeAllMovies = async (io, req, res) => {
         processedCount++;
       }
 
-      Logger.info("Batch done");
-
       await searchAndScrapeMovies(
         movieInfos,
         io,
@@ -78,11 +75,8 @@ const scrapeAllMovies = async (io, req, res) => {
 
       page++;
 
-      console.log("page  ", page);
-
-      // if (page > 1) {
-      //   break; // No more pages
-      // }
+      Logger.info(`Batch ${batchCount} complete -----`);
+      batchCount++;
     }
 
     res.status(200).json({
