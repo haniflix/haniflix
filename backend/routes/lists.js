@@ -18,7 +18,7 @@ router.delete("/:id", verify, listControllers.deleteList);
 //GET
 router.get("/", verify, listControllers.getLists);
 //
-router.get("/:id", verify, listControllers.getListById);
+router.get("/single/:id", verify, listControllers.getListById);
 
 router.get("/admin-list", verify, listControllers.getAdminLists);
 

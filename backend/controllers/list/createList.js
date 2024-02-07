@@ -2,25 +2,42 @@ const { List, Movie } = require("../../models");
 const User = require("../../models/User");
 const Genre = require("../../models/Genre");
 
+const _ = require("lodash");
+
 const addMoviesFromGenreToList = async (list) => {
   // Find movies with genres matching the list title
   const listTitleLowercase = list.title.toLowerCase()?.trim();
   const genres = await Genre.find({ title: listTitleLowercase });
   const genreIds = genres.map((genre) => genre._id);
 
+  let content = list.content ? [...list.content] : [];
+  let automaticallyAdded = [];
+
   const moviesToAdd = await Movie.find({
     genre: { $in: genreIds },
   });
-  console.log("moviesToAdd length ", moviesToAdd.length);
+
   // Add movies to list content and automaticallyAdded fields
   for (const movie of moviesToAdd) {
-    if (!list.content.includes(movie._id)) {
-      list.content.push(movie._id);
-      list.automaticallyAdded.push(movie._id);
+    if (list.content && !list.content.includes(movie._id)) {
+      content.push(movie._id);
+      automaticallyAdded.push(movie._id);
     }
-  }
 
-  return list;
+    // if (!list?.content || list?.content?.length == 0) {
+    //   content.push(movie._id);
+    //   automaticallyAdded.push(movie._id);
+    // }
+  }
+  // console.log("content  ", content);
+  // console.log("automaticallyAdded  ", automaticallyAdded);
+  content = _.uniq(content);
+  automaticallyAdded = _.uniq(automaticallyAdded);
+
+  return {
+    content,
+    automaticallyAdded,
+  };
 };
 
 const createList = async (req, res) => {
@@ -48,7 +65,12 @@ const createList = async (req, res) => {
     // Set the user for the new list
     newList.user = user;
 
-    newList = addMoviesFromGenreToList(newList);
+    const { content, automaticallyAdded } = await addMoviesFromGenreToList(
+      newList
+    );
+
+    newList["content"] = content;
+    newList["automaticallyAdded"] = automaticallyAdded;
 
     // Save the new list
     const savedList = await newList.save();
@@ -61,6 +83,7 @@ const createList = async (req, res) => {
 
     res.status(201).json(savedList);
   } catch (err) {
+    console.log("err ", err);
     res.status(500).json(err);
   }
 };
