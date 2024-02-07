@@ -5,6 +5,7 @@ const deleteList = require("./deleteList");
 const getAdminLists = require("./getAdminLists");
 const getLists = require("./getLists");
 const getMyLists = require("./getMyLists");
+const getListById = require("./getListById");
 const getContinueWatching = require("./getContinueWatching");
 
 module.exports = {
@@ -15,5 +16,6 @@ module.exports = {
   getAdminLists,
   getLists,
   getMyLists,
+  getListById,
   getContinueWatching,
 };

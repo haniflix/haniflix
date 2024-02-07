@@ -1,4 +1,4 @@
-const Movie = require("../../models/Movie");
+const { Movie } = require("../../models");
 
 const deleteMovie = async (req, res) => {
   if (req.user.isAdmin) {

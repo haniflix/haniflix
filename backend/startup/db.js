@@ -10,6 +10,7 @@ const connectDB = async () => {
       useFindAndModify: false,
     });
     Logger.info("MongoDB Connected...");
+
     return;
   } catch (err) {
     if (err) {

@@ -1,5 +1,5 @@
-const List = require("../../models/List");
-const Movie = require("../../models/Movie");
+const { List } = require("../../models");
+const { Movie } = require("../../models");
 
 const _ = require("lodash");
 

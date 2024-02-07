@@ -1,5 +1,27 @@
-const List = require("../../models/List");
+const { List, Movie } = require("../../models");
 const User = require("../../models/User");
+const Genre = require("../../models/Genre");
+
+const addMoviesFromGenreToList = async (list) => {
+  // Find movies with genres matching the list title
+  const listTitleLowercase = list.title.toLowerCase()?.trim();
+  const genres = await Genre.find({ title: listTitleLowercase });
+  const genreIds = genres.map((genre) => genre._id);
+
+  const moviesToAdd = await Movie.find({
+    genre: { $in: genreIds },
+  });
+  console.log("moviesToAdd length ", moviesToAdd.length);
+  // Add movies to list content and automaticallyAdded fields
+  for (const movie of moviesToAdd) {
+    if (!list.content.includes(movie._id)) {
+      list.content.push(movie._id);
+      list.automaticallyAdded.push(movie._id);
+    }
+  }
+
+  return list;
+};
 
 const createList = async (req, res) => {
   try {
@@ -21,10 +43,12 @@ const createList = async (req, res) => {
     };
 
     // Create a new list
-    const newList = new List(myList);
+    let newList = new List(myList);
 
     // Set the user for the new list
     newList.user = user;
+
+    newList = addMoviesFromGenreToList(newList);
 
     // Save the new list
     const savedList = await newList.save();

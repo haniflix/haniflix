@@ -1,6 +1,6 @@
 const puppeteer = require("puppeteer");
 
-const Movie = require("../../models/Movie");
+const { Movie } = require("../../models");
 const Genre = require("../../models/Genre");
 
 const Logger = require("../../lib/logger");

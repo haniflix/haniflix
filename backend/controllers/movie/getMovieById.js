@@ -1,5 +1,5 @@
-const Movie = require("../../models/Movie");
-const List = require("../../models/List");
+const { Movie } = require("../../models");
+const { List } = require("../../models");
 const MovieLike = require("../../models/MovieLikes");
 
 const getMovieById = async (req, res) => {

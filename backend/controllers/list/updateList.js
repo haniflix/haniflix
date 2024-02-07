@@ -1,4 +1,4 @@
-const List = require("../../models/List");
+const { List } = require("../../models");
 const User = require("../../models/User");
 
 const updateList = async (req, res) => {
@@ -10,14 +10,18 @@ const updateList = async (req, res) => {
       const list = await List.findById(req.params.id);
 
       if (user._id == list._id || user.isAdmin) {
-        const updatedList = await List.findByIdAndUpdate(req.params.id, {
-          $set: {
-            title: req.body.title,
-            content: req.body.content,
-            type: req.body.type,
-            genre: req.body.genre,
+        const updatedList = await List.findOneAndUpdate(
+          { _id: req.params.id },
+          {
+            $set: {
+              title: req.body.title,
+              content: req.body.content,
+              type: req.body.type,
+              genre: req.body.genre,
+            },
           },
-        });
+          { new: true }
+        );
 
         return res.status(200).json(updatedList);
       }

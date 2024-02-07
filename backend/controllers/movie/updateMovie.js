@@ -1,4 +1,4 @@
-const Movie = require("../../models/Movie");
+const { Movie } = require("../../models");
 const Genre = require("../../models/Genre");
 
 const _ = require("lodash");

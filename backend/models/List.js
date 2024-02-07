@@ -12,8 +12,15 @@ const ListSchema = new mongoose.Schema(
       required: true,
     },
     adminList: { type: Boolean, default: false },
+    automaticallyAdded: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "Movie" },
+    ],
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("List", ListSchema);
+module.exports = {
+  ListSchema,
+};
+
+// module.exports = mongoose.model("List", ListSchema);

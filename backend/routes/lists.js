@@ -16,8 +16,9 @@ router.put("/:id", verify, listControllers.updateList);
 router.delete("/:id", verify, listControllers.deleteList);
 
 //GET
-//router.get("/", verify, async (req, res) => {
 router.get("/", verify, listControllers.getLists);
+//
+router.get("/:id", verify, listControllers.getListById);
 
 router.get("/admin-list", verify, listControllers.getAdminLists);
 

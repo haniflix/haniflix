@@ -1,4 +1,4 @@
-const List = require("../../models/List");
+const { List } = require("../../models");
 
 const deleteList = async (req, res) => {
   if (req.user.isAdmin) {

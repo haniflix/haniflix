@@ -6,7 +6,7 @@ const createGenre = async (req, res) => {
   const params = _.pick(req.body, ["title"]);
 
   const newGenre = new Genre({
-    title: params.title,
+    title: params.title?.toLowerCase(),
   });
   try {
     const savedGenre = await newGenre.save();

@@ -1,4 +1,4 @@
-const List = require("../../models/List");
+const { List } = require("../../models");
 const User = require("../../models/User");
 
 const getMyLists = async (req, res) => {

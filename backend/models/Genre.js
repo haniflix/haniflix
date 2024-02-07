@@ -7,4 +7,8 @@ const GenreSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// module.exports = {
+//   GenreSchema,
+// };
+
 module.exports = mongoose.model("Genre", GenreSchema);

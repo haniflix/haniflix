@@ -1,11 +1,8 @@
-const List = require("../../models/List");
+const { List } = require("../../models");
 
 const getLists = async (req, res) => {
   const typeQuery = req.query.type;
   const genreQuery = req.query.genre;
-
-  console.log("genreQuery ", genreQuery);
-  console.log("typeQuery ", typeQuery);
 
   let list = [];
   try {

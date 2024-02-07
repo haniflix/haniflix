@@ -4,7 +4,7 @@ const {
 } = require("./functions");
 const Logger = require("../../lib/logger");
 
-const Movie = require("../../models/Movie");
+const { Movie } = require("../../models");
 
 const BATCH_SIZE = 5;
 
