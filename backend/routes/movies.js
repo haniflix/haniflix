@@ -30,4 +30,7 @@ router.post("/:id/like", verify, moviesController.likeMovie);
 //Dislike movie
 router.post("/:id/dislike", verify, moviesController.dislikeMovie);
 
+//stream movie
+router.get("/stream/:movieId", verify, moviesController.streamMovie);
+
 module.exports = router;

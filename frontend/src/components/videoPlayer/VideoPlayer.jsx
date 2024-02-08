@@ -48,11 +48,28 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
   });
 
   const authReducer = useSelector((state) => state.auth);
+  const accessToken = authReducer?.user?.accessToken;
+
+  const streamUrl = `${
+    import.meta.env.VITE_APP_API_URL
+  }movies/stream/${videoId}?token=${accessToken}`;
 
   const { socket } = React.useContext(SocketContext);
 
   //time tracker for emitter
   const lastEmitTimeRef = useRef(0);
+
+  useEffect(() => {
+    const handleContextMenu = (event) => {
+      event.preventDefault(); // Prevent the default right-click behavior
+    };
+
+    document.addEventListener("contextmenu", handleContextMenu);
+
+    return () => {
+      document.removeEventListener("contextmenu", handleContextMenu);
+    };
+  }, []);
 
   // Load saved playtime from localStorage on component mount
   useEffect(() => {
@@ -130,17 +147,6 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
     }
   };
 
-  // Handle seeking
-  const handleSeekChange = (e) => {
-    setSeekTime(parseFloat(e.target.value));
-  };
-
-  const handleSeek = () => {
-    playerRef.current.seekTo(seekTime);
-    setPlaytime(seekTime);
-    localStorage.setItem(`videoPlaytime_${videoId}`, seekTime.toString());
-  };
-
   const handleEnded = () => {
     setTimeout(() => {
       navigate("/"); // Redirect to homepage after 2 seconds
@@ -190,6 +196,28 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
     refetch({ force: true });
     // showSwal("Added to list", "", "success");
   };
+
+  // const getConfig = (authToken) => {
+  //   const file = {
+  //     // forceHLS: true,
+  //     hlsOptions: {
+  //       debug: false,
+  //       xhrSetup: (xhr, url) => {
+  //         xhr.setRequestHeader("token", `Bearer ${authToken}`);
+  //       },
+  //     },
+  //     httpOptions: {
+  //       withCredentials: true,
+  //       headers: {
+  //         token: `Bearer ${authToken}`,
+  //       },
+  //     },
+  //   };
+
+  //   return {
+  //     file,
+  //   };
+  // };
 
   const renderExtraButtons = () => {
     return (
@@ -277,7 +305,7 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
     <div className="video-player-container">
       <ReactPlayer
         ref={playerRef}
-        url={videoUrl}
+        url={streamUrl}
         controls
         onEnded={handleEnded}
         onDuration={handleDuration}
@@ -288,6 +316,14 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
         height="95vh"
         playbackRate={1.0}
         progressInterval={1000}
+        config={{
+          file: {
+            attributes: {
+              controlsList: "nodownload", // Disable download attribute
+            },
+          },
+        }}
+        // config={getConfig(accessToken)}
       />
       <div className="px-3">{renderExtraButtons()}</div>
     </div>

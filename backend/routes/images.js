@@ -28,5 +28,7 @@ router.get("/avatar", verify, imageController.getAllimages);
 
 // get by id
 router.get("/avatar/:id", verify, avatarController.getAvatarById);
+//serve file
+router.get("/avatar/static/:filename", avatarController.serveAvatarFile);
 
 module.exports = router;

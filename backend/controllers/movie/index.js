@@ -7,6 +7,7 @@ const getMovies = require("./getMovies");
 const getRandomMovie = require("./getRandomMovie");
 const likeMovie = require("./likeMovie");
 const updateMovie = require("./updateMovie");
+const streamMovie = require("./streamMovie");
 
 module.exports = {
   createMovie,
@@ -18,4 +19,5 @@ module.exports = {
   getRandomMovie,
   likeMovie,
   updateMovie,
+  streamMovie,
 };

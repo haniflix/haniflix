@@ -72,8 +72,8 @@ export default function Login() {
 
     if (!res?.data) {
       Swal.fire({
-        title: res?.error?.data || "Error encountered during login",
-        text: res.data,
+        title: res?.error?.data?.message || "Error encountered during login",
+        text: res?.error?.data?.message,
         icon: "error",
       });
     }

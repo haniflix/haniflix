@@ -1,6 +1,6 @@
 const { Movie } = require("../../models");
 const MovieLike = require("../../models/MovieLikes");
-const List = require("../../models/List");
+const { List } = require("../../models");
 
 const getRandomMovie = async (req, res) => {
   const type = req.query.type;

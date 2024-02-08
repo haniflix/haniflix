@@ -86,7 +86,7 @@ const setupSocket = (io) => {
               { upsert: true, new: true }
             );
 
-          console.log("find or update ", continueWatchingList);
+          // console.log("find or update ", continueWatchingList);
         }
       } catch (error) {
         console.error("Error updating progress:", error);

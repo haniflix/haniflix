@@ -3,9 +3,8 @@ const User = require("../models/User");
 
 function verify(req, res, next) {
   const authHeader = req.headers.token;
-  if (authHeader) {
-    const token = authHeader.split(" ")[1];
-
+  const token = authHeader?.split(" ")?.[1] || req?.query?.token;
+  if (token) {
     jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
       if (err) {
         if (err.name === "TokenExpiredError") {
