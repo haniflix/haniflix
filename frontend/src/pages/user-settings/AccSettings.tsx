@@ -20,9 +20,16 @@ import { selectUser, setUser } from "../../store/reducers/auth";
 import useApiClient from "../../hooks/useApiClient";
 import Swal from "sweetalert2";
 import { Close } from "@mui/icons-material";
+
+import { useFormik } from 'formik';
+
+
 import "./settings.scss";
+import ChangePasswordForm from "../../components/forms/ChangePasswordForm";
 
 const url = import.meta.env.VITE_APP_API_URL;
+
+
 
 const AccSettings = () => {
   const user = useAppSelector(selectUser);
@@ -68,6 +75,29 @@ const AccSettings = () => {
       .email("Invalid email address")
       .required("Email cannot be left blank"),
   });
+
+  const changePassValidationSchema = Yup.object({
+    currentPassword: Yup.string().required('Current password is required'),
+    newPassword: Yup.string()
+      .required('New password is required')
+      .min(6, 'New password must be at least 6 characters'),
+    confirmPassword: Yup.string()
+      .required('Confirm password is required')
+      .oneOf([Yup.ref('newPassword'), null], 'Passwords must match'),
+  })
+
+  const changePassFormik = useFormik({
+    initialValues: {
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: '',
+    },
+    validationSchema: changePassValidationSchema,
+    onSubmit: (values) => {
+      // Submit form data to the server
+      console.log("change pass ", values);
+    }
+  })
 
   const handleSubmitUserDetails = async (
     values,
@@ -123,6 +153,70 @@ const AccSettings = () => {
         });
       });
   };
+
+  const renderDeleteModal = () => {
+    return (
+      <Modal
+        open={deleteAccount}
+        onClose={() => setDeleteAccount(false)}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Container
+          sx={{
+            // padding: 2,
+            maxWidth: 600,
+            margin: "auto",
+            borderRadius: 3,
+            position: "relative",
+          }}
+        >
+          <Paper sx={{ color: "#000", padding: 5 }}>
+            <Typography variant="h6">
+              Delete account and cancel subscription
+            </Typography>
+            <p style={{ marginBottom: 50 }}>
+              Are you sure to cancel your subscription and delete your account ?
+            </p>
+            <IconButton
+              edge="end"
+              color="inherit"
+              //onClick={handleCloseModal}
+              onClick={() => setDeleteAccount(false)}
+              aria-label="close"
+              style={{ position: "absolute", top: 0, right: 35 }}
+            >
+              <Close />
+            </IconButton>
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setDeleteAccount(false)}
+                className="gradientButton"
+                sx={{ color: "#fff" }}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => onDeleteAccount()}
+                style={{ marginLeft: 10 }}
+                className="gradientButton"
+                sx={{ color: "#fff" }}
+              >
+                {deleteLoading ? <CircularProgress size={24} /> : "Delete"}
+              </Button>
+            </Grid>
+          </Paper>
+        </Container>
+      </Modal>
+    )
+  }
 
   return (
     <>
@@ -196,12 +290,19 @@ const AccSettings = () => {
         </Formik>
       </Box>
 
-      <Box
-        width={"100%"}
-        position={"absolute"}
-        display={"flex"}
-        justifyContent={"center"}
-        bottom={10}
+      <div className='w-full flex justify-center'>
+        <div className='w-[fit-content]'>
+          <ChangePasswordForm
+            formik={changePassFormik}
+          />
+        </div>
+      </div>
+
+
+
+
+      <div
+        className="fixed bottom-[10px] right-0 left-0 flex justify-center"
       >
         <Button
           className="gradientButton"
@@ -217,67 +318,9 @@ const AccSettings = () => {
         >
           Cancel subscription and delete account
         </Button>
-      </Box>
+      </div>
 
-      <Modal
-        open={deleteAccount}
-        onClose={() => setDeleteAccount(false)}
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Container
-          sx={{
-            // padding: 2,
-            maxWidth: 600,
-            margin: "auto",
-            borderRadius: 3,
-            position: "relative",
-          }}
-        >
-          <Paper sx={{ color: "#000", padding: 5 }}>
-            <Typography variant="h6">
-              Delete account and cancel subscription
-            </Typography>
-            <p style={{ marginBottom: 50 }}>
-              Are you sure to cancel your subscription and delete your account ?
-            </p>
-            <IconButton
-              edge="end"
-              color="inherit"
-              //onClick={handleCloseModal}
-              onClick={() => setDeleteAccount(false)}
-              aria-label="close"
-              style={{ position: "absolute", top: 0, right: 35 }}
-            >
-              <Close />
-            </IconButton>
-            <Grid item xs={12}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => setDeleteAccount(false)}
-                className="gradientButton"
-                sx={{ color: "#fff" }}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => onDeleteAccount()}
-                style={{ marginLeft: 10 }}
-                className="gradientButton"
-                sx={{ color: "#fff" }}
-              >
-                {deleteLoading ? <CircularProgress size={24} /> : "Delete"}
-              </Button>
-            </Grid>
-          </Paper>
-        </Container>
-      </Modal>
+      {renderDeleteModal()}
     </>
   );
 };

@@ -85,7 +85,12 @@ const Navbar = () => {
         </div>
         <div className="mobile-header-list-item">
           <Link className="link" to="/settings">
-            <span>Settings</span>
+            <span>Edit Profile</span>
+          </Link>
+        </div>
+        <div className="mobile-header-list-item">
+          <Link className="link" to="/settings">
+            <span>Account Settings</span>
           </Link>
         </div>
 
@@ -113,15 +118,7 @@ const Navbar = () => {
           className="menu-toggle-container"
           onClick={function () {
             setShowMobileMenu(!showMobileMenu)
-            // const menu = document.getElementById("mobile-header-list");
-            // console.log('menu ', menu)
-            // if (menu.style.display === "none") {
-            //   menu.style.display = "block";
-            //   console.log("menu shown");
-            // } else {
-            //   menu.style.display = "none";
-            //   console.log("menu hidden");
-            // }
+
           }}
         >
           <svg
@@ -172,13 +169,19 @@ const Navbar = () => {
           <img src={NavLogo1} alt="" width="50px" height="50px" />
           <div className="profile">
             <ArrowDropDown className="icon" />
-            <div className="options">
-              <span style={{ color: "#000" }}>Hello {user?.fullname}!</span>
-              <Link className="link" to="/settings">
-                {" "}
-                <span style={{ color: "#000" }}>Settings</span>
-              </Link>
-              <span style={{ color: "#000" }} onClick={onLogout}>
+            <div className="options !text-black py-[12px]">
+              <span >Hello {user?.fullname}!</span>
+              <span>
+                <Link className="" to="/settings">
+                  Edit Profile
+                </Link>
+              </span>
+              <span>
+                <Link className="" to="/settings">
+                  Account Settings
+                </Link>
+              </span>
+              <span onClick={onLogout}>
                 Logout
               </span>
             </div>
