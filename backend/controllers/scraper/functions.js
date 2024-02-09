@@ -264,6 +264,12 @@ async function searchAndScrapeMovies(movieInfos, io, totalCount, currentCount) {
               },
               { new: true }
             );
+
+            if (updatedMovie?.failedDuringScrape == true) {
+              delete updatedMovie.failedDuringScrape;
+            }
+
+            await updatedMovie.save();
           }
 
           io.emit("scrapeDetails", {

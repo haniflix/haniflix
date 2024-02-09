@@ -1,215 +1,30 @@
 const router = require("express").Router();
-const User = require("../models/User");
-
-const CryptoJS = require("crypto-js");
 const verify = require("../middleware/verifyToken");
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-
-const _ = require("lodash");
+const userController = require("../controllers/user");
 
 //CREATE
-router.post("/", verify, async (req, res) => {
-  if (req.user.isAdmin) {
-    if (req.body.password) {
-      req.body.password = CryptoJS.AES.encrypt(
-        req.body.password,
-        process.env.SECRET_KEY
-      ).toString();
-    }
-    const newUser = new User(req.body);
-    try {
-      const savedUser = await newUser.save();
-      res.status(201).json(savedUser);
-    } catch (err) {
-      res.status(500).json(err);
-    }
-  } else {
-    res.status(403).json("You are not allowed!");
-  }
-});
+router.post("/", verify, userController.createUser);
 
 //UPDATE
-router.put("/:id", verify, async (req, res) => {
-  if (req.user.id === req.params.id || req.user.isAdmin) {
-    if (req.body.password) {
-      req.body.password = CryptoJS.AES.encrypt(
-        req.body.password,
-        process.env.SECRET_KEY
-      ).toString();
-    }
-
-    try {
-      const updatedUser = await User.findByIdAndUpdate(
-        req.params.id,
-        {
-          $set: req.body,
-        },
-        { new: true }
-      );
-      res.status(200).json(updatedUser);
-    } catch (err) {
-      res.status(500).json(err);
-    }
-  } else {
-    res.status(403).json("You can update only your account!");
-  }
-});
+router.put("/:id", verify, userController.updateUser);
 
 //DELETE
-router.delete("/:id", verify, async (req, res) => {
-  if (req.user.id === req.params.id || req.user.isAdmin) {
-    try {
-      const user = await User.findById(req.params.id);
-      if (user?.subscriptionId) {
-        await stripe.subscriptions.cancel(user?.subscriptionId);
-      }
-      await User.findByIdAndDelete(req.params.id);
-      res.status(200).json("User has been deleted...");
-    } catch (err) {
-      res.status(500).json(err);
-    }
-  } else {
-    res.status(403).json("You can delete only your account!");
-  }
-});
+router.delete("/:id", verify, userController.deleteUser);
 
 //GET
-router.get("/find/:id", async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
-    const { password, ...info } = user._doc;
-    res.status(200).json(info);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+router.get("/find/:id", verify, userController.getUserById);
 
 //GET ALL
-router.get("/", async (req, res) => {
-  // const query = req.query.new;
-  //if(req.user.isAdmin) {
-  try {
-    const params = _.pick(req.query, ["orderBy"]);
-    const orderBy = params.orderBy;
-
-    const aggregationPipeline = []; // Initialize empty pipeline
-
-    // Add sort stage based on "orderBy" parameter
-    switch (orderBy) {
-      case "descAlpha":
-        aggregationPipeline.push({ $sort: { fullname: -1 } });
-        break;
-      case "ascAlpha":
-        aggregationPipeline.push({ $sort: { fullname: 1 } });
-        break;
-    }
-
-    // Ensure at least one pipeline stage
-    if (aggregationPipeline.length === 0) {
-      aggregationPipeline.push({ $match: {} });
-    }
-
-    aggregationPipeline.push({
-      $project: {
-        _id: 1,
-        // Exclude accessToken
-        accessToken: 0,
-      },
-    });
-
-    const users = await User.aggregate(aggregationPipeline);
-
-    res.status(200).json(users);
-  } catch (err) {
-    //-- throws a 'headers_already_sent' error
-    console.log("erro ", err);
-
-    res.status(500).json(err);
-  }
-  /*} else {
-      res.status(403).json("You are not allowed to see all users!");
-  }*/
-});
+router.get("/", verify, userController.getAllUsers);
 
 //GET USER STATS
-router.get("/stats", async (req, res) => {
-  const today = new Date();
-  const latYear = today.setFullYear(today.setFullYear() - 1);
-
-  try {
-    const data = await User.aggregate([
-      {
-        $project: {
-          month: { $month: "$createdAt" },
-        },
-      },
-      {
-        $group: {
-          _id: "$month",
-          total: { $sum: 1 },
-        },
-      },
-    ]);
-    res.status(200).json(data);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+router.get("/stats", verify, userController.getStats);
 
 // UPDATE USER DETAILS
-router.put("/updateUserDetails/:id", async (req, res) => {
-  if (req.body.id === req.params.id) {
-    try {
-      // Update user details, excluding password
-      const updatedUser = await User.findByIdAndUpdate(
-        req.params.id,
-        {
-          $set: {
-            fullname: req.body.name,
-            username: req.body.email,
-            email: req.body.email,
-          },
-        },
-        { new: true }
-      );
-      const { password, ...info } = updatedUser._doc;
-      res.status(200).json(info);
-    } catch (err) {
-      res.status(500).json(err);
-    }
-  } else {
-    res.status(403).json("You can update only your account!");
-  }
-});
+router.put("/updateUserDetails/:id", verify, userController.updateUserDetails);
 
 // UPDATE PASSWORD
-router.put("/updatePassword/:id", async (req, res) => {
-  if (req.user.id === req.params.id) {
-    try {
-      // Encrypt new password
-      const encryptedPassword = CryptoJS.AES.encrypt(
-        req.body.newPassword,
-        process.env.SECRET_KEY
-      ).toString();
-
-      // Update user password
-      await User.findByIdAndUpdate(
-        req.params.id,
-        {
-          $set: {
-            password: encryptedPassword,
-          },
-        },
-        { new: true }
-      );
-      res.status(200).json("Password updated successfully");
-    } catch (err) {
-      res.status(500).json(err);
-    }
-  } else {
-    res.status(403).json("You can update only your account!");
-  }
-});
+router.put("/updatePassword/:id", verify, userController.updatePassword);
 
 // router.post('/subscribe', async (req, res) => {
 //   try {

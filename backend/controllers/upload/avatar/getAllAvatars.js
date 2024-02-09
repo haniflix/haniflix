@@ -5,8 +5,11 @@ const path = require("path");
 const getAllAvatars = async (req, res) => {
   // Handle fetching avatar logic here
   try {
+    const NODE_ENV = process.env.NODE_ENV;
     // Get all avatars from the database
-    const avatarsFromDB = await Avatar.find({});
+    const avatarsFromDB = await Avatar.find({
+      environment: NODE_ENV,
+    });
 
     // Get all files in the "uploads/avatars" directory
     const avatarFiles = fs.readdirSync(
@@ -24,7 +27,7 @@ const getAllAvatars = async (req, res) => {
       filename: avatar.filename,
       mimetype: avatar.mimetype,
       size: avatar.size,
-      url: `/api/avatar/${avatar.filename}`, // Change this path according to your route
+      url: `/api/image/avatar/static/${avatar.filename}`, // Change this path according to your route
     }));
 
     res.json({

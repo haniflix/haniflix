@@ -73,5 +73,5 @@ const setupSockets = require("./sockets");
 setupSockets(io);
 
 server.listen(PORT, () => {
-  console.log("Backend server is running on port 8800!");
+  console.log(`Backend server is running on port ${PORT}!`);
 });

@@ -2,6 +2,7 @@ const Image = require("../../models/Image");
 const Avatar = require("../../models/Avatar");
 
 const uploadFile = async (req, res) => {
+  const NODE_ENV = process.env.NODE_ENV;
   // Handle file upload logic here
   const file = req.file;
   const type = req.body.type; // Access 'type' sent as FormData
@@ -23,6 +24,7 @@ const uploadFile = async (req, res) => {
       filename: file.filename,
       mimetype: file.mimetype,
       size: file.size,
+      environment: NODE_ENV,
     });
   } else {
     // Create a new image document in MongoDB
@@ -30,6 +32,7 @@ const uploadFile = async (req, res) => {
       filename: file.filename,
       mimetype: file.mimetype,
       size: file.size,
+      environment: NODE_ENV,
     });
   }
 
