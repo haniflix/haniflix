@@ -6,7 +6,7 @@ import {
   Box,
   TextField,
   Button,
-  CircularProgress,
+  // CircularProgress,
   Typography,
   Modal,
   Container,
@@ -26,6 +26,10 @@ import { useFormik } from 'formik';
 
 import "./settings.scss";
 import ChangePasswordForm from "../../components/forms/ChangePasswordForm";
+import { useGetUserQuery, useUpdateUserPasswordMutation } from "../../store/rtk-query/usersApi";
+
+import CircularProgress from "@mui/material-next/CircularProgress";
+
 
 const url = import.meta.env.VITE_APP_API_URL;
 
@@ -33,6 +37,8 @@ const url = import.meta.env.VITE_APP_API_URL;
 
 const AccSettings = () => {
   const user = useAppSelector(selectUser);
+  const accessToken = user?.accessToken
+
   const userId = user?._id;
   const [loading, setLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -46,28 +52,20 @@ const AccSettings = () => {
   const client = useApiClient();
   const dispatch = useAppDispatch();
 
-  const fetchUserDetails = useCallback(async () => {
-    if (userId) {
-      try {
-        setLoading(true);
-        const response = await axios.get(`${url}users/find/${userId}`);
-        // console.log("Data available:", response.data);
-        setUserDetails({
-          id: response.data._id,
-          name: response.data.fullname,
-          email: response.data.email,
-        });
-      } catch (error) {
-        console.error("Error fetching user details:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-  }, [userId]);
+  const { data: userData, isLoading: userDataLoading, refetch: refetchUserData } = useGetUserQuery(userId)
+  const [updatePassword, updatePasswordState] = useUpdateUserPasswordMutation()
+
 
   useEffect(() => {
-    fetchUserDetails();
-  }, [fetchUserDetails]);
+    // fetchUserDetails();
+    if (userData) {
+      setUserDetails({
+        id: userId,
+        name: userData?.fullname,
+        email: userData?.email,
+      })
+    }
+  }, [userData]);
 
   const validationSchema = Yup.object({
     name: Yup.string().required("Name cannot be left blank"),
@@ -96,20 +94,62 @@ const AccSettings = () => {
     onSubmit: (values) => {
       // Submit form data to the server
       console.log("change pass ", values);
+      onUpdatePassword(values)
     }
   })
+
+  const showSwal = (title, message, type) => {
+    Swal.fire({
+      title: title ?? "",
+      text: message,
+      icon: type,
+    });
+  };
+
+  const onUpdatePassword = async (values) => {
+    const newPassword = values?.newPassword
+    const currentPassword = values.currentPassword
+
+    const data = { newPassword, currentPassword }
+
+    const res = await updatePassword({
+      data,
+      id: userId
+    })
+
+    if (res?.data) {
+      Swal.fire({
+        title: "",
+        text: "Password changed",
+        icon: "success",
+        timer: 1500,
+      })
+    } else {
+      Swal.fire({
+        title: res?.error?.data?.message || "Error encountered during update",
+        text: res?.error?.data?.message,
+        icon: "error",
+      });
+    }
+  }
 
   const handleSubmitUserDetails = async (
     values,
     { resetForm, setSubmitting }
   ) => {
     setLoading(true);
+    const config = {
+      headers: {
+        token: `Bearer ${accessToken}`,
+      },
+    }
+
     try {
       const res = await axios.put(`${url}users/updateUserDetails/${userId}`, {
         id: userId,
         name: values.name,
         email: values.email,
-      });
+      }, config);
       setUserDetails({
         id: res.data._id,
         name: res.data.fullname,
@@ -119,8 +159,10 @@ const AccSettings = () => {
         setUser({ ...user, fullname: res.data.fullname, email: res.data.email })
       );
       localStorage.setItem("user", JSON.stringify(res.data));
-      alert("Details Updated Successfully");
+      // alert("Details Updated Successfully");
+      showSwal("", "Details Updated Successfully", "success");
     } catch (error) {
+      showSwal("", "Error encountered", "error");
       console.error(error);
     } finally {
       setLoading(false);
@@ -283,7 +325,7 @@ const AccSettings = () => {
                 disabled={isSubmitting || loading}
                 sx={{ mt: 2, mb: 2 }}
               >
-                {loading ? <CircularProgress size={24} /> : "Save Changes"}
+                {loading ? <CircularProgress color="inherit" size={24} /> : "Save Changes"}
               </Button>
             </Form>
           )}
@@ -294,6 +336,7 @@ const AccSettings = () => {
         <div className='w-[fit-content]'>
           <ChangePasswordForm
             formik={changePassFormik}
+            isLoading={updatePasswordState.isLoading}
           />
         </div>
       </div>

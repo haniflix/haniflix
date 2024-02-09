@@ -4,11 +4,13 @@ import { Formik, Form, Field, ErrorMessage, FormikProvider } from 'formik';
 import {
     TextField,
     Button,
-    CircularProgress,
+    // CircularProgress,
 } from "@mui/material";
 
+import CircularProgress from "@mui/material-next/CircularProgress";
 
-const ChangePasswordForm = ({ formik }) => {
+
+const ChangePasswordForm = ({ formik, isLoading }) => {
     // return <div className='bg-white h-[50px]'>I am fine</div>
     const { errors, touched } = formik
 
@@ -71,7 +73,7 @@ const ChangePasswordForm = ({ formik }) => {
                     // disabled={isSubmitting || loading}
                     sx={{ mt: 2, mb: 2 }}
                 >
-                    {false ? <CircularProgress size={24} /> : "Save Changes"}
+                    {isLoading ? <div className='text-white'><CircularProgress color="inherit" size={24} /></div> : "Save Changes"}
                 </Button>
             </div>
 

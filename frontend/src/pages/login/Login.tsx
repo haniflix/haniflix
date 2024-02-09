@@ -1,10 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import "./login.scss";
 import Swal from "sweetalert2";
 import Logo from "../../Assets/Images/Nav-logo.png";
 import { Link } from "react-router-dom";
 // import { login } from "../../context/login/apiCalls";
-import "../../Assets/css/styles.scss";
 import landingBg from "../../Assets/Images/landing-bg.png";
 import useApiClient from "../../hooks/useApiClient";
 import { useDispatch } from "react-redux";
@@ -16,6 +14,12 @@ import { useNavigate } from 'react-router-dom'
 
 import SocketContext from "../../context/SocketContext";
 
+import "./login.scss";
+
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
+// import "../../Assets/css/styles.scss";
+
+
 export default function Login() {
   const emailRef = useRef();
 
@@ -23,6 +27,9 @@ export default function Login() {
   // const passwordRef = useRef();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [showPassword, setShowPassword] = useState<boolean>(false)
+
   const client = useApiClient();
   const dispatch = useDispatch();
   const user = useAppSelector(selectUser);
@@ -133,23 +140,35 @@ export default function Login() {
       <div className="section">
         <div className="intro-section">
           <h2>Sign In to your account</h2>
-          <input
-            type="email"
-            placeholder="Email"
-            style={{ color: "#000" }}
-            ref={emailRef}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            style={{ color: "#000" }}
-            // ref={passwordRef}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onKeyDown={handleKeyDown}
-          />
+          <div className='inputWrapper'>
+            <input
+              type="email"
+              placeholder="Email"
+              style={{ color: "#000" }}
+              ref={emailRef}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div className='inputWrapper'>
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              style={{ color: "#000" }}
+              // ref={passwordRef}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
+            <div
+              className="cursor-pointer mr-2"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {
+                showPassword ? <FaRegEye /> : <FaRegEyeSlash />
+              }
+            </div>
+          </div>
           <button className="loginButton" onClick={handleStart}>
             Sign In
           </button>

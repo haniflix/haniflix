@@ -1,50 +1,63 @@
-import { User } from '../types';
-import { authApi } from './authApi';
+import { User } from "../types";
+import { authApi } from "./authApi";
+
+type UpdateUserReq = {
+  id: number | string;
+  data: Partial<User>;
+};
 
 export const usersApi = authApi.injectEndpoints({
   endpoints: (builder) => ({
     getUsers: builder.query({
       query: (params?: Pagination) => ({
-        url: 'users',
-        params
+        url: "users",
+        params,
       }),
-      providesTags: ['Users']
+      providesTags: ["Users"],
     }),
     getUser: builder.query({
       query: (id: number | string) => ({
-        url: `users/${id}`
-      })
+        url: `users/find/${id}`,
+      }),
     }),
     createUser: builder.mutation({
       query: (data: Partial<User>) => ({
-        url: 'users',
-        method: 'POST',
-        body: data
+        url: "users",
+        method: "POST",
+        body: data,
       }),
-      invalidatesTags: ['Users']
+      invalidatesTags: ["Users"],
     }),
     updateUser: builder.mutation({
-      query: (id: number | string, data: Partial<User>) => ({
+      query: ({ id, data }: UpdateUserReq) => ({
         url: `users/${id}`,
-        method: 'PUT',
-        body: data
+        method: "PUT",
+        body: data,
       }),
-      invalidatesTags: ['Users']
+      invalidatesTags: ["Users"],
+    }),
+    updateUserPassword: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `users/updatePassword/${id}`,
+        method: "PUT",
+        body: data,
+      }),
     }),
     deleteUser: builder.mutation({
       query: (id: number | string) => ({
         url: `users/${id}`,
-        method: 'DELETE'
-      })
-    })
+        method: "DELETE",
+      }),
+    }),
   }),
-  overrideExisting: false
+  overrideExisting: false,
 });
 
 export const {
   useGetUsersQuery,
   useGetUserQuery,
+  useUpdateUserPasswordMutation,
   useCreateUserMutation,
   useUpdateUserMutation,
-  useDeleteUserMutation
+  useDeleteUserMutation,
 } = usersApi;
