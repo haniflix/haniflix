@@ -1,5 +1,7 @@
 .navbar {
-    width: 100%;
+    // width: 100%;
+    right: 0;
+    left:0;
     color: white;
     font-size: 14px;
     position: fixed;
@@ -15,12 +17,13 @@
         background-color: #000;//var(--main-color);
     }
 
-    .container {
+    .desk-container {
         padding: 0px 50px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         height: 90px;
+        width: 100%;
 
         .left {
             display: flex;
@@ -100,10 +103,14 @@
     @media screen and (max-width: 768px){
         #nav-desktop-container{
             display: none;
+            width: 100vw;
         }
         .mobile-header{
-            display: grid;
-            grid-template-columns: auto 50px;
+            display: flex;
+            width: 100vw;
+            padding-right: 6px;
+            justify-content: space-between;
+            // grid-template-columns: auto 50px;
         }
         .mobile-logo-cont img{
             width: 90px;

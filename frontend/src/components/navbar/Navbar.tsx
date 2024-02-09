@@ -1,7 +1,7 @@
 import { ArrowDropDown, Notifications, Search } from "@mui/icons-material";
 import React, { useState } from "react";
 import NavLogo1 from "../../Assets/Images/Nav-logo.png";
-import "./navbar.scss";
+
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { selectUser, setUser, logout } from "../../store/reducers/auth";
@@ -13,6 +13,8 @@ import { useSelector } from 'react-redux'
 import Swal from 'sweetalert2'
 import { addClassNames } from "../../store/utils/functions";
 import GenresDropdown from "../GenresDropdown";
+
+import "./navbar.scss";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -108,27 +110,42 @@ const Navbar = () => {
 
   const renderMobileMenuToggle = () => {
     return (
-      <div className="mobile-header">
+      <div className="mobile-header ">
         <div
           onClick={() => navigate('/')}
           className="mobile-logo-cont cursor-pointer">
           <img src={NavLogo1} alt="" className="mobile-logo" />
         </div>
-        <div
-          className="menu-toggle-container"
-          onClick={function () {
-            setShowMobileMenu(!showMobileMenu)
+        <div className='flex items-center gap-[5px]'>
 
-          }}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="1em"
-            viewBox="0 0 448 512"
-            fill='#fff'
+          <Link className="link" to="/search">
+            <Search className="icon" />
+          </Link>
+          <div className='text-xs' >{user?.fullname}</div>
+
+          <div>
+            <Notifications className="icon" />
+          </div>
+          <div className='bg-gray-300 rounded-[8px] h-[50px] w-[50px]'>
+            <img src={NavLogo1} alt=""
+              className="w-full h-full"
+            />
+          </div>
+          <div
+            className="menu-toggle-container border !p-[8px]"
+            onClick={function () {
+              setShowMobileMenu(!showMobileMenu)
+            }}
           >
-            <path d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z" />
-          </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="1em"
+              viewBox="0 0 448 512"
+              fill='#fff'
+            >
+              <path d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z" />
+            </svg>
+          </div>
         </div>
       </div>
     )
@@ -136,7 +153,7 @@ const Navbar = () => {
 
   const renderDesktopMenu = () => {
     return (
-      <div className="container" id="nav-desktop-container">
+      <div className="desk-container" id="nav-desktop-container">
         <div className="left" style={{ width: "100%", height: "100px" }}>
           <div
             onClick={() => navigate('/')}
@@ -166,7 +183,11 @@ const Navbar = () => {
           </Link>
           <span>{user?.fullname}</span>
           <Notifications className="icon" />
-          <img src={NavLogo1} alt="" width="50px" height="50px" />
+          <div className='bg-gray-300 rounded-[8px] h-[60px] w-[60px]'>
+            <img src={NavLogo1} alt=""
+              className="w-full h-full"
+            />
+          </div>
           <div className="profile">
             <ArrowDropDown className="icon" />
             <div className="options !text-black py-[12px]">
