@@ -34,7 +34,6 @@ const Searchresults = () => {
   const [search, setSearch] = useState("");
 
   let queryParams = {
-
     searchTerm: search
   }
 
@@ -44,7 +43,7 @@ const Searchresults = () => {
   })
 
   const handleSearch = (e) => {
-    const searchString = e.target.value.trimStart().toLowerCase();
+    const searchString = e.target.value.trim().toLowerCase();
     setSearch(searchString);
   };
 
