@@ -1,11 +1,12 @@
 version: "2.1"
 services:
   haniflix_backend:
-    image: ghcr.io/puppeteer/puppeteer:latest
+    build: .
     container_name: haniflix_backend
     working_dir: /usr/app
     volumes:
       - ./:/usr/app
+      - /usr/app/node_modules
     ports:
       - 8800:8800
     restart: unless-stopped

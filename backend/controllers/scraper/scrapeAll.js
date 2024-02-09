@@ -11,18 +11,29 @@ const BATCH_SIZE = 5;
 //CREATE
 const scrapeAllMovies = async (io, req, res) => {
   try {
-    // Get the total count of movies that match the filter
-    const totalCount = await Movie.countDocuments({
-      $or: [
-        { title: { $exists: false } },
-        { desc: { $exists: false } },
-        { img: { $exists: false } },
-        { imgTitle: { $exists: false } },
-        { year: { $exists: false } },
-        { ageRating: { $exists: false } },
-        { duration: { $exists: false } },
+    const query = {
+      $and: [
+        {
+          $or: [
+            { title: { $exists: false } },
+            { desc: { $exists: false } },
+            { img: { $exists: false } },
+            { imgTitle: { $exists: false } },
+            { year: { $exists: false } },
+            { ageRating: { $exists: false } },
+            { duration: { $exists: false } },
+          ],
+        },
+        {
+          $or: [
+            { failedDuringScrape: { $exists: false } },
+            { failedDuringScrape: false },
+          ],
+        },
       ],
-    });
+    };
+    // Get the total count of movies that match the filter
+    const totalCount = await Movie.countDocuments(query);
 
     let page = 1;
     let totalPages = Math.ceil(totalCount / BATCH_SIZE);
@@ -39,17 +50,7 @@ const scrapeAllMovies = async (io, req, res) => {
       const skip = (page - 1) * BATCH_SIZE;
       Logger.info(`Batch ${batchCount} starting -----`);
 
-      const moviesToProcess = await Movie.find({
-        $or: [
-          { title: { $exists: false } },
-          { desc: { $exists: false } },
-          { img: { $exists: false } },
-          { imgTitle: { $exists: false } },
-          { year: { $exists: false } },
-          { ageRating: { $exists: false } },
-          { duration: { $exists: false } },
-        ],
-      })
+      const moviesToProcess = await Movie.find(query)
         .skip(skip)
         .limit(BATCH_SIZE);
 

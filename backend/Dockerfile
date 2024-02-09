@@ -1,30 +1,16 @@
-FROM ghcr.io/puppeteer/puppeteer:latest
+FROM node:21-alpine3.18 AS builder
 
-# Install additional dependencies
-RUN apt-get update && \
-    apt-get install -y \
-    build-essential \
-    python \
-    make \
-    g++ \
-    pkg-config \
-    libpng-dev \
-    libjpeg-dev \
-    libvips \
-    libvips-dev
-
-# Set the working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install npm dependencies
-RUN yarn install --ignore-engines
+RUN npm install --include=optional sharp
 
-# Copy the rest of the application code
-COPY . .
+FROM ghcr.io/puppeteer/puppeteer:latest
 
-# Expose port and start the application
-EXPOSE 8800
-CMD ["npm", "start"]
+WORKDIR /usr/app
+
+COPY --from=builder /app /usr/app
+
+# EXPOSE 8800
+
