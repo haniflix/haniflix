@@ -6,7 +6,7 @@ import { baseQueryWithReauth } from "./customBaseQuery";
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["Profile", "Movies", "Movie", "Lists", "Users"],
+  tagTypes: ["Profile", "Movies", "Movie", "Lists", "Users", "Avatars"],
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (body: LoginRequest) => {

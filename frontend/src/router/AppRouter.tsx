@@ -9,6 +9,7 @@ import ForgotPassword from "../pages/forgot-password/ForgotPassword";
 import ChangePassword from "../pages/change-password/ChangePassword";
 import SearchPage from "../pages/search/SearchPage";
 import AccSettings from "../pages/user-settings/AccSettings";
+import EditProfile from "../pages/EditProfile";
 import CookieConsent from "react-cookie-consent";
 import {
     BrowserRouter as Router,
@@ -99,6 +100,7 @@ const AppRouter = (props) => {
                     <Route path="search" element={<SearchPage />} />
                     <Route path="genre/:id" element={<GenrePage />} />
                     <Route path="settings" element={<AccSettings />} />
+                    <Route path="edit-profile" element={<EditProfile />} />
                 </Route>
 
             </Routes>

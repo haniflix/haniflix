@@ -15,6 +15,7 @@ import { addClassNames } from "../../store/utils/functions";
 import GenresDropdown from "../GenresDropdown";
 
 import "./navbar.scss";
+import { useGetUserQuery } from "../../store/rtk-query/usersApi";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -26,9 +27,13 @@ const Navbar = () => {
 
   const [loginCalled, setLoginCalled] = useState(false)
 
-  const authReducer = useAppSelector((state) => state.auth);
+  // const authReducer = useAppSelector((state) => state.auth);
+  const userId = user?._id;
 
   const [showMobileMenu, setShowMobileMenu] = React.useState<boolean>(false)
+
+  const { data: userData, isLoading: userDataLoading, refetch: refetchUserData } = useGetUserQuery(userId)
+
 
 
   const showSwal = (title, message, type) => {
@@ -49,6 +54,15 @@ const Navbar = () => {
 
     // window.location.href = "/";
   };
+
+  const makeImageUrl = (url) => {
+    const BASE_URL = import.meta.env.VITE_APP_API_URL
+
+    let imageSuffix = url?.replace('/api/', '')
+    let finalUrl = `${BASE_URL}${imageSuffix}`
+
+    return finalUrl
+  }
 
   const renderMobileMenuList = () => {
 
@@ -86,7 +100,7 @@ const Navbar = () => {
           </Link>
         </div>
         <div className="mobile-header-list-item">
-          <Link className="link" to="/settings">
+          <Link className="link" to="/edit-profile">
             <span>Edit Profile</span>
           </Link>
         </div>
@@ -121,16 +135,20 @@ const Navbar = () => {
           <Link className="link" to="/search">
             <Search className="icon" />
           </Link>
-          <div className='text-xs' >{user?.fullname}</div>
+          <div className='text-xs' >{userData?.fullname}</div>
 
           <div>
             <Notifications className="icon" />
           </div>
-          <div className='bg-gray-300 rounded-[8px] h-[50px] w-[50px]'>
-            <img src={NavLogo1} alt=""
-              className="w-full h-full"
-            />
-          </div>
+          <Link className="" to="/settings">
+            <div className='bg-gray-300 rounded-[8px] h-[50px] w-[50px]'>
+              <img
+                src={userData?.avatar ? makeImageUrl(userData?.avatar) : NavLogo1}
+                alt=""
+                className="w-full h-full"
+              />
+            </div>
+          </Link>
           <div
             className="menu-toggle-container border !p-[8px]"
             onClick={function () {
@@ -181,19 +199,23 @@ const Navbar = () => {
           <Link className="link" to="/search">
             <Search className="icon" />
           </Link>
-          <span>{user?.fullname}</span>
+          <span>{userData?.fullname}</span>
           <Notifications className="icon" />
-          <div className='bg-gray-300 rounded-[8px] h-[60px] w-[60px]'>
-            <img src={NavLogo1} alt=""
-              className="w-full h-full"
-            />
-          </div>
+          <Link className="" to="/settings">
+            <div className='bg-gray-300 rounded-[8px] h-[60px] w-[60px]'>
+              <img
+                src={userData?.avatar ? makeImageUrl(userData?.avatar) : NavLogo1}
+                alt=""
+                className="w-full h-full"
+              />
+            </div>
+          </Link>
           <div className="profile">
             <ArrowDropDown className="icon" />
             <div className="options !text-black py-[12px]">
-              <span >Hello {user?.fullname}!</span>
+              <span >Hello {userData?.fullname}!</span>
               <span>
-                <Link className="" to="/settings">
+                <Link className="" to="/edit-profile">
                   Edit Profile
                 </Link>
               </span>
