@@ -56,6 +56,7 @@ export default function Welcome() {
 
   return (
     <div className="welcomePage">
+      <div className='absolute top-0 right-0 left-0 h-[60px] bg-gradient-to-b from-black to-transparent'></div>
       <Box
         className="top"
         style={{ maxWidth: 1200, marginLeft: "auto", marginRight: "auto" }}
@@ -101,59 +102,40 @@ export default function Welcome() {
         <p style={{ marginBottom: 10 }}>
           Ready to watch? Enter your email to create or restart your membership.
         </p>
-        <Box
-          // display={"flex"}
-          //width={"40%"}
-          marginLeft={"auto"}
-          marginRight={"auto"}
-          sx={(theme) => ({
-            [theme.breakpoints.only("xs")]: {
-              width: "80%",
-            },
-            [theme.breakpoints.up("sm")]: {
-              width: "40%",
-            },
-          })}
-        >
-          <Grid container>
-            <Grid item xs={0} sm={1} />
-            <Grid item xs={12} sm={6}>
-              <input
-                type="email"
-                placeholder="Email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <Box
-                className="gradientButton"
-                onClick={onSignUp}
-                whiteSpace={"nowrap"}
-                paddingX={3}
-                component={"button"}
-                display={"flex"}
-                alignItems={"center"}
-                sx={(theme) => ({
-                  // marginTop: { sx: 1, sm: undefined },
-                  // marginLeft: { sx: "auto", sm: 2 },
-                  // marginRight: { sx: "auto", sm: undefined },
-                  [theme.breakpoints.only("xs")]: {
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                    marginTop: 1,
-                  },
-                  [theme.breakpoints.up("sm")]: {
-                    marginLeft: 2,
-                  },
-                })}
-              >
-                Get started
-                <ArrowForwardIos />
-              </Box>
-            </Grid>
-          </Grid>
-        </Box>
+        <div className="flex w-[50%] mx-[auto]">
+          <input
+            type="email"
+            placeholder="Email address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Box
+            className="gradientButton"
+            onClick={onSignUp}
+            whiteSpace={"nowrap"}
+            paddingX={3}
+            component={"button"}
+            display={"flex"}
+            alignItems={"center"}
+            sx={(theme) => ({
+              // marginTop: { sx: 1, sm: undefined },
+              // marginLeft: { sx: "auto", sm: 2 },
+              // marginRight: { sx: "auto", sm: undefined },
+              [theme.breakpoints.only("xs")]: {
+                marginLeft: "auto",
+                marginRight: "auto",
+                marginTop: 1,
+              },
+              [theme.breakpoints.up("sm")]: {
+                marginLeft: 2,
+              },
+            })}
+          >
+            Get started
+            <ArrowForwardIos />
+          </Box>
+        </div>
+
       </div>
 
       <TopSection />

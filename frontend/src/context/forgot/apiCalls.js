@@ -14,6 +14,7 @@ export const forgot = async (user) => {
     const res = await axios.post(api_url + "auth/forgot-pass", user);
     console.log(res);
 
+    return;
     if (!res.data.error && res.statusText === "Created") {
       Swal.fire({
         title: "Hurray!",
@@ -22,7 +23,7 @@ export const forgot = async (user) => {
         timer: 1500,
       });
 
-      do_redirect();
+      // do_redirect();
     } else {
       Swal.fire({
         title: "Oops!",

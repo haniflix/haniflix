@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import StripePaymentForm from "../../components/StripePaymentForm";
 import Logo from "../../Assets/Images/Nav-logo.png";
 import "../../Assets/css/styles.scss";
-import "./register.scss";
+import styles from "./register.module.scss";
 import { Link, useSearchParams } from "react-router-dom";
 import { Input } from "@mui/material";
 
@@ -80,12 +80,12 @@ const Register = () => {
   const [showPaymentForm, setShowPaymentForm] = React.useState(false);
 
   return (
-    <div className="loginNew">
-      <div className="top">
-        <div className="wrapper">
+    <div className={styles["loginNew"]}>
+      <div className={styles["top"]}>
+        <div className={styles["wrapper"]}>
           <a href={"/"} className="link">
             <img
-              className="logo"
+              className={styles["logo"]}
               src={Logo}
               width="100px"
               height="100px"
@@ -95,75 +95,51 @@ const Register = () => {
         </div>
       </div>
 
-      {/*<div className="section">
-        <div className="intro-section">
-          <h1>Welcome to Haniflix</h1>
-          <br />
-          <h3>
-            We are the ultimate streaming service offering unlimited award-winning TV
-            shows, movies, and more in 4k on any device ad-free for only $4.99/month!
-          </h3>
-          <br />
-          Watch anywhere. Cancel anytime.
-          <br />
-          Ready to watch? Create an account.
-          <br />
-          <div className="circle pulse arrow-down">
-            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="12" viewBox="0 0 384 512">
-              <path d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z" />
-            </svg>
-          </div>
-        </div>
-  </div>*/}
 
-      <div className="section">
-        <div className="intro-section">
+
+      <div className={styles["section"]}>
+        <div className={styles["intro-section"]}>
           <h2>Sign Up</h2>
           <form
             onSubmit={handleSubmit}
             style={{ maxWidth: "450px", width: "100%" }}
           >
-            <input
-              type="email"
-              placeholder="Email"
-              id="email"
-              name="email"
-              value={values.email}
-              onChange={handleChange}
-            //error={touched.email && Boolean(errors.email)}
-            //helpertext={touched.email && errors.email}
-            //margin="normal"
-            //variant="outlined"
-            />
+            <div className={styles["inputWrapper"]}>
+              <input
+                type="email"
+                placeholder="Email"
+                id="email"
+                name="email"
+                value={values.email}
+                onChange={handleChange}
 
-            <input
-              //fullwidth="true"
-              id="password"
-              name="password"
-              type="password"
-              placeholder="Password"
-              value={values.password}
-              onChange={handleChange}
-            //error={touched.password && Boolean(errors.password)}
-            //helpertext={touched.password && errors.password}
-            //margin="normal"
-            //variant="outlined"
-            />
+              />
+            </div>
+            <div className={styles["inputWrapper"]}>
+              <input
+                //fullwidth="true"
+                id="password"
+                name="password"
+                type="password"
+                placeholder="Password"
+                value={values.password}
+                onChange={handleChange}
 
-            <input
-              //fullWidth="true"
-              id="repeatPassword"
-              name="repeatPassword"
-              type="password"
-              placeholder="Repeat Password"
-              value={values.repeatPassword}
-              onChange={handleChange}
-              //error={touched.repeatPassword && Boolean(errors.repeatPassword)}
-              //helpertext={touched.repeatPassword && errors.repeatPassword}
-              //margin="normal"
-              //variant="outlined"
-              onKeyDown={handleKeyDown}
-            />
+              />
+            </div>
+            <div className={styles["inputWrapper"]}>
+              <input
+                //fullWidth="true"
+                id="repeatPassword"
+                name="repeatPassword"
+                type="password"
+                placeholder="Repeat Password"
+                value={values.repeatPassword}
+                onChange={handleChange}
+
+                onKeyDown={handleKeyDown}
+              />
+            </div>
 
             <button
               className="registerButton"
@@ -171,7 +147,7 @@ const Register = () => {
               onClick={handleStart}
               style={{ color: "#fff" }}
             >
-              Get Started
+              Sign Up
             </button>
           </form>
 
@@ -182,9 +158,11 @@ const Register = () => {
             </div>
           )}
 
-          <Link className="link text-dark" to={{ pathname: "/login" }}>
-            Already Signed up? Sign in
-          </Link>
+          <div className="flex justify-center">
+            <Link className="link text-dark" to={{ pathname: "/login" }}>
+              Already have an account? <span className="underline">Sign in</span>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

@@ -32,7 +32,8 @@ type MovieListItemProps = {
     movieObj?: any;
     refetchFn?: () => {}
     onHover?: (movieId: string) => {};
-    layoutType?: 'carousel' | 'grid'
+    layoutType?: 'carousel' | 'grid';
+    isActive: boolean
 }
 
 export default function MovieListItem({
@@ -242,7 +243,6 @@ export default function MovieListItem({
     return (
         <>
 
-            {/*<Link to={{ pathname: "/watch", movie: movie }}>*/}
             <div
                 onClick={() => {
                     if (isMobile) {
@@ -252,9 +252,9 @@ export default function MovieListItem({
                 className={
                     addClassNames(
                         "listItem relative",
-                        "h-[130px] sm:w-[225px] rounded-[3px]",
-                        isMobile ? '' : 'hover:scale-[1.25]',
-                        layoutType == 'grid' ? '!w-full' : 'w-[225px]'
+                        "h-[240px] rounded-[3px]",
+                        // isMobile ? '' : 'hover:scale-[1.25]',
+                        layoutType == 'grid' ? '!w-[180px]' : '!w-full'
                     )
                 }
                 // style={{ left: isHovered && index * 225 - 50 + index * 2.5 }}

@@ -2,9 +2,10 @@ import { useRef } from "react";
 import Swal from "sweetalert2";
 import Logo from "../../Assets/Images/Nav-logo.png";
 import "../../Assets/css/styles.scss";
-import "./forgot.scss";
 import { forgot } from "../../context/forgot/apiCalls";
 import { Link } from "react-router-dom";
+
+import styles from "./forgot.module.scss";
 
 const validateEmail = (email) => {
   var emailReg = /^([\w-.]+@([\w-]+\.)+[\w-]{2,6})?$/;
@@ -22,7 +23,7 @@ const showSwal = (title, message, type) => {
 export default function ForgotPassword() {
   const emailRef = useRef();
 
-  const handleStart = () => {
+  const handleStart = async () => {
     if (emailRef.current.value.length < 5) {
       Swal.fire({
         title: "",
@@ -41,8 +42,31 @@ export default function ForgotPassword() {
         email: emailRef.current.value,
       };
 
-      forgot(user);
+      const response = (await forgot(user))?.response;
+      console.log("res", response?.data);
+
+      if (response.status === 200) {
+        console.log("Password reset email sent successfully!");
+        Swal.fire({
+          title: "Hurray!",
+          text: "Your reset link has been sent to email!",
+          icon: "success",
+          timer: 1500,
+        });
+
+        do_redirect();
+      } else {
+        // API call failed due to unexpected status code
+        console.error("Unexpected error:", response.data?.statusText);
+        showSwal("Error encountered", response?.data?.statusText, "error");
+      }
     }
+  };
+
+  const do_redirect = () => {
+    setTimeout(() => {
+      window.location.href = "/login";
+    }, 1500);
   };
 
   const handleKeyDown = (event) => {
@@ -52,12 +76,12 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="loginNew">
-      <div className="top">
-        <div className="wrapper">
-          <a href={"/"} className="link">
+    <div className={styles["loginNew"]}>
+      <div className={styles["top"]}>
+        <div className={styles["wrapper"]}>
+          <a href={"/"} className={styles["link"]}>
             <img
-              className="logo"
+              className={styles["logo"]}
               src={Logo}
               width="100px"
               height="100px"
@@ -80,27 +104,30 @@ export default function ForgotPassword() {
           </div>
   </div>*/}
 
-      <div className="section">
-        <div className="intro-section">
-          <h2>Forgot Password</h2>
-          <input
-            type="email"
-            placeholder="Email"
-            style={{ color: "#000" }}
-            ref={emailRef}
-            onKeyDown={handleKeyDown}
-          />
+      <div className={styles["section"]}>
+        <div className={styles["intro-section"]}>
+          <h2 className="text-white text-center">Forgot Password?</h2>
+          <div className={styles["inputWrapper"]}>
+            <input
+              type="email"
+              placeholder="Email"
+              ref={emailRef}
+              onKeyDown={handleKeyDown}
+            />
+          </div>
           <button
-            className="registerButton"
+            className={styles["registerButton"]}
             style={{ color: "#fff" }}
             onClick={handleStart}
           >
-            Send Link
+            Submit
           </button>
           <br />
-          <Link className="link text-dark" to={{ pathname: "/login" }}>
-            Remember your password? Login
-          </Link>
+          <div className="flex items-center justify-center">
+            <Link className="link " to={{ pathname: "/login" }}>
+              Remember your password? <span className="underline">Sign in</span>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

@@ -1,0 +1,116 @@
+.loginNew{
+    background: url(/images/imagesGridBg.png) no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed;
+
+    .top{
+        position: fixed;
+        top: 10px;
+        left: 10px;
+    }
+
+    .section {
+        box-sizing: border-box;
+        height: 100vh;
+        width: 100%;
+        // background-color: rgba(0, 0, 0, 0.75);
+        border-bottom: solid 1px #555;
+        color: #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .intro-section{
+        max-width: 95%;
+        border-radius: 10px;
+        width: 500px;
+        padding: 50px 30px;
+        background-color: rgba(255, 255, 255, 0.13);
+        backdrop-filter: blur(15px);
+        box-sizing: border-box;
+    }
+
+    .inputWrapper {
+        height: 45px;
+        border-radius: 5px;
+        background-color: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        color: #000;
+        outline:none;
+        display: flex;
+        align-items: center;
+
+        margin: 10px auto;
+        width: 100%;
+        padding-left:10px;
+        padding-right:10px;
+
+        &::placeholder {
+            color: #000;
+        }
+
+        input{
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.000001);
+            color: #fff
+        }
+    }
+
+
+    button {
+        height: 40px;
+        width: 100%;
+        margin-top:48px;
+        margin: 5px auto 10px auto;
+        border-radius: 5px;
+        background-color: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+        //  color: #222;
+        border: none;
+        font-size: 18px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    span {
+        color: lightgray;
+        b {
+            color: white;
+        }
+    }
+    .link{
+        color: #222;
+    }
+    #scroll-simulator{
+        text-align: center;
+        display: block;
+        margin: 20px auto;
+    }
+}
+
+.arrow-down{
+    animation: pulse 1s infinite ease-in-out alternate;
+    box-shadow: 0 0 1px 1px rgba(0,0,0,.102);
+    text-align: center;
+    border-radius: 40px;
+    width: 40px;
+    padding: 10px;
+    margin: 20px auto -10px auto;
+    background: rgb(0, 255, 177);
+    background: -moz-linear-gradient(
+        90deg,
+        rgba(0, 255, 177, 1) 36%,
+        rgba(0, 212, 255, 1) 100%
+    );
+}
+
+@keyframes pulse {
+from { transform: scale(0.8); }
+to { transform: scale(1.2); }
+}
+
+@media screen and (min-width: 600px) {
+    .form {
+        width: 95%;
+    }
+}

@@ -70,7 +70,7 @@ const List: React.FC<ListProps> = ({ list, onDelete, onEdit }) => {
             ) : null}
           </div>
         </div>
-        <div className="wrapper ">
+        <div className="wrapper">
           <Carousel
             ref={carouselRef}
             responsive={responsive}
@@ -88,7 +88,7 @@ const List: React.FC<ListProps> = ({ list, onDelete, onEdit }) => {
             }
             itemClass={
               addClassNames(
-                ' !w-[225px]',
+                ' hover:!w-[400px] transition-all duration-200',
                 `mr-[15px] carousel-item`
               )
             }

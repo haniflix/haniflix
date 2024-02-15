@@ -99,7 +99,7 @@ const updateMovie = async (req, res) => {
         isSeries,
       };
 
-      const updatedMovie = await Movie.findByIdAndUpdate(
+      let updatedMovie = await Movie.findByIdAndUpdate(
         req.params.id,
         {
           $set: newFields,
@@ -107,7 +107,30 @@ const updateMovie = async (req, res) => {
         { new: true }
       );
 
-      console.log("updatedMovie ", updatedMovie);
+      const {
+        imgSm: dummyImgSm,
+        limit: dummyLimit,
+        trailer: dummyTrailer,
+        isSeries: dummyIseries, // affects lodash .every() check
+        ...fieldsToCheck
+      } = newFields;
+
+      // Check if any field is an empty string
+      const areFieldsNotEmpty = _.every(fieldsToCheck, (field) => {
+        return !_.isEmpty(field);
+      });
+
+      // Check if the genre field is an array and has more than 1 item
+      const isGenreValid =
+        _.isArray(fieldsToCheck.genre) && fieldsToCheck.genre.length > 1;
+
+      if (areFieldsNotEmpty && isGenreValid) {
+        updatedMovie = await Movie.findByIdAndUpdate(updatedMovie._id, {
+          $unset: { failedDuringScrape: "" },
+        });
+      }
+
+      // console.log("updatedMovie ", updatedMovie);
 
       res.status(200).json(updatedMovie);
     } catch (err) {

@@ -30,8 +30,26 @@ import { useGetUserQuery, useUpdateUserPasswordMutation } from "../../store/rtk-
 
 import CircularProgress from "@mui/material-next/CircularProgress";
 
+import { styled } from '@mui/material/styles';
 
 const url = import.meta.env.VITE_APP_API_URL;
+
+const CustomTextField = styled(TextField)(({ theme }) => ({
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: theme.palette.grey[500], // Darker gray outline
+      '&:hover fieldset': {
+        borderColor: theme.palette.grey[600], // Slightly lighter on hover
+      },
+    },
+  },
+  '& .MuiInputLabel-root': { // Target the label
+    color: 'white', // Set label color to white
+  },
+  '& .MuiInputBase-input': {
+    color: 'white', // Set text color to white
+  },
+}));
 
 
 
@@ -290,13 +308,14 @@ const AccSettings = () => {
               style={{
                 maxWidth: "450px",
                 width: "100%",
-                background: "#fff",
+                // background: "#fff",
+                border: '1px solid gray',
                 padding: 10,
                 borderRadius: 5,
               }}
             >
               <Field
-                as={TextField}
+                as={CustomTextField}
                 fullWidth
                 id="name"
                 name="name"
@@ -306,7 +325,7 @@ const AccSettings = () => {
               />
 
               <Field
-                as={TextField}
+                as={CustomTextField}
                 fullWidth
                 id="email"
                 name="email"

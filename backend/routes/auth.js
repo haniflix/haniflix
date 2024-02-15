@@ -13,7 +13,7 @@ const List = require("../models/List");
 dotenv.config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
-const demo_url = "http://localhost:3000/";
+const demo_url = "https://haniflix.com/"; // "http://localhost:3000/";
 
 sgMail.setApiKey(SENDGRID_API_KEY);
 
@@ -297,14 +297,18 @@ router.post("/verify_email", async (req, res) => {
 router.post("/forgot-pass", async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email });
-    if (user.username) {
-      const url = `${demo_url}change-password/${user._id}/${user.email}`;
 
-      const msg = {
-        to: req.body.email,
-        from: email_from,
-        subject: "Password Reset Link - Haniflix",
-        html: `
+    if (!user?.username) {
+      res.status(400).json({ error: true, statusText: "User does not exist!" });
+      return;
+    }
+    const url = `${demo_url}change-password/${user._id}/${user.email}`;
+
+    const msg = {
+      to: req.body.email,
+      from: email_from,
+      subject: "Password Reset Link - Haniflix",
+      html: `
           <p><strong>Hello Haniflix User,</strong></p>
           <p>We received a request to reset your password. Click on the link below to reset your password:</p>
           <p><a href="${url}" target="_blank">${url}</a></p>
@@ -318,21 +322,24 @@ router.post("/forgot-pass", async (req, res) => {
 
             </div>
           `,
-      };
+    };
 
-      sgMail
-        .send(msg)
-        .then(() => {
-          res.status(201).json(user);
-        })
-        .catch((error) => {
-          res.status(203).json(error);
-        });
-    } else {
-      res.status(203).json({ error: true, statusText: "Something is wrong!" });
-    }
+    sgMail
+      .send(msg)
+      .then((data) => {
+        console.log("data ", data);
+        res.status(201).json(user);
+      })
+      .catch((error) => {
+        console.log("error ", error);
+        res.status(203).json(error);
+      });
   } catch (e) {
-    res.status(201).json("Wrong OTP supplied!");
+    console.log("e ", e);
+    res.status(400).json({
+      message: "Error encountered",
+      error: e,
+    });
   }
 });
 

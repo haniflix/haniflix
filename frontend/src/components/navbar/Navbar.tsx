@@ -241,7 +241,7 @@ const Navbar = () => {
       {
         renderMobileMenuList()
       }
-      <GenresDropdown />
+      {/* <GenresDropdown /> */}
     </div>
   );
 };

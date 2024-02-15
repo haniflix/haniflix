@@ -20,6 +20,25 @@ import { useFormik, FormikProvider, Field } from 'formik';
 import * as Yup from "yup";
 import Swal from "sweetalert2";
 
+import { styled } from '@mui/material/styles';
+
+const CustomTextField = styled(TextField)(({ theme }) => ({
+    '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+            borderColor: theme.palette.grey[500], // Darker gray outline
+            '&:hover fieldset': {
+                borderColor: theme.palette.grey[600], // Slightly lighter on hover
+            },
+        },
+    },
+    '& .MuiInputLabel-root': { // Target the label
+        color: 'white', // Set label color to white
+    },
+    '& .MuiInputBase-input': {
+        color: 'white', // Set text color to white
+    },
+}));
+
 
 
 const EditProfile = () => {
@@ -167,14 +186,22 @@ const EditProfile = () => {
                                         value={formik}
                                     >
                                         <Field
-                                            as={TextField}
-                                            // fullWidth
+                                            as={CustomTextField}
                                             className="w-full"
                                             id="name"
                                             name="name"
                                             label="Name"
                                             margin="normal"
                                             variant="outlined"
+                                            sx={{
+                                                '& .MuiOutlinedInput-root': { // Target MUI's outline
+                                                    borderColor: 'transparent', // Remove default outline (optional)
+                                                },
+                                                '& .MuiInputBase-input': { // Target input text
+                                                    color: 'white', // Or any desired text color
+                                                },
+                                            }}
+                                        // InputProps={{ className: '!text-white ' }}
                                         />
                                     </FormikProvider>
                                     {/* <div>

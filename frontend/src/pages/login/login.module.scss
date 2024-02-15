@@ -1,7 +1,8 @@
 .loginNew{
-    background: url(/images/landing-bg.png) no-repeat center center;
+    background: url(/images/imagesGridBg.png) no-repeat center center;
     background-size: cover;
     background-attachment: fixed;
+    color: white;
 
     .top{
         position: fixed;
@@ -13,7 +14,7 @@
         box-sizing: border-box;
         height: 100vh;
         width: 100%;
-        background-color: rgba(0, 0, 0, 0.75);
+        // background-color: #FFFFFF1A;
         border-bottom: solid 1px #555;
         color: #000;
         display: flex;
@@ -25,50 +26,45 @@
         border-radius: 10px;
         width: 500px;
         padding: 50px 30px;
-        background-color: #fffd;
+        background-color: rgba(255, 255, 255, 0.13);
+        // opacity: 0.5;
+        backdrop-filter: blur(15px);
         box-sizing: border-box;
     }
 
     .inputWrapper {
         height: 45px;
         border-radius: 5px;
-        background-color: #d1d1d1;
+        background-color: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.5);
         color: #000;
-        // padding-left: 10px;
         outline:none;
         display: flex;
         align-items: center;
 
         margin: 10px auto;
         width: 100%;
+        padding-left:10px;
+        padding-right:10px;
 
         &::placeholder {
             color: #000;
+        }
+
+        input{
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.000001);
+            color: #fff
         }
     }
 
     .loginButton {
         height: 40px;
-        width: 200px;
+        width: 100%;
+        margin-top:48px;
         margin: 5px auto 10px auto;
         border-radius: 5px;
-        background: rgb(0, 255, 177);
-        background: -moz-linear-gradient(
-            90deg,
-            rgba(0, 255, 177, 1) 36%,
-            rgba(0, 212, 255, 1) 100%
-        );
-        background: -webkit-linear-gradient(
-            90deg,
-            rgba(0, 255, 177, 1) 36%,
-            rgba(0, 212, 255, 1) 100%
-        );
-        background: linear-gradient(
-            90deg,
-            rgba(0, 255, 177, 1) 36%,
-            rgba(0, 212, 255, 1) 100%
-        );
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#00ffb1",endColorstr="#00d4ff",GradientType=1);
+        background-color: rgba(255, 255, 255, 0.2);
         color: #ffffff;
         border: none;
         font-size: 18px;
@@ -83,7 +79,8 @@
         }
     }
     .link{
-        color: #222;
+        color: #fff;
+        text-decoration: underline;
     }
     #scroll-simulator{
         text-align: center;

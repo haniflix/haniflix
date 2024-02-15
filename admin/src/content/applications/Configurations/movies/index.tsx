@@ -285,7 +285,7 @@ function Movies() {
                       key={row._id}
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     >
-                      <TableCell component="th" scope="row">
+                      <TableCell component="th" className={`${row?.failedDuringScrape ? '!text-[red]' : ''}`} scope="row">
                         {row.title}
                       </TableCell>
                       <TableCell align="right">

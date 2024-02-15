@@ -57,6 +57,14 @@ const getMovies = async (req, res) => {
       });
     }
 
+    if (orderBy == "failedDuringScrape") {
+      aggregationPipeline.push({
+        $match: {
+          failedDuringScrape: true,
+        },
+      });
+    }
+
     // Add sort stage based on "orderBy" parameter
     switch (orderBy) {
       case "descAlpha":

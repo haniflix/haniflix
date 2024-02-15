@@ -27,6 +27,10 @@ const popularity = [
         id: 'dateAddedDesc',
         label: "Date Added Descending"
     },
+    {
+        id: 'failedDuringScrape',
+        label: "Failed During Web Scrape"
+    },
 ];
 
 let input_class = 'text-[#03042499] bg-[#fff] focus:text-[#030424] border-2 p-2 px-[20px] font-[400] rounded-[11px] text-[18px] flex items-center h-[44px] min-w-[150px] justify-between'

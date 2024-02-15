@@ -149,6 +149,7 @@ async function searchAndScrapeMovies(movieInfos, io, totalCount, currentCount) {
     headless: "new",
     // devtools: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    timeout: 60 * 1000,
   });
 
   try {
@@ -257,7 +258,7 @@ async function searchAndScrapeMovies(movieInfos, io, totalCount, currentCount) {
               genre: genreIds,
             };
 
-            const updatedMovie = await Movie.findByIdAndUpdate(
+            let updatedMovie = await Movie.findByIdAndUpdate(
               addedMovie?.movieId,
               {
                 $set: newFields,
@@ -266,7 +267,9 @@ async function searchAndScrapeMovies(movieInfos, io, totalCount, currentCount) {
             );
 
             if (updatedMovie?.failedDuringScrape == true) {
-              delete updatedMovie.failedDuringScrape;
+              updatedMovie = await Movie.findByIdAndUpdate(updatedMovie._id, {
+                $unset: { failedDuringScrape: "" },
+              });
             }
 
             await updatedMovie.save();
@@ -282,12 +285,12 @@ async function searchAndScrapeMovies(movieInfos, io, totalCount, currentCount) {
             },
           });
         } catch (error) {
-          console.error(`Error processing movie: ${movieInfo.movieName}`);
+          console.error(`\n\nError processing movie: ${movieInfo.movieName}`);
           Logger.info(
             `Retry count for movie:${movieInfo?.movieId} is ${retryCount}`
           );
 
-          console.error("error :", error);
+          console.error("error in while :", error);
 
           io.emit("scrapeDetails", {
             total: totalCount,
@@ -316,6 +319,8 @@ async function searchAndScrapeMovies(movieInfos, io, totalCount, currentCount) {
         }
       }
     }
+  } catch (error) {
+    console.log("error in browser ", error);
   } finally {
     await browser.close();
   }

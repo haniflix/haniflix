@@ -1,5 +1,5 @@
 .loginNew{
-    background: url(/images/landing-bg.png) no-repeat center center;
+    background: url(/images/imagesGridBg.png) no-repeat center center;
     background-size: cover;
     background-attachment: fixed;
 
@@ -13,7 +13,7 @@
         box-sizing: border-box;
         height: 100vh;
         width: 100%;
-        background-color: rgba(0, 0, 0, 0.75);        
+        // background-color: #FFFFFF1A;
         border-bottom: solid 1px #555;
         color: #000;
         display: flex;
@@ -25,19 +25,20 @@
         border-radius: 10px;
         width: 500px;
         padding: 50px 30px;
-        background-color: #fffd;
+        background-color: #FFFFFF1A;
         box-sizing: border-box;
     }
 
-    input {
-        height: 40px;
+    .inputWrapper {
+        height: 45px;
         border-radius: 5px;
         background-color: #d1d1d1;
         color: #000;
-        padding-left: 10px;
+        // padding-left: 10px;
         outline:none;
-        border: none;
-        display: block;
+        display: flex;
+        align-items: center;
+
         margin: 10px auto;
         width: 100%;
 
@@ -46,11 +47,10 @@
         }
     }
 
-    button {
+    .loginButton {
         height: 40px;
         width: 200px;
         margin: 5px auto 10px auto;
-        display: block;
         border-radius: 5px;
         background: rgb(0, 255, 177);
         background: -moz-linear-gradient(
@@ -69,7 +69,7 @@
             rgba(0, 212, 255, 1) 100%
         );
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#00ffb1",endColorstr="#00d4ff",GradientType=1);
-        color: #222;
+        color: #ffffff;
         border: none;
         font-size: 18px;
         font-weight: 500;
@@ -90,27 +90,6 @@
         display: block;
         margin: 20px auto;
     }
-}
-
-.arrow-down{
-    animation: pulse 1s infinite ease-in-out alternate;
-    box-shadow: 0 0 1px 1px rgba(0,0,0,.102);
-    text-align: center;
-    border-radius: 40px;
-    width: 40px;
-    padding: 10px;
-    margin: 20px auto -10px auto;
-    background: rgb(0, 255, 177);
-    background: -moz-linear-gradient(
-        90deg,
-        rgba(0, 255, 177, 1) 36%,
-        rgba(0, 212, 255, 1) 100%
-    );
-}
-
-@keyframes pulse {
-from { transform: scale(0.8); }
-to { transform: scale(1.2); }
 }
 
 @media screen and (min-width: 600px) {

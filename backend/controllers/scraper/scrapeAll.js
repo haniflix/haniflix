@@ -8,30 +8,37 @@ const { Movie } = require("../../models");
 
 const BATCH_SIZE = 5;
 
+const NODE_ENV = process.env.NODE_ENV;
+
 //CREATE
 const scrapeAllMovies = async (io, req, res) => {
   try {
-    const query = {
-      $and: [
-        {
-          $or: [
-            { title: { $exists: false } },
-            { desc: { $exists: false } },
-            { img: { $exists: false } },
-            { imgTitle: { $exists: false } },
-            { year: { $exists: false } },
-            { ageRating: { $exists: false } },
-            { duration: { $exists: false } },
-          ],
-        },
-        {
-          $or: [
-            { failedDuringScrape: { $exists: false } },
-            { failedDuringScrape: false },
-          ],
-        },
-      ],
-    };
+    let query = {};
+
+    if (NODE_ENV == "development") {
+      query = {
+        $and: [
+          {
+            $or: [
+              { title: { $exists: false } },
+              { desc: { $exists: false } },
+              { img: { $exists: false } },
+              { imgTitle: { $exists: false } },
+              { year: { $exists: false } },
+              { ageRating: { $exists: false } },
+              { duration: { $exists: false } },
+            ],
+          },
+          {
+            $or: [
+              { failedDuringScrape: { $exists: false } },
+              { failedDuringScrape: false },
+            ],
+          },
+        ],
+      };
+    }
+
     // Get the total count of movies that match the filter
     const totalCount = await Movie.countDocuments(query);
 

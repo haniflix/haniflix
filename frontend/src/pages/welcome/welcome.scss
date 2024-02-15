@@ -1,7 +1,6 @@
 .welcomePage {
     //background-size: cover;
-    background:linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('/images/landing-bg.png') no-repeat center center;
-        background-color: rgba(0, 0, 0, 0.75);        
+    background:url('/images/welcomePageBg1.png') no-repeat center center;
     background-size: cover;
    background-attachment: fixed;
     min-height: 100vh;
@@ -22,32 +21,35 @@
 
     .get-started-section {
         box-sizing: border-box;
+        background-color: rgba(255, 255, 255, 0.13);
+        backdrop-filter: blur(15px);
+        margin-right: 50px;
+        margin-left: 50px;
         // height: 100vh;
-        width: 100%;
+        // width: 100%;
         // border-bottom: solid 1px #555;
         color: #fff;
         text-align: center;
         margin-top: 100px;
         margin-bottom: 200px;
-        // display: flex;
-        // justify-content: center;
-        // align-items: center;
-        h1 {   
-            font-size: 3.5em;
-            margin-bottom: 0.5em;
-        }
+        padding-top:30px;
+        padding-bottom:30px;
+        h1 {
+            font-size: 60px;
+            line-height: 1em;
+                }
 
         p{
             font-size: 1.3em;
         }
     }
-    
+
     .top-section {
-        background-color: #000; 
+        background-color: #000;
     }
 
     .top-section-container {
-        padding-top: 5px; 
+        padding-top: 5px;
         background-color: #000;
        // border-top: 5px solid red;
         background: rgb(0, 255, 177);

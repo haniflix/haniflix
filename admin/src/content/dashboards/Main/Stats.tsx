@@ -83,7 +83,9 @@ function Stats() {
   const [users, setUsers] = useState<User[]>([]);
   const [movies, setMovies] = useState<Movie[]>([]);
 
-  const { data: statsData, isLoading: statsLoading } = useGetStatsQuery({})
+  const { data: statsData, isLoading: statsLoading, refetch } = useGetStatsQuery({ a: 'ee' }, {
+    refetchOnMountOrArgChange: true
+  })
 
 
   // const client = useApiClient();

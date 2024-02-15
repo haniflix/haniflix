@@ -9,6 +9,26 @@ import {
 
 import CircularProgress from "@mui/material-next/CircularProgress";
 
+import { styled } from '@mui/material/styles';
+
+
+const CustomTextField = styled(TextField)(({ theme }) => ({
+    '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+            borderColor: theme.palette.grey[500], // Darker gray outline
+            '&:hover fieldset': {
+                borderColor: theme.palette.grey[600], // Slightly lighter on hover
+            },
+        },
+    },
+    '& .MuiInputLabel-root': { // Target the label
+        color: 'white', // Set label color to white
+    },
+    '& .MuiInputBase-input': {
+        color: 'white', // Set text color to white
+    },
+}));
+
 
 const ChangePasswordForm = ({ formik, isLoading }) => {
     // return <div className='bg-white h-[50px]'>I am fine</div>
@@ -19,14 +39,15 @@ const ChangePasswordForm = ({ formik, isLoading }) => {
             value={formik}
         >
 
+            <div className='font-bold text-2xl text-gray-300  mt-8 mb-3'>
+                Change Password
+            </div>
             <div
-                className='border sm:w-[450px] max-w-[450px] p-[10px] bg-white rounded mt-6 mb-20'>
-                <div className='font-bold text-2xl text-gray-300'>
-                    Change Password
-                </div>
+                className='border border-[gray] sm:w-[450px] max-w-[450px] p-[10px] rounded mb-20'>
+
                 <div>
                     <Field
-                        as={TextField}
+                        as={CustomTextField}
                         type="password" name="currentPassword" id="currentPassword"
                         fullWidth
                         label="Current Password"
@@ -39,7 +60,7 @@ const ChangePasswordForm = ({ formik, isLoading }) => {
                 </div>
                 <div>
                     <Field
-                        as={TextField}
+                        as={CustomTextField}
                         name="newPassword" id="newPassword"
                         fullWidth
                         label="New Password"
@@ -57,7 +78,7 @@ const ChangePasswordForm = ({ formik, isLoading }) => {
                         label="Confirm Password"
                         margin="normal"
                         variant="outlined"
-                        as={TextField}
+                        as={CustomTextField}
                     />
                     {errors.confirmPassword && touched.confirmPassword && (
                         <div className="text-[red] text-xs">{errors.confirmPassword}</div>
