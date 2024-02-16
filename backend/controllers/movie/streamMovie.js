@@ -18,7 +18,9 @@ const streamMovie = async (req, res) => {
 
     let videoFileName;
 
-    if (NODE_ENV === "production") {
+    console.log("process.env ", process.env);
+
+    if (process.env.IS_IN_DOCKER === "is_docker") {
       const movieData = await Movie.findById(movieId);
 
       // Strip the CDN URL from the video URL
