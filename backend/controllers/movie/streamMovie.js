@@ -18,6 +18,9 @@ const streamMovie = async (req, res) => {
 
     let videoFileName;
 
+    console.log("process.env ", process.env);
+    console.log("NODE_ENV ", NODE_ENV);
+
     if (NODE_ENV === "production") {
       const movieData = await Movie.findById(movieId);
 
@@ -34,6 +37,8 @@ const streamMovie = async (req, res) => {
     }
 
     const videoPath = path.join(getBasePath(), videoFileName);
+
+    console.log("videoPath ", videoPath);
 
     const stat = fs.statSync(videoPath);
     const fileSize = stat.size;
