@@ -1,5 +1,7 @@
 FROM node:21-alpine3.18 AS builder
 
+ENV NODE_ENV production
+
 WORKDIR /app
 
 COPY package*.json ./
