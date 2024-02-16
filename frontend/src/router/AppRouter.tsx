@@ -34,6 +34,7 @@ import { useDispatch } from 'react-redux'
 
 import Swal from 'sweetalert2'
 import GenrePage from '../pages/genres/GenrePage';
+import Movie from '../pages/movie/index';
 
 
 const AppRouter = (props) => {
@@ -93,6 +94,8 @@ const AppRouter = (props) => {
                 <Route element={<ProtectedRoutes />}>
                     {/* <Route index element={<Home />} /> */}
                     <Route path="movies" element={<Home type="movies" />} />
+                    <Route path="movie/:movieId" element={<Movie />} />
+
                     <Route path="series" element={<Home type="series" />} />
                     <Route path="new-and-popular" element={<Home />} />
                     <Route path="watch/:id" element={<Watch />} />

@@ -7,11 +7,19 @@ import { addClassNames } from "../../store/utils/functions";
 import { useGetMoviesQuery } from "../../store/rtk-query/moviesApi";
 import MovieListItem from "../MovieListItem/index";
 
+import { useLocation } from 'react-router-dom';
+
+import {
+  SearchIcon
+} from '../../Assets/svgs/tsSvgs'
+
 const api_url = import.meta.env.VITE_APP_API_URL;
+
+import styles from './search.module.scss'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    paddingTop: "12vh",
+    paddingTop: "5vh",
     width: "85%",
     margin: "auto",
     color: "white",
@@ -32,6 +40,15 @@ const Searchresults = () => {
   const classes = useStyles();
   const [movies, setMovies] = useState([]);
   const [search, setSearch] = useState("");
+
+  const location = useLocation();
+
+  React.useEffect(() => {
+    if (location.state.search) {
+      setSearch(location.state.search)
+    }
+  }, [location.state])
+
 
   let queryParams = {
     searchTerm: search
@@ -57,34 +74,28 @@ const Searchresults = () => {
 
   return (
     <Container className={classes.root}>
-      <TextField
-        placeholder="Search movies"
-        className={
-          addClassNames(
-            classes.input,
-            'bg-white !mt-11 sm:!mt-2'
-          )
-        }
-        variant="outlined"
-        onChange={handleSearch}
-        InputProps={{
-          style: {
-            color: "black",
-          },
-        }}
-      />
+      <div className={styles["inputWrapper"]}>
+        <div className=''>
+          <SearchIcon className="icon" />
+        </div>
+        <input
+          placeholder="Search movies"
+          value={search}
+          onChange={handleSearch}
+        />
+      </div>
 
       {filteredMovies?.length === 0 && search !== "" && (
         <h1 className='text-white'>No Movies Found...</h1>
       )}
 
-      {filteredMovies?.length === 0 && search === "" && (
+      {/* {filteredMovies?.length === 0 && search === "" && (
         <h1 className='text-white'>Search your movies!</h1>
-      )}
+      )} */}
 
-      <Grid container spacing={2} className='sm:!mx-[20px] !mt-3'>
+      <Grid container spacing={2} className=' !mt-3'>
         {filteredMovies?.map((movie, index) => (
-          <Grid item xs={6} sm={6} md={4} lg={3} key={index}>
+          <Grid item xs={6} sm={4} md={2} lg={2} key={index}>
             <div className='relative hover:z-[200] shadow-md'>
               <MovieListItem
                 movieObj={movie}

@@ -31,6 +31,14 @@ import { useGetGenresQuery } from "../../store/rtk-query/genresApi";
 
 import styles from "./details.module.scss";
 
+import {
+  PlayIcon,
+  HeartIcon,
+  HeartIconFilled,
+  ThumbsDownIcon,
+  ThumbsUpIcon
+} from '../../Assets/svgs/tsSvgs'
+
 
 type MetaInfoItem = {
   text: string
@@ -65,7 +73,6 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
     skip: skipInitialCall || !movieId
   })
 
-
   useEffect(() => {
     if (newMovieData) {
       setMovieData(newMovieData)
@@ -76,6 +83,10 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
   useEffect(() => {
     if (movieDataProps) {
       setMovieData(movieDataProps)
+    }
+    // if no movieDataProps, then call get movie query
+    else {
+      setSkipInitial(false)
     }
   }, [movieDataProps])
 
@@ -88,16 +99,6 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
     });
   };
 
-  const applyLikeInFrontend = (action: "like" | "dislike") => {
-    setIsLike((cur) => {
-      if (cur == null && action == "like") return true;
-      if (cur == null && action == "dislike") return false;
-      if (cur == true && action == "like") return null;
-      if (cur == true && action == "dislike") return false;
-      if (cur == false && action == "like") return true;
-      if (cur == false && action == "dislike") return null;
-    });
-  };
 
   const onLikeMovie = async () => {
     const res = await likeMovie(movieData?._id)
@@ -106,7 +107,7 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
       showSwal("Error Liking movie", '', "error");
       return
     }
-    applyLikeInFrontend("like");
+
     if (skipInitialCall) {
       setSkipInitial(false)
     }
@@ -122,7 +123,7 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
       showSwal("Error disliking movie", '', "error");
       return
     }
-    applyLikeInFrontend("dislike");
+    // applyLikeInFrontend("dislike");
     if (skipInitialCall) {
       setSkipInitial(false)
     }
@@ -173,7 +174,9 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
   }, [movieData]);
 
   const buttonClasses = addClassNames(
-    "bg-[#FFFFFF33] backdrop-blur-md",
+    " backdrop-blur-md",
+    'bg-[#ffffff29] rounded-[30px] text-sm !border !border-[#FFFFFF1A]',
+    'h-[45px] ',
     'flex gap-1 !text-white rounded-[8px] height-[55px] flex items-center justify-center'
   )
 
@@ -192,7 +195,7 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
           aria-label="thumb up">
           {likeMovieState?.isLoading ? <CircularProgress color="inherit" size={18} /> :
             <>
-              {movieData?.currentUserLiked ? <ThumbUp /> : <ThumbUpAltOutlined />}
+              {movieData?.currentUserLiked ? <ThumbUp /> : <div className='scale-75'><ThumbsUpIcon /></div>}
             </>
           }
           <div className='text-sm'>{formatNumber(movieData?.likesCount)}</div>
@@ -209,7 +212,7 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
 
           {dislikeMovieState?.isLoading ? <CircularProgress color="inherit" size={18} /> :
             <>
-              {movieData?.currentUserDisliked ? <ThumbDown /> : <ThumbDownOutlined />}
+              {movieData?.currentUserDisliked ? <ThumbDown /> : <div className='scale-75'><ThumbsDownIcon /></div>}
             </>
           }
           <div className='text-sm'>{formatNumber(movieData?.dislikesCount)}</div>
@@ -352,24 +355,32 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
               )
             }>
               <Link
+                className={
+                  buttonClasses
+                }
                 to={`/watch/${movieData?._id}`}
                 style={{ textDecoration: "none" }}
               >
-                <button className={
-                  buttonClasses
-                }>
-                  <PlayArrow />
-                  <span className='uppercase text-[13px]'>Play Now</span>
+                <button >
+                  <div className='scale-75'><PlayIcon /></div>
+                  <span className='capitalise text-[13px] font-[500]'>Play Now</span>
                 </button>
               </Link>
-              <button className={buttonClasses} onClick={onAddToList}>
+              <div className={
+                addClassNames(
+                  buttonClasses,
+                  "px-2"
+                )
+              } onClick={onAddToList}>
                 {addToMyListState?.isLoading ? <CircularProgress color="inherit" size={18} /> :
                   <>
-                    {movieData?.isInDefaultList ? <Check /> : <AddCircle />}
+                    {movieData?.isInDefaultList ? <div className='scale-[0.73]'><HeartIconFilled /></div> : <div className='scale-75'><HeartIcon /></div>}
                   </>
                 }
-                <span className='uppercase text-[13px]'>My List</span>
-              </button>
+                <span className=' text-[13px] font-[500]'>
+                  {movieData?.isInDefaultList ? "Remove From My List" : "Add To My List"}
+                </span>
+              </div>
             </div>
             {
               renderLikeContainer()

@@ -8,12 +8,13 @@ import { useRef, useState } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import ListItem from "../listItem/ListItem";
-import "./list.scss";
 import { useAppSelector } from "../../store/hooks";
 import { selectUser } from "../../store/reducers/auth";
 import MovieListItem from "../MovieListItem/index";
 import { addClassNames } from "../../store/utils/functions";
 import useResponsive from "../../hooks/useResponsive";
+
+import styles from "./list.module.scss";
 
 interface ListProps {
   list: any;
@@ -54,9 +55,9 @@ const List: React.FC<ListProps> = ({ list, onDelete, onEdit }) => {
 
   return (
     <>
-      <div className="list">
+      <div className={styles["list"]}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <div className="listTitle text-white font-bold !text-2xl mt-6">{list?.title}</div>
+          <div className={addClassNames(styles['listTitle'], " text-white mt-10")}>{list?.title}</div>
           <div>
             {onEdit ? (
               <span style={{ cursor: "pointer" }} onClick={() => onEdit()}>
@@ -88,7 +89,7 @@ const List: React.FC<ListProps> = ({ list, onDelete, onEdit }) => {
             }
             itemClass={
               addClassNames(
-                ' hover:!w-[400px] transition-all duration-200',
+                '!w-[135px] hover:!w-[300px] transition-all duration-200',
                 `mr-[15px] carousel-item`
               )
             }

@@ -26,6 +26,7 @@ import { useAppSelector } from "../../store/hooks";
 import { selectUser } from "../../store/reducers/auth";
 import Swal from "sweetalert2";
 import { useGetMoviesQuery } from "../../store/rtk-query/moviesApi";
+import MovieListItem from "../../components/MovieListItem/index";
 
 const api_url = import.meta.env.VITE_APP_API_URL;
 const theme = createTheme();
@@ -266,14 +267,15 @@ const MyLists = () => {
       });
   };
 
+
   return (
     <>
       <Navbar />
       <div
-        className='sm:h-[60px]'
+        className='sm:h-[100px]'
       />
       <Container sx={styles.root}>
-        <Paper sx={styles.contentContainer}>
+        {/* <Paper sx={styles.contentContainer}>
           <Typography variant="h4" style={styles.contentHeading}>
             My Lists
           </Typography>
@@ -287,165 +289,26 @@ const MyLists = () => {
           >
             Add New List
           </Button>
-        </Paper>
+        </Paper> */}
 
-        {myLists?.map((list, index) => (
-          <div key={list._id}>
-            <List
-              key={list._id}
-              list={list}
-              onDelete={() => setToDelete(list)}
-              onEdit={() => setToEdit(list)}
-            />
-          </div>
-        ))}
-
-        <Modal
-          open={isModalOpen || toEdit != null}
-          onClose={handleCloseModal}
-          sx={styles.modalContainer}
+        <div
+          className="leading-[32px]  font-[500] text-[20px] text-white"
         >
-          <Container>
-            <Paper sx={{ ...styles.modalContent, color: "#000" }}>
-              <Typography variant="h6" style={{ marginBottom: 30 }}>
-                {toEdit ? "Update List" : "Add New List"}
-              </Typography>
-              <IconButton
-                edge="end"
-                color="inherit"
-                onClick={handleCloseModal}
-                aria-label="close"
-                style={{ position: "absolute", top: 0, right: 10 }}
-              >
-                <Close />
-              </IconButton>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    label="List Title"
-                    variant="outlined"
-                    value={newListTitle}
-                    disabled={toEdit?._id === user?.defaultList}
-                    onChange={(e) => setNewListTitle(e.target.value)}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <FormControl sx={styles.movieSelect}>
-                    <InputLabel id="select-movies">Select Movies</InputLabel>
-                    <Select
-                      label={"Select movies"}
-                      labelId="select-movies"
-                      multiple
-                      value={selectedMovies.map((movie) => movie._id)}
-                      onChange={handleMovieSelection}
-                      variant="outlined"
-                      renderValue={(selected) => (
-                        <Stack gap={1} direction="row" flexWrap="wrap">
-                          {selectedMovies
-                            .filter((movie) => selected.includes(movie._id))
-                            .map((movie) => (
-                              <Chip
-                                key={movie._id}
-                                label={movie.title}
-                                sx={styles.chip}
-                              />
-                            ))}
-                        </Stack>
-                      )}
-                    >
-                      {movies?.map((movie) => (
-                        <MenuItem key={movie?._id} value={movie?._id}>
-                          <div>
-                            <img
-                              src={movie?.img}
-                              alt={movie?.title}
-                              style={{
-                                marginRight: theme.spacing(1),
-                                width: "40px",
-                                height: "40px",
-                              }}
-                            />
-                            {movie?.title}
-                          </div>
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12}>
-                  {toEdit ? (
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => updateList()}
-                      className="gradientButton"
-                      sx={{ color: "#fff" }}
-                    >
-                      Update
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={handleAddList}
-                      className="gradientButton"
-                      sx={{ color: "#fff" }}
-                    >
-                      Confirm
-                    </Button>
-                  )}
-                </Grid>
-              </Grid>
-            </Paper>
-          </Container>
-        </Modal>
+          My List
+        </div>
+        <Grid container spacing={2} className='!mt-3 relative'>
+          {myLists?.[0]?.content?.map((movieId, index) => (
+            <Grid item xs={6} sm={4} md={2} lg={2} key={index}>
+              <div className='relative hover:z-[200] hover:!w-[300px] transition-all duration-200 shadow-md'>
+                <MovieListItem
+                  movieId={movieId}
+                  layoutType="grid"
+                />
+              </div>
+            </Grid>
+          ))}
+        </Grid>
 
-        <Modal
-          open={toDelete != null}
-          onClose={() => setToDelete(null)}
-          sx={styles.modalContainer}
-        >
-          <Container>
-            <Paper sx={{ ...styles.modalContent, color: "#000" }}>
-              <Typography variant="h6">Delete List</Typography>
-              <p style={{ marginBottom: 50 }}>
-                Are you sure to delete {toDelete?.title} ?
-              </p>
-              <IconButton
-                edge="end"
-                color="inherit"
-                //onClick={handleCloseModal}
-                onClick={() => setToDelete(null)}
-                aria-label="close"
-                style={{ position: "absolute", top: 10, right: 10 }}
-              >
-                <Close />
-              </IconButton>
-              <Grid item xs={12}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => setToDelete(null)}
-                  className="gradientButton"
-                  sx={{ color: "#fff" }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => deleteList(toDelete._id)}
-                  style={{ marginLeft: 10 }}
-                  className="gradientButton"
-                  sx={{ color: "#fff" }}
-                >
-                  Delete
-                </Button>
-              </Grid>
-            </Paper>
-          </Container>
-        </Modal>
       </Container>
     </>
   );

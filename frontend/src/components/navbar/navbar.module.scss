@@ -1,5 +1,5 @@
 .navbar {
-    // width: 100%;
+    // width: 100vw;
     right: 0;
     left:0;
     color: white;
@@ -17,17 +17,50 @@
         // background-color: #000;//var(--main-color);
     }
 
+    .link{
+        color:#B8B4B4;
+        line-height: 24px;
+        font-size: 16px;
+    }
+
+    .inputWrapper {
+        height: 45px;
+        border-radius: 5px;
+        background-color: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        color: #000;
+        outline:none;
+        display: flex;
+        align-items: center;
+
+        margin: 10px auto;
+        width: 100%;
+        padding-left:10px;
+        padding-right:10px;
+
+        &::placeholder {
+            color: #000;
+        }
+
+        input{
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.000001);
+            color: #fff
+        }
+    }
+
     .desk-container {
-        padding: 0px 50px;
+        // padding: 0px 0px;
+        margin:0px 80px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         height: 90px;
-        width: 100%;
 
         .left {
             display: flex;
             align-items: center;
+            width: 40%;
 
             img {
                 margin-right: 40px;
@@ -41,7 +74,10 @@
 
         .right {
             display: flex;
+            gap: 4px;
             align-items: center;
+            width: 100%;
+
 
             .icon {
                 margin: 0px 15px;
@@ -49,7 +85,7 @@
             }
 
             img {
-                border-radius: 5px;
+                // border-radius: 5px;
                 object-fit: cover;
                 cursor: pointer;
             }
@@ -61,6 +97,12 @@
                     border-radius: 5px;
                 }
 
+                .options {
+                    &:hover {
+                        display: flex;
+                    }
+                }
+
                 span {
                     padding: 10px;
                     cursor: pointer;
@@ -68,9 +110,23 @@
 
                 &:hover {
                     .options {
+                        display: block;
+
+                        .menu{
+                        border: 1px solid #FFFFFF33;
+                        border-radius: 8px;
                         display: flex;
                         flex-direction: column;
                         position: absolute;
+                        right:0;
+                        width: 260px;
+                        // margin-top:8px;
+                        background-color: #00000033;
+                        }
+
+                        span{
+                            color: #fff
+                        }
                     }
                 }
             }
@@ -103,7 +159,6 @@
     @media screen and (max-width: 768px){
         #nav-desktop-container{
             display: none;
-            width: 100vw;
         }
         .mobile-header{
             display: flex;

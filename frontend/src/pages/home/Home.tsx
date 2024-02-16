@@ -11,7 +11,7 @@ import {
   ArrowForwardIosOutlined,
 } from "@mui/icons-material";
 import ListItem from "../../components/listItem/ListItem";
-import { useGetContinueWatchingListQuery, useGetRandomListsQuery } from "../../store/rtk-query/listsApi";
+import { useGetContinueWatchingListQuery, useGetMyListQuery, useGetRandomListsQuery } from "../../store/rtk-query/listsApi";
 import List from "../../components/list/List"
 import { addClassNames } from "../../store/utils/functions";
 
@@ -28,55 +28,16 @@ const Home = ({ type = null }) => {
   })
 
   const { data: randomListData, isLoading: randomListLoading } = useGetRandomListsQuery({
-    // type,
-    // genre
   }, {
     refetchOnMountOrArgChange: true,
   })
 
-  // React.useEffect(() => {
+  const { data: myListData, isLoading: myListLoading } = useGetMyListQuery({})
 
-  // },[])
 
-  // const getRandomLists = useCallback(
-  //   (type: string, genre: string) => {
-  //     console.log('type, genre ', { type, genre })
-  //     client
-  //       .getRandomLists(type, genre)
-  //       .then((res) => {
-  //         console.log('res ', res)
-  //         //const filteredLists = res.filter((list) => !list.user);
-  //         //setLists(filteredLists);
-  //         setLists(res);
-  //       })
-  //       .catch((err) => {
-  //         console.error(err);
-  //       });
-  //   },
-  //   [client]
-  // );
-
-  /*const getRandomMovies = useCallback(
-    (type: string) => {
-      client
-        .getRandomMovies(type)
-        .then((res) => {
-          setMovies(res);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    },
-    [client]
-  );*/
 
   useEffect(() => {
-    // getRandomLists(type, genre);
-    // getRandomMovies(type);
-
     setLists(randomListData);
-
-
   }, [type, genre, randomListData]);
 
   const responsive = {
@@ -100,7 +61,7 @@ const Home = ({ type = null }) => {
 
 
   return (
-    <div className="home relative">
+    <div className="home relative !bg-black">
       <Navbar />
       <div className='fixed top-0 right-0 left-0 z-[900]'>
         <Featured type={type} />
@@ -108,17 +69,17 @@ const Home = ({ type = null }) => {
 
 
       <div className={addClassNames(
-        'bg-black overflow-hidden mt-[65vh] relative z-[10] pt-[0px]'
+        ' overflow-hidden mt-[65vh] relative z-[10] pt-[0px] pb-6'
       )}>
         <div
-          className='fixed z-[200] top-[65vh] left-0 right-0 h-[7vh] bg-gradient-to-b from-black to-transparent'
+          className='fixed z-[200] top-[65vh] left-0 right-0 h-[25px] bg-gradient-to-b from-black to-transparent'
         >
 
         </div>
         <Suspense
           fallback={<div style={{ backgroundColor: "black" }}>Loading...</div>}
         >
-          <div className='mx-[20px] sm:mx-[50px] '>
+          <div className='mx-[20px] sm:mx-[80px] overflow-x-hidden'>
             <div>
 
               {
@@ -127,6 +88,17 @@ const Home = ({ type = null }) => {
                     ...continueWatchingListData?.list,
                     title: "Continue Watching"
                   }} />
+                  : undefined
+              }
+            </div>
+
+            <div>
+
+              {
+                myListData?.[0] ?
+                  <List list={
+                    myListData?.[0]
+                  } />
                   : undefined
               }
             </div>

@@ -6,3 +6,12 @@
 body, html, div,input{
     outline: none;
 }
+
+body{
+    background-color: #000;
+}
+
+*{
+    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
+}

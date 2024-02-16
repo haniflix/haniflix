@@ -24,6 +24,10 @@ import useResponsive from "../../hooks/useResponsive";
 import moviePlaceHolderSvg from '../../Assets/svgs/moviePlaceholder.svg'
 import { useGetGenresQuery } from "../../store/rtk-query/genresApi";
 
+import {
+    PlayIcon
+} from '../../Assets/svgs/tsSvgs'
+
 
 const api_url = import.meta.env.VITE_APP_API_URL;
 
@@ -167,7 +171,28 @@ export default function MovieListItem({
 
 
     const renderSideButtons = () => {
+        if (layoutType == 'grid') return
 
+        //render play instead
+        return (
+            <div className="side-buttons absolute right-3 top-0 bottom-0 z-[1000] flex flex-col gap-1 justify-end pb-[17px]">
+                <Link
+                    to={`/movie/${movie._id}`}
+                    style={{ textDecoration: "none", color: "#fff" }}
+                >
+                    <div className={
+                        addClassNames(
+                            'h-[43px] w-[43px] bg-[#FFFFFF33] flex',
+                            'border border-[#FFFFFF33] rounded-[50%] items-center justify-center'
+                        )
+                    }>
+                        <div className='scale-75'><PlayIcon /></div>
+                    </div>
+                </Link>
+            </div>
+        )
+
+        //like buttons
         return (
             <div className="side-buttons absolute right-3 top-0 bottom-0 z-[1000] flex flex-col gap-1 justify-end pb-[17px]">
                 <div
@@ -245,16 +270,16 @@ export default function MovieListItem({
 
             <div
                 onClick={() => {
-                    if (isMobile) {
-                        navigate(`/watch/${movie._id}`)
+                    if (isMobile || layoutType == 'grid') {
+                        navigate(`/movie/${movie._id}`)
                     }
                 }}
                 className={
                     addClassNames(
                         "listItem relative",
-                        "h-[240px] rounded-[3px]",
+                        "h-[160px] rounded-[3px]",
                         // isMobile ? '' : 'hover:scale-[1.25]',
-                        layoutType == 'grid' ? '!w-[180px]' : '!w-full'
+                        layoutType == 'grid' ? '!w-[135px] cursor-pointer' : '!w-full'
                     )
                 }
                 // style={{ left: isHovered && index * 225 - 50 + index * 2.5 }}
@@ -291,32 +316,41 @@ export default function MovieListItem({
                         }}
                     >
                         <Link
-                            to={`/watch/${movie._id}`}
+                            to={`/movie/${movie._id}`}
                             style={{ textDecoration: "none", color: "#fff" }}
                         >
                             <div className="flex flex-col">
 
-                                <div className={
-                                    addClassNames(
-                                        'h-[25px] w-[25px] bg-[rgb(0, 0, 0, 0.9)] flex',
-                                        'border border-[#ddd] rounded-[50%] items-center justify-center'
-                                    )
-                                }>
-                                    <PlayArrow className="text-[red] !text-[19px]" />
-                                </div>
 
                                 <div style={{}}>
                                     <div className='font-[500] text-[11.5px] mt-[4px] mb-[1px]'>{movie.title}</div>
-                                    <div className='flex items-center gap-[5px]'>
+                                    <div
+
+                                        className={
+                                            addClassNames(
+                                                'flex items-center gap-[5px]',
+                                                layoutType == 'grid' ? '!hidden' : ""
+                                            )
+                                        }>
                                         <div>
                                             {movie?.year}
                                         </div>
-                                        {movie?.ageRating ? <div className='text-[9px] border border-[#ddd] border-[1px] rounded-[2px] py-[1px] px-[2px]'><div>
-                                            {movie?.ageRating}
-                                        </div> </div> : undefined}
-                                        {movie?.duration ?
-                                            <div>{movie?.duration}</div>
+                                        <div className="h-[10px] w-[1px] bg-[#fff]" />
+                                        {movie?.ageRating ? <>
+                                            <div className='text-[9px] border border-[#ddd] border-[1px] rounded-[2px] py-[1px] px-[2px]'><div>
+                                                {movie?.ageRating}
+                                            </div> </div>
+                                            <div className="h-[10px] w-[1px] bg-[#fff]" />
+                                        </>
                                             : undefined}
+
+                                        {movie?.duration ?
+                                            <>
+                                                <div>{movie?.duration}</div>
+                                                <div className="h-[10px] w-[1px] bg-[#fff]" />
+                                            </>
+                                            : undefined}
+
                                         <div className='font-[600]'>
                                             4K
                                         </div>

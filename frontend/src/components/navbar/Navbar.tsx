@@ -14,8 +14,10 @@ import Swal from 'sweetalert2'
 import { addClassNames } from "../../store/utils/functions";
 import GenresDropdown from "../GenresDropdown";
 
-import "./navbar.scss";
+import styles from "./navbar.module.scss";
 import { useGetUserQuery } from "../../store/rtk-query/usersApi";
+
+import { SearchIcon, ProfileIcon, SettingsIcon, LogoutIcon } from '../../Assets/svgs/tsSvgs'
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -26,6 +28,7 @@ const Navbar = () => {
   const navigate = useNavigate()
 
   const [loginCalled, setLoginCalled] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
 
   // const authReducer = useAppSelector((state) => state.auth);
   const userId = user?._id;
@@ -63,6 +66,18 @@ const Navbar = () => {
 
     return finalUrl
   }
+
+  const handleSearch = () => {
+    console.log('searchTerm ', searchTerm)
+
+    navigate('/search', { state: { search: searchTerm } })
+  }
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' || event.keyCode === 13) {
+      handleSearch();
+    }
+  };
 
   const renderMobileMenuList = () => {
 
@@ -124,7 +139,7 @@ const Navbar = () => {
 
   const renderMobileMenuToggle = () => {
     return (
-      <div className="mobile-header ">
+      <div className={styles["mobile-header"]}>
         <div
           onClick={() => navigate('/')}
           className="mobile-logo-cont cursor-pointer">
@@ -132,13 +147,13 @@ const Navbar = () => {
         </div>
         <div className='flex items-center gap-[5px]'>
 
-          <Link className="link" to="/search">
+          <Link className={styles["link"]} to="/search">
             <Search className="icon" />
           </Link>
           <div className='text-xs' >{userData?.fullname}</div>
 
           <div>
-            <Notifications className="icon" />
+            <Notifications className={styles["icon"]} />
           </div>
           <Link className="" to="/settings">
             <div className='bg-gray-300 rounded-[8px] h-[50px] w-[50px]'>
@@ -171,78 +186,101 @@ const Navbar = () => {
 
   const renderDesktopMenu = () => {
     return (
-      <div className="desk-container" id="nav-desktop-container">
-        <div className="left" style={{ width: "100%", height: "100px" }}>
-          <div
-            onClick={() => navigate('/')}
-            className='cursor-pointer'
-          >
-            <img src={NavLogo1} alt="" width={100} height={100} loading="lazy" />
-          </div>
-          <Link className="link" to="/">
+      <div className={styles["desk-container"]} id="nav-desktop-container">
+        <div className={styles["left"]} style={{ width: "100%", height: "100px" }}>
+
+          <Link className={styles["link"]} to="/">
             <span>Home</span>
           </Link>
-          <Link className="link" to="/series">
-            <span>Series</span>
-          </Link>
-          <Link className="link" to="/movies">
+
+          <Link className={styles["link"]} to="/movies">
             <span>Movies</span>
           </Link>
-          <Link className="link" to="/new-and-popular">
-            <span>New and Popular</span>
-          </Link>
-          <Link className="link" to="/my-list">
+
+          <Link className={styles["link"]} to="/my-list">
             <span>My List</span>
           </Link>
         </div>
-        <div className="right">
-          <Link className="link" to="/search">
-            <Search className="icon" />
-          </Link>
-          <span>{userData?.fullname}</span>
-          <Notifications className="icon" />
-          <Link className="" to="/settings">
-            <div className='bg-gray-300 rounded-[8px] h-[60px] w-[60px]'>
+        <div className={styles["right"]}>
+          <div className={styles["inputWrapper"]}>
+            <div className=''>
+              <SearchIcon className="icon" />
+            </div>
+            <input
+              type="text" placeholder="Search"
+              className="px-2"
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
+          </div>
+          <span className="ml-[30px] whitespace-nowrap ">Hi, {userData?.fullname}</span>
+
+          <Link className={
+            addClassNames(
+              styles["profile"],
+              'relative ml-[6px]'
+            )
+          } to="/settings">
+            <div className='bg-gray-300 rounded-[100px] h-[45px] w-[45px]'>
               <img
                 src={userData?.avatar ? makeImageUrl(userData?.avatar) : NavLogo1}
                 alt=""
-                className="w-full h-full"
+                className="w-full h-full rounded-[100px]"
               />
             </div>
-          </Link>
-          <div className="profile">
-            <ArrowDropDown className="icon" />
-            <div className="options !text-black py-[12px]">
-              <span >Hello {userData?.fullname}!</span>
-              <span>
-                <Link className="" to="/edit-profile">
-                  Edit Profile
-                </Link>
-              </span>
-              <span>
-                <Link className="" to="/settings">
-                  Account Settings
-                </Link>
-              </span>
-              <span onClick={onLogout}>
-                Logout
-              </span>
+            <div className={
+              addClassNames(
+                styles['options'],
+                " !text-black "
+              )
+            }>
+              {/* <div className="h-2 bg-[#000000]"></div> */}
+              <div className={styles['menu']}>
+                <span className='flex items-center justify-between'>
+                  <Link className="" to="/edit-profile">
+                    Change your avatar
+                  </Link>
+                  <ProfileIcon />
+                </span>
+                <span className='flex items-center justify-between'>
+                  <Link className="" to="/settings">
+                    Account Settings
+                  </Link>
+                  <SettingsIcon />
+                </span>
+                <div
+                  className='h-[1px] bg-[#4B4B4B] w-full'
+                />
+                <span
+                  className='flex items-center justify-between cursor-pointer !pb-[0px]'
+                  onClick={onLogout}>
+                  <span className='!pl-[0px]'>Logout</span>
+                  <LogoutIcon />
+                </span>
+              </div>
             </div>
-          </div>
+          </Link>
+
         </div>
       </div>
     )
   }
 
   return (
-    <div className={isScrolled ? "navbar scrolled" : "navbar"}>
+    <div className={isScrolled ?
+      addClassNames(
+        styles["navbar"],
+        styles["scrolled"]
+      )
+      : styles["navbar"]}
+    >
       {renderDesktopMenu()}
       {renderMobileMenuToggle()}
       {
         renderMobileMenuList()
       }
       {/* <GenresDropdown /> */}
-    </div>
+    </div >
   );
 };
 
