@@ -8,6 +8,9 @@ RUN npm install --include=optional sharp
 
 FROM ghcr.io/puppeteer/puppeteer:latest
 
+# Create the /usr/movies directory
+RUN mkdir -p /usr/movies
+
 WORKDIR /usr/app
 
 COPY --from=builder /app /usr/app

@@ -5,8 +5,8 @@ const { Movie } = require("../../models");
 
 // Function to get the base path for movies
 const getBasePath = () => {
-  return process.env.NODE_ENV === "production"
-    ? "/var/www/html/cdn.haniflix.com/movies"
+  return process.env.IS_IN_DOCKER === "is_docker"
+    ? "/usr/movies"
     : path.resolve(__dirname, "..", "..", "../../test videos");
   // : path.join(__dirname, "..", "..", "test_videos");
 };

@@ -4,10 +4,12 @@ services:
     build: .
     environment:
       NODE_ENV: production
+      IS_IN_DOCKER: is_docker
     container_name: haniflix_backend
     working_dir: /usr/app
     volumes:
       - ./:/usr/app
+      - /var/www/html/cdn.haniflix.com/movies:/usr/movies
       - /usr/app/node_modules
     ports:
       - 8800:8800
