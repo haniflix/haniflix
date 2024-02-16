@@ -30,7 +30,7 @@ const streamMovie = async (req, res) => {
         ""
       );
       // Extract the file name from the URL
-      videoFileName = decodeURIComponent(videoUrl);
+      videoFileName = videoUrl; //decodeURIComponent(videoUrl);
     } else {
       // Default to sample movie in development
       videoFileName = "sample.mov";
