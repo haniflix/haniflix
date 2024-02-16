@@ -5,6 +5,8 @@ import VideoPlayer from "../../components/videoPlayer/VideoPlayer";
 import { useEffect, useState } from "react";
 import useApiClient from "../../hooks/useApiClient";
 
+import { Helmet } from "react-helmet";
+
 export default function Watch() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -32,14 +34,19 @@ export default function Watch() {
   };
 
   return (
-    <div className="watch">
-      <Link to="/">
-        <div className="back" onClick={handleGoBack}>
+    <>
+      <Helmet>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Helmet>
+
+      <div className="watch">
+        <div
+          className="back cursor-pointer" onClick={handleGoBack}>
           <ArrowBackOutlined />
           Go Back
         </div>
-      </Link>
-      <VideoPlayer videoId={movie?._id} videoUrl={movie?.video} />
-    </div>
+        <VideoPlayer videoId={movie?._id} videoUrl={movie?.video} />
+      </div>
+    </>
   );
 }

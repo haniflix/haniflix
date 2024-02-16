@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import ReactPlayer from "react-player";
 
 import { useSelector } from "react-redux";
 import SocketContext from "../../context/SocketContext";
@@ -25,6 +24,8 @@ import { useAddMovieToDefaultListMutation } from "../../store/rtk-query/listsApi
 import CircularProgress from "@mui/material-next/CircularProgress";
 
 import { useNavigate } from "react-router-dom";
+
+import CustomReactPlayer from "./ReactPlayer";
 
 const VideoPlayer = ({ videoId, videoUrl }) => {
   const [playtime, setPlaytime] = useState(0);
@@ -79,7 +80,7 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
     if (!isNaN(savedPlaytime) && savedPlaytime <= duration) {
       setPlaytime(savedPlaytime);
       setSeekTime(savedPlaytime);
-      playerRef.current.seekTo(savedPlaytime);
+      playerRef.current?.seekTo(savedPlaytime);
     }
   }, [videoId, duration]);
 
@@ -302,8 +303,8 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
   };
 
   return (
-    <div className="video-player-container">
-      <ReactPlayer
+    <div className="video-player-containerd  h-screen">
+      <CustomReactPlayer
         ref={playerRef}
         url={streamUrl}
         controls
@@ -313,7 +314,7 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
         onPause={handlePause}
         playing
         width="100%"
-        height="95vh"
+        height="90vh"
         playbackRate={1.0}
         progressInterval={1000}
         config={{
