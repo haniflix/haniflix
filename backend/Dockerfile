@@ -1,5 +1,9 @@
 FROM node:21-alpine3.18 AS builder
 
+# Create and set permissions for directories (without relying on specific users)
+RUN mkdir -p /usr/movies /usr/app/uploads && \
+    chmod 775 /usr/movies /usr/app/uploads
+
 WORKDIR /app
 
 COPY package*.json ./
@@ -7,11 +11,6 @@ COPY package*.json ./
 RUN npm install --include=optional sharp
 
 FROM ghcr.io/puppeteer/puppeteer:latest
-
-# Create and set permissions for directories
-RUN mkdir -p /usr/movies && \
-    mkdir -p /usr/app/uploads && \
-    chown -R newuser:newuser /usr/movies /usr/app/uploads
 
 # Switch to non-root user
 USER newuser
