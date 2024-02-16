@@ -8,12 +8,14 @@ RUN npm install --include=optional sharp
 
 FROM ghcr.io/puppeteer/puppeteer:latest
 
-# Create the /usr/movies directory
-RUN mkdir -p /usr/movies
+# Create and set permissions for directories
+RUN mkdir -p /usr/movies && \
+    mkdir -p /usr/app/uploads && \
+    chown -R newuser:newuser /usr/movies /usr/app/uploads
+
+# Switch to non-root user
+USER newuser
 
 WORKDIR /usr/app
 
 COPY --from=builder /app /usr/app
-
-# EXPOSE 8800
-
