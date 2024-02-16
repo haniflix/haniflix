@@ -12,9 +12,6 @@ RUN npm install --include=optional sharp
 
 FROM ghcr.io/puppeteer/puppeteer:latest
 
-# Switch to non-root user
-USER newuser
-
 WORKDIR /usr/app
 
 COPY --from=builder /app /usr/app
