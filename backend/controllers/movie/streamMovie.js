@@ -7,7 +7,7 @@ const { Movie } = require("../../models");
 const getBasePath = () => {
   return process.env.NODE_ENV === "production"
     ? "/var/www/html/cdn.haniflix.com/movies"
-    : path.resolve(__dirname, "..", "..", "../../test_videos");
+    : path.resolve(__dirname, "..", "..", "../../test videos");
   // : path.join(__dirname, "..", "..", "test_videos");
 };
 
@@ -18,9 +18,6 @@ const streamMovie = async (req, res) => {
 
     let videoFileName;
 
-    console.log("process.env ", process.env);
-    console.log("NODE_ENV ", NODE_ENV);
-
     if (NODE_ENV === "production") {
       const movieData = await Movie.findById(movieId);
 
@@ -30,10 +27,11 @@ const streamMovie = async (req, res) => {
         ""
       );
       // Extract the file name from the URL
-      videoFileName = videoUrl; //decodeURIComponent(videoUrl);
+      videoFileName = decodeURIComponent(videoUrl);
     } else {
       // Default to sample movie in development
-      videoFileName = "sample.mov";
+      videoFileName =
+        "21 Jump Street (2012) [1080p]/21.Jump.Street.2012.1080p.BluRay.x264.YIFY.mov";
     }
 
     const videoPath = path.join(getBasePath(), videoFileName);
