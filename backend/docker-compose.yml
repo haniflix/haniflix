@@ -10,9 +10,9 @@ services:
     volumes:
       - ./:/usr/app
       - /var/www/html/cdn.haniflix.com/movies:/usr/movies
-      - /var/www/html/uploads:/usr/uploads
+      - /var/www/html/uploads:/usr/app/uploads
       - /usr/app/node_modules
     ports:
       - 8800:8800
     restart: unless-stopped
-    command: node index.js
+    # command: ["USER", "node", "node", "index.js"]

@@ -26,6 +26,7 @@ const storage = multer.diskStorage({
         cb(null, destination);
       });
     } catch (err) {
+      console.log("error ", err);
       cb(err); // Handle errors gracefully
     }
   },
