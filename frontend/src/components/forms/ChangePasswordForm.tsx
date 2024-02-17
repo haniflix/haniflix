@@ -30,7 +30,6 @@ const ChangePasswordForm = ({ formik, isLoading }) => {
                 <div className={styles['inputWrapper']}>
                     <Field
                         type="password" name="currentPassword" id="currentPassword"
-                        fullWidth
                         label="Current Password"
                         margin="normal"
                         variant="outlined"
@@ -46,7 +45,6 @@ const ChangePasswordForm = ({ formik, isLoading }) => {
                 <div className={styles['inputWrapper']}>
                     <Field
                         name="newPassword" id="newPassword"
-                        fullWidth
                         label="New Password"
                         margin="normal"
                         variant="outlined"
@@ -63,7 +61,6 @@ const ChangePasswordForm = ({ formik, isLoading }) => {
                 <div className={styles['inputWrapper']}>
                     <Field
                         type="password" name="confirmPassword" id="confirmPassword"
-                        fullWidth
                         label="Confirm Password"
                         margin="normal"
                         variant="outlined"

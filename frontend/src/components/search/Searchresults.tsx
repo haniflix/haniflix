@@ -71,8 +71,8 @@ const Searchresults = () => {
 
     //render only first 4 results
     // Render only first 4 results
-    const firstFour = filtered.slice(0, 4);
-    const moreToExplore = filtered.slice(4, 8);
+    const firstFour = filtered?.slice(0, 4);
+    const moreToExplore = filtered?.slice(4, 8);
 
     return {
       filteredMovies: firstFour,
@@ -102,7 +102,7 @@ const Searchresults = () => {
                 {search.split(" ").includes(word.toLowerCase()) ? (
                   <span className="font-[600]">{word}</span>
                 ) : (
-                  <span className="font-[400]">{word}</span>
+                  <span className="font-[300]">{word}</span>
                 )}
               </React.Fragment>
             ))}
