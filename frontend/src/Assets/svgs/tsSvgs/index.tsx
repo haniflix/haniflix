@@ -7,6 +7,7 @@ import ProfileIcon from './ProfileIcon'
 import SettingsIcon from './SettingsIcon'
 import LogoutIcon from './LogoutIcon'
 import HeartIconFilled from './HeartIconFilled'
+import CloseIcon from './CloseIcon'
 
 export {
     SearchIcon,
@@ -17,5 +18,6 @@ export {
     ProfileIcon,
     SettingsIcon,
     LogoutIcon,
-    HeartIconFilled
+    HeartIconFilled,
+    CloseIcon
 }

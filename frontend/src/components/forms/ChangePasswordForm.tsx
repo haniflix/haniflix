@@ -9,25 +9,7 @@ import {
 
 import CircularProgress from "@mui/material-next/CircularProgress";
 
-import { styled } from '@mui/material/styles';
-
-
-const CustomTextField = styled(TextField)(({ theme }) => ({
-    '& .MuiOutlinedInput-root': {
-        '& fieldset': {
-            borderColor: theme.palette.grey[500], // Darker gray outline
-            '&:hover fieldset': {
-                borderColor: theme.palette.grey[600], // Slightly lighter on hover
-            },
-        },
-    },
-    '& .MuiInputLabel-root': { // Target the label
-        color: 'white', // Set label color to white
-    },
-    '& .MuiInputBase-input': {
-        color: 'white', // Set text color to white
-    },
-}));
+import styles from '../SettingsSideBar/sidebar.module.scss'
 
 
 const ChangePasswordForm = ({ formik, isLoading }) => {
@@ -39,58 +21,66 @@ const ChangePasswordForm = ({ formik, isLoading }) => {
             value={formik}
         >
 
-            <div className='font-bold text-2xl text-gray-300  mt-8 mb-3'>
-                Change Password
-            </div>
             <div
-                className='border border-[gray] sm:w-[450px] max-w-[450px] p-[10px] rounded mb-20'>
+                className=' mb-20'>
 
-                <div>
+                <label className={styles['input_label']}>
+                    Current Password
+                </label>
+                <div className={styles['inputWrapper']}>
                     <Field
-                        as={CustomTextField}
                         type="password" name="currentPassword" id="currentPassword"
                         fullWidth
                         label="Current Password"
                         margin="normal"
                         variant="outlined"
                     />
-                    {errors.currentPassword && touched.currentPassword && (
-                        <div className="text-[red] text-xs">{errors.currentPassword}</div>
-                    )}
+
                 </div>
-                <div>
+                {errors.currentPassword && touched.currentPassword && (
+                    <div className="text-[red] text-xs">{errors.currentPassword}</div>
+                )}
+                <label className={styles['input_label']}>
+                    New Password
+                </label>
+                <div className={styles['inputWrapper']}>
                     <Field
-                        as={CustomTextField}
                         name="newPassword" id="newPassword"
                         fullWidth
                         label="New Password"
                         margin="normal"
                         variant="outlined"
                         type="password" />
-                    {errors.newPassword && touched.newPassword && (
-                        <div className="text-[red] text-xs">{errors.newPassword}</div>
-                    )}
+
 
                 </div>
-                <div>
-                    <Field type="password" name="confirmPassword" id="confirmPassword"
+                {errors.newPassword && touched.newPassword && (
+                    <div className="text-[red] text-xs">{errors.newPassword}</div>
+                )}
+                <label className={styles['input_label']}>
+                    Confirm Password
+                </label>
+                <div className={styles['inputWrapper']}>
+                    <Field
+                        type="password" name="confirmPassword" id="confirmPassword"
                         fullWidth
                         label="Confirm Password"
                         margin="normal"
                         variant="outlined"
-                        as={CustomTextField}
                     />
-                    {errors.confirmPassword && touched.confirmPassword && (
-                        <div className="text-[red] text-xs">{errors.confirmPassword}</div>
-                    )}
+
                 </div>
+                {errors.confirmPassword && touched.confirmPassword && (
+                    <div className="text-[red] text-xs">{errors.confirmPassword}</div>
+                )}
+                {/* Divider */}
+                <div className="my-6 border-b border-[#4B4B4B]" />
                 <Button
-                    className="gradientButton"
+                    className={styles['app_button']}
                     onClick={formik.handleSubmit}
                     fullWidth
                     variant="contained"
                     color="primary"
-                    style={{ backgroundColor: "#1976d2" }}
                     // disabled={isSubmitting || loading}
                     sx={{ mt: 2, mb: 2 }}
                 >

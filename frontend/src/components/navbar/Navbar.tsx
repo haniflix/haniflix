@@ -19,6 +19,9 @@ import { useGetUserQuery } from "../../store/rtk-query/usersApi";
 
 import { SearchIcon, ProfileIcon, SettingsIcon, LogoutIcon } from '../../Assets/svgs/tsSvgs'
 
+import ChangeAvatarModal from "../ChangeAvatarModal";
+import SettingsSidebar from "../SettingsSideBar";
+
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const user = useAppSelector(selectUser);
@@ -37,6 +40,8 @@ const Navbar = () => {
 
   const { data: userData, isLoading: userDataLoading, refetch: refetchUserData } = useGetUserQuery(userId)
 
+  const [showSettings, setShowSettings] = React.useState<boolean>(false)
+  const [showChangeAvatar, setShowChangeAvatar] = React.useState<boolean>(false)
 
 
   const showSwal = (title, message, type) => {
@@ -68,8 +73,6 @@ const Navbar = () => {
   }
 
   const handleSearch = () => {
-    console.log('searchTerm ', searchTerm)
-
     navigate('/search', { state: { search: searchTerm } })
   }
 
@@ -150,7 +153,7 @@ const Navbar = () => {
           <Link className={styles["link"]} to="/search">
             <Search className="icon" />
           </Link>
-          <div className='text-xs' >{userData?.fullname}</div>
+          <div className='text-xs' >{userData?.username}</div>
 
           <div>
             <Notifications className={styles["icon"]} />
@@ -203,7 +206,9 @@ const Navbar = () => {
         </div>
         <div className={styles["right"]}>
           <div className={styles["inputWrapper"]}>
-            <div className=''>
+            <div
+              onClick={handleSearch}
+              className='cursor-pointer'>
               <SearchIcon className="icon" />
             </div>
             <input
@@ -213,14 +218,15 @@ const Navbar = () => {
               onKeyDown={handleKeyDown}
             />
           </div>
-          <span className="ml-[30px] whitespace-nowrap ">Hi, {userData?.fullname}</span>
+          <span className="ml-[30px] whitespace-nowrap ">Hi, {userData?.username}</span>
 
-          <Link className={
+          <div className={
             addClassNames(
               styles["profile"],
               'relative ml-[6px]'
             )
-          } to="/settings">
+          }
+          >
             <div className='bg-gray-300 rounded-[100px] h-[45px] w-[45px]'>
               <img
                 src={userData?.avatar ? makeImageUrl(userData?.avatar) : NavLogo1}
@@ -234,18 +240,25 @@ const Navbar = () => {
                 " !text-black "
               )
             }>
-              {/* <div className="h-2 bg-[#000000]"></div> */}
               <div className={styles['menu']}>
-                <span className='flex items-center justify-between'>
-                  <Link className="" to="/edit-profile">
+                <span
+                  onClick={() => {
+                    console.log('clicked')
+                    setShowChangeAvatar(true)
+                  }}
+                  className='flex items-center justify-between'>
+                  <div className="" >
                     Change your avatar
-                  </Link>
+                  </div>
                   <ProfileIcon />
                 </span>
-                <span className='flex items-center justify-between'>
-                  <Link className="" to="/settings">
+                <span
+                  onClick={() => setShowSettings(true)}
+                  className='flex items-center justify-between'>
+                  <div
+                    className="" >
                     Account Settings
-                  </Link>
+                  </div>
                   <SettingsIcon />
                 </span>
                 <div
@@ -259,7 +272,7 @@ const Navbar = () => {
                 </span>
               </div>
             </div>
-          </Link>
+          </div>
 
         </div>
       </div>
@@ -267,20 +280,30 @@ const Navbar = () => {
   }
 
   return (
-    <div className={isScrolled ?
-      addClassNames(
-        styles["navbar"],
-        styles["scrolled"]
-      )
-      : styles["navbar"]}
-    >
-      {renderDesktopMenu()}
-      {renderMobileMenuToggle()}
-      {
-        renderMobileMenuList()
-      }
-      {/* <GenresDropdown /> */}
-    </div >
+    <>
+      <div className={isScrolled ?
+        addClassNames(
+          styles["navbar"],
+          styles["scrolled"]
+        )
+        : styles["navbar"]}
+      >
+        {renderDesktopMenu()}
+        {renderMobileMenuToggle()}
+        {
+          renderMobileMenuList()
+        }
+        {/* <GenresDropdown /> */}
+      </div >
+      <SettingsSidebar
+        show={showSettings}
+        onClose={() => setShowSettings(false)}
+      />
+      <ChangeAvatarModal
+        show={showChangeAvatar}
+        onClose={() => setShowChangeAvatar(false)}
+      />
+    </>
   );
 };
 

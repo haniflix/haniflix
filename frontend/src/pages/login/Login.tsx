@@ -66,15 +66,7 @@ export default function Login() {
 
     if (res?.data) {
       console.log('Login successful')
-      // Swal.fire({
-      //   title: "",
-      //   text: "Login successful. Redirecting..",
-      //   icon: "success",
-      //   timer: 1500,
-      // }).then(function () {
-      //   // window.location.href = "/";
-      //   navigate('/')
-      // });
+
     }
 
     if (!res?.data) {

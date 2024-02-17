@@ -49,6 +49,12 @@ export const usersApi = authApi.injectEndpoints({
         method: "DELETE",
       }),
     }),
+    cancelSub: builder.mutation({
+      query: (id: number | string) => ({
+        url: `users/${id}/cancel-sub`,
+        method: "POST",
+      }),
+    }),
   }),
   overrideExisting: false,
 });
@@ -60,4 +66,5 @@ export const {
   useCreateUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
+  useCancelSubMutation,
 } = usersApi;

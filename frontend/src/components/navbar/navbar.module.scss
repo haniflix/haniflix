@@ -120,8 +120,12 @@
                         position: absolute;
                         right:0;
                         width: 260px;
-                        // margin-top:8px;
                         background-color: #00000033;
+
+                        >span{
+                            margin-bottom: 13px;
+                            height: 35px;
+                        }
                         }
 
                         span{

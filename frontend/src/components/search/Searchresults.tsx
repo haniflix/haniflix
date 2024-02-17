@@ -64,13 +64,55 @@ const Searchresults = () => {
     setSearch(searchString);
   };
 
-  const filteredMovies = React.useMemo(() => {
+  const { filteredMovies, moreToExplore } = React.useMemo(() => {
     if (search?.trim() == '') return []
 
-    return moviesData?.movies?.filter((movie) =>
-      search.split(" ").every((word) => movie.title.toLowerCase().includes(word))
-    );
+    let filtered = moviesData?.movies
+
+    //render only first 4 results
+    // Render only first 4 results
+    const firstFour = filtered.slice(0, 4);
+    const moreToExplore = filtered.slice(4, 8);
+
+    return {
+      filteredMovies: firstFour,
+      moreToExplore: moreToExplore
+    }
   }, [search, moviesData])
+
+  const renderMoreToExplore = () => {
+    if (!moreToExplore || moreToExplore?.length === 0) return;
+
+    return (
+      <div className="flex items-center gap-x-[8px] gap-y-[5px] flex-wrap mt-5">
+        <div className="text-[20px] text-[#B8B4B4] font-[500]">
+          More to explore:
+        </div>
+        {moreToExplore?.map((movie) => (
+          <div
+            className="cursor-pointer h-[40px] px-[13px] flex items-center bg-[#FFFFFF1A] rounded-[50px] border border-[#FFFFFF1A]"
+            key={movie.id}
+            onClick={() => {
+              setSearch(movie.title)
+            }}
+          >
+            {movie.title.split(" ").map((word, index) => (
+              <React.Fragment key={index}>
+                {index > 0 && <span className='w-[3.4px]' />} {/* Add space between words */}
+                {search.split(" ").includes(word.toLowerCase()) ? (
+                  <span className="font-[600]">{word}</span>
+                ) : (
+                  <span className="font-[400]">{word}</span>
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+
 
   return (
     <Container className={classes.root}>
@@ -84,7 +126,7 @@ const Searchresults = () => {
           onChange={handleSearch}
         />
       </div>
-
+      {renderMoreToExplore()}
       {filteredMovies?.length === 0 && search !== "" && (
         <h1 className='text-white'>No Movies Found...</h1>
       )}
