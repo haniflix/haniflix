@@ -84,7 +84,7 @@ const Searchresults = () => {
     if (!moreToExplore || moreToExplore?.length === 0) return;
 
     return (
-      <div className="flex items-center gap-x-[8px] gap-y-[5px] flex-wrap mt-5">
+      <div className="flex items-center space-x-[8px] space-y-[5px] flex-wrap mt-5">
         <div className="text-[20px] text-[#B8B4B4] font-[500]">
           More to explore:
         </div>

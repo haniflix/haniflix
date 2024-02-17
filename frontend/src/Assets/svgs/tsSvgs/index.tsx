@@ -8,6 +8,8 @@ import SettingsIcon from './SettingsIcon'
 import LogoutIcon from './LogoutIcon'
 import HeartIconFilled from './HeartIconFilled'
 import CloseIcon from './CloseIcon'
+import ChevronDown from './ChevronDown'
+import TranslateIcon from './TranslateIcon'
 
 export {
     SearchIcon,
@@ -19,5 +21,7 @@ export {
     SettingsIcon,
     LogoutIcon,
     HeartIconFilled,
-    CloseIcon
+    CloseIcon,
+    ChevronDown,
+    TranslateIcon
 }

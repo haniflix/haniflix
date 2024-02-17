@@ -153,7 +153,7 @@ export default function MovieListItem({
         }
 
         return (
-            <div className='flex text-[9px] flex-wrap gap-[3px]'>
+            <div className='flex text-[9px] flex-wrap space-x-[3px]'>
                 {genreTextArr?.map((text, index) => {
                     return <div key={index} className='flex'>
                         <div className='capitalize'>{text}</div>
@@ -175,7 +175,7 @@ export default function MovieListItem({
 
         //render play instead
         return (
-            <div className="side-buttons absolute right-3 top-0 bottom-0 z-[1000] flex flex-col gap-1 justify-end pb-[17px]">
+            <div className="side-buttons absolute right-3 top-0 bottom-0 z-[1000] flex flex-col space-x-1 justify-end pb-[17px]">
                 <Link
                     to={`/movie/${movie._id}`}
                     style={{ textDecoration: "none", color: "#fff" }}
@@ -194,7 +194,7 @@ export default function MovieListItem({
 
         //like buttons
         return (
-            <div className="side-buttons absolute right-3 top-0 bottom-0 z-[1000] flex flex-col gap-1 justify-end pb-[17px]">
+            <div className="side-buttons absolute right-3 top-0 bottom-0 z-[1000] flex flex-col space-x-1 justify-end pb-[17px]">
                 <div
                     onClick={() => {
                         onLikeMovie()
@@ -328,7 +328,7 @@ export default function MovieListItem({
 
                                         className={
                                             addClassNames(
-                                                'flex items-center gap-[5px]',
+                                                'flex items-center space-x-[5px]',
                                                 layoutType == 'grid' ? '!hidden' : ""
                                             )
                                         }>

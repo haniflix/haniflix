@@ -177,13 +177,13 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
     " backdrop-blur-md",
     'bg-[#ffffff29] rounded-[30px] text-sm !border !border-[#FFFFFF1A]',
     'h-[45px] ',
-    'flex gap-1 !text-white rounded-[8px] height-[55px] flex items-center justify-center'
+    'flex space-x-1 !text-white rounded-[8px] height-[55px] flex items-center justify-center'
   )
 
 
   const renderLikeContainer = () => {
     return (
-      <div className="flex gap-[4px]">
+      <div className="flex space-x-[4px]">
         <button
           onClick={onLikeMovie}
           className={
@@ -236,7 +236,7 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
 
       return (
         <div
-          className='flex flex-wrap gap-3 mt-2'
+          className='flex flex-wrap space-x-3 mt-2'
         >
           {genreTextArr?.map((genreText) => {
             return (
@@ -282,7 +282,7 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
 
     return (
       <div
-        className='flex flex-wrap  gap-3 mt-2'
+        className='flex flex-wrap space-x-3 mt-2'
       >
         {metaInfo?.map((info) => {
           return (
@@ -348,10 +348,10 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
           <span className={styles["desc"]} >
             {trimmedDesc}
           </span>
-          <div className="flex flex-wrap  gap-3">
+          <div className="flex flex-wrap  space-x-3">
             <div className={
               addClassNames(
-                styles["buttons"], ' !gap-[8px] '
+                styles["buttons"], ' !space-x-[8px] '
               )
             }>
               <Link

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Swal from "sweetalert2";
-import Logo from "../../Assets/Images/Nav-logo.png";
+import Logo from "../../Assets/Images/Logo.png";
 import { Link } from "react-router-dom";
 // import { login } from "../../context/login/apiCalls";
 import landingBg from "../../Assets/Images/landing-bg.png";
@@ -131,7 +131,10 @@ export default function Login() {
             styles["intro-section"]
           )
         }>
-          <h2 className="text-white font-[500] m-[auto] w-[fit-content]" >Sign In</h2>
+          <h2 className="text-white font-[500] text-[25px] m-[auto] w-[fit-content]" >Sign In</h2>
+          <div
+            className='h-[1px] bg-[#4B4B4B] mt-4 mb-3'
+          />
           <div className={styles['inputWrapper']}>
             <input
               type="email"
@@ -162,19 +165,27 @@ export default function Login() {
           </div>
 
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div className='flex items-center gap-2 w-[fit-content]'>
+            <div className={
+              addClassNames(
+                'flex items-center gap-2 w-[fit-content]',
+                styles['rememberMe_wrapper']
+              )
+            }>
               <input
                 type="checkbox"
                 name="rememberMe"
                 className={
-                  "!h-[20px] !w-[20px] rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  addClassNames(
+                    "!h-[20px] !w-[20px] rounded border border-white text-white shadow-sm",
+                  )
                 }
                 checked={rememberMe}
                 onClick={() => setRememberMe(!rememberMe)}
                 onChange={() => { }}
               />
-              <label htmlFor="rememberMe" className="text-sm text-gray-600">Remember Me</label>
+              <label htmlFor="rememberMe" className="text-sm text-white">Remember Me</label>
             </div>
+
             <div>
               <span style={{ color: "#222" }}>
                 <Link className={styles["link"]} to={{ pathname: "/forgot-pass" }}>

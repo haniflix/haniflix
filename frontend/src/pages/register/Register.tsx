@@ -99,7 +99,11 @@ const Register = () => {
 
       <div className={styles["section"]}>
         <div className={styles["intro-section"]}>
-          <h2>Sign Up</h2>
+
+          <h2 className="text-white font-[500] text-[25px] m-[auto] w-[fit-content]" >Sign Up</h2>
+          <div
+            className='h-[1px] bg-[#4B4B4B] mt-4 mb-3'
+          />
           <form
             onSubmit={handleSubmit}
             style={{ maxWidth: "450px", width: "100%" }}

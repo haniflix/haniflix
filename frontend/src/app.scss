@@ -27,26 +27,11 @@ body {
 
 .gradientButton {
     height: 40px;
+    padding: 8px;
     // width: 200px;
     // margin: 5px auto 10px auto;
     border-radius: 5px;
-    background: rgb(0, 255, 177);
-    background: -moz-linear-gradient(
-        90deg,
-        rgba(0, 255, 177, 1) 36%,
-        rgba(0, 212, 255, 1) 100%
-    );
-    background: -webkit-linear-gradient(
-        90deg,
-        rgba(0, 255, 177, 1) 36%,
-        rgba(0, 212, 255, 1) 100%
-    );
-    background: linear-gradient(
-        90deg,
-        rgba(0, 255, 177, 1) 36%,
-        rgba(0, 212, 255, 1) 100%
-    );
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#00ffb1",endColorstr="#00d4ff",GradientType=1);
+    background-color: rgba(255, 255, 255, 0.2);
     color: #ffffff;
     border: none;
     font-size: 18px;

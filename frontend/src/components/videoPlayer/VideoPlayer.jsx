@@ -27,6 +27,13 @@ import { useNavigate } from "react-router-dom";
 
 import CustomReactPlayer from "./ReactPlayer";
 
+import {
+  HeartIconFilled,
+  HeartIcon,
+  ThumbsDownIcon,
+  ThumbsUpIcon,
+} from "../../Assets/svgs/tsSvgs";
+
 const VideoPlayer = ({ videoId, videoUrl }) => {
   const [playtime, setPlaytime] = useState(0);
   const [seekTime, setSeekTime] = useState(0);
@@ -237,12 +244,12 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
           ) : (
             <>
               {movieData?.isInDefaultList ? (
-                <div className="icon-circle">
-                  <Check className="" />
+                <div className="scale-[0.75]">
+                  <HeartIconFilled />
                 </div>
               ) : (
-                <div className="icon-circle">
-                  <Add className=" " />
+                <div className="scale-75">
+                  <HeartIcon />
                 </div>
               )}
             </>
@@ -262,12 +269,12 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
           ) : (
             <>
               {movieData?.currentUserLiked ? (
-                <div className="icon-circle">
+                <div className="icon-circle mr-1">
                   <ThumbUp className="" />
                 </div>
               ) : (
-                <div className="icon-circle">
-                  <ThumbUpAltOutlined className="" />
+                <div className="scale-[0.75]">
+                  <ThumbsUpIcon className="" />
                 </div>
               )}
             </>
@@ -284,12 +291,12 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
           ) : (
             <>
               {movieData?.currentUserDisliked ? (
-                <div className="icon-circle">
+                <div className="icon-circle mr-1">
                   <ThumbDown className="" />
                 </div>
               ) : (
-                <div className="icon-circle">
-                  <ThumbDownOutlined className=" " />
+                <div className="scale-[0.75]">
+                  <ThumbsDownIcon className=" " />
                 </div>
               )}
             </>

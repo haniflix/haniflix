@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import Swal from "sweetalert2";
-import Logo from "../../Assets/Images/Nav-logo.png";
+import Logo from "../../Assets/Images/Logo.png";
 import "../../Assets/css/styles.scss";
 import { forgot } from "../../context/forgot/apiCalls";
 import { Link } from "react-router-dom";
@@ -106,11 +106,14 @@ export default function ForgotPassword() {
 
       <div className={styles["section"]}>
         <div className={styles["intro-section"]}>
-          <h2 className="text-white text-center">Forgot Password?</h2>
+          <h2 className="text-white font-[500] text-[25px] m-[auto] w-[fit-content]">
+            Forgot Password?
+          </h2>
+          <div className="h-[1px] bg-[#4B4B4B] mt-4 mb-3" />
           <div className={styles["inputWrapper"]}>
             <input
               type="email"
-              placeholder="Email"
+              placeholder="Email Address"
               ref={emailRef}
               onKeyDown={handleKeyDown}
             />
@@ -125,7 +128,7 @@ export default function ForgotPassword() {
           <br />
           <div className="flex items-center justify-center">
             <Link className="link " to={{ pathname: "/login" }}>
-              Remember your password? <span className="underline">Sign in</span>
+              Remember password? <span className="underline">Sign in</span>
             </Link>
           </div>
         </div>

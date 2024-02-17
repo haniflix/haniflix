@@ -8,6 +8,8 @@ import { useGetUserQuery, useUpdateUserMutation } from '../../store/rtk-query/us
 import styles from './change_avatar.module.scss'
 import { selectUser } from '../../store/reducers/auth';
 import { useAppSelector } from '../../store/hooks';
+import CircularProgress from '@mui/material-next/CircularProgress';
+
 
 import Swal from "sweetalert2";
 
@@ -37,6 +39,7 @@ const ChangeAvatarModal = ({ show, onClose }) => {
         const handleEscape = (event) => {
             if (event.code === 'Escape') {
                 onClose();
+                setSelectedAvatar(undefined)
             }
         };
 
@@ -62,6 +65,7 @@ const ChangeAvatarModal = ({ show, onClose }) => {
         })
 
         if (res?.data) {
+            console.log('swal fired')
             Swal.fire({
                 title: "",
                 text: "Profile updated",
@@ -80,17 +84,18 @@ const ChangeAvatarModal = ({ show, onClose }) => {
 
     const handleClose = () => {
         onClose(); // Pass closure to ensure correct state update
+        setSelectedAvatar(undefined)
     };
 
     return (
         <Transition show={show}>
             <div className={
                 addClassNames(
-                    "fixed inset-0 overflow-hidden z-[1000] bg-transparent ",
+                    "fixed top-0 right-0 left-0 bottom-0 overflow-hidden z-[1000] bg-transparent border",
                     "flex items-center justify-center"
                 )
             }>
-                <div className="absolute inset-0 backdrop-filter backdrop-brightness-[0.3]" onClick={handleClose}></div>
+                <div className="absolute top-0 right-0 left-0 bottom-0 backdrop-filter backdrop-brightness-[0.3]" onClick={handleClose}></div>
 
                 <Transition.Child
                     enter="transition duration-150 ease-out"
@@ -149,7 +154,7 @@ const ChangeAvatarModal = ({ show, onClose }) => {
                                                                     '!h-[33px] !w-[70px] !text-[12px] '
                                                                 )
                                                             }>
-                                                            Select
+                                                            {updateUserState.isLoading ? <div className='text-white'><CircularProgress color="inherit" size={24} /></div> : "Select"}
                                                         </div>
                                                     </div>
                                                     : undefined

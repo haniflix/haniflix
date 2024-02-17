@@ -4,6 +4,46 @@
     background-attachment: fixed;
     color: white;
 
+    .rememberMe_wrapper {
+        /* Remove default input styling */
+        input[type="checkbox"] {
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
+          background-color: transparent;
+          border: none;
+          padding: 0;
+          margin: 0;
+        }
+
+        input[type="checkbox"]:checked {
+          /* Add checkmark for checked state */
+          background: url('/images/checkmark.svg');
+          background-repeat: no-repeat;
+          background-size: 10px;
+          background-position-x: 5px;
+          background-position-y: 5px;
+        }
+
+        /* Style the checkbox container */
+        input[type="checkbox"]:after {
+          content: "";
+          display: block;
+          width: 20px;
+          height: 20px;
+          border: 2px solid #fff;
+          border-radius: 6px;
+          box-sizing: border-box;
+          cursor: pointer;
+        }
+
+        /* Style the checkbox on focus */
+        input[type="checkbox"]:focus:after {
+          outline: 1.5px solid #fff;
+        }
+      }
+
+
     .top{
         position: fixed;
         top: 10px;

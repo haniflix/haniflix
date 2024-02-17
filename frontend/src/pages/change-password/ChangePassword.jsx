@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useState } from "react";
 import Swal from "sweetalert2";
-import Logo from "../../Assets/Images/Nav-logo.png";
+import Logo from "../../Assets/Images/Logo.png";
 import "../../Assets/css/styles.scss";
 import styles from "./change.module.scss";
 import { change } from "../../context/forgot/changePass";
