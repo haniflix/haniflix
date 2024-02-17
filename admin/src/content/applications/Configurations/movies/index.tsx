@@ -181,7 +181,7 @@ function Movies() {
     return (
       <div className='w-full px-7 mt-2 flex gap-4 items-start'>
         <Button variant="contained" onClick={onScrapeAllMovies}>
-          Scrape All
+          Pull All
         </Button>
         <div className='text-sm'>
           {
@@ -243,7 +243,7 @@ function Movies() {
           <div className='px-7 flex flex-wrap sm:flex-nowrap w-full '>
             <div className='flex gap-2'>
               <Button variant="contained" onClick={() => setOpenAddModal(true)}>
-                Add movie
+                Add Movie
               </Button>
 
             </div>

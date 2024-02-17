@@ -72,7 +72,7 @@ const SubMenuWrapper = styled(Box)(
             color: ${theme.palette.primary.contrastText};
           }
         }
-    
+
         .MuiButton-root {
           display: flex;
           color: ${theme.colors.alpha.trueWhite[70]};
@@ -96,7 +96,7 @@ const SubMenuWrapper = styled(Box)(
             font-size: ${theme.typography.pxToRem(20)};
             margin-right: ${theme.spacing(1)};
           }
-          
+
           .MuiButton-endIcon {
             color: ${theme.colors.alpha.trueWhite[50]};
             margin-left: auto;
@@ -147,9 +147,9 @@ const SubMenuWrapper = styled(Box)(
                 background: ${theme.colors.alpha.trueWhite[100]};
                 opacity: 0;
                 transition: ${theme.transitions.create([
-                  'transform',
-                  'opacity'
-                ])};
+    'transform',
+    'opacity'
+  ])};
                 width: 6px;
                 height: 6px;
                 transform: scale(0);
@@ -273,6 +273,17 @@ function SidebarMenu() {
                   startIcon={<TableChartTwoToneIcon />}
                 >
                   Users
+                </Button>
+              </ListItem>
+              <ListItem component="div">
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
+                  to="/configurations/avatars"
+                  startIcon={<TableChartTwoToneIcon />}
+                >
+                  Manage Avatars
                 </Button>
               </ListItem>
             </List>

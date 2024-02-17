@@ -58,7 +58,7 @@ const Tooltips = Loader(
   lazy(() => import('src/content/pages/Components/Tooltips'))
 );
 const Avatars = Loader(
-  lazy(() => import('src/content/pages/Components/Avatars'))
+  lazy(() => import('src/content/pages/Avatar/Avatars'))
 );
 const Cards = Loader(lazy(() => import('src/content/pages/Components/Cards')));
 const Forms = Loader(lazy(() => import('src/content/pages/Components/Forms')));
@@ -169,7 +169,11 @@ const routes: RouteObject[] = [
       {
         path: 'lists',
         element: <Lists />
-      }
+      },
+      {
+        path: 'avatars',
+        element: <Avatars />
+      },
     ]
   }
 
