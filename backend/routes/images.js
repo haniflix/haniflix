@@ -11,7 +11,7 @@ const { upload, compressAvatar } = require("../middleware/imageMiddlewares");
 router.post(
   "/upload",
   verify,
-  upload.single("image"),
+  upload.array("images"),
   compressAvatar,
   imageController.uploadFile
 );

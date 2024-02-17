@@ -11,6 +11,9 @@ router.put("/:id", verify, userController.updateUser);
 //DELETE
 router.delete("/:id", verify, userController.deleteUser);
 
+//CANCEL SUBSCRIPTION
+router.post("/:id/cancel-sub", verify, userController.cancelSubscription);
+
 //GET
 router.get("/find/:id", verify, userController.getUserById);
 

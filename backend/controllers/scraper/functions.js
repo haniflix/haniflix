@@ -28,7 +28,10 @@ async function scrapeMovieDetails({ _page, url }) {
     await page.setUserAgent(
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36"
     );
-    await page.goto(url, { waitUntil: "domcontentloaded" });
+    await page.setViewport({ width: 1366, height: 768 });
+    await page.goto(url, {
+      waitUntil: ["domcontentloaded", "networkidle2", "load"],
+    });
 
     //
   } else if (_page instanceof puppeteer.Page) {
@@ -36,6 +39,18 @@ async function scrapeMovieDetails({ _page, url }) {
   }
 
   try {
+    //wait for large image
+    const waitLargeImg = async () => {
+      await page.waitForSelector("picture.css-cxmmyk.edbh37f0 link", {
+        timeout: 60 * 1000,
+      });
+    };
+
+    await Promise.race([
+      waitLargeImg(),
+      new Promise((resolve) => setTimeout(resolve, 15 * 1000)),
+    ]);
+
     let movieDetails = await page.$eval("body", async (body) => {
       const yearOfRelease = body.querySelector(
         ".css-n6mjxq.e1r3wknn10"
@@ -72,13 +87,81 @@ async function scrapeMovieDetails({ _page, url }) {
       //last item is not a genre
       genre = genre?.slice(0, -1);
 
-      const imageUrl = body.querySelector(".css-18pmxw3.edbh37f1")?.src;
+      // const imageUrl = body.querySelector(".css-18pmxw3.edbh37f1")?.src;
+
+      let sourceElements = body?.querySelectorAll(
+        "picture.css-cxmmyk.edbh37f0 source"
+      );
+
+      //set imageurl with smallest image
+      let imageUrl = undefined;
+      let largestPosterSize = 0;
+      let sourceUrls;
+      let sourceSrcSets = [];
+
+      sourceElements.forEach((sourceElement) => {
+        const srcset = sourceElement?.getAttribute("srcset");
+        sourceSrcSets.push(srcset);
+        sourceUrls = srcset
+          ?.split(",")
+          .filter((item) => item?.includes("poster"))
+          .map((item) => {
+            const [url, size] = item?.trim()?.split(" ");
+            return { url, size: parseInt(size) || 0 };
+          });
+
+        //for background image
+        sourceUrls?.forEach(({ url, size }) => {
+          if (size > largestPosterSize) {
+            largestPosterSize = size;
+            imageUrl = url;
+          }
+        });
+      });
+
+      let linkSourceElements = body?.querySelectorAll(
+        "picture.css-cxmmyk.edbh37f0 link"
+      );
+
+      let largestSize = 0;
+      let largestImageUrl = undefined;
+      let urls;
+      let srcSets = [];
+
+      linkSourceElements.forEach((sourceElement) => {
+        const srcset = sourceElement?.getAttribute("imagesrcset");
+        urls = srcset?.split(",").map((item) => {
+          const [url, size] = item?.trim()?.split(" ");
+          return { url, size: parseInt(size) || 0 };
+        });
+
+        //for background image
+        urls?.forEach(({ url, size }) => {
+          if (size > largestSize) {
+            largestSize = size;
+            largestImageUrl = url;
+          }
+        });
+      });
+
+      if (!imageUrl) {
+        imageUrl = body.querySelector(".css-18pmxw3.edbh37f1")?.src;
+      }
+
+      if (!largestImageUrl) {
+        largestImageUrl = imageUrl?.replace("poster-185", "backdrop-1280");
+      }
 
       return {
         title,
         // trailerUrl,
+        // srcSets,
+        // urls,
+        // sourceUrls,
+        // sourceSrcSets,
         description,
         imageUrl,
+        largestImageUrl,
         ageRating,
         genre,
         yearOfRelease,
@@ -160,7 +243,7 @@ async function searchAndScrapeMovies(movieInfos, io, totalCount, currentCount) {
     await page.setUserAgent(
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36"
     );
-    await page.setViewport({ width: 1066, height: 768 });
+    await page.setViewport({ width: 1366, height: 768 });
     await page.goto(SEARCH_PAGE_URL, {
       waitUntil: ["domcontentloaded", "networkidle2", "load"],
     });
@@ -251,7 +334,7 @@ async function searchAndScrapeMovies(movieInfos, io, totalCount, currentCount) {
               title: addedMovie?.title,
               desc: addedMovie?.description,
               img: addedMovie?.imageUrl,
-              imgTitle: addedMovie?.imageUrl,
+              imgTitle: addedMovie?.largestImageUrl || addedMovie?.imageUrl,
               ageRating: addedMovie?.ageRating,
               duration: addedMovie?.duration,
               year: addedMovie?.yearOfRelease,

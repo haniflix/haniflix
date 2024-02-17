@@ -16,9 +16,20 @@ const UserSchema = new mongoose.Schema(
     otp: { type: String, default: "" },
     lists: [{ type: mongoose.Schema.Types.ObjectId, ref: "List" }],
     // default list is user's Watch list
-    defaultList: { type: mongoose.Schema.Types.ObjectId, ref: "List" }, // Id of user's default list
+    defaultList: { type: mongoose.Schema.Types.ObjectId, ref: "List" }, // Id of user's default list,
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
+
+// pre hook to filter out soft-deleted users
+UserSchema.pre(/^find/, function (next) {
+  // Exclude soft-deleted users from queries
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
 
 module.exports = mongoose.model("User", UserSchema);

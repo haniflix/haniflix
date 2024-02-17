@@ -5,43 +5,51 @@ const uploadFile = async (req, res) => {
   try {
     const NODE_ENV = process.env.NODE_ENV;
     // Handle file upload logic here
-    const file = req.file;
+
     const type = req.body.type; // Access 'type' sent as FormData
 
-    if (!file || !type) {
-      return res.status(400).json({ error: "Missing file or image type" });
+    const files = req.files; // Access uploaded files
+
+    console.log("files ", files);
+
+    if (!files || !type) {
+      return res.status(400).json({ error: "Missing files or image type" });
     }
 
-    let newImage;
+    // Loop through each uploaded file
+    for (const file of files) {
+      let newImage;
 
-    if (type == "avatar") {
-      if (!req.user.isAdmin) {
-        return res.status(401).send({
-          message: "Unauthorized call",
+      if (type == "avatar") {
+        if (!req.user.isAdmin) {
+          return res.status(401).send({
+            message: "Unauthorized call",
+          });
+        }
+
+        newImage = new Avatar({
+          filename: file.filename,
+          mimetype: file.mimetype,
+          size: file.size,
+          environment: NODE_ENV,
+        });
+      } else {
+        // Create a new image document in MongoDB
+        newImage = new Image({
+          filename: file.filename,
+          mimetype: file.mimetype,
+          size: file.size,
+          environment: NODE_ENV,
         });
       }
 
-      newImage = new Avatar({
-        filename: file.filename,
-        mimetype: file.mimetype,
-        size: file.size,
-        environment: NODE_ENV,
-      });
-    } else {
-      // Create a new image document in MongoDB
-      newImage = new Image({
-        filename: file.filename,
-        mimetype: file.mimetype,
-        size: file.size,
-        environment: NODE_ENV,
-      });
+      await newImage.save();
     }
 
-    await newImage.save();
-    res.json({ message: "Image uploaded successfully", newImage });
+    res.json({ message: "Images uploaded successfully" });
   } catch (error) {
     res.status(500).send({
-      message: "error uploading image",
+      message: "Error uploading images",
       error,
     });
   }

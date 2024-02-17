@@ -8,8 +8,8 @@ const updateUserDetails = async (req, res) => {
         req.params.id,
         {
           $set: {
-            fullname: req.body.name,
-            username: req.body.email,
+            username: req.body.username,
+            // username: req.body.email,
             email: req.body.email,
           },
         },

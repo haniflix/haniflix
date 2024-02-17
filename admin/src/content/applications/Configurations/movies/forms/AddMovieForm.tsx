@@ -46,6 +46,7 @@ interface MovieDetails {
   description: string;
   trailerUrl: string;
   imageUrl: string;
+  largestImageUrl: string;
   ageRating: string;
   genre: string;
   yearOfRelease: string;
@@ -58,6 +59,7 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
   const [videoLink, setVideoLink] = useState<string>('');
   const [trailerLink, setTrailerLink] = useState<string>('');
   const [imageLink, setImageLink] = useState<string>('');
+  const [largeImageLink, setLargeImageLink] = useState<string>('');
   const [year, setYear] = useState<string>('');
   const [ageRating, setAgeRating] = useState<string>('');
   const [duration, setDuration] = useState<string>('');
@@ -88,6 +90,7 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
     setDescription('');
     setVideoLink('');
     setImageLink('');
+    setLargeImageLink('');
     setYear('');
     setTrailerLink('');
     setGenres([]);
@@ -101,6 +104,7 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
     setDescription(movie.desc);
     setVideoLink(movie.video);
     setImageLink(movie.img);
+    setLargeImageLink(movie.imgTitle);
     setYear(movie.year);
     setTrailerLink(movie.trailer);
 
@@ -129,7 +133,7 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
       desc: description,
       video: videoLink,
       img: imageLink,
-      imgTitle: imageLink,
+      imgTitle: largeImageLink,
       trailer: trailerLink,
       year,
       genre: genreObjs,
@@ -246,6 +250,8 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
       setTitle(newMovieDetails.title);
       setDescription(newMovieDetails.description);
       setImageLink(newMovieDetails.imageUrl);
+      console.log('newMovieDetails.largestImageUrl ', newMovieDetails.largestImageUrl)
+      setLargeImageLink(newMovieDetails.largestImageUrl);
       setYear(newMovieDetails.yearOfRelease);
 
       setScrapeUrl('')
@@ -371,6 +377,14 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
           value={imageLink}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             setImageLink(event.target.value);
+          }}
+        />
+        <TextField
+          label="Large Image link"
+          fullWidth
+          value={largeImageLink}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            setLargeImageLink(event.target.value);
           }}
         />
         <TextField

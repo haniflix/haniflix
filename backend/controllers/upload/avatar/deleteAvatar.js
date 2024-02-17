@@ -15,10 +15,10 @@ const deleteAvatar = async (req, res) => {
     // Delete the file from the server
     const filePath = path.join(
       __dirname,
-      "uploads",
-      "avatars",
+      "../../../uploads/avatars",
       avatar.filename
     );
+
     fs.unlinkSync(filePath);
 
     // Delete the avatar document from the database

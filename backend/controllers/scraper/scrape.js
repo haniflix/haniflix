@@ -6,7 +6,7 @@ const scrapeMovieFromUrl = async (req, res) => {
     const movieUrl = req.body.url;
 
     const movieDetails = await scrapeMovieDetails({ url: movieUrl });
-
+    console.log("movieDetails in controller", movieDetails);
     res.status(200).json(movieDetails);
   } catch (err) {
     console.log("error ", err);

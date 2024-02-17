@@ -7,6 +7,7 @@ const updateUser = require("./updateUser");
 const getStats = require("./getStats");
 const updatePassword = require("./updatePassword");
 const updateUserDetails = require("./updateUserDetails");
+const cancelSubscription = require("./cancelSubscription");
 
 module.exports = {
   getUserById,
@@ -17,4 +18,5 @@ module.exports = {
   getStats,
   updatePassword,
   updateUserDetails,
+  cancelSubscription,
 };
