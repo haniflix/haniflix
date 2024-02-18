@@ -15,6 +15,7 @@ USER root
 # Add 'node' and 'pptruser' users to 'www-data' group
 RUN adduser node www-data && adduser pptruser www-data
 
+
 # Create directories
 RUN mkdir -p /usr/movies /usr/app/uploads/avatars
 
