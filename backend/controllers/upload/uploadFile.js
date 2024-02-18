@@ -10,8 +10,6 @@ const uploadFile = async (req, res) => {
 
     const files = req.files; // Access uploaded files
 
-    console.log("files ", files);
-
     if (!files || !type) {
       return res.status(400).json({ error: "Missing files or image type" });
     }

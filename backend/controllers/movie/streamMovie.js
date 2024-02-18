@@ -40,19 +40,14 @@ const streamMovie = async (req, res) => {
     const fileSize = stat.size;
 
     const range = req.headers.range;
-    console.log("range ", range);
-    // console.log("stat ", stat);
-    console.log("fileSize ", fileSize);
+    // console.log("range ", range);
+
     if (range) {
       const parts = range.replace(/bytes=/, "").split("-");
       const start = parseInt(parts[0], 10);
       const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
       const chunksize = end - start + 1;
       const file = fs.createReadStream(videoPath, { start, end });
-
-      console.log("start ", start);
-      console.log("end ", end);
-      console.log("chunksize ", chunksize);
 
       res.writeHead(206, {
         "Content-Range": `bytes ${start}-${end}/${fileSize}`,

@@ -1,9 +1,10 @@
 .welcomePage {
-    //background-size: cover;
-    background:url('/images/welcomePageBg1.png') no-repeat center center;
-    background-size: cover;
+    background:url('/images/welcomePageBg1.png') repeat-y center center;
+    background-size: contain;
     background-attachment: fixed;
-    min-height: 100vh;
+   // min-height: 100vh;
+
+
 
     .footer-wrapper{
         background:url('/images/accordionBg.png') no-repeat center center;

@@ -25,7 +25,8 @@ import moviePlaceHolderSvg from '../../Assets/svgs/moviePlaceholder.svg'
 import { useGetGenresQuery } from "../../store/rtk-query/genresApi";
 
 import {
-    PlayIcon
+    PlayIcon,
+    DolbyLogo
 } from '../../Assets/svgs/tsSvgs'
 
 
@@ -155,12 +156,12 @@ export default function MovieListItem({
         return (
             <div className='flex text-[9px] flex-wrap space-x-[3px]'>
                 {genreTextArr?.map((text, index) => {
-                    return <div key={index} className='flex'>
+                    return <div key={index} className='flex items-center'>
                         <div className='capitalize'>{text}</div>
-                        <div className='ml-[3px]'>
+                        <div className='ml-[3px] font-bold'>
                             {(
                                 index + 1 !== genreTextArr.length
-                            ) ? '.' : ''}
+                            ) ? <div className="h-[2px] w-[2px] bg-[#fff] rounded-lg" /> : ''}
                         </div>
                     </div>
                 })
@@ -351,6 +352,9 @@ export default function MovieListItem({
                                             </>
                                             : undefined}
 
+                                        <div className="">
+                                            <DolbyLogo />
+                                        </div>
                                         <div className='font-[600]'>
                                             4K
                                         </div>

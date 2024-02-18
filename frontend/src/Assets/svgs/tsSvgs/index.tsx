@@ -10,6 +10,7 @@ import HeartIconFilled from './HeartIconFilled'
 import CloseIcon from './CloseIcon'
 import ChevronDown from './ChevronDown'
 import TranslateIcon from './TranslateIcon'
+import DolbyLogo from './DolbyLogo'
 
 export {
     SearchIcon,
@@ -23,5 +24,6 @@ export {
     HeartIconFilled,
     CloseIcon,
     ChevronDown,
-    TranslateIcon
+    TranslateIcon,
+    DolbyLogo
 }
