@@ -15,14 +15,18 @@ RUN npm install --include=optional sharp
 
 FROM ghcr.io/puppeteer/puppeteer:latest
 
-# Switch back to the default user provided by the Puppeteer image
-USER pptruser
+
+USER root
 
 # Add 'node' and 'pptruser' users to 'www-data' group
 RUN adduser node www-data && adduser pptruser www-data
 
 # Adjust directory permissions
 RUN chmod g+w /usr/app/uploads
+
+# Switch back to the default user provided by the Puppeteer image
+USER pptruser
+
 
 WORKDIR /usr/app
 
