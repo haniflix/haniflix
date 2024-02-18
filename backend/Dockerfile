@@ -1,9 +1,11 @@
+ARG PPTRUSER_GID=999  # Default value, can be overridden during build
+
 FROM node:21-alpine3.18 AS builder
 
 # Create directories
 RUN mkdir -p /usr/movies /usr/app/uploads/avatars
 
-# Change ownership and set permissions for directories (assuming Puppeteer uses 'pptruser')
+# Change ownership and set permissions for directories
 RUN chown -R node:node /usr/app && \
     chmod -R 755 /usr/app /usr/movies /usr/app/uploads/avatars
 
@@ -18,12 +20,17 @@ FROM ghcr.io/puppeteer/puppeteer:latest
 # Switch back to the default user provided by the Puppeteer image
 USER pptruser
 
-# Create dedicated upload user
-RUN useradd -M uploaduser
+# Add 'node' user to 'pptruser' group
+RUN grpmod -g ${PPTRUSER_GID} -M node pptruser
 
-# Change ownership and set permissions for upload directory
-RUN chown uploaduser:uploaduser /usr/app/uploads
-RUN chmod 770 /usr/app/uploads
+# Adjust directory permissions
+RUN chmod g+w /usr/app/uploads
+
+# Obtain actual pptruser_gid during build
+RUN ACTUAL_PPTRUSER_GID=$(getent group pptruser | awk -F: '{print $3}')
+
+# Update log message with actual group ID
+RUN echo "Using pptruser_gid: ${ACTUAL_PPTRUSER_GID}"
 
 WORKDIR /usr/app
 
