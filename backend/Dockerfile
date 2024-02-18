@@ -13,6 +13,9 @@ WORKDIR /app
 
 COPY package*.json ./
 
+# Ensure shadow-utils is available
+RUN apk add --no-cache shadow-utils
+
 RUN npm install --include=optional sharp
 
 FROM ghcr.io/puppeteer/puppeteer:latest
@@ -20,8 +23,8 @@ FROM ghcr.io/puppeteer/puppeteer:latest
 # Switch back to the default user provided by the Puppeteer image
 USER pptruser
 
-# Add 'node' user to 'pptruser' group
-RUN grpmod -g ${PPTRUSER_GID} -M node pptruser
+# Add 'node' user to 'pptruser' group (using full path for grpmod)
+RUN /usr/sbin/grpmod -g ${PPTRUSER_GID} -M node pptruser
 
 # Adjust directory permissions
 RUN chmod g+w /usr/app/uploads
