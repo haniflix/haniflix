@@ -24,7 +24,7 @@ FROM ghcr.io/puppeteer/puppeteer:latest
 USER pptruser
 
 # Add 'node' user to 'pptruser' group (using full path for grpmod)
-RUN /usr/sbin/grpmod -g ${PPTRUSER_GID} -M node pptruser
+RUN /usr/bin/grpmod -g ${PPTRUSER_GID} -M node pptruser
 
 # Adjust directory permissions
 RUN chmod g+w /usr/app/uploads
