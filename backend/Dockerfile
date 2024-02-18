@@ -1,11 +1,5 @@
 FROM node:21-alpine3.18 AS builder
 
-# Create directories
-RUN mkdir -p /usr/movies /usr/app/uploads/avatars
-
-# Change ownership and set permissions for directories
-RUN chown -R node:node /usr/app && \
-    chmod -R 755 /usr/app /usr/movies /usr/app/uploads/avatars
 
 WORKDIR /app
 
@@ -20,6 +14,13 @@ USER root
 
 # Add 'node' and 'pptruser' users to 'www-data' group
 RUN adduser node www-data && adduser pptruser www-data
+
+# Create directories
+RUN mkdir -p /usr/movies /usr/app/uploads/avatars
+
+# Change ownership and set permissions for directories
+RUN chown -R node:node /usr/app && \
+    chmod -R 755 /usr/app /usr/movies /usr/app/uploads/avatars
 
 # Adjust directory permissions
 RUN chmod g+w /usr/app/uploads
