@@ -7,6 +7,8 @@ const Logger = require("../../lib/logger");
 
 const DELAY_AFTER_MOVIES = 2;
 
+const NODE_ENV = process.env.NODE_ENV;
+
 // must match batch size in scrapeAll.js
 const BATCH_SIZE = 5;
 //
@@ -18,7 +20,7 @@ let browser; // Declare browser instance globally
 async function initBrowser() {
   try {
     browser = await puppeteer.launch({
-      headless: false,
+      headless: NODE_ENV == "production" ? "new" : false,
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
       timeout: 60 * 1000,
     });
