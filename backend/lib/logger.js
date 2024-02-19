@@ -43,16 +43,16 @@ const fileFormat = winston.format.combine(
   )
 );
 
-const logsDir = path.join(__dirname, "..", "logs"); // Adjust path as needed
+// const logsDir = path.join(__dirname, "..", "logs"); // Adjust path as needed
 
-const dailyRotateTransport = new dailyRotate({
-  filename: path.join(logsDir, "app-%DATE%.log"), // Include date in filename
-  datePattern: "YYYY-MM-DD", // Format of date in filename
-  level: level(),
-  levels,
-  handleExceptions: true,
-  format: fileFormat,
-});
+// const dailyRotateTransport = new dailyRotate({
+//   filename: path.join(logsDir, "app-%DATE%.log"), // Include date in filename
+//   datePattern: "YYYY-MM-DD", // Format of date in filename
+//   level: level(),
+//   levels,
+//   handleExceptions: true,
+//   format: fileFormat,
+// });
 
 const transports = [
   new winston.transports.Console({
@@ -61,7 +61,7 @@ const transports = [
     handleExceptions: true,
     format: consoleFormat,
   }),
-  dailyRotateTransport,
+  // dailyRotateTransport,
 ];
 
 const Logger = winston.createLogger({

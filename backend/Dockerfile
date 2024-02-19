@@ -24,7 +24,7 @@ RUN chown -R pptruser:www-data /usr/app && \
     chmod -R 755 /usr/app /usr/movies /usr/app/uploads/avatars /usr/app/logs
 
 # Adjust directory permissions
-RUN chmod g+w /usr/app/uploads
+RUN chmod g+w /usr/app/uploads /usr/app/logs
 
 # Switch back to the default user provided by the Puppeteer image
 USER pptruser
