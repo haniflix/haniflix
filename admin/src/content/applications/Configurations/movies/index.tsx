@@ -40,7 +40,7 @@ import Pagination from 'src/components/Pagination';
 import { BiSearch } from "react-icons/bi";
 
 import { SocketContext } from 'src/contexts/SocketContext'
-import { useScrapeAllMoviesMutation } from 'src/store/rtk-query/scraperApi';
+import { useCheckScrapingMutation, useScrapeAllMoviesMutation, useStopScrapingMutation } from 'src/store/rtk-query/scraperApi';
 
 
 function Movies() {
@@ -85,10 +85,16 @@ function Movies() {
 
   const [deleteMovie, deleteMovieState] = useDeleteMovieMutation()
   const [scrapeAllMovies, scrapeAllMoviesState] = useScrapeAllMoviesMutation()
+  const [checkScraping, checkScrapingState] = useCheckScrapingMutation()
+  const [stopScraping, stopScrapingState] = useStopScrapingMutation()
 
   const pageCount = moviesData?.totalMovies
     ? Math.ceil(moviesData.totalMovies / queryParams.perPage)
     : 0;
+
+  React.useEffect(() => {
+    checkScraping()
+  }, [])
 
   React.useEffect(() => {
     socket?.on("scrapeDetails", (message) => {

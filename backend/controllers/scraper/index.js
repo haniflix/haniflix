@@ -1,7 +1,13 @@
 const scrapeMovieFromUrl = require("./scrape");
-const scrapeAll = require("./scrapeAll");
+const {
+  scrapeAllMovies,
+  stopScraping,
+  checkScrapingProgress,
+} = require("./scrapeAll");
 
 module.exports = {
   scrapeMovieFromUrl,
-  scrapeAll,
+  scrapeAll: scrapeAllMovies,
+  stopScraping,
+  checkScrapingProgress,
 };

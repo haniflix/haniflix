@@ -6,16 +6,65 @@ const Genre = require("../../models/Genre");
 const Logger = require("../../lib/logger");
 
 const DELAY_AFTER_MOVIES = 2;
+
+// must match batch size in scrapeAll.js
+const BATCH_SIZE = 5;
+//
 const SEARCH_PAGE_URL = "https://reelgood.com/";
+let pageInstanceForMultiple;
+
+let browser; // Declare browser instance globally
+
+async function initBrowser() {
+  try {
+    browser = await puppeteer.launch({
+      headless: false,
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      timeout: 60 * 1000,
+    });
+  } catch (error) {
+    Logger.error(`Error while initializing browser : ${error}`);
+  }
+}
+
+async function closeBrowser() {
+  try {
+    await browser.close();
+    browser = undefined;
+  } catch (error) {
+    Logger.error(`Error while closing browser : ${error}`);
+  }
+}
+
+const checkPageIsReady = async (page) => {
+  // Fill input with dummy text
+  await page.type('input[data-testid="search-input"]', "dummy text");
+
+  // Create a promise that resolves after the input is cleared
+  const waitForInputClear = async () => {
+    console.log("wait for input clear successful");
+    await page.waitForFunction(
+      'document.querySelector(\'input[data-testid="search-input"]\').value === ""'
+    );
+  };
+
+  // Use Promise.race to either wait for input clearing or timeout
+  await Promise.race([
+    waitForInputClear(),
+    new Promise((resolve) => setTimeout(resolve, 2000)),
+  ]);
+};
 
 async function scrapeMovieDetails({ _page, url }) {
   //if _page is set url will not be set
   // and vice versa
 
-  const browser = await puppeteer.launch({
-    headless: "new",
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  });
+  let browserInitializedLocally = false;
+
+  if (!browser) {
+    await initBrowser();
+    browserInitializedLocally = true;
+  }
 
   let page;
 
@@ -173,70 +222,62 @@ async function scrapeMovieDetails({ _page, url }) {
     return movieDetails;
   } catch (error) {
     console.error("Error scraping movie details:", error);
+    Logger.error("Error scraping movie details:" + error);
     return {};
   } finally {
     // Close the page if it was created inside this function
     if (!(_page instanceof puppeteer.Page)) {
-      await browser.close();
+      // await browser.close();
+      await page.close();
+    }
+    if (browserInitializedLocally) {
+      // await browser.close();
+      await closeBrowser();
     }
   }
-}
-
-/**
- * Extracts Movie Info from reelsgood url
- *
- * @param {string} cdnUrl - The cdn url of the movie.
- * @param {string} movieId - The movieId in db
- */
-function extractMovieInfoFromCdnUrl(cdnUrl, movieId) {
-  // Extract the part after .com/movies/
-  const urlParts = cdnUrl.split(".com/movies/")[1];
-
-  if (urlParts) {
-    // Convert encoded characters back to normal string
-    const decodedString = decodeURIComponent(urlParts);
-
-    // Define the regular expression pattern for extracting movie name, year, and quality
-    const pattern = /([^/]+)\s+\((\d{4})\)\s*\[([^\]]+)\]/;
-
-    // Use RegExp.exec to find the match in the decoded string
-    const match = pattern.exec(decodedString);
-
-    // Check if there is a match
-    if (match) {
-      // Extract movie name, year, and quality from the matched groups
-      const movieName = match[1].replace(/%20/g, " ");
-      const movieYear = match[2];
-      const movieQuality = match[3];
-
-      return { movieName, movieYear, movieQuality, movieId };
-    }
-  }
-
-  return null;
 }
 
 //array of movies
 /**
  * Extracts Movie Info from reelsgood url
  *
+ * @param {number} movieInfos -Array of movieInfo objects {name, year, movieId}.
  * @param {number} totalCount - Total movies count that match criteria.
  * @param {number} currentCount - The current count in the batch from mongoose
  * @param {any} io - Socket.io server instance
+ * @param {Function} setProcessedCount - set processed movies count
+ * @param {boolean} stopProcess - boolean to determine continuation of api call
  */
-async function searchAndScrapeMovies(movieInfos, io, totalCount, currentCount) {
+async function searchAndScrapeMovies(
+  movieInfos,
+  io,
+  totalCount,
+  currentCount,
+  batchCount,
+  setProcessedCount,
+  stopProcess
+) {
   let countInCurrentBatch = 0;
   const processedMoviesData = [];
+  page = pageInstanceForMultiple;
 
-  const browser = await puppeteer.launch({
-    headless: "new",
-    // devtools: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    timeout: 60 * 1000,
-  });
+  console.log("movieInfos ", movieInfos);
+
+  if (!browser) {
+    await initBrowser();
+  }
 
   try {
-    const page = await browser.newPage();
+    if (!pageInstanceForMultiple) {
+      page = await browser.newPage();
+      pageInstanceForMultiple = page;
+    }
+
+    page.on("console", (msg) => {
+      // console.log(msg.text());
+      // Logger.debug("From Puppeteer console: \n" + msg.text());
+    });
+
     await page.setExtraHTTPHeaders({
       "Accept-Language": "en-US,en;q=0.9",
     });
@@ -248,21 +289,8 @@ async function searchAndScrapeMovies(movieInfos, io, totalCount, currentCount) {
       waitUntil: ["domcontentloaded", "networkidle2", "load"],
     });
 
-    // Fill input with dummy text
-    await page.type('input[data-testid="search-input"]', "dummy text");
-
-    // Create a promise that resolves after the input is cleared
-    const waitForInputClear = async () => {
-      await page.waitForFunction(
-        'document.querySelector(\'input[data-testid="search-input"]\').value === ""'
-      );
-    };
-
-    // Use Promise.race to either wait for input clearing or timeout
-    await Promise.race([
-      waitForInputClear(),
-      new Promise((resolve) => setTimeout(resolve, 2000)),
-    ]);
+    //check if page is ready
+    await checkPageIsReady(page);
 
     // Define an asynchronous function to handle each movie search and scrape
     const processMovie = async (movieInfo) => {
@@ -277,6 +305,7 @@ async function searchAndScrapeMovies(movieInfos, io, totalCount, currentCount) {
         processedMoviesData.push({
           ...movieDetail,
           movieId: movieInfo?.movieId,
+          cdnUrlMovieName: movieInfo?.movieName,
         });
       }
 
@@ -294,11 +323,20 @@ async function searchAndScrapeMovies(movieInfos, io, totalCount, currentCount) {
       const RETRY_ATTEMPTS = 3;
       countInCurrentBatch++;
 
-      while (!addedMovie && retryCount < RETRY_ATTEMPTS) {
+      // a while loop to keep retrying till RETRY_ATTEMPTS
+      while (!addedMovie && retryCount <= RETRY_ATTEMPTS) {
         try {
           // Process the movie
           await processMovie(movieInfo);
 
+          // Check if the process should stop ( takes effect in next batch )
+          if (stopProcess) {
+            console.log("Scraping process stopped remotely.");
+            Logger.info("Scraping process stopped remotely.");
+            break; // Exit the loop immediately
+          }
+
+          //logic to check if movie in this loop has already been processed
           addedMovie = processedMoviesData?.find(
             (processedMovieData) =>
               processedMovieData?.movieId == movieInfo?.movieId
@@ -312,22 +350,24 @@ async function searchAndScrapeMovies(movieInfos, io, totalCount, currentCount) {
             //process genres
             let genreIds = [];
 
-            for (const genreItem of addedMovie?.genre) {
-              const findGenreMatch = await Genre.findOne({
-                title: genreItem?.toLowerCase(),
-              });
+            if (Array.isArray(addedMovie?.genre)) {
+              for (const genreItem of addedMovie?.genre) {
+                const findGenreMatch = await Genre.findOne({
+                  title: genreItem?.toLowerCase(),
+                });
 
-              if (findGenreMatch) {
-                // already stored in db
-                genreIds.push(findGenreMatch._id);
-                continue;
+                if (findGenreMatch) {
+                  // already stored in db
+                  genreIds.push(findGenreMatch._id);
+                  continue;
+                }
+
+                //create new genre, if none is found
+                const newGenre = new Genre({ title: genreItem?.toLowerCase() });
+
+                const savedGenre = await newGenre.save();
+                genreIds.push(savedGenre._id);
               }
-
-              //create new genre, if none is found
-              const newGenre = new Genre({ title: genreItem?.toLowerCase() });
-
-              const savedGenre = await newGenre.save();
-              genreIds.push(savedGenre._id);
             }
 
             const newFields = {
@@ -340,6 +380,31 @@ async function searchAndScrapeMovies(movieInfos, io, totalCount, currentCount) {
               year: addedMovie?.yearOfRelease,
               genre: genreIds,
             };
+
+            // add final check to ensure movie matches the name before adding details to db
+            let pulledMovieName = addedMovie?.title;
+            let cdnUrlMovieName = addedMovie?.cdnUrlMovieName;
+
+            pulledMovieName = pulledMovieName
+              .replace(/[^\w\s]/gi, "")
+              .toLowerCase();
+            cdnUrlMovieName = cdnUrlMovieName
+              .replace(/[^\w\s]/gi, "")
+              .toLowerCase();
+
+            //
+            const allMovieWordsIncluded = cdnUrlMovieName
+              ?.trim()
+              .split(" ")
+              .every((word) => {
+                return pulledMovieName.includes(word);
+              });
+
+            if (!allMovieWordsIncluded) {
+              throw {
+                message: "DB movie details not matching with pulled data",
+              };
+            }
 
             let updatedMovie = await Movie.findByIdAndUpdate(
               addedMovie?.movieId,
@@ -358,6 +423,9 @@ async function searchAndScrapeMovies(movieInfos, io, totalCount, currentCount) {
             await updatedMovie.save();
           }
 
+          // Update processedCount via the setter function
+          setProcessedCount(currentCount + countInCurrentBatch);
+
           io.emit("scrapeDetails", {
             total: totalCount,
             processed: countInCurrentBatch + currentCount,
@@ -368,12 +436,15 @@ async function searchAndScrapeMovies(movieInfos, io, totalCount, currentCount) {
             },
           });
         } catch (error) {
-          console.error(`\n\nError processing movie: ${movieInfo.movieName}`);
+          Logger.error(`\n\nError processing movie: ${movieInfo.movieName}`);
           Logger.info(
             `Retry count for movie:${movieInfo?.movieId} is ${retryCount}`
           );
 
           console.error("error in while :", error);
+
+          // Update processedCount via the setter function
+          setProcessedCount(currentCount + countInCurrentBatch);
 
           io.emit("scrapeDetails", {
             total: totalCount,
@@ -404,8 +475,17 @@ async function searchAndScrapeMovies(movieInfos, io, totalCount, currentCount) {
     }
   } catch (error) {
     console.log("error in browser ", error);
+    Logger.error(`error in browser : ${JSON.stringify(error)}`);
   } finally {
-    await browser.close();
+    //  Logger.debug("Browser finally reached");
+
+    let processed = countInCurrentBatch + currentCount;
+
+    //close if its the final movie
+    // sometimes some batches movies dont get processed at all
+    if (processed >= totalCount || BATCH_SIZE * batchCount >= totalCount) {
+      await closeBrowser();
+    }
   }
 }
 
@@ -418,8 +498,6 @@ async function searchAndScrapeMovies(movieInfos, io, totalCount, currentCount) {
  */
 async function searchAndScrapeMovie(page, movieName, movieYear) {
   try {
-    // page.waitForNetworkIdle({ idleTime: 600 });
-
     // Type the search term into the input field
     // Check if input field is already filled (optimization)
     const isInputFilled = await page.$eval(
@@ -435,19 +513,52 @@ async function searchAndScrapeMovie(page, movieName, movieYear) {
       );
     }
 
-    // Type the movie name and year into the input field
-    await Promise.all([
-      page.type(
-        'input[data-testid="search-input"]',
-        `${movieName} ${movieYear}`
-      ),
-    ]);
+    // keep trying to type movie name into search
+    for (let retries = 0; retries < 3; retries++) {
+      try {
+        await page.type(
+          'input[data-testid="search-input"]',
+          `${movieName} ${movieYear}`
+        );
+
+        await new Promise((r) => setTimeout(r, 1500));
+
+        // Verify input value after typing
+        const actualValue = await page.$eval(
+          'input[data-testid="search-input"]',
+          (input) => input.value.trim()
+        );
+        console.log("Actual input value:", actualValue);
+
+        if (actualValue !== "") {
+          break; // Success, exit retry loop
+        } else {
+          console.warn("Typing failed, retrying...", retries + 1);
+          await new Promise((r) => setTimeout(r, 2000)); // Add a short delay between retries
+        }
+      } catch (error) {
+        console.error("Error typing search term:", error);
+        // Handle specific errors if needed
+      }
+    }
+
+    // Check if typing was successful after retries
+    const actualValue = await page.$eval(
+      'input[data-testid="search-input"]',
+      (input) => input.value.trim()
+    );
+    if (actualValue === "") {
+      throw {
+        message: "Input field is empty after retries",
+      };
+    }
 
     await page.waitForSelector("#search_dropdown_results", {
       timeout: 60 * 1000 * 2,
     });
-    await page.waitForSelector("#search_dropdown_results a"),
-      { timeout: 60 * 1000 * 2 };
+    await page.waitForSelector("#search_dropdown_results a", {
+      timeout: 60 * 1000 * 2,
+    });
 
     // Query all result links
     const resultLinks = await page.$$eval(
@@ -504,7 +615,11 @@ async function searchAndScrapeMovie(page, movieName, movieYear) {
       page.goto(`${SEARCH_PAGE_URL}${matchingResult.href}`),
     ]);
 
-    await page.waitForSelector(".css-n6mjxq.e1r3wknn10", {
+    //check if page is ready
+    await checkPageIsReady(page);
+
+    //wait until movie title is displayed on movie page
+    await page.waitForSelector(".css-xuu3cf.e3sx6uc7", {
       timeout: 60 * 1000 * 2,
     });
 
@@ -521,6 +636,7 @@ async function searchAndScrapeMovie(page, movieName, movieYear) {
     // }
   } catch (error) {
     console.error("Error searching and scraping movie:", error);
+    Logger.error("Error searching and scraping movie:" + JSON.stringify(error));
 
     throw error;
   }
@@ -532,6 +648,5 @@ async function searchAndScrapeMovie(page, movieName, movieYear) {
 
 module.exports = {
   scrapeMovieDetails,
-  extractMovieInfoFromCdnUrl,
   searchAndScrapeMovies,
 };

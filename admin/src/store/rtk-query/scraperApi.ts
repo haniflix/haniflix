@@ -16,10 +16,28 @@ export const scraperApi = authApi.injectEndpoints({
         method: 'POST'
         // body: data
       })
+    }),
+    checkScraping: builder.mutation({
+      query: () => ({
+        url: 'scraper/check-scraping',
+        method: 'POST'
+        // body: data
+      })
+    }),
+    stopScraping: builder.mutation({
+      query: () => ({
+        url: 'scraper/stop-scraping',
+        method: 'POST'
+        // body: data
+      })
     })
   }),
   overrideExisting: false
 });
 
-export const { useScrapeWebsiteMutation, useScrapeAllMoviesMutation } =
-  scraperApi;
+export const {
+  useScrapeWebsiteMutation,
+  useScrapeAllMoviesMutation,
+  useCheckScrapingMutation,
+  useStopScrapingMutation
+} = scraperApi;

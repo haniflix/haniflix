@@ -14,5 +14,13 @@ module.exports = (io) => {
     scraperController.scrapeAll(io, req, res);
   });
 
+  router.post("/stop-scraping", verify, (req, res) => {
+    scraperController.stopScraping(io, req, res);
+  });
+
+  router.post("/check-scraping", verify, (req, res) => {
+    scraperController.checkScrapingProgress(io, req, res);
+  });
+
   return router;
 };

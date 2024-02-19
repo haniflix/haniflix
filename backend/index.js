@@ -13,6 +13,9 @@ const statsRoute = require("./routes/stats");
 const scraperRoute = require("./routes/scraper");
 const imagesRoute = require("./routes/images");
 
+//
+const errorHandler = require("./middleware/errorHandler");
+
 const cors = require("cors");
 
 const socketio = require("socket.io");
@@ -67,6 +70,9 @@ app.use("/api/image", imagesRoute);
 
 const scraperRouteWithIO = scraperRoute(io);
 app.use("/api/scraper", scraperRouteWithIO);
+
+//errors
+app.use(errorHandler);
 
 // Import and call the socket setup function
 const setupSockets = require("./sockets");

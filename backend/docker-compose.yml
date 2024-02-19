@@ -11,6 +11,7 @@ services:
       - ./:/usr/app
       - /var/www/html/cdn.haniflix.com/movies:/usr/movies
       - /var/www/html/uploads:/usr/app/uploads
+      - /var/www/html/logs:/usr/app/logs
       - /usr/app/node_modules
     ports:
       - 8800:8800

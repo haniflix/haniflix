@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const Genre = require("./Genre");
 // const List = require("./");
 
+const Logger = require("../lib/logger");
+
 function arraysAreEqual(array1, array2) {
   // Check if both arrays have the same length
   if (array1.length !== array2.length) {
@@ -43,7 +45,6 @@ const addHooks = ({ MovieSchema, ListSchema }) => {
     try {
       const previousState = this._previousState;
 
-      console.log("previousState ", previousState);
       // console.log("this ", this);
 
       if (previousState === undefined) {
@@ -104,7 +105,6 @@ const addHooks = ({ MovieSchema, ListSchema }) => {
         if (!list.content.includes(movie._id)) {
           list.content.push(movie._id);
           list.automaticallyAdded.push(movie._id);
-          console.log("pushing contents ", movie._id);
           await list.save();
         }
       }
@@ -127,6 +127,7 @@ const addHooks = ({ MovieSchema, ListSchema }) => {
       }
     } catch (error) {
       console.error("Error updating lists in hook:", error);
+      Logger.error("Error updating lists in hook:" + JSON.stringify(error));
     }
   });
 
@@ -142,6 +143,7 @@ const addHooks = ({ MovieSchema, ListSchema }) => {
       );
     } catch (error) {
       console.error("Error removing movie from lists:", error);
+      Logger.error("Error removing movie from lists:", error);
     }
   });
 

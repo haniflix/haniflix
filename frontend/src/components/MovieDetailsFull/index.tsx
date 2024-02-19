@@ -79,6 +79,8 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
     }
   }, [newMovieData])
 
+  console.log('movieData ', movieData)
+
   //if initialised with movieDataProps then set as default
   useEffect(() => {
     if (movieDataProps) {
@@ -311,7 +313,9 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
         {/* Image div */}
         <div
           className="absolute top-0 left-0 right-0 bottom-0 bg-cover bg-teal-500 bg-no-repeat"
-          style={{ backgroundImage: `url(${movieData?.img})` }}
+          style={{
+            backgroundImage: `url(${movieData?.imgTitle}), url(${movieData?.img})`
+          }}
         ></div>
 
         {/* 1st overlay div */}
