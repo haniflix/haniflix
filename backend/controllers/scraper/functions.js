@@ -23,6 +23,7 @@ async function initBrowser() {
       headless: NODE_ENV == "production" ? "new" : false,
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
       timeout: 60 * 1000,
+      protocolTimeout: 60 * 1000,
     });
   } catch (error) {
     Logger.error(`Error while initializing browser : ${error}`);
