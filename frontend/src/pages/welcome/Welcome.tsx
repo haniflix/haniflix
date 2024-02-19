@@ -221,7 +221,7 @@ export default function Welcome() {
         }
       />
 
-      < Section
+      <Section
         title="Create profiles for kids"
         description="Send kids on adventures with their favorite characters in a space made for just them — free with your membership"
         imageUrl={createProfile}

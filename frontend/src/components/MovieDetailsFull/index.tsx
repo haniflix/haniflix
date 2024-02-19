@@ -1,5 +1,5 @@
 import { PlayArrow, AddCircle } from "@mui/icons-material";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2"; // Import SweetAlert 2
@@ -39,6 +39,7 @@ import {
   ThumbsUpIcon,
   DolbyLogo
 } from '../../Assets/svgs/tsSvgs'
+import useResponsive from "../../hooks/useResponsive";
 
 
 type MetaInfoItem = {
@@ -52,6 +53,8 @@ type Props = {
 
 export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
   const client = useApiClient();
+
+  const isMobile = React.useRef(window.matchMedia('(pointer: coarse)').matches);
 
   const userReducer = useSelector((state) => state.auth)
 
@@ -349,7 +352,12 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
             styles['info']
           )
         }>
-          <div className="text-4xl font-[500] mt-6">{movieData?.title ? movieData?.title : <div><CircularProgress color="inherit" size={18} /><span>Loading..</span></div>}</div>
+          <div className={
+            addClassNames(
+              " font-[500] mt-6",
+              isMobile.current ? "text-[5rem]" : "text-[3rem]"
+            )
+          }>{movieData?.title ? movieData?.title : <div><CircularProgress color="inherit" size={18} /><span>Loading..</span></div>}</div>
           <div className="flex flex-wrap  space-x-3">
             <div className={
               addClassNames(

@@ -53,7 +53,7 @@ export default function MovieListItem({
     onHover,
     layoutType,
     refetchFn }: MovieListItemProps) {
-    const [isHovered, setIsHovered] = useState<boolean>(false);
+    // const [isHovered, setIsHovered] = useState<boolean>(false);
     const [movie, setMovie] = useState<any>({});
 
     const [isLike, setIsLike] = useState<boolean | null>(null);
@@ -80,9 +80,47 @@ export default function MovieListItem({
         [] // Ensure it only gets created once
     );
 
-    const handleMouseEnter = useCallback((movie) => {
+    // const handleMouseEnter = useCallback((movie) => {
+    //     debouncedOnHover(movie);
+    // }, [debouncedOnHover]);
+
+    // const isMobile = useRef(window.matchMedia('(pointer: coarse)').matches); // Detect mobile early
+    const hoverTimer = React.useRef(null);
+    const [isHovered, setIsHovered] = React.useState(false);
+
+    // Pointer events for modern devices
+    const handlePointerEnter = useCallback(() => {
+        setIsHovered(true);
+        clearTimeout(hoverTimer.current); // Clear any potential ongoing timers
         debouncedOnHover(movie);
-    }, [debouncedOnHover]);
+    }, [debouncedOnHover, movie]);
+
+    const handlePointerLeave = useCallback(() => {
+        setIsHovered(false);
+        hoverTimer.current = setTimeout(() => {
+            // Simulate hover end after a short delay to handle overlapping interactions
+            if (isHovered) { // Check if the state hasn't already changed
+                setIsHovered(false);
+            }
+        }, 300);
+    }, [debouncedOnHover, movie, isHovered]);
+
+    // Touch events as fallback
+    const handleTouchStart = useCallback((event) => {
+        event.preventDefault(); // Prevent default touch behavior if needed
+        setIsHovered(true);
+        clearTimeout(hoverTimer.current);
+        debouncedOnHover(movie);
+    }, [debouncedOnHover, movie]);
+
+    const handleTouchEnd = useCallback(() => {
+        hoverTimer.current = setTimeout(() => {
+            if (isHovered) {
+                setIsHovered(false);
+            }
+        }, 300);
+    }, [debouncedOnHover, movie, isHovered]);
+
 
 
     useEffect(() => {
@@ -291,12 +329,15 @@ export default function MovieListItem({
                         layoutType == 'grid' ? '!w-[135px] cursor-pointer' : '!w-full'
                     )
                 }
-
-                onMouseEnter={() => {
-                    handleMouseEnter(movie)
-                    setIsHovered(true)
-                }}
-                onMouseLeave={() => setIsHovered(false)}
+                onPointerEnter={handlePointerEnter}
+                onPointerLeave={handlePointerLeave}
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+            // onMouseEnter={() => {
+            //     handleMouseEnter(movie)
+            //     setIsHovered(true)
+            // }}
+            // onMouseLeave={() => setIsHovered(false)}
             >
                 <img src={movie?.img ? movie?.img : moviePlaceHolderSvg} alt="" className="rounded-[3px]" />
 

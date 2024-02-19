@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { Movie } = require("../models");
 
 const Logger = require("../lib/logger");
 
