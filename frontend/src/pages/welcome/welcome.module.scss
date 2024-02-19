@@ -1,9 +1,12 @@
 .welcomePage {
-    background:url('/images/welcomePageBg1.png') repeat-y center center;
+    background:url('/images/welcomePageBg1.png') repeat center center;
     background-size: contain;
     background-attachment: fixed;
    // min-height: 100vh;
 
+   .section_icon_wrapper{
+    background: linear-gradient(110deg, #0065AD 0%, #21F69B 50%, #0065AD 100%);
+   }
 
 
     .footer-wrapper{

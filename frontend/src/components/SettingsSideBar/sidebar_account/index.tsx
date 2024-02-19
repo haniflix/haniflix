@@ -233,7 +233,7 @@ const SidebarAccount = () => {
 
     return (
         <div>
-            <div className="flex gap-[8px] my-3 items-center">
+            {/* <div className="flex gap-[8px] my-3 items-center">
                 <span>
                     Hi, {userData?.username}
                 </span>
@@ -243,7 +243,7 @@ const SidebarAccount = () => {
                         className="h-full w-full rounded-[30px]"
                     />
                 </div>
-            </div>
+            </div> */}
             <Formik
                 initialValues={userDetails}
                 validationSchema={validationSchema}

@@ -115,7 +115,7 @@ const ChangeAvatarModal = ({ show, onClose }) => {
                         {/* Top section with heading and close button */}
                         <div className="flex items-center justify-between mb-[35px]">
                             <h3 className="text-[25px] font-[500] leading-6 text-white">
-                                Choose your avatar
+                                Choose your Profile Picture
                             </h3>
                             <button
                                 type="button"
@@ -128,7 +128,7 @@ const ChangeAvatarModal = ({ show, onClose }) => {
                         </div>
                         {/* Divider */}
                         <div className="mb-6 border-b border-[#4B4B4B]" />
-                        <div className="mt-5 grid grid-cols-4 gap-[13px]" aria-labelledby="modal-title">
+                        <div className="mt-5 grid grid-cols-6 gap-[13px]" aria-labelledby="modal-title">
                             {
                                 avatarsData?.avatars?.map((avatar, index) => {
                                     const imageUrl = avatar?.url?.replace('/api/', '')

@@ -15,14 +15,16 @@ import { addClassNames } from "../../store/utils/functions";
 import useResponsive from "../../hooks/useResponsive";
 
 import styles from "./list.module.scss";
+import { Movie } from "../../store/types";
 
 interface ListProps {
   list: any;
   onDelete?: Function;
   onEdit?: Function;
+  onHoverMovie?: (movie: Movie) => {}
 }
 
-const List: React.FC<ListProps> = ({ list, onDelete, onEdit }) => {
+const List: React.FC<ListProps> = ({ list, onDelete, onEdit, ...otherProps }) => {
   const user = useAppSelector(selectUser);
 
   const carouselRef = useRef();
@@ -49,8 +51,9 @@ const List: React.FC<ListProps> = ({ list, onDelete, onEdit }) => {
   const { isMobile } = useResponsive()
 
 
-  const onHoverMovie = (movieId: string) => {
-    const movieIndex = list?.content?.findIndex(id => id == movieId)
+  const onHoverMovie = (movie: Movie) => {
+    // const movieIndex = list?.content?.findIndex(id => id == movieId)
+    otherProps.onHoverMovie(movie)
   }
 
   return (
@@ -71,7 +74,7 @@ const List: React.FC<ListProps> = ({ list, onDelete, onEdit }) => {
             ) : null}
           </div>
         </div>
-        <div className="wrapper">
+        <div className={styles["wrapper"]}>
           <Carousel
             ref={carouselRef}
             responsive={responsive}
@@ -82,10 +85,19 @@ const List: React.FC<ListProps> = ({ list, onDelete, onEdit }) => {
               )
             }
             customLeftArrow={
-              <ArrowBackIosOutlined className="sliderArrow left" />
+              <ArrowBackIosOutlined className={
+                addClassNames(
+                  styles["sliderArrow"], styles['left']
+                )
+              } />
             }
             customRightArrow={
-              <ArrowForwardIosOutlined className="sliderArrow right" />
+              <ArrowForwardIosOutlined
+                className={
+                  addClassNames(
+                    styles["sliderArrow"], styles['right']
+                  )
+                } />
             }
             itemClass={
               addClassNames(

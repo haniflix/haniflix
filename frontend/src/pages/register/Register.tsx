@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import Swal from "sweetalert2";
 import StripePaymentForm from "../../components/StripePaymentForm";
-import Logo from "../../Assets/Images/Nav-logo.png";
+import Logo from "../../Assets/Images/Logo.png";
 import "../../Assets/css/styles.scss";
 import styles from "./register.module.scss";
 import { Link, useSearchParams } from "react-router-dom";
@@ -111,7 +111,7 @@ const Register = () => {
             <div className={styles["inputWrapper"]}>
               <input
                 type="email"
-                placeholder="Email"
+                placeholder="Email Address"
                 id="email"
                 name="email"
                 value={values.email}

@@ -22,7 +22,16 @@ import { SearchIcon, ProfileIcon, SettingsIcon, LogoutIcon } from '../../Assets/
 import ChangeAvatarModal from "../ChangeAvatarModal";
 import SettingsSidebar from "../SettingsSideBar";
 
-const Navbar = () => {
+import { IoIosArrowDown } from "react-icons/io";
+import { useGetMoviesQuery } from "../../store/rtk-query/moviesApi";
+
+import { Transition } from '@headlessui/react';
+
+type Props = {
+  onSelectMovie?: (movie: Movie) => {}
+}
+
+const Navbar = (props: Props) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const user = useAppSelector(selectUser);
   // const userName = user?.fullname;
@@ -42,6 +51,30 @@ const Navbar = () => {
 
   const [showSettings, setShowSettings] = React.useState<boolean>(false)
   const [showChangeAvatar, setShowChangeAvatar] = React.useState<boolean>(false)
+
+  let queryParams = {
+    searchTerm
+  }
+
+  const { currentData: searchMoviesData, isLoading: moviesLoading, refetch, isFetching } = useGetMoviesQuery(queryParams, {
+    // pollingInterval: 10000,
+    refetchOnMountOrArgChange: true,
+  })
+
+
+  const showSearchDropdown = React.useMemo(() => {
+    let show = false;
+
+    if (searchTerm == '' || !searchTerm) {
+      return false
+    }
+
+    if (moviesLoading || searchMoviesData) {
+      show = true
+    }
+
+    return show;
+  }, [searchMoviesData, moviesLoading])
 
 
   const showSwal = (title, message, type) => {
@@ -205,34 +238,90 @@ const Navbar = () => {
           </Link>
         </div>
         <div className={styles["right"]}>
-          <div className={styles["inputWrapper"]}>
-            <div
-              onClick={handleSearch}
-              className='cursor-pointer'>
-              <SearchIcon className="icon" />
+          <div className={
+            addClassNames(
+              styles["inputWrapper"],
+              'backdrop-blur-md border border-[#ffffff50]',
+              showSearchDropdown ? 'border-b-[0] rounded-b-[0] rounded-t-[5px]' : 'rounded-[5px]'
+            )
+          }>
+            <div className='w-full flex items-center relative px-[8px]'>
+              <div
+                onClick={handleSearch}
+                className='cursor-pointer'>
+                <SearchIcon className="icon" />
+              </div>
+              <input
+                type="text" placeholder="Search"
+                className="px-2"
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={handleKeyDown}
+              />
             </div>
-            <input
-              type="text" placeholder="Search"
-              className="px-2"
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyDown={handleKeyDown}
-            />
+            <Transition
+              as={"div"}
+              className='relative w-full '
+              show={showSearchDropdown}
+              enter="transition-opacity duration-75"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="transition-opacity duration-150"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <div className={addClassNames('border-[#ffffff50] backdrop-blur-md border bg-[#ffffff29]', styles['search_results'])}>
+                {searchMoviesData?.movies?.slice(0, 4)?.map((movie) => {
+                  return (
+                    <div
+                      onClick={() => {
+                        props.onSelectMovie?.(movie)
+                        setSearchTerm('')
+                      }}
+                      className="flex items-center my-[8px] py-[4px] px-[8px] cursor-pointer"
+                    >
+                      <div className='w-[20%]'>
+                        <div className="h-[50px] w-[50px]">
+                          <img
+                            className="!w-[50px] h-full rounded-[50%]"
+                            src={movie?.img}
+                          />
+                        </div>
+                      </div>
+                      <div
+                        className="text-[14px] font-[500] ml-3"
+                      >
+                        {movie?.title}{'  '}{movie?.year}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </Transition>
           </div>
           <span className="ml-[30px] whitespace-nowrap ">Hi, {userData?.username}</span>
+
+          <div
+            onClick={() => {
+              console.log('clicked')
+              setShowChangeAvatar(true)
+            }}
+            className='cursor-pointer bg-gray-300 rounded-[100px] h-[45px] !w-[45px] border'>
+            <img
+              src={userData?.avatar ? makeImageUrl(userData?.avatar) : NavLogo1}
+              alt=""
+              className="w-[45px] h-full rounded-[100px]"
+            />
+          </div>
 
           <div className={
             addClassNames(
               styles["profile"],
-              'relative ml-[6px]'
+              'relative ml-[6px] cursor-pointer'
             )
           }
           >
-            <div className='bg-gray-300 rounded-[100px] h-[45px] w-[45px]'>
-              <img
-                src={userData?.avatar ? makeImageUrl(userData?.avatar) : NavLogo1}
-                alt=""
-                className="w-full h-full rounded-[100px]"
-              />
+            <div className='h-[45px] w-[25px] text-white flex items-center justify-start'>
+              <IoIosArrowDown />
             </div>
             <div className={
               addClassNames(
@@ -243,12 +332,11 @@ const Navbar = () => {
               <div className={styles['menu']}>
                 <span
                   onClick={() => {
-                    console.log('clicked')
                     setShowChangeAvatar(true)
                   }}
                   className='flex items-center justify-between'>
                   <div className="" >
-                    Change your avatar
+                    Change your Profile Picture
                   </div>
                   <ProfileIcon />
                 </span>
@@ -257,7 +345,7 @@ const Navbar = () => {
                   className='flex items-center justify-between'>
                   <div
                     className="" >
-                    Account Settings
+                    Settings
                   </div>
                   <SettingsIcon />
                 </span>

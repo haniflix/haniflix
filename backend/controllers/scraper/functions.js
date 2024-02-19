@@ -263,8 +263,6 @@ async function searchAndScrapeMovies(
   const processedMoviesData = [];
   page = pageInstanceForMultiple;
 
-  console.log("movieInfos ", movieInfos);
-
   if (!browser) {
     await initBrowser();
   }
@@ -613,6 +611,7 @@ async function searchAndScrapeMovie(page, movieName, movieYear) {
     await Promise.all([
       page.waitForNavigation({
         waitUntil: ["domcontentloaded", "load", "networkidle2"],
+        timeout: 60 * 1000 * 2,
       }),
       page.goto(`${SEARCH_PAGE_URL}${matchingResult.href}`),
     ]);

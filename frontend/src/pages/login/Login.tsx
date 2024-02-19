@@ -138,7 +138,7 @@ export default function Login() {
           <div className={styles['inputWrapper']}>
             <input
               type="email"
-              placeholder="Email"
+              placeholder="Email Address"
               ref={emailRef}
               value={email}
               onKeyDown={handleKeyDown}

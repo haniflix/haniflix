@@ -36,7 +36,8 @@ import {
   HeartIcon,
   HeartIconFilled,
   ThumbsDownIcon,
-  ThumbsUpIcon
+  ThumbsUpIcon,
+  DolbyLogo
 } from '../../Assets/svgs/tsSvgs'
 
 
@@ -78,8 +79,6 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
       setMovieData(newMovieData)
     }
   }, [newMovieData])
-
-  console.log('movieData ', movieData)
 
   //if initialised with movieDataProps then set as default
   useEffect(() => {
@@ -276,6 +275,18 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
       })
     }
 
+    metaInfo.push({
+      component: <div>
+        <DolbyLogo
+          height={23}
+          width={60}
+        />
+      </div>
+    })
+
+    metaInfo.push({
+      component: <div>4K</div>
+    })
 
     if (metaInfo.length == 0) return
 
@@ -284,14 +295,14 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
 
     return (
       <div
-        className='flex flex-wrap space-x-3 mt-2'
+        className='flex flex-wrap items-center space-x-3'
       >
         {metaInfo?.map((info) => {
           return (
             <div
               key={info?.text}
               className='px-3 capitalize py-2 bg-[#ffffff29] rounded-[30px] text-xs'>
-              {info.text}
+              {info.text || info.component}
             </div>
           )
         })}
@@ -309,7 +320,7 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
       )
     }>
 
-      <div className="h-full w-full relative flex flex-col justify-center">
+      <div className="h-full w-full relative flex flex-col justify-end ">
         {/* Image div */}
         <div
           className="absolute top-0 left-0 right-0 bottom-0 bg-cover bg-teal-500 bg-no-repeat"
@@ -332,26 +343,13 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
         <div className={
           addClassNames(
             "z-[100] relative p-[13px] min-h-[300px] ",
-            '!top-[100px] sm:!top-[60px] sm:w-[60vw]',
+            '!top-[100px] sm:!top-[60px] sm:w-[66vw]',
             'sm:ml-[70px]',
+            'mb-[5vh] space-y-[12px]',
             styles['info']
           )
         }>
-          {/* <div className="w-[150px] h-[250px]">
-            <img
-              className="w-full h-full"
-              src={movieData?.imgTitle ? movieData?.imgTitle : moviePlaceholderSvg}
-              alt="" loading="lazy" />
-          </div> */}
-          <div>
-            {renderGenres()}
-          </div>
           <div className="text-4xl font-[500] mt-6">{movieData?.title ? movieData?.title : <div><CircularProgress color="inherit" size={18} /><span>Loading..</span></div>}</div>
-          {renderMetaInfo()}
-
-          <span className={styles["desc"]} >
-            {trimmedDesc}
-          </span>
           <div className="flex flex-wrap  space-x-3">
             <div className={
               addClassNames(
@@ -390,6 +388,16 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
               renderLikeContainer()
             }
           </div>
+          {renderMetaInfo()}
+
+          <div>
+            {renderGenres()}
+          </div>
+
+          <span className={styles["desc"]} >
+            {trimmedDesc}
+          </span>
+
         </div>
       </div>
 

@@ -44,6 +44,12 @@ import {
 } from '../../Assets/svgs/tsSvgs'
 import AppAccordion from "./AppAccordion";
 
+import { PiTelevisionSimpleFill } from "react-icons/pi";
+import { MdPeopleAlt } from "react-icons/md";
+
+import gradientStar from '../../Assets/Images/gradientStar.png'
+
+
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
@@ -114,7 +120,7 @@ export default function Welcome() {
           className={
             addClassNames(
               styles['wrapper'],
-              " flex pt-9 pb-6 items-center justify-between px-[80px]"
+              " flex pt-9 pb-6 items-center justify-between pl-10 pr-[80px]"
             )
           }
         >
@@ -171,7 +177,7 @@ export default function Welcome() {
         }>
           <input
             type="email"
-            placeholder="Email address"
+            placeholder="Email Address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -192,6 +198,9 @@ export default function Welcome() {
         description="Unlimited award-winning TV shows, movies, and more in 4k and ad-free on any device for only $4.99/month!"
         imageUrl={discoverImg}
         imagePosition="right"
+        icon={<div className="h-[56px] w-[56px] mb-[25px]">
+          <img alt="" src={gradientStar} />
+        </div>}
       />
 
       <Section
@@ -199,17 +208,39 @@ export default function Welcome() {
         description="Watch on Smart TVs, Playstation, Xbox, Chromecast, Apple TV, Blu-ray players, and more."
         imageUrl={watchEvrywhere}
         imagePosition="left"
+        icon={<div
+          className={
+            addClassNames(
+              "h-[56px] w-[56px] mb-[25px] flex items-center justify-center rounded-[50%]",
+              styles['section_icon_wrapper']
+            )
+          }
+        >
+          <PiTelevisionSimpleFill />
+        </div>
+        }
       />
 
-      <Section
+      < Section
         title="Create profiles for kids"
         description="Send kids on adventures with their favorite characters in a space made for just them — free with your membership"
         imageUrl={createProfile}
         imagePosition="right"
+        icon={<div
+          className={
+            addClassNames(
+              "h-[56px] w-[56px] mb-[25px] flex items-center justify-center rounded-[50%]",
+              styles['section_icon_wrapper']
+            )
+          }
+        >
+          < MdPeopleAlt />
+        </div>
+        }
       />
 
 
-      <div
+      < div
         className="bg-black "
       >
         <div
@@ -253,7 +284,7 @@ export default function Welcome() {
             }>
               <input
                 type="email"
-                placeholder="Email address"
+                placeholder="Email Address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -266,7 +297,7 @@ export default function Welcome() {
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 }

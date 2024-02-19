@@ -296,7 +296,11 @@ const MyLists = () => {
         >
           My List
         </div>
-        <Grid container spacing={2} className='!mt-3 relative'>
+        {myLists?.[0] ? <List list={{
+          ...myLists?.[0],
+          title: ""
+        }} /> : undefined}
+        {/* <Grid container spacing={2} className='!mt-3 relative'>
           {myLists?.[0]?.content?.map((movieId, index) => (
             <Grid item xs={6} sm={4} md={2} lg={2} key={index}>
               <div className='relative hover:z-[200] hover:!w-[300px] transition-all duration-200 shadow-md'>
@@ -307,7 +311,7 @@ const MyLists = () => {
               </div>
             </Grid>
           ))}
-        </Grid>
+        </Grid> */}
 
       </Container>
     </>

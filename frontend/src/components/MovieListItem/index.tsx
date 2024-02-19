@@ -9,7 +9,7 @@ import {
     ThumbDown,
 } from "@mui/icons-material";
 import { AiOutlinePlus } from "react-icons/ai";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
@@ -26,8 +26,14 @@ import { useGetGenresQuery } from "../../store/rtk-query/genresApi";
 
 import {
     PlayIcon,
-    DolbyLogo
+    DolbyLogo,
+    HeartIcon,
+    HeartIconFilled,
+    ThumbsDownIcon,
+    ThumbsUpIcon,
 } from '../../Assets/svgs/tsSvgs'
+
+import { debounce } from 'lodash';
 
 
 const api_url = import.meta.env.VITE_APP_API_URL;
@@ -66,6 +72,17 @@ export default function MovieListItem({
     })
 
     const { data: genresData, isLoading: genresLoading } = useGetGenresQuery()
+
+    const debouncedOnHover = React.useCallback(
+        debounce((movie) => {
+            onHover?.(movie)
+        }, 300),
+        [] // Ensure it only gets created once
+    );
+
+    const handleMouseEnter = useCallback((movie) => {
+        debouncedOnHover(movie);
+    }, [debouncedOnHover]);
 
 
     useEffect(() => {
@@ -174,9 +191,72 @@ export default function MovieListItem({
     const renderSideButtons = () => {
         if (layoutType == 'grid') return
 
-        //render play instead
+
+
+        //like buttons
         return (
-            <div className="side-buttons absolute right-3 top-0 bottom-0 z-[1000] flex flex-col space-x-1 justify-end pb-[17px]">
+            <div
+                className="side-buttons absolute right-3 top-0 bottom-0 z-[1000] flex flex-col space-x-1 space-y-[4px] justify-end items-center pb-[17px]">
+                <div
+                    onClick={() => {
+                        onLikeMovie()
+                    }}
+                    className='cursor-pointer ml-[3.5px]'
+                >
+                    {likeMovieState?.isLoading ? <CircularProgress color="inherit" style={{}} size={14} /> :
+                        <>
+                            {(movie?.currentUserLiked) ? (
+                                <div className='icon-circle'>
+                                    <ThumbUp
+                                        className='!text-[10px] '
+                                    />
+                                </div>
+                            ) : (
+
+                                <div className='icon-circle'>
+                                    <div className='scale-[0.4]'><ThumbsUpIcon /></div>
+                                </div>
+                            )}
+                        </>
+                    }
+
+                </div>
+                <div
+                    onClick={() => {
+                        onDislikeMovie()
+                    }}
+                    className='cursor-pointer'
+                >
+                    {dislikeMovieState?.isLoading ? <CircularProgress color="inherit" style={{}} size={14} /> :
+                        <>
+                            {(movie?.currentUserDisliked) ? (
+
+                                <div className='icon-circle'>
+                                    <ThumbDown
+                                        className='!text-[10px] '
+                                    />
+                                </div>
+                            ) : (
+
+                                <div className='icon-circle'>
+                                    <div className='scale-[0.4]'><ThumbsDownIcon /></div>
+                                </div>
+                            )}
+                        </>
+                    }
+
+                </div>
+                <div
+                    className='cursor-pointer'
+                    onClick={onAddToList}>
+                    {addToMyListState?.isLoading ? <CircularProgress color="inherit" style={{}} size={14} /> :
+                        <>
+                            {movie?.isInDefaultList ? <div className='scale-[0.73]'><HeartIconFilled /></div> :
+                                <div className='scale-[0.73]'><HeartIcon /></div>}
+                        </>
+                    }
+                </div>
+                {/* play button */}
                 <Link
                     to={`/movie/${movie._id}`}
                     style={{ textDecoration: "none", color: "#fff" }}
@@ -192,78 +272,6 @@ export default function MovieListItem({
                 </Link>
             </div>
         )
-
-        //like buttons
-        return (
-            <div className="side-buttons absolute right-3 top-0 bottom-0 z-[1000] flex flex-col space-x-1 justify-end pb-[17px]">
-                <div
-                    onClick={() => {
-                        onLikeMovie()
-                    }}
-                    className='cursor-pointer'
-                >
-                    {likeMovieState?.isLoading ? <CircularProgress color="inherit" style={{ marginRight: -10 }} size={14} /> :
-                        <>
-                            {(movie?.currentUserLiked) ? (
-                                <div className='icon-circle'>
-                                    <ThumbUp
-                                        className='!text-[10px] '
-                                    />
-                                </div>
-                            ) : (
-
-                                <div className='icon-circle'>
-                                    <ThumbUpAltOutlined
-                                        className='!text-[10px] '
-                                    />
-                                </div>
-                            )}
-                        </>
-                    }
-
-                </div>
-                <div
-                    onClick={() => {
-                        onDislikeMovie()
-                    }}
-                    className='cursor-pointer'
-                >
-                    {dislikeMovieState?.isLoading ? <CircularProgress color="inherit" style={{ marginRight: -10 }} size={14} /> :
-                        <>
-                            {(movie?.currentUserDisliked) ? (
-
-                                <div className='icon-circle'>
-                                    <ThumbDown
-                                        className='!text-[10px] '
-                                    />
-                                </div>
-                            ) : (
-
-                                <div className='icon-circle'>
-                                    <ThumbDownOutlined
-                                        className='!text-[10px] '
-                                    />
-                                </div>
-                            )}
-                        </>
-                    }
-
-                </div>
-                <div
-                    className='cursor-pointer'
-                    onClick={onAddToList}>
-                    {addToMyListState?.isLoading ? <CircularProgress color="inherit" style={{ marginRight: -10 }} size={14} /> :
-                        <>
-                            {movie?.isInDefaultList ? <div className='icon-circle'><Check
-                                className='!text-[10px] '
-                            /></div> : <div className='icon-circle'><AiOutlinePlus
-                                className='!text-[10px] '
-                            /></div>}
-                        </>
-                    }
-                </div>
-            </div>
-        )
     }
 
     return (
@@ -272,7 +280,7 @@ export default function MovieListItem({
             <div
                 onClick={() => {
                     if (isMobile || layoutType == 'grid') {
-                        navigate(`/movie/${movie._id}`)
+                        navigate(`/watch/${movie._id}`)
                     }
                 }}
                 className={
@@ -283,9 +291,9 @@ export default function MovieListItem({
                         layoutType == 'grid' ? '!w-[135px] cursor-pointer' : '!w-full'
                     )
                 }
-                // style={{ left: isHovered && index * 225 - 50 + index * 2.5 }}
+
                 onMouseEnter={() => {
-                    onHover?.(movie?._id)
+                    handleMouseEnter(movie)
                     setIsHovered(true)
                 }}
                 onMouseLeave={() => setIsHovered(false)}
@@ -317,12 +325,10 @@ export default function MovieListItem({
                         }}
                     >
                         <Link
-                            to={`/movie/${movie._id}`}
+                            to={`/watch/${movie._id}`}
                             style={{ textDecoration: "none", color: "#fff" }}
                         >
-                            <div className="flex flex-col">
-
-
+                            <div className="flex flex-col max-w-[260px] ">
                                 <div style={{}}>
                                     <div className='font-[500] text-[11.5px] mt-[4px] mb-[1px]'>{movie.title}</div>
                                     <div
@@ -338,7 +344,7 @@ export default function MovieListItem({
                                         </div>
                                         <div className="h-[10px] w-[1px] bg-[#fff]" />
                                         {movie?.ageRating ? <>
-                                            <div className='text-[9px] border border-[#ddd] border-[1px] rounded-[2px] py-[1px] px-[2px]'><div>
+                                            <div className='text-[9px] py-[1px] px-[2px]'><div>
                                                 {movie?.ageRating}
                                             </div> </div>
                                             <div className="h-[10px] w-[1px] bg-[#fff]" />
@@ -355,6 +361,7 @@ export default function MovieListItem({
                                         <div className="">
                                             <DolbyLogo />
                                         </div>
+                                        <div className="h-[10px] w-[1px] bg-[#fff]" />
                                         <div className='font-[600]'>
                                             4K
                                         </div>

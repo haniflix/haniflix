@@ -10,16 +10,17 @@ interface SectionProps {
   imagePosition: 'left' | 'right'
   contentWrapperStyle?: React.CSSProperties;
   imageWrapperStyle?: React.CSSProperties;
+  icon: any;
 }
 
-const Section: React.FC<SectionProps> = ({ title, description, imageUrl, imagePosition, contentWrapperStyle, imageWrapperStyle }) => {
+const Section: React.FC<SectionProps> = ({ title, description, imageUrl, imagePosition, contentWrapperStyle, imageWrapperStyle, icon }) => {
   const flexDirection = imagePosition === 'right' ? 'row' : 'row-reverse';
 
   return (
     <div className={styles["section"]} style={{ display: 'flex', flexDirection }}>
       <div style={{ flex: '1', ...contentWrapperStyle }}>
         <div className="h-[56px] w-[56px] mb-[25px]">
-          <img alt="" src={gradientStar} />
+          {icon}
         </div>
         <h1
           className="font-[600] !text-[36px] leading-[56px] mb-3"

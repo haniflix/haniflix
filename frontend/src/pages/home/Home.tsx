@@ -34,6 +34,8 @@ const Home = ({ type = null }) => {
 
   const { data: myListData, isLoading: myListLoading } = useGetMyListQuery({})
 
+  const [movieToShow, setMovieToShow] = React.useState(undefined)
+
 
 
   useEffect(() => {
@@ -59,12 +61,20 @@ const Home = ({ type = null }) => {
     },
   };
 
+  const onHoverOverMovie = (movie) => {
+    setMovieToShow(movie)
+  }
+
 
   return (
     <div className="home relative !bg-black">
-      <Navbar />
+      <Navbar
+        onSelectMovie={(movie) => setMovieToShow(movie)}
+      />
       <div className='fixed top-0 right-0 left-0 z-[900]'>
-        <Featured type={type} />
+        <Featured
+          movieObj={movieToShow}
+          type={type} />
       </div>
 
 
@@ -84,10 +94,12 @@ const Home = ({ type = null }) => {
 
               {
                 continueWatchingListData?.list ?
-                  <List list={{
-                    ...continueWatchingListData?.list,
-                    title: "Continue Watching"
-                  }} />
+                  <List
+                    onHoverMovie={onHoverOverMovie}
+                    list={{
+                      ...continueWatchingListData?.list,
+                      title: "Continue Watching"
+                    }} />
                   : undefined
               }
             </div>
@@ -96,15 +108,19 @@ const Home = ({ type = null }) => {
 
               {
                 myListData?.[0] ?
-                  <List list={
-                    myListData?.[0]
-                  } />
+                  <List
+                    onHoverMovie={onHoverOverMovie}
+                    list={
+                      myListData?.[0]
+                    } />
                   : undefined
               }
             </div>
 
             {lists?.map((list) => (
-              <List key={list._id} list={list} />
+              <List
+                onHoverMovie={onHoverOverMovie}
+                key={list._id} list={list} />
             ))}
           </div>
         </Suspense>

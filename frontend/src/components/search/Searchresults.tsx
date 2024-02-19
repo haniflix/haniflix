@@ -16,6 +16,7 @@ import {
 const api_url = import.meta.env.VITE_APP_API_URL;
 
 import styles from './search.module.scss'
+import List from "../list/List";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -80,6 +81,17 @@ const Searchresults = () => {
     }
   }, [search, moviesData])
 
+  let listCarouselData = {
+    content: []
+  }
+
+  if (filteredMovies) {
+    let content = filteredMovies?.map((movie) => movie?._id)
+    listCarouselData.content = content
+  }
+
+  console.log('listCarouselData ', listCarouselData)
+
   const renderMoreToExplore = () => {
     if (!moreToExplore || moreToExplore?.length === 0) return;
 
@@ -131,11 +143,11 @@ const Searchresults = () => {
         <h1 className='text-white'>No Movies Found...</h1>
       )}
 
-      {/* {filteredMovies?.length === 0 && search === "" && (
-        <h1 className='text-white'>Search your movies!</h1>
-      )} */}
 
-      <Grid container spacing={2} className=' !mt-3'>
+      {listCarouselData ? <List list={listCarouselData} /> : undefined}
+
+
+      {/* <Grid container spacing={2} className=' !mt-3'>
         {filteredMovies?.map((movie, index) => (
           <Grid item xs={6} sm={4} md={2} lg={2} key={index}>
             <div className='relative hover:z-[200] shadow-md'>
@@ -147,7 +159,7 @@ const Searchresults = () => {
             </div>
           </Grid>
         ))}
-      </Grid>
+      </Grid> */}
     </Container>
   );
 };
