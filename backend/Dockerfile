@@ -20,7 +20,7 @@ RUN adduser node www-data && adduser pptruser www-data
 RUN mkdir -p /usr/movies /usr/app/uploads/avatars /usr/app/logs
 
 # Change ownership and set permissions for directories
-RUN chown -R pptruser:www-data /usr/app && \
+RUN chown -R pptruser:www-data /usr/app /usr/app/logs && \
     chmod -R 755 /usr/app /usr/movies /usr/app/uploads/avatars /usr/app/logs
 
 # Adjust directory permissions
