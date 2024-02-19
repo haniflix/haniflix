@@ -93,7 +93,7 @@ function Movies() {
     : 0;
 
   React.useEffect(() => {
-    checkScraping()
+    onCheckScraping()
   }, [])
 
   React.useEffect(() => {
@@ -105,6 +105,23 @@ function Movies() {
       }
     });
   }, [socket])
+
+  const onCheckScraping = async () => {
+    const res = await checkScraping()
+
+    if (res?.data) {
+      if (res?.data?.total) {
+        setTotalToProcess(res?.data?.total)
+      }
+      if (res?.data?.processed) {
+        setTotalProcessed(res?.data?.processed)
+      }
+      // toast.success('Scraping completed successfully', { position: 'top-right' });
+    }
+    // else {
+    //   toast.error('Error encountered during scraping', { position: 'top-right' });
+    // }
+  }
 
   const getData = useCallback(() => {
     console.log('callback')
@@ -150,7 +167,7 @@ function Movies() {
       toast.success('Scraping completed successfully', { position: 'top-right' });
     }
     else {
-      toast.error('Error encountered during scraping', { position: 'top-right' });
+      toast.error(res?.error?.data?.message || 'Error encountered during scraping', { position: 'top-right' });
     }
   }
 
