@@ -430,7 +430,7 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
         <div className={
           addClassNames(
             "z-[100] relative p-[13px] min-h-[300px] ",
-            '!top-[100px] sm:!top-[60px] sm:w-[66vw]',
+            '!top-[100px] sm:!top-[60px] w-[70vw]',
             'sm:ml-[70px]',
             'mb-[5vh] space-y-[12px]',
             styles['info']
