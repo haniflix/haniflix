@@ -61,7 +61,7 @@ const Searchresults = () => {
   })
 
   const handleSearch = (e) => {
-    const searchString = e.target.value.trim().toLowerCase();
+    const searchString = e.target.value.toLowerCase();
     setSearch(searchString);
   };
 
@@ -89,8 +89,6 @@ const Searchresults = () => {
     let content = filteredMovies?.map((movie) => movie?._id)
     listCarouselData.content = content
   }
-
-  console.log('listCarouselData ', listCarouselData)
 
   const renderMoreToExplore = () => {
     if (!moreToExplore || moreToExplore?.length === 0) return;

@@ -193,8 +193,6 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
 
   const renderTrailerModal = () => {
 
-    console.log('movieData?.trailer ', movieData)
-
     return (
       <Transition appear show={playTrailerOpen} as={React.Fragment}>
         <Dialog
@@ -419,7 +417,8 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
           }}
           className={
             addClassNames(
-              "flex items-center gap-[4px] px-7 absolute flex items-center top-[22vh] right-[10%]",
+              "flex items-center gap-[4px] px-7 absolute flex items-center  right-[10%]",
+              isMobile.current ? 'top-[220px]' : 'top-[120px]',
               buttonClasses
             )
           }

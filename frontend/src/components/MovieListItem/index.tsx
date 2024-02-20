@@ -64,7 +64,9 @@ export default function MovieListItem({
     const [dislikeMovie, dislikeMovieState] = useDislikeMovieMutation()
     const [addToMyList, addToMyListState] = useAddMovieToDefaultListMutation()
 
-    const { isMobile } = useResponsive()
+    // const { isMobile } = useResponsive()
+    const isMobile = React.useRef(window.matchMedia('(pointer: coarse)').matches);
+
 
     const { data: movieData, isLoading: movieDataLoading, refetch } = useGetMovieQuery(movieId, {
         //skip if movieObj is defined
@@ -80,13 +82,27 @@ export default function MovieListItem({
         [] // Ensure it only gets created once
     );
 
-    // const handleMouseEnter = useCallback((movie) => {
-    //     debouncedOnHover(movie);
-    // }, [debouncedOnHover]);
+    const [isDivExpanded, setIsDivExpanded] = React.useState(false)
+    const containerRef = React.useRef(null)
+
+    useEffect(() => {
+        const observer = new ResizeObserver((entries) => {
+            const div = entries[0].target;
+            const isExpanded = div.clientWidth > 200; // Check if width is greater than 200px
+            if (isExpanded !== isDivExpanded) { // Only update if state needs to change
+                setIsDivExpanded(isExpanded);
+            }
+        });
+
+        observer.observe(containerRef.current); // Observe the div
+
+        return () => observer.disconnect(); // Clean up on unmount
+    }, [isDivExpanded]);
 
     // const isMobile = useRef(window.matchMedia('(pointer: coarse)').matches); // Detect mobile early
     const hoverTimer = React.useRef(null);
     const [isHovered, setIsHovered] = React.useState(false);
+
 
     // Pointer events for modern devices
     const handlePointerEnter = useCallback(() => {
@@ -122,11 +138,15 @@ export default function MovieListItem({
     }, [debouncedOnHover, movie, isHovered]);
 
     const imageToshow = React.useMemo(() => {
-        if (isHovered) {
+        if (isDivExpanded) {
             return movie?.imgTitle ? movie?.imgTitle : moviePlaceHolderSvg
         }
+
+        // if (isHovered) {
+        //     return movie?.imgTitle ? movie?.imgTitle : moviePlaceHolderSvg
+        // }
         return movie?.img ? movie?.img : moviePlaceHolderSvg
-    }, [movie, isHovered]);
+    }, [movie, isHovered, isDivExpanded]);
 
     useEffect(() => {
         if (movieObj) {
@@ -323,11 +343,7 @@ export default function MovieListItem({
         <>
 
             <div
-                onClick={() => {
-                    // if (isMobile || layoutType == 'grid') {
-                    //     navigate(`/watch/${movie._id}`)
-                    // }
-                }}
+                ref={containerRef}
                 className={
                     addClassNames(
                         "listItem relative",

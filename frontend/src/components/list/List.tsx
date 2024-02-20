@@ -53,7 +53,7 @@ const List: React.FC<ListProps> = ({ list, onDelete, onEdit, ...otherProps }) =>
 
   const onHoverMovie = (movie: Movie) => {
     // const movieIndex = list?.content?.findIndex(id => id == movieId)
-    otherProps.onHoverMovie(movie)
+    otherProps?.onHoverMovie?.(movie)
   }
 
   return (
