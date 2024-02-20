@@ -68,16 +68,11 @@ const setupSocket = (io) => {
             user: userId,
           });
 
-          console.log("removing ", movieId);
-          console.log("old length ", continueWatchingList.content?.length);
-
           let newContent = [...continueWatchingList.content];
           newContent = newContent.filter((_movieId) => _movieId != movieId);
-          console.log("newContent l ", newContent?.length);
+
           continueWatchingList.content = newContent;
           await continueWatchingList.save();
-
-          console.log("new length ", continueWatchingList.content?.length);
         } else {
           // Find or create the user's ContinueWatchingList document
           const continueWatchingList =
