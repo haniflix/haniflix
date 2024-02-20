@@ -22,8 +22,8 @@ async function initBrowser() {
     browser = await puppeteer.launch({
       headless: NODE_ENV == "production" ? "new" : false,
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
-      timeout: 60 * 1000,
-      protocolTimeout: 60 * 1000,
+      timeout: 3 * 60 * 1000,
+      protocolTimeout: 5 * 60 * 1000,
     });
   } catch (error) {
     Logger.error(`Error while initializing browser : ${error}`);
@@ -499,6 +499,16 @@ async function searchAndScrapeMovies(
   } catch (error) {
     console.log("error in browser ", error);
     Logger.error(`error in browser : ${JSON.stringify(error)}`);
+
+    if (error.name === "ProtocolError") {
+      Logger.warn(`ProtocolError, relaunching browser...`);
+      await initBrowser(); // Relaunch the browser
+    }
+
+    if ((error.name = "TargetCloseError")) {
+      Logger.warn(`TargetCloseError, relaunching browser...`);
+      await initBrowser(); // Relaunch the browser
+    }
   } finally {
     //  Logger.debug("Browser finally reached");
 
