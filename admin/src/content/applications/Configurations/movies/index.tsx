@@ -171,9 +171,13 @@ function Movies() {
     }
   }
 
-  const onScrapeAllMovies = async () => {
+  const onScrapeAllMovies = async (type) => {
 
-    const res = await scrapeAllMovies()
+    const body = {
+      type
+    }
+
+    const res = await scrapeAllMovies(body)
 
     if (res?.data) {
       toast.success('Scraping completed successfully', { position: 'top-right' });
@@ -215,11 +219,18 @@ function Movies() {
 
     return (
       <div className='w-full px-7 mt-2 flex gap-4 items-center'>
-        <Button
-          className='!h-[43px] w-[100px]'
-          variant="contained" onClick={onScrapeAllMovies}>
-          Pull All
-        </Button>
+        <div className='space-y-2'>
+          <Button
+            className='!h-[30px] w-[100px]'
+            variant="contained" onClick={() => onScrapeAllMovies("all")}>
+            Pull All
+          </Button>
+          <Button
+            className='!h-[30px] w-[150px]'
+            variant="contained" onClick={() => onScrapeAllMovies("failed_movies")}>
+            Pull Red Font(s)
+          </Button>
+        </div>
         <div className='text-sm w-full flex gap-[50px] items-center'>
           {
             totalMoviesProcessed || totalMoviesToProcess ?

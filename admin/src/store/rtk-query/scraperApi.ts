@@ -11,10 +11,10 @@ export const scraperApi = authApi.injectEndpoints({
       })
     }),
     scrapeAllMovies: builder.mutation({
-      query: () => ({
+      query: (data) => ({
         url: 'scraper/scrape-all',
-        method: 'POST'
-        // body: data
+        method: 'POST',
+        body: data
       })
     }),
     checkScraping: builder.mutation({

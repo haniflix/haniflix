@@ -355,7 +355,7 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
     })
 
     metaInfo.push({
-      component: <div>4K</div>
+      component: <div className='font-[600]'>4K</div>
     })
 
     if (metaInfo.length == 0) return

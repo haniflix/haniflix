@@ -192,7 +192,7 @@ const AddMovieForm: React.FC<AddMovieProps> = ({ callback, item }) => {
       desc: description,
       video: videoLink,
       img: imageLink,
-      imgTitle: imageLink,
+      imgTitle: largeImageLink,
       trailer: trailerLink,
       year,
       genre,

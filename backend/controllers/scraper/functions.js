@@ -34,7 +34,7 @@ async function closeBrowser() {
   try {
     console.log("browser close called");
     //
-    await browser.disconnect();
+    // await browser.disconnect();
     await browser.close();
     browser = undefined;
 
@@ -94,6 +94,11 @@ async function scrapeMovieDetails({ _page, url }) {
   } else if (_page instanceof puppeteer.Page) {
     page = _page;
   }
+
+  page.on("console", (msg) => {
+    console.log(msg.text());
+    // Logger.debug("From Puppeteer console: \n" + msg.text());
+  });
 
   try {
     //wait for large image
@@ -205,8 +210,8 @@ async function scrapeMovieDetails({ _page, url }) {
         imageUrl = body.querySelector(".css-18pmxw3.edbh37f1")?.src;
       }
 
-      if (!largestImageUrl) {
-        largestImageUrl = imageUrl?.replace("poster-185", "backdrop-1280");
+      if (!largestImageUrl || !largestImageUrl?.includes("backdrop")) {
+        largestImageUrl = imageUrl?.replace(/poster-\d+/, "backdrop-1280");
       }
 
       return {
@@ -225,6 +230,8 @@ async function scrapeMovieDetails({ _page, url }) {
         duration,
       };
     });
+
+    console.log("movieDetails ", movieDetails);
 
     // Return the extracted data
     return movieDetails;
@@ -294,10 +301,10 @@ async function searchAndScrapeMovies(
       pageInstanceForMultiple = page;
     }
 
-    page.on("console", (msg) => {
-      // console.log(msg.text());
-      // Logger.debug("From Puppeteer console: \n" + msg.text());
-    });
+    // page.on("console", (msg) => {
+    //   console.log(msg.text());
+    //   // Logger.debug("From Puppeteer console: \n" + msg.text());
+    // });
 
     await page.setExtraHTTPHeaders({
       "Accept-Language": "en-US,en;q=0.9",

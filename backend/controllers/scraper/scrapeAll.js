@@ -25,6 +25,8 @@ const setCallBack = (_callback) => {
 //CREATE
 const scrapeAllMovies = async (io, req, res) => {
   try {
+    const type = req.body.type;
+
     // Check if scraping process is already running
     if (isScraping) {
       return res
@@ -58,6 +60,12 @@ const scrapeAllMovies = async (io, req, res) => {
           //   ],
           // },
         ],
+      };
+    }
+
+    if (type == "failed_movies") {
+      query = {
+        failedDuringScrape: true,
       };
     }
 
@@ -141,6 +149,7 @@ const scrapeAllMovies = async (io, req, res) => {
 
     // Unlock the API after scraping is complete
     isScraping = false;
+    processedCount = 0;
 
     res.status(200).json({
       success: true,

@@ -84,6 +84,7 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
     const savedPlaytime = parseFloat(
       localStorage.getItem(`videoPlaytime_${videoId}`)
     );
+    console.log("savedPlaytime ", savedPlaytime);
     if (!isNaN(savedPlaytime) && savedPlaytime <= duration) {
       setPlaytime(savedPlaytime);
       setSeekTime(savedPlaytime);
@@ -93,6 +94,9 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
 
   useEffect(() => {
     if (!socket) return;
+
+    // console.log("duration ", duration);
+    // console.log("playtime ", playtime);
 
     const watchedPercentage = Math.floor((playtime / duration) * 100);
 
@@ -139,6 +143,7 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
 
   // Set the video duration once it's available
   const handleDuration = (videoDuration) => {
+    console.log("videoDuration ", videoDuration);
     setDuration(videoDuration);
   };
 

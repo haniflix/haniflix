@@ -67,7 +67,7 @@ const CustomReactPlayer = React.forwardRef(
                 src={url}
                 controls={controls}
                 onEnded={handleEnded}
-                onDuration={handleDuration}
+                onDurationChange={handleDuration}
                 onTimeUpdate={handleProgress}
                 onPause={handlePause}
                 autoPlay={playing}
@@ -75,8 +75,8 @@ const CustomReactPlayer = React.forwardRef(
                     height,
                     width
                 }}
-                playbackRate={playbackRate}
-                progressInterval={progressInterval}
+                playbackrate={playbackRate}
+                progressinterval={progressInterval}
                 controlsList="nodownload" // Add controlsList prop here
                 buffered={5}
                 {...config}
