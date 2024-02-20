@@ -24,6 +24,7 @@ import {
   ThumbUpAltOutlined,
   ThumbDownOutlined,
   ThumbUp,
+  Close,
   ThumbDown
 } from "@mui/icons-material";
 import CircularProgress from '@mui/material-next/CircularProgress';
@@ -40,6 +41,9 @@ import {
   DolbyLogo
 } from '../../Assets/svgs/tsSvgs'
 import useResponsive from "../../hooks/useResponsive";
+
+import { Dialog, Disclosure, Transition } from '@headlessui/react';
+import ReactPlayer from "react-player";
 
 
 type MetaInfoItem = {
@@ -60,6 +64,8 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
 
   const [skipInitialCall, setSkipInitial] = useState(true)
 
+  const [playTrailerOpen, setPlayTrailerOpen] = useState(false)
+
 
   const { data: genresData, isLoading: genresLoading } = useGetGenresQuery()
 
@@ -74,7 +80,8 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
   const [movieData, setMovieData] = useState<any>()
 
   const { data: newMovieData, isLoading: getMovieLoading, refetch } = useGetMovieQuery(movieId, {
-    skip: skipInitialCall || !movieId
+    skip: skipInitialCall || !movieId,
+    refetchOnMountOrArgChange: true,
   })
 
   useEffect(() => {
@@ -183,6 +190,68 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
     'h-[45px] ',
     'flex space-x-1 !text-white rounded-[8px] height-[55px] flex items-center justify-center'
   )
+
+  const renderTrailerModal = () => {
+
+    console.log('movieData?.trailer ', movieData)
+
+    return (
+      <Transition appear show={playTrailerOpen} as={React.Fragment}>
+        <Dialog
+          className='z-[1000] absolute'
+          onClose={() => {
+            setPlayTrailerOpen(false)
+          }}>
+          <Transition.Child
+            as={React.Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+            as="div"
+          >
+            <div className="fixed top-0 right-0 left-0 bottom-0 bg-[#00000080] backdrop-blur-sm transition-opacity duration-300" />
+            <div className="fixed inset-0 z-10 overflow-y-auto">
+              <div className="flex items-center  justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:p-0">
+                <button
+                  className
+                  onClick={() => {
+                    setPlayTrailerOpen(false)
+                  }}>
+                  <span className={
+                    addClassNames(
+                      " bg-[#ffffff32] text-white flex items-center justify-center h-[35px] w-[35px] focus:ring-offset-2 focus:ring-blue-500",
+                      "rounded-[50%] px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-[#ffffff54] focus:outline-none focus:ring-2 ",
+                      "absolute top-[50px] right-[100px]"
+                    )
+                  }>
+                    <Close
+                      style={{ color: 'white' }}
+                    />
+                  </span>
+                </button>
+                <div className="mt-[100px] h-[80vh] max-w-[800px] w-[75%] text-center ">
+                  {/* Wrap your video player component here, e.g., react-player, with appropriate styling and state management */}
+                  <ReactPlayer
+                    url={movieData?.trailer}
+                    width="100%"
+                    height="100%"
+                    style={{
+                      objectFit: 'contain',
+                      height: 'auto !important',
+                      aspectRatio: '16/9'
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </Transition.Child>
+        </Dialog>
+      </Transition>
+    )
+  }
 
 
   const renderLikeContainer = () => {
@@ -322,7 +391,7 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
         styles['featured']
       )
     }>
-
+      {renderTrailerModal()}
       <div className="h-full w-full relative flex flex-col justify-end ">
         {/* Image div */}
         <div
@@ -343,6 +412,22 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
           className="absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-t from-black to-transparent opacity-[100%]"
         ></div>
 
+
+        <button
+          onClick={() => {
+            setPlayTrailerOpen(true)
+          }}
+          className={
+            addClassNames(
+              "flex items-center gap-[4px] px-7 absolute flex items-center top-[22vh] right-[10%]",
+              buttonClasses
+            )
+          }
+        >
+          {/* <div className='scale-75'><PlayIcon /></div> */}
+          <span className='capitalise text-[13px] font-[500]'>Play Trailer</span>
+        </button>
+
         <div className={
           addClassNames(
             "z-[100] relative p-[13px] min-h-[300px] ",
@@ -352,10 +437,11 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
             styles['info']
           )
         }>
+
           <div className={
             addClassNames(
               " font-[500] mt-6",
-              isMobile.current ? "text-[5rem]" : "text-[3rem]"
+              isMobile.current ? "text-[5rem]" : "text-[2.5rem]"
             )
           }>{movieData?.title ? movieData?.title : <div><CircularProgress color="inherit" size={18} /><span>Loading..</span></div>}</div>
           <div className="flex flex-wrap  space-x-3">

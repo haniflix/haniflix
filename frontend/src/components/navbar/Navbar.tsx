@@ -116,6 +116,8 @@ const Navbar = (props: Props) => {
   };
 
   const renderMobileMenuList = () => {
+    // mobile view disabled
+    return
 
     return (
       <div id="mobile-header-list"
@@ -174,6 +176,9 @@ const Navbar = (props: Props) => {
   }
 
   const renderMobileMenuToggle = () => {
+    // mobile view disabled
+    return
+
     return (
       <div className={styles["mobile-header"]}>
         <div
@@ -229,6 +234,10 @@ const Navbar = (props: Props) => {
             <span>Home</span>
           </Link>
 
+          <Link className={styles["link"]} to="/tv-shows">
+            <span>TV Shows</span>
+          </Link>
+
           <Link className={styles["link"]} to="/movies">
             <span>Movies</span>
           </Link>
@@ -279,18 +288,18 @@ const Navbar = (props: Props) => {
                       }}
                       className="flex items-center my-[8px] py-[4px] px-[8px] cursor-pointer"
                     >
-                      <div className='w-[20%]'>
-                        <div className="h-[50px] w-[50px]">
+                      <div className=''>
+                        <div className="h-[40px] w-[27px]">
                           <img
-                            className="!w-[50px] h-full rounded-[50%]"
+                            className="!w-[27px] h-full "
                             src={movie?.img}
                           />
                         </div>
                       </div>
                       <div
-                        className="text-[14px] font-[500] ml-3"
+                        className="text-[14px] font-[500] ml-3 "
                       >
-                        {movie?.title}{'  '}{movie?.year}
+                        {movie?.title}{'  '}({movie?.year})
                       </div>
                     </div>
                   )
@@ -330,16 +339,16 @@ const Navbar = (props: Props) => {
               )
             }>
               <div className={styles['menu']}>
-                <span
+                {/* <span
                   onClick={() => {
                     setShowChangeAvatar(true)
                   }}
                   className='flex items-center justify-between'>
                   <div className="" >
-                    Change your Profile Picture
+                    Change Your Profile Picture
                   </div>
                   <ProfileIcon />
-                </span>
+                </span> */}
                 <span
                   onClick={() => setShowSettings(true)}
                   className='flex items-center justify-between'>

@@ -121,7 +121,12 @@ export default function MovieListItem({
         }, 300);
     }, [debouncedOnHover, movie, isHovered]);
 
-
+    const imageToshow = React.useMemo(() => {
+        if (isHovered) {
+            return movie?.imgTitle ? movie?.imgTitle : moviePlaceHolderSvg
+        }
+        return movie?.img ? movie?.img : moviePlaceHolderSvg
+    }, [movie, isHovered]);
 
     useEffect(() => {
         if (movieObj) {
@@ -296,7 +301,7 @@ export default function MovieListItem({
                 </div>
                 {/* play button */}
                 <Link
-                    to={`/movie/${movie._id}`}
+                    to={`/watch/${movie._id}`}
                     style={{ textDecoration: "none", color: "#fff" }}
                 >
                     <div className={
@@ -312,19 +317,21 @@ export default function MovieListItem({
         )
     }
 
+
+
     return (
         <>
 
             <div
                 onClick={() => {
-                    if (isMobile || layoutType == 'grid') {
-                        navigate(`/watch/${movie._id}`)
-                    }
+                    // if (isMobile || layoutType == 'grid') {
+                    //     navigate(`/watch/${movie._id}`)
+                    // }
                 }}
                 className={
                     addClassNames(
                         "listItem relative",
-                        "h-[160px] rounded-[3px]",
+                        "h-[200px] rounded-[3px]",
                         // isMobile ? '' : 'hover:scale-[1.25]',
                         layoutType == 'grid' ? '!w-[135px] cursor-pointer' : '!w-full'
                     )
@@ -333,13 +340,11 @@ export default function MovieListItem({
                 onPointerLeave={handlePointerLeave}
                 onTouchStart={handleTouchStart}
                 onTouchEnd={handleTouchEnd}
-            // onMouseEnter={() => {
-            //     handleMouseEnter(movie)
-            //     setIsHovered(true)
-            // }}
-            // onMouseLeave={() => setIsHovered(false)}
+
             >
-                <img src={movie?.img ? movie?.img : moviePlaceHolderSvg} alt="" className="rounded-[3px]" />
+                <img src={
+                    imageToshow
+                } alt="" className="rounded-[3px] transition-all duration-200" />
 
                 <div
                     style={{

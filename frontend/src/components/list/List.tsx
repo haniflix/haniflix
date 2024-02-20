@@ -101,7 +101,7 @@ const List: React.FC<ListProps> = ({ list, onDelete, onEdit, ...otherProps }) =>
             }
             itemClass={
               addClassNames(
-                '!w-[135px] hover:!w-[300px] transition-all duration-200',
+                '!w-[135px] hover:!w-[340px] transition-all duration-200',
                 `mr-[15px] carousel-item`
               )
             }

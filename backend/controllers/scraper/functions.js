@@ -32,8 +32,13 @@ async function initBrowser() {
 
 async function closeBrowser() {
   try {
+    console.log("browser close called");
+    //
+    await browser.disconnect();
     await browser.close();
     browser = undefined;
+
+    console.log("browser set to undefined ", browser);
   } catch (error) {
     Logger.error(`Error while closing browser : ${error}`);
   }
@@ -250,6 +255,7 @@ async function scrapeMovieDetails({ _page, url }) {
  * @param {any} io - Socket.io server instance
  * @param {Function} setProcessedCount - set processed movies count
  * @param {boolean} stopProcess - boolean to determine continuation of api call
+ * @param {Function} setCallBack - Function to cancel browser
  */
 async function searchAndScrapeMovies(
   movieInfos,
@@ -258,15 +264,29 @@ async function searchAndScrapeMovies(
   currentCount,
   batchCount,
   setProcessedCount,
-  stopProcess
+  _stopProcess,
+  setCallBack
 ) {
+  let stopProcess = _stopProcess;
   let countInCurrentBatch = 0;
   const processedMoviesData = [];
   page = pageInstanceForMultiple;
 
+  //set setCallBack in parent file
+  setCallBack({
+    // closeBrowser,
+    // stopScraping: () => {
+    //   stopProcess = true;
+    // },
+  });
+
+  // console.log("browser ", browser);
+
   if (!browser) {
     await initBrowser();
   }
+
+  // console.log("browser after", browser);
 
   try {
     if (!pageInstanceForMultiple) {
@@ -334,6 +354,8 @@ async function searchAndScrapeMovies(
           if (stopProcess) {
             console.log("Scraping process stopped remotely.");
             Logger.info("Scraping process stopped remotely.");
+            await closeBrowser();
+
             break; // Exit the loop immediately
           }
 

@@ -94,6 +94,7 @@ const AppRouter = (props) => {
                 <Route element={<ProtectedRoutes />}>
                     {/* <Route index element={<Home />} /> */}
                     <Route path="movies" element={<Home type="movies" />} />
+                    <Route path="tv-shows" element={<Home type="series" />} />
                     <Route path="movie/:movieId" element={<Movie />} />
 
                     <Route path="series" element={<Home type="series" />} />

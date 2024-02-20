@@ -159,6 +159,18 @@ function Movies() {
       });
   }, []);
 
+  const onStopScraping = async () => {
+
+    const res = await stopScraping()
+
+    if (res?.data) {
+      toast.success(res?.data?.message || 'Scraping stopped successfully', { position: 'top-right' });
+    }
+    else {
+      toast.error(res?.error?.data?.message || 'Error encountered while stopping', { position: 'top-right' });
+    }
+  }
+
   const onScrapeAllMovies = async () => {
 
     const res = await scrapeAllMovies()
@@ -202,11 +214,13 @@ function Movies() {
   const renderScraperInfo = () => {
 
     return (
-      <div className='w-full px-7 mt-2 flex gap-4 items-start'>
-        <Button variant="contained" onClick={onScrapeAllMovies}>
+      <div className='w-full px-7 mt-2 flex gap-4 items-center'>
+        <Button
+          className='!h-[43px] w-[100px]'
+          variant="contained" onClick={onScrapeAllMovies}>
           Pull All
         </Button>
-        <div className='text-sm'>
+        <div className='text-sm w-full flex gap-[50px] items-center'>
           {
             totalMoviesProcessed || totalMoviesToProcess ?
               <div>
@@ -234,10 +248,20 @@ function Movies() {
               </div>
               : undefined
           }
+          {scrapeAllMoviesState.isLoading && <img src={spinnerSvg} alt="Spinner" />}
           {/* <div></div>  */}
-
+          {
+            totalMoviesProcessed || totalMoviesToProcess ?
+              <Button
+                // style={{ backgroundColor: 'red', marginLeft: 'auto' }}
+                className='!mr-10 !bg-[red] !ml-[auto] absolute'
+                variant="contained" onClick={onStopScraping}>
+                {stopScrapingState.isLoading ? '' : "Cancel"}
+              </Button>
+              :
+              <div></div>
+          }
         </div>
-        {scrapeAllMoviesState.isLoading && <img src={spinnerSvg} alt="Spinner" />}
       </div>
     )
   }

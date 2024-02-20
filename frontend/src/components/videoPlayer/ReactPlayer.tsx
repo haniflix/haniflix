@@ -37,19 +37,19 @@ const CustomReactPlayer = React.forwardRef(
 
         const handleEnded = () => {
             if (onEnded) {
-                onEnded();
+                onEnded?.();
             }
         };
 
         const handleDuration = (e) => {
             if (onDuration) {
-                onDuration(e.target.duration);
+                onDuration?.(e.target.duration);
             }
         };
 
         const handleProgress = (e) => {
             if (onProgress) {
-                onProgress({
+                onProgress?.({
                     playedSeconds: e.target.currentTime,
                 });
             }
@@ -57,7 +57,7 @@ const CustomReactPlayer = React.forwardRef(
 
         const handlePause = () => {
             if (onPause) {
-                onPause();
+                onPause?.();
             }
         };
 

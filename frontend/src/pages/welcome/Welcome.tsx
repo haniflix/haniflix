@@ -120,7 +120,7 @@ export default function Welcome() {
           className={
             addClassNames(
               styles['wrapper'],
-              " flex pt-9 pb-6 items-center justify-between pl-10 pr-[80px]"
+              " flex pt-9 pb-6 items-center justify-between pl-3 pr-[80px]"
             )
           }
         >

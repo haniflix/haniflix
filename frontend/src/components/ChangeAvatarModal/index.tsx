@@ -115,7 +115,7 @@ const ChangeAvatarModal = ({ show, onClose }) => {
                         {/* Top section with heading and close button */}
                         <div className="flex items-center justify-between mb-[35px]">
                             <h3 className="text-[25px] font-[500] leading-6 text-white">
-                                Choose your Profile Picture
+                                Choose Your Profile Picture
                             </h3>
                             <button
                                 type="button"

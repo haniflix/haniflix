@@ -46,6 +46,15 @@ const getRandomMovie = async (req, res) => {
 
     movie = movie?.[0];
 
+    //if movie is not found, then select anyone
+    if (!movie) {
+      movie = await Movie.aggregate([
+        //movie must be playable and have an image
+        matchCondition,
+        { $sample: { size: 1 } },
+      ]);
+    }
+
     // Count likes and dislikes using aggregation
     const [likesData, dislikesData, likesCount, dislikesCount] =
       await Promise.all([

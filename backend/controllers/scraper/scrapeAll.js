@@ -10,11 +10,16 @@ let isScraping = false; // Variable to track if scraping is in progress
 let totalCount = 0;
 let processedCount = 0;
 let stopProcess = false;
+let callback; // callback functions from child function
 
 const NODE_ENV = process.env.NODE_ENV;
 
 const setProcessedCount = (count) => {
   processedCount = count;
+};
+
+const setCallBack = (_callback) => {
+  callback = _callback;
 };
 
 //CREATE
@@ -117,7 +122,8 @@ const scrapeAllMovies = async (io, req, res) => {
         localProcessedCount - BATCH_SIZE,
         batchCount,
         setProcessedCount,
-        stopProcess
+        stopProcess,
+        setCallBack
       );
 
       // stop in outer while loop if inner has stopped
@@ -157,12 +163,26 @@ const stopScraping = (io, req, res) => {
     return;
   }
 
+  // console.log("callback ", callback);
+
+  // if (callback && callback?.closeBrowser) {
+  //   callback.closeBrowser?.();
+  //   Logger.error(
+  //     "[stopscraping.controller.js] Scraping process stopped remotely."
+  //   );
+  //   stopProcess = false;
+  // }
+
   io.emit("scrapeDetails", {
     total: totalCount,
     processed: processedCount,
   });
+
   stopProcess = true;
-  res.status(200).json({ success: true, message: "Scraping process stopped." });
+  res.status(200).json({
+    success: true,
+    message: `Scraping stop sent!\nWill stop after current batch.`,
+  });
 };
 
 const checkScrapingProgress = (io, req, res) => {
