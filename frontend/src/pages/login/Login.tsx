@@ -19,6 +19,7 @@ import styles from "./login.module.scss";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 import { addClassNames } from "../../store/utils/functions";
 
+import { Helmet } from "react-helmet";
 
 export default function Login() {
   const emailRef = useRef();
@@ -39,6 +40,35 @@ export default function Login() {
   const [login, loginState] = useLoginMutation()
 
   const { handleUserLogin } = React.useContext(SocketContext)
+
+
+  const [appHeight, setAppHeight] = React.useState(window.innerHeight);
+  const [appWidth, setAppWidth] = React.useState(window.innerWidth);
+  const [isMobile, setIsMobile] = React.useState(window.matchMedia('(pointer: coarse)').matches)
+
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      setAppHeight(window.innerHeight); // Update appHeight
+      setAppWidth(window.innerWidth); // Update appWidth
+      setIsMobile(window.matchMedia('(pointer: coarse)').matches)
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize); // Clean up listener
+  }, [window.innerHeight, window.innerWidth]);
+
+
+  const imageHeight = 1008;
+  const imageWidth = 1440;
+
+  const imageHeightInScreen = React.useMemo(() => {
+    const aspectRatio = imageHeight / imageWidth;
+    const newHeight = aspectRatio * appWidth;
+    return newHeight;
+  }, [imageHeight, imageWidth, appWidth])
+
 
   const showSwal = (title, message, type) => {
     Swal.fire({
@@ -103,110 +133,120 @@ export default function Login() {
   };
 
   return (
-    <div
-      className={
-        styles['loginNew']
-      }
-    >
-      <div className={styles['top']}>
-        <div className={styles["wrapper"]}>
-          <a href={"/"} className="link">
-            <img
-              className="logo"
-              src={Logo}
-              width="100px"
-              height="100px"
-              alt=""
-              loading="lazy"
-            />
-          </a>
-        </div>
-      </div>
-
-
-      <div className={styles['section']}>
-        <div className={
-          addClassNames(
-            "bg-[#FFFFFF1A] rounded-[20px] px-[48px] py-[64px] ",
-            styles["intro-section"]
+    <>
+      {/* <Helmet>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Helmet> */}
+      <div
+        style={{
+          height: isMobile ? imageHeightInScreen : "100%",
+          backgroundSize: isMobile ? "contain" : "cover",
+        }}
+        className={
+          addClassNames(styles['loginNew']
           )
-        }>
-          <h2 className="text-white font-[500] text-[25px] m-[auto] w-[fit-content]" >Sign In</h2>
-          <div
-            className='h-[1px] bg-[#4B4B4B] mt-4 mb-3'
-          />
-          <div className={styles['inputWrapper']}>
-            <input
-              type="email"
-              placeholder="Email Address"
-              ref={emailRef}
-              value={email}
-              onKeyDown={handleKeyDown}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div className={styles['inputWrapper']}>
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              // ref={passwordRef}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              onKeyDown={handleKeyDown}
-            />
-            <div
-              className="cursor-pointer mr-2 text-white"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {
-                showPassword ? <FaRegEye /> : <FaRegEyeSlash />
-              }
-            </div>
-          </div>
-
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <div className={
-              addClassNames(
-                'flex items-center gap-2 w-[fit-content]',
-                styles['rememberMe_wrapper']
-              )
-            }>
-              <input
-                type="checkbox"
-                name="rememberMe"
-                className={
-                  addClassNames(
-                    "!h-[20px] !w-[20px] rounded border border-white text-white shadow-sm",
-                  )
-                }
-                checked={rememberMe}
-                onClick={() => setRememberMe(!rememberMe)}
-                onChange={() => { }}
+        }
+      >
+        <div className={styles['top']}>
+          <div className={styles["wrapper"]}>
+            <a href={"/"} className="link">
+              <img
+                className="logo"
+                src={Logo}
+                width="100px"
+                height="100px"
+                alt=""
+                loading="lazy"
               />
-              <label htmlFor="rememberMe" className="text-sm text-white">Remember Me</label>
+            </a>
+          </div>
+        </div>
+
+
+        <div className={styles['section']}>
+          <div className={
+            addClassNames(
+              "bg-[#FFFFFF1A] rounded-[20px] px-[48px] py-[64px] ",
+              styles["intro-section"]
+            )
+          }>
+            <h2 className="text-white font-[500] text-[25px] m-[auto] w-[fit-content]" >Sign In</h2>
+            <div
+              className='h-[1px] bg-[#4B4B4B] mt-4 mb-3'
+            />
+            <div className={styles['inputWrapper']}>
+              <input
+                type="email"
+                placeholder="Email Address"
+                ref={emailRef}
+                value={email}
+                onKeyDown={handleKeyDown}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className={styles['inputWrapper']}>
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                // ref={passwordRef}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={handleKeyDown}
+              />
+              <div
+                className="cursor-pointer mr-2 text-white"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {
+                  showPassword ? <FaRegEye /> : <FaRegEyeSlash />
+                }
+              </div>
             </div>
 
-            <div>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <div className={
+                addClassNames(
+                  'flex items-center gap-2 w-[fit-content]',
+                  styles['rememberMe_wrapper']
+                )
+              }>
+                <input
+                  type="checkbox"
+                  name="rememberMe"
+                  className={
+                    addClassNames(
+                      "!h-[20px] !w-[20px] rounded border border-white text-white shadow-sm",
+                    )
+                  }
+                  checked={rememberMe}
+                  onClick={() => setRememberMe(!rememberMe)}
+                  onChange={() => { }}
+                />
+                <label htmlFor="rememberMe" className="text-sm text-white">Remember Me</label>
+              </div>
+
+              <div>
+                <span style={{ color: "#222" }}>
+                  <Link className={styles["link"]} to={{ pathname: "/forgot-pass" }}>
+                    Forgot Password
+                  </Link>
+                </span>
+              </div>
+            </div>
+            <button className={styles["loginButton"]} onClick={handleStart}>
+              Sign In
+            </button>
+            <div className='text-white text-md text-center' >
+              <span>Don’t have an account?{' '}</span>
               <span style={{ color: "#222" }}>
-                <Link className={styles["link"]} to={{ pathname: "/forgot-pass" }}>
-                  Forgot Password
+                <Link className={styles["link"]} to={{ pathname: "/register" }}>
+                  Sign up
                 </Link>
               </span>
             </div>
           </div>
-          <button className={styles["loginButton"]} onClick={handleStart}>
-            Sign In
-          </button>
-          <div className='text-white text-md text-center' >
-            <span>Don’t have an account?{' '}</span>
-            <span style={{ color: "#222" }}>
-              <Link className={styles["link"]} to={{ pathname: "/register" }}>
-                Sign up
-              </Link>
-            </span>
-          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

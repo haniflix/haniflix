@@ -46,9 +46,12 @@ const AppRouter = (props) => {
 
     React.useEffect(() => {
         socket?.on("forceLogout", (message) => {
-            showSwal("You were logged out", 'Your account was logged into, in another device', 'success')
 
-            onLogout()
+            if (!user?.isAdmin) {
+                showSwal("You were logged out", 'Your account was logged into, in another device', 'success')
+
+                onLogout()
+            }
         });
     }, [socket])
 
@@ -71,7 +74,6 @@ const AppRouter = (props) => {
             <Routes>
 
                 <Route element={<GuestRoutes />}>
-                    <Route path="movies" element={<Home type="movies" />} />
 
                     <Route path="/" element={user ? <Home /> : <Welcome />} />
                     <Route

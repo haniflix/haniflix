@@ -113,14 +113,20 @@ export default function Welcome() {
     <div className={styles["welcomePage"]}>
       <div className='absolute pointer-events-none top-0 right-0 left-0 h-[60px] bg-gradient-to-b from-black to-transparent'></div>
       <Box
-        className={styles["top"]}
-        style={{ maxWidth: 1200, marginLeft: "auto", marginRight: "auto" }}
+        className={
+          addClassNames(
+            styles["top"],
+            'ml-[40px] mr-[40px]'
+          )
+        }
+
+      // style={{ maxWidth: 1200, marginLeft: "auto", marginRight: "auto" }}
       >
         <div
           className={
             addClassNames(
               styles['wrapper'],
-              " flex pt-9 pb-6 items-center justify-between pl-3 pr-[80px]"
+              " flex pt-9 pb-6 items-center justify-between pl-3 sm:pl-[0] pr-[80px]"
             )
           }
         >
@@ -135,11 +141,11 @@ export default function Welcome() {
             />
           </a>
           <div
-            className="flex items-center gap-[10px]">
+            className="flex items-center space-x-[10px]">
             <button
               className={
                 addClassNames(
-                  styles["app_button"], '!w-[fit-content] px-[12px] flex items-center gap-[7px]'
+                  styles["app_button"], '!w-[fit-content] px-[12px] flex items-center space-x-[7px]'
                 )
               }
             >

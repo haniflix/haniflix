@@ -63,11 +63,11 @@ function Users() {
     ...(formik.values.activeSort && { orderBy: formik.values.activeSort }),
   }
 
-  const { data: usersData, isLoading: usersLoading, refetch } = useGetUsersQuery(queryParams)
+  const { data: usersData, isLoading: usersLoading, refetch } = useGetUsersQuery(queryParams, {
+    refetchOnMountOrArgChange: true,
+  })
 
   const [deleteUser, deleteUserState] = useDeleteUserMutation()
-
-  console.log('usersData ', usersData)
 
   const getData = useCallback(() => {
     refetch()

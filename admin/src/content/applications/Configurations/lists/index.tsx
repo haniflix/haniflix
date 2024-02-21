@@ -58,7 +58,9 @@ function Lists() {
     ...(formik.values.activeSort && { orderBy: formik.values.activeSort }),
   }
 
-  const { data: adminListData, isLoading: adminListsLoading, refetch } = useGetAdminListsQuery(queryParams)
+  const { data: adminListData, isLoading: adminListsLoading, refetch } = useGetAdminListsQuery(queryParams, {
+    refetchOnMountOrArgChange: true,
+  })
 
   const [deleteList, deleteListState] = useDeleteListMutation()
 
