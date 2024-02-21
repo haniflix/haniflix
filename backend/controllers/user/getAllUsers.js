@@ -26,6 +26,12 @@ const getAllusers = async (req, res) => {
     }
 
     aggregationPipeline.push({
+      $match: {
+        isDeleted: { $ne: true },
+      },
+    });
+
+    aggregationPipeline.push({
       $project: {
         _id: 1,
         // Exclude accessToken
