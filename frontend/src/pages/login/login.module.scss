@@ -3,7 +3,11 @@
     background-size: contain;
     background-attachment: fixed;
     color: white;
-    height:100vh;
+    height:100% !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 
     .rememberMe_wrapper {
         /* Remove default input styling */
