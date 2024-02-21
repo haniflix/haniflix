@@ -84,6 +84,20 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
     refetchOnMountOrArgChange: true,
   })
 
+  const [appHeight, setAppHeight] = useState(window.innerHeight);
+  const [appWidth, setAppWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setAppHeight(window.innerHeight); // Update appHeight
+      setAppWidth(window.innerWidth); // Update appWidth
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize); // Clean up listener
+  }, [setAppHeight, setAppWidth]);
+
   useEffect(() => {
     if (newMovieData) {
       setMovieData(newMovieData)
@@ -427,15 +441,19 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
           <span className='capitalise text-[13px] font-[500]'>Play Trailer</span>
         </button>
 
-        <div className={
-          addClassNames(
-            "z-[100] relative p-[13px] min-h-[300px] ",
-            '!top-[100px] sm:!top-[60px] w-[70vw]',
-            'sm:ml-[70px]',
-            'mb-[5vh] space-y-[12px]',
-            styles['info']
-          )
-        }>
+        <div
+          style={{
+            width: appWidth * 0.73
+          }}
+          className={
+            addClassNames(
+              "z-[100] relative p-[13px] min-h-[300px] ",
+              '!top-[100px] sm:!top-[60px] border ',
+              'sm:ml-[70px]',
+              'mb-[5vh] space-y-[12px]',
+              styles['info']
+            )
+          }>
 
           <div className={
             addClassNames(

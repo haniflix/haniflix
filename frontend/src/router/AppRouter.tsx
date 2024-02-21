@@ -71,6 +71,8 @@ const AppRouter = (props) => {
             <Routes>
 
                 <Route element={<GuestRoutes />}>
+                    <Route path="movies" element={<Home type="movies" />} />
+
                     <Route path="/" element={user ? <Home /> : <Welcome />} />
                     <Route
                         path="/register"

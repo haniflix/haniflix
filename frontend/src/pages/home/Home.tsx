@@ -38,15 +38,27 @@ const Home = ({ type = null }) => {
 
   const [movieToShow, setMovieToShow] = React.useState(undefined)
 
-  const appHeight = React.useMemo(() => { // Wrap in useCallback if necessary
-    const doc = document.documentElement;
-    // doc.style.setProperty('— app-height', `${window.innerHeight}px`);
-    return window.innerHeight
-  }, [window.innerHeight]);
+  const [appHeight, setAppHeight] = useState(window.innerHeight);
+  const [appWidth, setAppWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setAppHeight(window.innerHeight); // Update appHeight
+      setAppWidth(window.innerWidth); // Update appWidth
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize); // Clean up listener
+  }, [setAppHeight, setAppWidth]);
+
+  console.log('window.innerHeight ', window.innerHeight)
+  console.log('appHeight ', appHeight)
 
   const heroHeight = appHeight * 0.65;
   const slidersHeight = appHeight * 0.35;
 
+  console.log('heroHeight ', heroHeight)
 
 
 
