@@ -106,11 +106,16 @@ const Home = ({ type = null }) => {
       </div>
 
 
-      <div className={addClassNames(
-        ' mt-[65vh] relative z-[10] pt-[0px] pb-6'
-      )}>
+      <div
+        style={{
+          marginTop: heroHeight
+        }}
+        className={addClassNames(
+          ' relative z-[10] pt-[0px] pb-6'
+        )}>
         <div
-          className='fixed z-[200] top-[65vh] left-0 right-0 h-[25px] bg-gradient-to-b from-black to-transparent'
+          style={{ top: heroHeight }}
+          className='fixed z-[200] left-0 right-0 h-[25px] bg-gradient-to-b from-black to-transparent'
         >
 
         </div>
