@@ -75,11 +75,9 @@ export default function Featured(props: Props) {
 
 
   return (
-    <div>
-      <MovieDetailsFull
-        movieId={movieObj ? movieObj?._id : getRandomMovieState?.data?._id}
-        movieDataProps={movieObj ? undefined : getRandomMovieState?.data}
-      />
-    </div>
+    <MovieDetailsFull
+      movieId={movieObj ? movieObj?._id : getRandomMovieState?.data?._id}
+      movieDataProps={movieObj ? undefined : getRandomMovieState?.data}
+    />
   );
 }

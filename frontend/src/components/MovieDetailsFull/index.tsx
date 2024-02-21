@@ -384,7 +384,7 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
     <div className={
       addClassNames(
         " relative",
-        "h-[65vh] flex flex-col justify-center",
+        "h-full border flex flex-col justify-center",
         movieData?.img ? '' : 'bg-gradient-to-b from-teal-500 to-gray-900',
         styles['featured']
       )

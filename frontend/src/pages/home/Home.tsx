@@ -15,6 +15,8 @@ import { useGetContinueWatchingListQuery, useGetMyListQuery, useGetRandomListsQu
 import List from "../../components/list/List"
 import { addClassNames } from "../../store/utils/functions";
 
+import './home.scss'
+
 const api_url = import.meta.env.VITE_APP_API_URL;
 
 const Home = ({ type = null }) => {
@@ -35,6 +37,16 @@ const Home = ({ type = null }) => {
   const { data: myListData, isLoading: myListLoading } = useGetMyListQuery({})
 
   const [movieToShow, setMovieToShow] = React.useState(undefined)
+
+  const appHeight = React.useMemo(() => { // Wrap in useCallback if necessary
+    const doc = document.documentElement;
+    // doc.style.setProperty('— app-height', `${window.innerHeight}px`);
+    return window.innerHeight
+  }, [window.innerHeight]);
+
+  const heroHeight = appHeight * 0.65;
+  const slidersHeight = appHeight * 0.35;
+
 
 
 
@@ -71,7 +83,11 @@ const Home = ({ type = null }) => {
       <Navbar
         onSelectMovie={(movie) => setMovieToShow(movie)}
       />
-      <div className='fixed top-0 right-0 left-0 z-[900]'>
+      <div
+        style={{
+          height: heroHeight,
+        }}
+        className='fixed top-0 right-0 left-0 z-[900] '>
         <Featured
           movieObj={movieToShow}
           type={type}
