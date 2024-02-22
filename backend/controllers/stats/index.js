@@ -5,7 +5,9 @@ const getAdminDashboardStats = async (req, res) => {
   try {
     const [movieCount, userCount] = await Promise.all([
       Movie.countDocuments({}),
-      User.countDocuments({}),
+      User.countDocuments({
+        isDeleted: { $ne: true },
+      }),
     ]);
 
     console.log("data ", {
