@@ -1,6 +1,8 @@
 const User = require("../../models/User");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
+const { v4: uuidv4 } = require("uuid");
+
 const deleteUser = async (req, res) => {
   try {
     if (req.user.id === req.params.id || req.user.isAdmin) {
@@ -13,6 +15,11 @@ const deleteUser = async (req, res) => {
         await User.findByIdAndUpdate(req.params.id, {
           isDeleted: true,
           isSubscribed: false,
+          old_email: user.email,
+          old_username: user.username,
+          email: uuidv4(),
+          username: uuidv4(),
+          // $unset: { email: "", username: "" },
         });
         res.status(200).json({
           message: "User has been deleted along with subscription.",

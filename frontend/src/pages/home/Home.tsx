@@ -143,9 +143,10 @@ const Home = ({ type = null }) => {
                 myListData?.[0] ?
                   <List
                     onHoverMovie={onHoverOverMovie}
-                    list={
-                      myListData?.[0]
-                    } />
+                    list={{
+                      ...myListData?.[0],
+                      title: 'My List'
+                    }} />
                   : undefined
               }
             </div>

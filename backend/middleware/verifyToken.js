@@ -23,7 +23,7 @@ function verify(req, res, next) {
         .then((user) => {
           if (!user || user.accessToken !== token) {
             //exclude admins from this check
-            if (!user.isAdmin) {
+            if (!user?.isAdmin) {
               // User logged in on another device
               return res.status(401).json({
                 error: "User logged in on another device",
