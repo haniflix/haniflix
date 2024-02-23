@@ -139,9 +139,13 @@ export default function Login() {
       </Helmet> */}
       <div
         style={{
-          height: isMobile ? imageHeightInScreen : "100%",
-          backgroundSize: isMobile ? "contain" : "cover",
+          height: isMobile ? "100%" : "100%",
+          backgroundSize: isMobile ? "cover" : "cover",
         }}
+        // style={{
+        //   height: isMobile ? imageHeightInScreen : "100%",
+        //   backgroundSize: isMobile ? "contain" : "cover",
+        // }}
         className={
           addClassNames(styles['loginNew']
           )
@@ -154,7 +158,7 @@ export default function Login() {
                 className="logo"
                 src={Logo}
                 width="100px"
-                height="100px"
+                // height="100px"
                 alt=""
                 loading="lazy"
               />

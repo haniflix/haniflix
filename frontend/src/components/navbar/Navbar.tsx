@@ -307,7 +307,7 @@ const Navbar = (props: Props) => {
               </div>
             </Transition>
           </div>
-          <span className="ml-[30px] whitespace-nowrap ">Hi, {userData?.username}</span>
+          <span className="ml-[30px] whitespace-nowrap sm:ml-[10px] sm:mr-[10px]">Hi, {userData?.username}</span>
 
           <div
             onClick={() => {

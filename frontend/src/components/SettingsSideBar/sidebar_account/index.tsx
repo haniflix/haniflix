@@ -179,7 +179,7 @@ const SidebarAccount = () => {
 
                     className=''
                 >
-                    <Paper className="relative border !border-[#4B4B4B] !bg-[#000]" sx={{ color: "#fff", padding: 5 }}>
+                    <Paper className="relative border !border-[#4B4B4B] !bg-[#4B4B4B]" sx={{ color: "#fff", padding: 5, background: "rgba(0,0,0,0.7)" }}>
                         <Typography variant="h6">
                             Delete Account
                         </Typography>
