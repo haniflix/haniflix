@@ -424,7 +424,7 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
         ></div>
 
 
-        <button
+        {/* <button
           onClick={() => {
             setPlayTrailerOpen(true)
           }}
@@ -435,11 +435,23 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
               buttonClasses
             )
           }
-        >
+        > */}
+        {movieData?.trailer && <Link
+                className={
+                  // buttonClasses
+                  addClassNames(
+                    "flex items-center gap-[4px] px-7 absolute flex items-center  right-[10%]",
+                    isMobile.current ? 'top-[220px]' : 'top-[120px]',
+                    buttonClasses
+                  )
+                }
+                to={`/watch-trailer/${movieData?._id}`}
+                style={{ textDecoration: "none" }}
+              >
           {/* <div className='scale-75'><PlayIcon /></div> */}
           <span className='capitalise text-[13px] font-[500]'>Play Trailer</span>
-        </button>
-
+          </Link>}
+        {/* </button> */}
         <div
           style={{
             width: appWidth * 0.73
