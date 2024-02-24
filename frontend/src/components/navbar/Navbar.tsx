@@ -222,7 +222,6 @@ const Navbar = (props: Props) => {
             </Transition>
           </div>
          
-
           <div
             onClick={() => {
               setShowChangeAvatar(true);
