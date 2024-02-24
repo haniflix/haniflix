@@ -30,25 +30,21 @@ import {
 import Section from "./Section";
 import TopSection from "./TopSection";
 
-import styles from './welcome.module.scss'
+import styles from "./welcome.module.scss";
 import { addClassNames } from "../../store/utils/functions";
 
-import createProfile from '../../Assets/Images/createProfile.png'
-import accordionBg from '../../Assets/Images/accordionBg.png'
-import watchEvrywhere from '../../Assets/Images/watchEvrywhere.png'
-import discoverImg from '../../Assets/Images/discoverImg.png'
+import createProfile from "../../Assets/Images/createProfile.png";
+import accordionBg from "../../Assets/Images/accordionBg.png";
+import watchEvrywhere from "../../Assets/Images/watchEvrywhere.png";
+import discoverImg from "../../Assets/Images/discoverImg.png";
 
-import {
-  ChevronDown,
-  TranslateIcon
-} from '../../Assets/svgs/tsSvgs'
+import { ChevronDown, TranslateIcon } from "../../Assets/svgs/tsSvgs";
 import AppAccordion from "./AppAccordion";
 
 import { PiTelevisionSimpleFill } from "react-icons/pi";
 import { MdPeopleAlt } from "react-icons/md";
 
-import gradientStar from '../../Assets/Images/gradientStar.png'
-
+import gradientStar from "../../Assets/Images/gradientStar.png";
 
 const darkTheme = createTheme({
   palette: {
@@ -108,57 +104,47 @@ export default function Welcome() {
     },
   ];
 
-
   return (
     <div className={styles["welcomePage"]}>
-      <div className='absolute pointer-events-none top-0 right-0 left-0 h-[60px] bg-gradient-to-b from-black to-transparent'></div>
+      <div className="absolute pointer-events-none top-0 right-0 left-0 h-[60px] bg-gradient-to-b from-black to-transparent"></div>
       <Box
-        className={
-          addClassNames(
-            styles["top"],
-            'ml-[40px] mr-[40px]'
-          )
-        }
+        className={addClassNames(styles["top"], "ml-[40px] mr-[40px]")}
 
-      // style={{ maxWidth: 1200, marginLeft: "auto", marginRight: "auto" }}
+        // style={{ maxWidth: 1200, marginLeft: "auto", marginRight: "auto" }}
       >
         <div
-          className={
-            addClassNames(
-              styles['wrapper'],
-              " flex pt-9 pb-6 items-center justify-between pl-3 sm:pl-[0] pr-[80px]"
-            )
-          }
+          className={addClassNames(
+            styles["wrapper"],
+            " flex pt-9  items-center justify-between "
+          )}
         >
           <a href={"/"} className={styles["link"]}>
             <img
-              className={styles["logo"]}
+              // className={styles["logo"]}
               src={Logo}
               width="100px"
+              height="100px"
               //height="100px"
-              alt=""
+              alt="App logo"
               loading="lazy"
             />
           </a>
-          <div
-            className="flex items-center space-x-[10px]">
+          <div className="flex items-center space-x-[10px]">
             <button
-              className={
-                addClassNames(
-                  styles["app_button"], '!w-[fit-content] px-[12px] flex items-center space-x-[7px]'
-                )
-              }
+              className={addClassNames(
+                styles["app_button"],
+                "!w-[fit-content] px-[12px] flex items-center space-x-[7px]"
+              )}
             >
-              <TranslateIcon />
+              <TranslateIcon className="mr-2" />
               English
               <ChevronDown />
             </button>
             <button
-              className={
-                addClassNames(
-                  styles["app_button"], '!w-[fit-content] px-[12px]'
-                )
-              }
+              className={addClassNames(
+                styles["app_button"],
+                styles["sign_in_button"]
+              )}
               onClick={() => navigate("/login")}
             >
               Sign In
@@ -175,26 +161,22 @@ export default function Welcome() {
         <p style={{ marginBottom: 10 }}>
           Ready to watch? Enter your email to create or restart your membership.
         </p>
-        <div className={
-          addClassNames(
+        <div
+          className={addClassNames(
             "flex w-[50%] mx-[auto]",
-            styles['inputWrapper']
-          )
-        }>
+            styles["inputWrapper"]
+          )}
+        >
           <input
             type="email"
             placeholder="Email Address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <button
-            className={styles["app_button"]}
-            onClick={onSignUp}
-          >
+          <button className={styles["app_button"]} onClick={onSignUp}>
             Get Started
           </button>
         </div>
-
       </div>
 
       <TopSection />
@@ -204,9 +186,11 @@ export default function Welcome() {
         description="Unlimited award-winning TV shows, movies, and more in 4k and ad-free on any device for only $4.99/month!"
         imageUrl={discoverImg}
         imagePosition="right"
-        icon={<div className="h-[56px] w-[56px] mb-[25px]">
-          <img alt="" src={gradientStar} />
-        </div>}
+        icon={
+          <div className="h-[56px] w-[56px] mb-[25px]">
+            <img alt="" src={gradientStar} />
+          </div>
+        }
       />
 
       <Section
@@ -214,16 +198,15 @@ export default function Welcome() {
         description="Watch on Smart TVs, Playstation, Xbox, Chromecast, Apple TV, Blu-ray players, and more."
         imageUrl={watchEvrywhere}
         imagePosition="left"
-        icon={<div
-          className={
-            addClassNames(
+        icon={
+          <div
+            className={addClassNames(
               "h-[56px] w-[56px] mb-[25px] flex items-center justify-center rounded-[50%]",
-              styles['section_icon_wrapper']
-            )
-          }
-        >
-          <PiTelevisionSimpleFill />
-        </div>
+              styles["section_icon_wrapper"]
+            )}
+          >
+            <PiTelevisionSimpleFill />
+          </div>
         }
       />
 
@@ -232,78 +215,66 @@ export default function Welcome() {
         description="Send kids on adventures with their favorite characters in a space made for just them — free with your membership"
         imageUrl={createProfile}
         imagePosition="right"
-        icon={<div
-          className={
-            addClassNames(
+        icon={
+          <div
+            className={addClassNames(
               "h-[56px] w-[56px] mb-[25px] flex items-center justify-center rounded-[50%]",
-              styles['section_icon_wrapper']
-            )
-          }
-        >
-          < MdPeopleAlt />
-        </div>
+              styles["section_icon_wrapper"]
+            )}
+          >
+            <MdPeopleAlt />
+          </div>
         }
       />
 
-
-      < div
-        className="bg-black "
-      >
-        <div
-          className={styles["footer-wrapper"]}
-        >
+      <div className="bg-black ">
+        <div className={styles["footer-wrapper"]}>
           <div
-            className={
-              addClassNames(
-                styles["blur_bg"],
-                'mx-[70px] py-[20px] px-[20px] mt-[100px] rounded-[10px] flex  gap-y-[12px] flex-col justify-center'
-              )
-            }
+            className={addClassNames(
+              styles["blur_bg"],
+              "mx-[70px] py-[20px] px-[20px] mt-[100px] rounded-[10px] flex  gap-y-[12px] flex-col justify-center"
+            )}
           >
-            <div className='mb-[3px] text-[22px]'>Support</div>
-            <div className='text-[20px]'>Frequently asked questions</div>
-            <div className='text-[20px]'>Everything you need to know about the product, subscription and billing.</div>
+            <div className="mb-[3px] text-[22px]">Support</div>
+            <div className="text-[20px]">Frequently asked questions</div>
+            <div className="text-[20px]">
+              Everything you need to know about the product, subscription and
+              billing.
+            </div>
           </div>
-          <div
-            className='mx-[70px]'
-          >
+          <div className="mx-[70px]">
             <AppAccordion items={accordionItems} />
           </div>
           <div
-            className={
-              addClassNames(
-                styles["blur_bg"],
-                'mx-[70px] py-[20px] px-[45px] mt-[100px] rounded-[10px] flex items-center flex-col justify-center'
-              )
-            }
+            className={addClassNames(
+              styles["blur_bg"],
+              "mx-[70px] py-[20px] px-[45px] mt-[100px] rounded-[10px] flex items-center flex-col justify-center"
+            )}
           >
-            <div className='text-[25px] text-center mb-[24px]'>
+            <div className="text-[25px] text-center mb-[24px]">
               Ready to watch? Enter your email to create or restart your
               membership.
             </div>
 
-            <div className={
-              addClassNames(
+            <div
+              className={addClassNames(
                 "flex w-[50%] mx-[auto]",
-                styles['inputWrapper']
-              )
-            }>
+                styles["inputWrapper"]
+              )}
+            >
               <input
                 type="email"
                 placeholder="Email Address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <button
-                className={styles["app_button"]}
-                onClick={onSignUp}
-              >
+              <button className={styles["app_button"]} onClick={onSignUp}>
                 Get Started
               </button>
             </div>
           </div>
         </div>
-      </div >
-    </div >
+      </div>
+    </div>
   );
 }

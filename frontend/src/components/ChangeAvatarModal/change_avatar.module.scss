@@ -1,21 +1,32 @@
-.app_button {
-    height: 40px;
-    width: 100%;
-    margin-top:48px;
-    margin: 5px auto 10px auto;
-    border-radius: 5px;
-    background-color: #FFFFFF33;
-    color: #fff;
-    border: 1px solid #FFFFFF33 !important;
-    backdrop-filter: blur(15px);
-    font-size: 18px;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.choose-your-profile-modal {
+  @media (max-width: 765px) {
+    margin: 10px;
 
-    &:hover{
-    background-color: rgba(255, 255, 255, 0.35);
+    h3 {
+      font-size: 18px;
+      line-height: 30px;
+      margin-right: 20px;
     }
+  }
+}
+.app_button {
+  height: 40px;
+  width: 100%;
+  margin-top: 48px;
+  margin: 5px auto 10px auto;
+  border-radius: 5px;
+  background-color: #ffffff33;
+  color: #fff;
+  border: 1px solid #ffffff33 !important;
+  backdrop-filter: blur(15px);
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.35);
+  }
 }

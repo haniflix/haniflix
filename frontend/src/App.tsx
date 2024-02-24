@@ -31,8 +31,6 @@ const App = () => {
   const user = useAppSelector(selectUser);
 
 
-
-
   return (
     <>
       <SocketProvider>

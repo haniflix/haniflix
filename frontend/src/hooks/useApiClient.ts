@@ -1,4 +1,4 @@
-import ApiClient from "@api/client";
+import ApiClient from "@api/client/src";
 import { useAppSelector } from "../store/hooks";
 import { selectUser } from "../store/reducers/auth";
 

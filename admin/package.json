@@ -6,7 +6,7 @@
   "type": "module",
   "private": false,
   "dependencies": {
-    "@api/client": "link:../api-client",
+    "@api/client": "file:../api-client",
     "@emotion/react": "11.9.0",
     "@emotion/styled": "11.8.1",
     "@headlessui/react": "^1.7.18",

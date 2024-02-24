@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
 import react from '@vitejs/plugin-react-swc';
 import path from 'path';
 
@@ -8,7 +9,13 @@ export default defineConfig({
   plugins: [
     react({
       jsxRuntime: 'classic'
-    })
+    }),
+
+    ViteImageOptimizer({
+      // Example options
+      compress: true,
+      quality: 80,
+    }),
   ],
   resolve: {
     alias: {

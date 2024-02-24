@@ -18,6 +18,9 @@ export const moviesApi = authApi.injectEndpoints({
               "Movies",
             ]
           : ["Movies"],
+      // transformErrorResponse: (data) => {
+      //   console.log(data);
+      // },
     }),
     getRandomMovies: builder.mutation({
       query: (type: string | undefined) => ({

@@ -21,10 +21,15 @@ interface ListProps {
   list: any;
   onDelete?: Function;
   onEdit?: Function;
-  onHoverMovie?: (movie: Movie) => {}
+  onHoverMovie?: (movie: Movie) => {};
 }
 
-const List: React.FC<ListProps> = ({ list, onDelete, onEdit, ...otherProps }) => {
+const List: React.FC<ListProps> = ({
+  list,
+  onDelete,
+  onEdit,
+  ...otherProps
+}) => {
   const user = useAppSelector(selectUser);
 
   const carouselRef = useRef();
@@ -48,19 +53,22 @@ const List: React.FC<ListProps> = ({ list, onDelete, onEdit, ...otherProps }) =>
     },
   };
 
-  const { isMobile } = useResponsive()
-
+  const { isMobile } = useResponsive();
 
   const onHoverMovie = (movie: Movie) => {
     // const movieIndex = list?.content?.findIndex(id => id == movieId)
-    otherProps?.onHoverMovie?.(movie)
-  }
+    otherProps?.onHoverMovie?.(movie);
+  };
 
   return (
     <>
       <div className={styles["list"]}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <div className={addClassNames(styles['listTitle'], " text-white mt-10")}>{list?.title}</div>
+          <div
+            className={addClassNames(styles["listTitle"], " text-white mt-10")}
+          >
+            {list?.title}
+          </div>
           <div>
             {onEdit ? (
               <span style={{ cursor: "pointer" }} onClick={() => onEdit()}>
@@ -79,44 +87,41 @@ const List: React.FC<ListProps> = ({ list, onDelete, onEdit, ...otherProps }) =>
             ref={carouselRef}
             responsive={responsive}
             centerMode={true}
-            containerClass={
-              addClassNames(
-                isMobile ? '' : 'overflow-visible'
-              )
-            }
+            containerClass={addClassNames(isMobile ? "" : "overflow-visible")}
             customLeftArrow={
-              <ArrowBackIosOutlined className={
-                addClassNames(
-                  styles["sliderArrow"], styles['left']
-                )
-              } />
+              <ArrowBackIosOutlined
+                className={addClassNames(styles["sliderArrow"], styles["left"])}
+              />
             }
             customRightArrow={
               <ArrowForwardIosOutlined
-                className={
-                  addClassNames(
-                    styles["sliderArrow"], styles['right']
-                  )
-                } />
+                className={addClassNames(
+                  styles["sliderArrow"],
+                  styles["right"]
+                )}
+              />
             }
-            itemClass={
-              addClassNames(
-                '!w-[135px] hover:!w-[340px] transition-all duration-200',
-                `mr-[15px] carousel-item`
-              )
-            }
+            itemClass={addClassNames(
+              "!w-[135px] hover:!w-[340px] transition-all duration-200",
+              `mr-[15px] carousel-item`
+            )}
           >
             {list?.content?.map((movieId, i) => {
               if (!movieId) return;
-              return <MovieListItem
-                key={i} index={i} movieId={movieId}
-                onHover={onHoverMovie}
-              />
+
+              return (
+                <MovieListItem
+                  key={i}
+                  index={i}
+                  movieId={movieId}
+                  // movieObj={list}
+                  onHover={onHoverMovie}
+                />
+              );
             })}
           </Carousel>
         </div>
       </div>
-
     </>
   );
 };

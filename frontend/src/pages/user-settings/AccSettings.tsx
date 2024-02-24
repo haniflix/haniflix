@@ -21,41 +21,42 @@ import useApiClient from "../../hooks/useApiClient";
 import Swal from "sweetalert2";
 import { Close } from "@mui/icons-material";
 
-import { useFormik } from 'formik';
-
+import { useFormik } from "formik";
 
 import "./settings.scss";
 import ChangePasswordForm from "../../components/forms/ChangePasswordForm";
-import { useGetUserQuery, useUpdateUserPasswordMutation } from "../../store/rtk-query/usersApi";
+import {
+  useGetUserQuery,
+  useUpdateUserPasswordMutation,
+} from "../../store/rtk-query/usersApi";
 
 import CircularProgress from "@mui/material-next/CircularProgress";
 
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
 
 const url = import.meta.env.VITE_APP_API_URL;
 
 const CustomTextField = styled(TextField)(({ theme }) => ({
-  '& .MuiOutlinedInput-root': {
-    '& fieldset': {
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": {
       borderColor: theme.palette.grey[500], // Darker gray outline
-      '&:hover fieldset': {
+      "&:hover fieldset": {
         borderColor: theme.palette.grey[600], // Slightly lighter on hover
       },
     },
   },
-  '& .MuiInputLabel-root': { // Target the label
-    color: 'white', // Set label color to white
+  "& .MuiInputLabel-root": {
+    // Target the label
+    color: "white", // Set label color to white
   },
-  '& .MuiInputBase-input': {
-    color: 'white', // Set text color to white
+  "& .MuiInputBase-input": {
+    color: "white", // Set text color to white
   },
 }));
 
-
-
 const AccSettings = () => {
   const user = useAppSelector(selectUser);
-  const accessToken = user?.accessToken
+  const accessToken = user?.accessToken;
 
   const userId = user?._id;
   const [loading, setLoading] = useState(false);
@@ -70,9 +71,12 @@ const AccSettings = () => {
   const client = useApiClient();
   const dispatch = useAppDispatch();
 
-  const { data: userData, isLoading: userDataLoading, refetch: refetchUserData } = useGetUserQuery(userId)
-  const [updatePassword, updatePasswordState] = useUpdateUserPasswordMutation()
-
+  const {
+    data: userData,
+    isLoading: userDataLoading,
+    refetch: refetchUserData,
+  } = useGetUserQuery(userId);
+  const [updatePassword, updatePasswordState] = useUpdateUserPasswordMutation();
 
   useEffect(() => {
     // fetchUserDetails();
@@ -81,7 +85,7 @@ const AccSettings = () => {
         id: userId,
         name: userData?.fullname,
         email: userData?.email,
-      })
+      });
     }
   }, [userData]);
 
@@ -93,28 +97,28 @@ const AccSettings = () => {
   });
 
   const changePassValidationSchema = Yup.object({
-    currentPassword: Yup.string().required('Current password is required'),
+    currentPassword: Yup.string().required("Current password is required"),
     newPassword: Yup.string()
-      .required('New password is required')
-      .min(6, 'New password must be at least 6 characters'),
+      .required("New password is required")
+      .min(6, "New password must be at least 6 characters"),
     confirmPassword: Yup.string()
-      .required('Confirm password is required')
-      .oneOf([Yup.ref('newPassword'), null], 'Passwords must match'),
-  })
+      .required("Confirm password is required")
+      .oneOf([Yup.ref("newPassword"), null], "Passwords must match"),
+  });
 
   const changePassFormik = useFormik({
     initialValues: {
-      currentPassword: '',
-      newPassword: '',
-      confirmPassword: '',
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
     },
     validationSchema: changePassValidationSchema,
     onSubmit: (values) => {
       // Submit form data to the server
       console.log("change pass ", values);
-      onUpdatePassword(values)
-    }
-  })
+      onUpdatePassword(values);
+    },
+  });
 
   const showSwal = (title, message, type) => {
     Swal.fire({
@@ -125,15 +129,15 @@ const AccSettings = () => {
   };
 
   const onUpdatePassword = async (values) => {
-    const newPassword = values?.newPassword
-    const currentPassword = values.currentPassword
+    const newPassword = values?.newPassword;
+    const currentPassword = values.currentPassword;
 
-    const data = { newPassword, currentPassword }
+    const data = { newPassword, currentPassword };
 
     const res = await updatePassword({
       data,
-      id: userId
-    })
+      id: userId,
+    });
 
     if (res?.data) {
       Swal.fire({
@@ -141,7 +145,7 @@ const AccSettings = () => {
         text: "Password changed",
         icon: "success",
         timer: 1500,
-      })
+      });
     } else {
       Swal.fire({
         title: res?.error?.data?.message || "Error encountered during update",
@@ -149,7 +153,7 @@ const AccSettings = () => {
         icon: "error",
       });
     }
-  }
+  };
 
   const handleSubmitUserDetails = async (
     values,
@@ -160,14 +164,18 @@ const AccSettings = () => {
       headers: {
         token: `Bearer ${accessToken}`,
       },
-    }
+    };
 
     try {
-      const res = await axios.put(`${url}users/updateUserDetails/${userId}`, {
-        id: userId,
-        name: values.name,
-        email: values.email,
-      }, config);
+      const res = await axios.put(
+        `${url}users/updateUserDetails/${userId}`,
+        {
+          id: userId,
+          name: values.name,
+          email: values.email,
+        },
+        config
+      );
       setUserDetails({
         id: res.data._id,
         name: res.data.fullname,
@@ -275,8 +283,8 @@ const AccSettings = () => {
           </Paper>
         </Container>
       </Modal>
-    )
-  }
+    );
+  };
 
   return (
     <>
@@ -309,7 +317,7 @@ const AccSettings = () => {
                 maxWidth: "450px",
                 width: "100%",
                 // background: "#fff",
-                border: '1px solid gray',
+                border: "1px solid gray",
                 padding: 10,
                 borderRadius: 5,
               }}
@@ -344,15 +352,19 @@ const AccSettings = () => {
                 disabled={isSubmitting || loading}
                 sx={{ mt: 2, mb: 2 }}
               >
-                {loading ? <CircularProgress color="inherit" size={24} /> : "Save Changes"}
+                {loading ? (
+                  <CircularProgress color="inherit" size={24} />
+                ) : (
+                  "Save Changes"
+                )}
               </Button>
             </Form>
           )}
         </Formik>
       </Box>
 
-      <div className='w-full flex justify-center'>
-        <div className='w-[fit-content]'>
+      <div className="w-full flex justify-center">
+        <div className="w-[fit-content]">
           <ChangePasswordForm
             formik={changePassFormik}
             isLoading={updatePasswordState.isLoading}
@@ -360,12 +372,7 @@ const AccSettings = () => {
         </div>
       </div>
 
-
-
-
-      <div
-        className="fixed bottom-[10px] right-0 left-0 flex justify-center"
-      >
+      <div className="fixed bottom-[10px] right-0 left-0 flex justify-center">
         <Button
           className="gradientButton"
           type="submit"

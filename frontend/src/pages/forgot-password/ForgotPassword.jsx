@@ -112,8 +112,8 @@ export default function ForgotPassword() {
       </Helmet> */}
       <div
         style={{
-          height: isMobile ? imageHeightInScreen : "100%",
-          backgroundSize: isMobile ? "contain" : "cover",
+          // height: isMobile ? imageHeightInScreen : "100%",
+          // backgroundSize: isMobile ? "contain" : "cover",
         }}
         className={addClassNames(styles["loginNew"])}
       >

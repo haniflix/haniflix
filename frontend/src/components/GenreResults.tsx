@@ -4,7 +4,6 @@ import { makeStyles } from "@mui/styles";
 import axios from "axios";
 import SearchListItem from "../components/search/searchlistItem/SearchListItem";
 
-
 import { addClassNames } from "../store/utils/functions";
 import { useGetMoviesQuery } from "../store/rtk-query/moviesApi";
 
@@ -13,8 +12,15 @@ import Pagination from "./Pagination";
 import { useGetGenresQuery } from "../store/rtk-query/genresApi";
 import MovieListItem from "./MovieListItem/index";
 
-import { TextField, Grid, Container, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
-
+import {
+  TextField,
+  Grid,
+  Container,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+} from "@mui/material";
 
 const api_url = import.meta.env.VITE_APP_API_URL;
 
@@ -39,8 +45,10 @@ const useStyles = makeStyles((theme) => ({
 
 const getCurrentYear = () => new Date().getFullYear(); // Get current year dynamically
 
-const years = Array.from({ length: getCurrentYear() - 1900 + 1 }, (_, i) => 1900 + i).reverse(); // Generate years in descending order
-
+const years = Array.from(
+  { length: getCurrentYear() - 1900 + 1 },
+  (_, i) => 1900 + i
+).reverse(); // Generate years in descending order
 
 const GenreResults = () => {
   const classes = useStyles();
@@ -49,9 +57,12 @@ const GenreResults = () => {
   const [movieYear, setMovieYear] = useState<undefined | number>(undefined);
 
   const { id: genreId } = useParams();
-  const { data: genresData, isLoading: genresLoading } = useGetGenresQuery({}, {
-    refetchOnMountOrArgChange: true,
-  })
+  const { data: genresData, isLoading: genresLoading } = useGetGenresQuery(
+    {},
+    {
+      refetchOnMountOrArgChange: true,
+    }
+  );
 
   const itemsPerPage = 20;
   const [page, setPage] = React.useState(1);
@@ -61,31 +72,34 @@ const GenreResults = () => {
     perPage: itemsPerPage,
     page,
     searchTerm: search,
-    ...(movieYear && { movieYear })
-  }
+    ...(movieYear && { movieYear }),
+  };
 
-  const { data: moviesData, isLoading: moviesLoading, isFetching, refetch } = useGetMoviesQuery(queryParams, {
+  const {
+    data: moviesData,
+    isLoading: moviesLoading,
+    isFetching,
+    refetch,
+    error,
+  } = useGetMoviesQuery(queryParams, {
     pollingInterval: 10000,
     refetchOnMountOrArgChange: true,
-  })
+  });
 
   const pageCount = moviesData?.totalMovies
     ? Math.ceil(moviesData.totalMovies / queryParams.perPage)
     : 0;
 
-
   const selectedGenre = React.useMemo(() => {
     if (!genresData) return;
 
-    let selected = genresData?.genres?.find((item) => item?._id == genreId)
-    return selected
-  }, [genresData, genreId])
-
-
+    let selected = genresData?.genres?.find((item) => item?._id == genreId);
+    return selected;
+  }, [genresData, genreId]);
 
   const handlePageChange = (data) => {
-    const selectedPage = (parseInt(data?.selected) + 1) || 0;
-    setPage(selectedPage)
+    const selectedPage = parseInt(data?.selected) + 1 || 0;
+    setPage(selectedPage);
   };
 
   const handleSearch = (e) => {
@@ -104,18 +118,16 @@ const GenreResults = () => {
       <div className="w-full flex justify-end gap-[4px]  !mt-11 sm:!mt-2">
         <TextField
           placeholder="Search movies"
-          className={
-            addClassNames(
-              // classes.input,
-              'bg-white h-[45px]'
-            )
-          }
+          className={addClassNames(
+            // classes.input,
+            "bg-white h-[45px]"
+          )}
           variant="outlined"
           onChange={handleSearch}
           InputProps={{
             style: {
               color: "black",
-              height: 45
+              height: 45,
             },
           }}
         />
@@ -124,14 +136,14 @@ const GenreResults = () => {
 
           <Select
             id="year-select"
-            value={movieYear || ''}
+            value={movieYear || ""}
             label="Year"
             onChange={handleYearChange}
-            className='bg-white h-[45px] w-[90px] text-black'
+            className="bg-white h-[45px] w-[90px] text-black"
             InputProps={{
               style: {
                 color: "black",
-                height: 45
+                height: 45,
               },
             }}
           >
@@ -147,21 +159,19 @@ const GenreResults = () => {
         </FormControl>
       </div>
 
-
-
-
-      <div className='text-4xl font-bold mt-11 sm:mt-2 capitalize'>
+      <div className="text-4xl font-bold mt-11 sm:mt-2 capitalize">
         {selectedGenre?.title}
       </div>
 
-      {moviesData?.movies?.length === 0 && (search !== "" || movieYear !== undefined) && (
-        <h1 className='text-white mt-6'>No Movies Found...</h1>
-      )}
+      {moviesData?.movies?.length === 0 &&
+        (search !== "" || movieYear !== undefined) && (
+          <h1 className="text-white mt-6">No Movies Found...</h1>
+        )}
 
-      <Grid container spacing={2} className='!mt-3 sm:!mx-[20px] relative'>
+      <Grid container spacing={2} className="!mt-3 sm:!mx-[20px] relative">
         {moviesData?.movies?.map((movie, index) => (
           <Grid item xs={6} sm={6} md={4} lg={3} key={index}>
-            <div className='relative hover:z-[200] shadow-md'>
+            <div className="relative hover:z-[200] shadow-md">
               <MovieListItem
                 movieObj={movie}
                 refetchFn={refetch}

@@ -48,19 +48,20 @@ const Register = () => {
 
   const [appHeight, setAppHeight] = React.useState(window.innerHeight);
   const [appWidth, setAppWidth] = React.useState(window.innerWidth);
-  const [isMobile, setIsMobile] = React.useState(window.matchMedia('(pointer: coarse)').matches)
-
+  const [isMobile, setIsMobile] = React.useState(
+    window.matchMedia("(pointer: coarse)").matches
+  );
 
   React.useEffect(() => {
     const handleResize = () => {
       setAppHeight(window.innerHeight); // Update appHeight
       setAppWidth(window.innerWidth); // Update appWidth
-      setIsMobile(window.matchMedia('(pointer: coarse)').matches)
+      setIsMobile(window.matchMedia("(pointer: coarse)").matches);
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
-    return () => window.removeEventListener('resize', handleResize); // Clean up listener
+    return () => window.removeEventListener("resize", handleResize); // Clean up listener
   }, [window.innerHeight, window.innerWidth]);
 
   const imageHeight = 1008;
@@ -70,8 +71,7 @@ const Register = () => {
     const aspectRatio = imageHeight / imageWidth;
     const newHeight = aspectRatio * appWidth;
     return newHeight;
-  }, [imageHeight, imageWidth, appWidth])
-
+  }, [imageHeight, imageWidth, appWidth]);
 
   const handleStart = () => {
     if (errors.email) {
@@ -94,10 +94,10 @@ const Register = () => {
   };
 
   const handleKeyDown = (event) => {
-    if (event.key === 'Enter' || event.keyCode === 13) {
+    if (event.key === "Enter" || event.keyCode === 13) {
       handleStart(); // Trigger login on Enter key press
     }
-  }
+  };
 
   const showSwal = (title, message, type) => {
     Swal.fire({
@@ -116,10 +116,11 @@ const Register = () => {
       </Helmet> */}
       <div
         style={{
-          height: isMobile ? imageHeightInScreen : "100%",
-          backgroundSize: isMobile ? "contain" : "cover",
+          // height: isMobile ? imageHeightInScreen : "100%",
+          // backgroundSize: isMobile ? "contain" : "cover",
         }}
-        className={addClassNames(styles["loginNew"])}>
+        className={addClassNames(styles["loginNew"])}
+      >
         <div className={styles["top"]}>
           <div className={styles["wrapper"]}>
             <a href={"/"} className="link">
@@ -134,15 +135,12 @@ const Register = () => {
           </div>
         </div>
 
-
-
         <div className={styles["section"]}>
           <div className={styles["intro-section"]}>
-
-            <h2 className="text-white font-[500] text-[25px] m-[auto] w-[fit-content]" >Sign Up</h2>
-            <div
-              className='h-[1px] bg-[#4B4B4B] mt-4 mb-3'
-            />
+            <h2 className="text-white font-[500] text-[25px] m-[auto] w-[fit-content]">
+              Sign Up
+            </h2>
+            <div className="h-[1px] bg-[#4B4B4B] mt-4 mb-3" />
             <form
               onSubmit={handleSubmit}
               style={{ maxWidth: "450px", width: "100%" }}
@@ -155,7 +153,6 @@ const Register = () => {
                   name="email"
                   value={values.email}
                   onChange={handleChange}
-
                 />
               </div>
               <div className={styles["inputWrapper"]}>
@@ -167,7 +164,6 @@ const Register = () => {
                   placeholder="Password"
                   value={values.password}
                   onChange={handleChange}
-
                 />
               </div>
               <div className={styles["inputWrapper"]}>
@@ -179,7 +175,6 @@ const Register = () => {
                   placeholder="Repeat Password"
                   value={values.repeatPassword}
                   onChange={handleChange}
-
                   onKeyDown={handleKeyDown}
                 />
               </div>
@@ -203,7 +198,8 @@ const Register = () => {
 
             <div className="flex justify-center">
               <Link className="link text-dark" to={{ pathname: "/login" }}>
-                Already have an account? <span className="underline">Sign in</span>
+                Already have an account?{" "}
+                <span className="underline">Sign in</span>
               </Link>
             </div>
           </div>

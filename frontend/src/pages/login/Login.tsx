@@ -10,7 +10,7 @@ import { selectUser, setUser } from "../../store/reducers/auth";
 import { useAppSelector } from "../../store/hooks";
 import { useLoginMutation } from "../../store/rtk-query/authApi";
 
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
 import SocketContext from "../../context/SocketContext";
 
@@ -24,12 +24,12 @@ import { Helmet } from "react-helmet";
 export default function Login() {
   const emailRef = useRef();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   // const passwordRef = useRef();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [showPassword, setShowPassword] = useState<boolean>(false)
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const client = useApiClient();
   const dispatch = useDispatch();
@@ -37,28 +37,27 @@ export default function Login() {
 
   const [rememberMe, setRememberMe] = useState(false);
 
-  const [login, loginState] = useLoginMutation()
+  const [login, loginState] = useLoginMutation();
 
-  const { handleUserLogin } = React.useContext(SocketContext)
-
+  const { handleUserLogin } = React.useContext(SocketContext);
 
   const [appHeight, setAppHeight] = React.useState(window.innerHeight);
   const [appWidth, setAppWidth] = React.useState(window.innerWidth);
-  const [isMobile, setIsMobile] = React.useState(window.matchMedia('(pointer: coarse)').matches)
-
+  const [isMobile, setIsMobile] = React.useState(
+    window.matchMedia("(pointer: coarse)").matches
+  );
 
   React.useEffect(() => {
     const handleResize = () => {
       setAppHeight(window.innerHeight); // Update appHeight
       setAppWidth(window.innerWidth); // Update appWidth
-      setIsMobile(window.matchMedia('(pointer: coarse)').matches)
+      setIsMobile(window.matchMedia("(pointer: coarse)").matches);
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
-    return () => window.removeEventListener('resize', handleResize); // Clean up listener
+    return () => window.removeEventListener("resize", handleResize); // Clean up listener
   }, [window.innerHeight, window.innerWidth]);
-
 
   const imageHeight = 1008;
   const imageWidth = 1440;
@@ -67,8 +66,7 @@ export default function Login() {
     const aspectRatio = imageHeight / imageWidth;
     const newHeight = aspectRatio * appWidth;
     return newHeight;
-  }, [imageHeight, imageWidth, appWidth])
-
+  }, [imageHeight, imageWidth, appWidth]);
 
   const showSwal = (title, message, type) => {
     Swal.fire({
@@ -91,22 +89,19 @@ export default function Login() {
   // }, [user]);
 
   const onLogin = async (email: string, password: string) => {
-    const res = await login({ email, password, rememberMe })
-
+    const res = await login({ email, password, rememberMe });
 
     if (res?.data) {
-      console.log('Login successful')
-
+      console.log("Login successful");
     }
 
     if (!res?.data) {
       Swal.fire({
-        title: res?.error?.data?.message || "Error encountered during login",
-        text: res?.error?.data?.message,
+        title: res?.error.message || "Error encountered during login",
+        text: res?.error.message,
         icon: "error",
       });
     }
-
   };
 
   const handleStart = useCallback(() => {
@@ -123,11 +118,10 @@ export default function Login() {
     // return;
 
     onLogin(email, password);
-
   }, [email, password, emailRef, rememberMe]);
 
   const handleKeyDown = (event) => {
-    if (event.key === 'Enter' || event.keyCode === 13) {
+    if (event.key === "Enter" || event.keyCode === 13) {
       handleStart(); // Trigger login on Enter key press
     }
   };
@@ -140,18 +134,14 @@ export default function Login() {
       <div
         style={{
           height: isMobile ? "100%" : "100%",
-          backgroundSize: isMobile ? "cover" : "cover",
         }}
         // style={{
         //   height: isMobile ? imageHeightInScreen : "100%",
         //   backgroundSize: isMobile ? "contain" : "cover",
         // }}
-        className={
-          addClassNames(styles['loginNew']
-          )
-        }
+        className={addClassNames(styles["loginNew"])}
       >
-        <div className={styles['top']}>
+        <div className={styles["top"]}>
           <div className={styles["wrapper"]}>
             <a href={"/"} className="link">
               <img
@@ -166,19 +156,18 @@ export default function Login() {
           </div>
         </div>
 
-
-        <div className={styles['section']}>
-          <div className={
-            addClassNames(
+        <div className={styles["section"]}>
+          <div
+            className={addClassNames(
               "bg-[#FFFFFF1A] rounded-[20px] px-[48px] py-[64px] ",
               styles["intro-section"]
-            )
-          }>
-            <h2 className="text-white font-[500] text-[25px] m-[auto] w-[fit-content]" >Sign In</h2>
-            <div
-              className='h-[1px] bg-[#4B4B4B] mt-4 mb-3'
-            />
-            <div className={styles['inputWrapper']}>
+            )}
+          >
+            <h2 className="text-white font-[500] text-[25px] m-[auto] w-[fit-content]">
+              Sign In
+            </h2>
+            <div className="h-[1px] bg-[#4B4B4B] mt-4 mb-3" />
+            <div className={styles["inputWrapper"]}>
               <input
                 type="email"
                 placeholder="Email Address"
@@ -188,7 +177,7 @@ export default function Login() {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <div className={styles['inputWrapper']}>
+            <div className={styles["inputWrapper"]}>
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
@@ -201,37 +190,38 @@ export default function Login() {
                 className="cursor-pointer mr-2 text-white"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {
-                  showPassword ? <FaRegEye /> : <FaRegEyeSlash />
-                }
+                {showPassword ? <FaRegEye /> : <FaRegEyeSlash />}
               </div>
             </div>
 
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <div className={
-                addClassNames(
-                  'flex items-center gap-2 w-[fit-content]',
-                  styles['rememberMe_wrapper']
-                )
-              }>
+              <div
+                className={addClassNames(
+                  "flex items-center gap-2 w-[fit-content]",
+                  styles["rememberMe_wrapper"]
+                )}
+              >
                 <input
                   type="checkbox"
                   name="rememberMe"
-                  className={
-                    addClassNames(
-                      "!h-[20px] !w-[20px] rounded border border-white text-white shadow-sm",
-                    )
-                  }
+                  className={addClassNames(
+                    "!h-[20px] !w-[20px] rounded border border-white text-white shadow-sm"
+                  )}
                   checked={rememberMe}
                   onClick={() => setRememberMe(!rememberMe)}
-                  onChange={() => { }}
+                  onChange={() => {}}
                 />
-                <label htmlFor="rememberMe" className="text-sm text-white">Remember Me</label>
+                <label htmlFor="rememberMe" className="text-sm text-white">
+                  Remember Me
+                </label>
               </div>
 
               <div>
                 <span style={{ color: "#222" }}>
-                  <Link className={styles["link"]} to={{ pathname: "/forgot-pass" }}>
+                  <Link
+                    className={styles["link"]}
+                    to={{ pathname: "/forgot-pass" }}
+                  >
                     Forgot Password
                   </Link>
                 </span>
@@ -240,8 +230,8 @@ export default function Login() {
             <button className={styles["loginButton"]} onClick={handleStart}>
               Sign In
             </button>
-            <div className='text-white text-md text-center' >
-              <span>Don’t have an account?{' '}</span>
+            <div className="text-white text-md text-center">
+              <span>Don’t have an account? </span>
               <span style={{ color: "#222" }}>
                 <Link className={styles["link"]} to={{ pathname: "/register" }}>
                   Sign up
