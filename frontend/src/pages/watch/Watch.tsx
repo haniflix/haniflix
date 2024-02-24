@@ -33,6 +33,8 @@ export default function Watch() {
     navigate(-1);
   };
 
+
+
   return (
     <>
       <Helmet>
@@ -45,7 +47,7 @@ export default function Watch() {
           <ArrowBackOutlined />
           Go Back
         </div>
-        <VideoPlayer videoId={movie?._id} videoUrl={movie?.video} />
+        <VideoPlayer videoId={movie?._id} videoUrl={movie?.trailer} />
       </div>
     </>
   );

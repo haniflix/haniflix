@@ -1,38 +1,30 @@
-import "./listItem.scss";
 import {
-  PlayArrow,
-  Add,
-  ThumbUpAltOutlined,
-  ThumbDownOutlined,
-  ThumbUp,
-  Check,
   ThumbDown,
+  ThumbUp
 } from "@mui/icons-material";
-import { AiOutlinePlus } from "react-icons/ai";
 import React, { useCallback, useEffect, useState } from "react";
+import "./listItem.scss";
 
-import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
+import { useAddMovieToDefaultListMutation } from "../../store/rtk-query/listsApi";
 import {
   useDislikeMovieMutation,
   useGetMovieQuery,
   useLikeMovieMutation,
 } from "../../store/rtk-query/moviesApi";
-import { useAddMovieToDefaultListMutation } from "../../store/rtk-query/listsApi";
 
 import CircularProgress from "@mui/material-next/CircularProgress";
 import { addClassNames } from "../../store/utils/functions";
-import useResponsive from "../../hooks/useResponsive";
 
 import moviePlaceHolderSvg from "../../Assets/svgs/moviePlaceholder.svg";
 import { useGetGenresQuery } from "../../store/rtk-query/genresApi";
 
 import {
-  PlayIcon,
   DolbyLogo,
   HeartIcon,
   HeartIconFilled,
+  PlayIcon,
   ThumbsDownIcon,
   ThumbsUpIcon,
 } from "../../Assets/svgs/tsSvgs";
@@ -188,6 +180,8 @@ export default function MovieListItem({
       if (cur == false && action == "dislike") return null;
     });
   };
+
+
 
   const onLikeMovie = async () => {
     const res = await likeMovie(movie?._id);
@@ -349,7 +343,7 @@ export default function MovieListItem({
             </>
           )}
         </div>
-        {/* play button */}
+        {movie?.trailer &&
         <Link
           to={`/watch/${movie._id}`}
           style={{ textDecoration: "none", color: "#fff" }}
@@ -364,7 +358,7 @@ export default function MovieListItem({
               <PlayIcon />
             </div>
           </div>
-        </Link>
+        </Link>}
       </div>
     );
   };
