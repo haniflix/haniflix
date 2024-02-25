@@ -147,7 +147,9 @@ const ChangeAvatarModal = ({ show, onClose }) => {
               aria-labelledby="modal-title"
             >
               {userData?.avatars?.map((avatar, index) => {
+                console.log('avatar:', avatar);
                 const imageUrl = avatar?.url?.replace("/api/", "");
+                console.log('imageUrl:', imageUrl);
                 return (
                   <div
                     key={avatar?._id}
