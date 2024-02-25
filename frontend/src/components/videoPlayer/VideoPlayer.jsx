@@ -58,7 +58,7 @@ const VideoPlayer = ({ videoId, videoUrl, isTrailer }) => {
   
   let id='';
   let isYouTube = false;
-  if(videoUrl && videoUrl.includes('youtu')){
+  if(videoUrl && videoUrl.includes('youtu.') || videoUrl.includes('youtube.com')){
     isYouTube = true;
   }
   if(isTrailer && videoUrl){
