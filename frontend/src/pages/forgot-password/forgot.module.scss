@@ -86,13 +86,12 @@
 
   span {
     color: lightgray;
-    b {
-      color: white;
-    }
   }
   .link {
-    color: #222;
+    color: #fff !important;
+    text-decoration: underline;
   }
+
   #scroll-simulator {
     text-align: center;
     display: block;

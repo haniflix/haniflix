@@ -56,3 +56,9 @@ body {
   //   font-weight: 500;
   //   cursor: pointer;
 }
+
+.d--sm-none {
+  @media (max-width: 768px) {
+    display: none;
+  }
+}

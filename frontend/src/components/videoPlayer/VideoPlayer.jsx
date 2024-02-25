@@ -58,7 +58,7 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
   const authReducer = useSelector((state) => state.auth);
   const accessToken = authReducer?.user?.accessToken;
 
-  const streamUrl = `${
+  const streamUrl = videoUrl.includes('youtu.be') ? videoUrl : `${
     import.meta.env.VITE_APP_API_URL
   }movies/stream/${videoId}?token=${accessToken}`;
 

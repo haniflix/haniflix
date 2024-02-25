@@ -111,10 +111,12 @@ export default function ForgotPassword() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Helmet> */}
       <div
-        style={{
-          // height: isMobile ? imageHeightInScreen : "100%",
-          // backgroundSize: isMobile ? "contain" : "cover",
-        }}
+        style={
+          {
+            // height: isMobile ? imageHeightInScreen : "100%",
+            // backgroundSize: isMobile ? "contain" : "cover",
+          }
+        }
         className={addClassNames(styles["loginNew"])}
       >
         <div className={styles["top"]}>
@@ -166,10 +168,13 @@ export default function ForgotPassword() {
               Submit
             </button>
             <br />
-            <div className="flex items-center justify-center">
-              <Link className="link " to={{ pathname: "/login" }}>
-                Remember password? <span className="underline">Sign in</span>
+            <div className="text-white text-md text-center">
+              <span>Remember password? </span>
+             <span>
+               <Link className={styles["link"]}  to={{ pathname: "/login" }}>
+                 Sign in
               </Link>
+             </span>
             </div>
           </div>
         </div>
