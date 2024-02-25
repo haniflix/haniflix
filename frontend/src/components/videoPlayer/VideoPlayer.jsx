@@ -59,7 +59,7 @@ const VideoPlayer = ({ videoId, videoUrl, isTrailer }) => {
   const accessToken = authReducer?.user?.accessToken;
   
   if(isTrailer && videoUrl){
-    const lnks = (videoUrl as string).split('/')
+    const lnks = (videoUrl).split('/')
     videoUrl =`https://www.youtube.com/watch?v=${lnks[lnks.length -1]}`;
   }
 
