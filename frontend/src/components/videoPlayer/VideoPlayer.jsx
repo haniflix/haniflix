@@ -1,17 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { useSelector } from "react-redux";
+import YouTubePlayer from "react-youtube";
+
 import SocketContext from "../../context/SocketContext";
 
-import { IconButton } from "@mui/material";
 import {
-  Add,
-  ThumbUpAltOutlined,
-  ThumbDownOutlined,
-  ThumbUp,
   ThumbDown,
-  Check,
+  ThumbUp
 } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
 import {
   useDislikeMovieMutation,
   useGetMovieQuery,
@@ -28,8 +26,8 @@ import { useNavigate } from "react-router-dom";
 import CustomReactPlayer from "./ReactPlayer";
 
 import {
-  HeartIconFilled,
   HeartIcon,
+  HeartIconFilled,
   ThumbsDownIcon,
   ThumbsUpIcon,
 } from "../../Assets/svgs/tsSvgs";
@@ -58,8 +56,14 @@ const VideoPlayer = ({ videoId, videoUrl, isTrailer }) => {
   const authReducer = useSelector((state) => state.auth);
   const accessToken = authReducer?.user?.accessToken;
   
+  let id='';
+  let isYouTube = false;
+  if(videoUrl.include('youtu')){
+    isYouTube = true;
+  }
   if(isTrailer && videoUrl){
     const lnks = (videoUrl).split('/')
+    id = lnks[lnks.length -1];
     videoUrl =`https://www.youtube.com/watch?v=${lnks[lnks.length -1]}`;
   }
 
@@ -322,7 +326,7 @@ const VideoPlayer = ({ videoId, videoUrl, isTrailer }) => {
 
   return (
     <div className="video-player-containerd  h-screen">
-      <CustomReactPlayer
+     {isYouTube ? <YouTubePlayer videoId={id} /> : <CustomReactPlayer
         ref={playerRef}
         url={streamUrl}
         controls
@@ -343,7 +347,7 @@ const VideoPlayer = ({ videoId, videoUrl, isTrailer }) => {
           },
         }}
         // config={getConfig(accessToken)}
-      />
+      />}
       <div className="px-3">{renderExtraButtons()}</div>
     </div>
   );
