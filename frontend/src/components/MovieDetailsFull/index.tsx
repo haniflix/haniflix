@@ -510,7 +510,6 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
               </div>
             </div>
             {renderLikeContainer()}
-
             {movieData?.trailer && (
               <Link
                 className={
@@ -518,10 +517,11 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
                   addClassNames(
                     "px-7",
                     isMobile.current ? "top-[220px]" : "top-[100px]",
-                    buttonClasses
+                    buttonClasses,
+                    styles["like-container"]
                   )
                 }
-                to={`/watch-trailer/${movieData?.trailer}`}
+                to={`/watch-trailer/${movieData?._id}`}
                 style={{ textDecoration: "none" }}
               >
                 {/* <div className='scale-75'><PlayIcon /></div> */}
