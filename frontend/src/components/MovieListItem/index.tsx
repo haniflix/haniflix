@@ -338,9 +338,10 @@ export default function MovieListItem({
             </>
           )}
         </div>
-        {movie?.trailer && (
+     
           <Link
-            to={`/watch/${movie?.trailer}`}
+            to={`/watch/${movie?._id}`}
+            
             style={{ textDecoration: "none", color: "#fff" }}
           >
             <div
@@ -354,7 +355,7 @@ export default function MovieListItem({
               </div>
             </div>
           </Link>
-        )}
+        
       </div>
     );
   };

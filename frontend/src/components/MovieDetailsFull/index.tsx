@@ -46,6 +46,7 @@ import useResponsive from "../../hooks/useResponsive";
 
 import { Dialog, Disclosure, Transition } from "@headlessui/react";
 import ReactPlayer from "react-player";
+import useWindowSize from "../../hooks/useWindowSize";
 
 type MetaInfoItem = {
   text: string;
@@ -60,6 +61,7 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
   const client = useApiClient();
 
   const isMobile = React.useRef(window.matchMedia("(pointer: coarse)").matches);
+  const [width] = useWindowSize();
 
   const userReducer = useSelector((state) => state.auth);
 
@@ -536,7 +538,7 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
           <div>{renderGenres()}</div>
 
           <span className={styles["desc"]}>
-            {isMobile.current
+            {width <= 768
               ? `${trimmedDesc.substring(0, 40)}...`
               : trimmedDesc}
           </span>

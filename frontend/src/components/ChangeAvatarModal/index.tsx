@@ -75,7 +75,6 @@ const ChangeAvatarModal = ({ show, onClose }) => {
     });
 
     if (res?.data) {
-      console.log("swal fired");
       Swal.fire({
         title: "",
         text: "Profile updated",
@@ -147,9 +146,7 @@ const ChangeAvatarModal = ({ show, onClose }) => {
               aria-labelledby="modal-title"
             >
               {avatarsData?.avatars?.map((avatar, index) => {
-                console.log('avatar:', avatar);
                 const imageUrl = avatar?.url?.replace("/api/", "");
-                console.log('imageUrl:', imageUrl);
                 return (
                   <div
                     key={avatar?._id}

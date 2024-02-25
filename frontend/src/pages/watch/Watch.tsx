@@ -43,7 +43,7 @@ export default function Watch() {
           <ArrowBackOutlined />
           Go Back
         </div>
-        <VideoPlayer videoId={movie?._id} videoUrl={movie?.video} isTrailer />
+        <VideoPlayer videoId={movie?._id} videoUrl={movie?.video} isTrailer={false} />
       </div>
     </>
   );
