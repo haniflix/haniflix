@@ -247,7 +247,7 @@ export default function Welcome() {
           </div>
           <div
             className={addClassNames(
-              styles["blur_bg"],
+              styles["get-started-section"],
               "mx-[70px] py-[20px] px-[45px] mt-[100px] rounded-[10px] flex items-center flex-col justify-center"
             )}
           >

@@ -232,8 +232,9 @@ export default function Login() {
             </button>
             <div className="text-white text-md text-center">
               <span>Don’t have an account? </span>
-              <span style={{ color: "#222" }}>
+              <span>
                 <Link className={styles["link"]} to={{ pathname: "/register" }}>
+                  {" "}
                   Sign up
                 </Link>
               </span>

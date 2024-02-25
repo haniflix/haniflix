@@ -13,11 +13,7 @@ import { addClassNames } from "../../store/utils/functions";
 import { useGetUserQuery } from "../../store/rtk-query/usersApi";
 import styles from "./navbar.module.scss";
 
-import {
-  LogoutIcon,
-  SearchIcon,
-  SettingsIcon
-} from "../../Assets/svgs/tsSvgs";
+import { LogoutIcon, SearchIcon, SettingsIcon } from "../../Assets/svgs/tsSvgs";
 
 import ChangeAvatarModal from "../ChangeAvatarModal";
 import SettingsSidebar from "../SettingsSideBar";
@@ -126,13 +122,11 @@ const Navbar = (props: Props) => {
   const renderMobileMenuList = () => {
     // mobile view disabled
     return;
-
   };
 
   const renderMobileMenuToggle = () => {
     // mobile view disabled
     return;
-
   };
 
   const renderDesktopMenu = () => {
@@ -154,9 +148,9 @@ const Navbar = (props: Props) => {
             <span>Movies</span>
           </Link>
 
-          <Link className={styles["link"]} to="/my-list">
+          <a className={styles["link"]} href="#my-list">
             <span>My List</span>
-          </Link>
+          </a>
         </div>
         <div className={styles["right"]}>
           <div
@@ -193,11 +187,11 @@ const Navbar = (props: Props) => {
             >
               <div
                 className={addClassNames(
-                  "border-[#ffffff50] backdrop-blur-md border bg-[#ffffff29]",
+                  "border-[#ffffff50] backdrop-blur-md border bg-[#ffffff29] overflow-y-auto h-60",
                   styles["search_results"]
                 )}
               >
-                {searchMoviesData?.movies?.slice(0, 4)?.map((movie) => {
+                {searchMoviesData?.movies?.map((movie) => {
                   return (
                     <div
                       onClick={() => {
@@ -221,12 +215,12 @@ const Navbar = (props: Props) => {
               </div>
             </Transition>
           </div>
-         
+
           <div
             onClick={() => {
               setShowChangeAvatar(true);
             }}
-            className="cursor-pointer bg-gray-300 rounded-[100px] h-[45px] !w-[45px] border sm:mr-2"
+            // className="cursor-pointer bg-zinc-300 rounded-[100px] h-[45px] !w-[45px] border sm:mr-2"
           >
             <img
               src={userData?.avatar ? makeImageUrl(userData?.avatar) : NavLogo1}

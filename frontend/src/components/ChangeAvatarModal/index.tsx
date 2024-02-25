@@ -26,6 +26,8 @@ const ChangeAvatarModal = ({ show, onClose }) => {
     refetch: refetchUserData,
   } = useGetUserQuery(userId);
 
+ 
+
   const { data: avatarsData, isLoading: avatarsLoading } = useGetAvatarsQuery(
     {},
     {
@@ -42,6 +44,7 @@ const ChangeAvatarModal = ({ show, onClose }) => {
   const closeButtonRef = React.useRef();
 
   const BASE_URL = import.meta.env.VITE_APP_API_URL;
+
 
   // Close on escape key press
   useEffect(() => {
@@ -65,8 +68,6 @@ const ChangeAvatarModal = ({ show, onClose }) => {
     if (Object.keys(data).length == 0) {
       return;
     }
-
-    console.log("data ", data);
 
     const res = await updateUser({
       data,
@@ -142,10 +143,10 @@ const ChangeAvatarModal = ({ show, onClose }) => {
             {/* Divider */}
             <div className="mb-6 border-b border-[#4B4B4B]" />
             <div
-              className="mt-5 grid grid-cols-6 gap-[13px]"
+              className="mt-5 flex flex-wrap gap-[13px]"
               aria-labelledby="modal-title"
             >
-              {avatarsData?.avatars?.map((avatar, index) => {
+              {userData?.avatars?.map((avatar, index) => {
                 const imageUrl = avatar?.url?.replace("/api/", "");
                 return (
                   <div
