@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
 import { Transition } from "@headlessui/react";
+import React, { useEffect } from "react";
 import { CloseIcon } from "../../Assets/svgs/tsSvgs";
-import { addClassNames } from "../../store/utils/functions";
 import { useGetAvatarsQuery } from "../../store/rtk-query/avatarsApi";
 import {
   useGetUserQuery,
   useUpdateUserMutation,
 } from "../../store/rtk-query/usersApi";
+import { addClassNames } from "../../store/utils/functions";
 
-import styles from "./change_avatar.module.scss";
-import { selectUser } from "../../store/reducers/auth";
-import { useAppSelector } from "../../store/hooks";
 import CircularProgress from "@mui/material-next/CircularProgress";
+import { useAppSelector } from "../../store/hooks";
+import { selectUser } from "../../store/reducers/auth";
+import styles from "./change_avatar.module.scss";
 
 import Swal from "sweetalert2";
 
@@ -146,7 +146,7 @@ const ChangeAvatarModal = ({ show, onClose }) => {
               className="mt-5 flex flex-wrap gap-[13px]"
               aria-labelledby="modal-title"
             >
-              {userData?.avatars?.map((avatar, index) => {
+              {avatarsData?.avatars?.map((avatar, index) => {
                 console.log('avatar:', avatar);
                 const imageUrl = avatar?.url?.replace("/api/", "");
                 console.log('imageUrl:', imageUrl);
