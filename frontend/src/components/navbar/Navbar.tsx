@@ -109,15 +109,15 @@ const Navbar = (props: Props) => {
     return finalUrl;
   };
 
-  const handleSearch = () => {
-    navigate("/search", { state: { search: searchTerm } });
-  };
+  // const width = () => {
+  //   navigate("/search", { state: { search: searchTerm } });
+  // };
 
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter" || event.keyCode === 13) {
-      handleSearch();
-    }
-  };
+  // const handleKeyDown = (event) => {
+  //   if (event.key === "Enter" || event.keyCode === 13) {
+  //     handleSearch();
+  //   }
+  // };
 
   const renderMobileMenuList = () => {
     // mobile view disabled
@@ -163,7 +163,7 @@ const Navbar = (props: Props) => {
             )}
           >
             <div className="w-full flex items-center relative px-[8px] ">
-              <div onClick={handleSearch} className="cursor-pointer">
+              <div  className="cursor-pointer">
                 <SearchIcon className="icon" />
               </div>
               <input
@@ -171,7 +171,7 @@ const Navbar = (props: Props) => {
                 placeholder="Search"
                 className="px-2"
                 onChange={(e) => setSearchTerm(e.target.value)}
-                onKeyDown={handleKeyDown}
+                
               />
             </div>
             <Transition
