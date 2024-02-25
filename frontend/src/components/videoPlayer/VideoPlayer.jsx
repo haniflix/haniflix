@@ -57,6 +57,11 @@ const VideoPlayer = ({ videoId, videoUrl, isTrailer }) => {
 
   const authReducer = useSelector((state) => state.auth);
   const accessToken = authReducer?.user?.accessToken;
+  
+  if(isTrailer){
+    const lnks = videoUrl.split('/')
+    videoUrl =`https://www.youtube.com/watch?v=${lnks[lnks.length -1]}`;
+  }
 
    const streamUrl = isTrailer ? videoUrl : `${
     import.meta.env.VITE_APP_API_URL
