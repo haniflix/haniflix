@@ -115,10 +115,12 @@ const Register = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Helmet> */}
       <div
-        style={{
-          // height: isMobile ? imageHeightInScreen : "100%",
-          // backgroundSize: isMobile ? "contain" : "cover",
-        }}
+        style={
+          {
+            // height: isMobile ? imageHeightInScreen : "100%",
+            // backgroundSize: isMobile ? "contain" : "cover",
+          }
+        }
         className={addClassNames(styles["loginNew"])}
       >
         <div className={styles["top"]}>
@@ -191,16 +193,18 @@ const Register = () => {
 
             {showPaymentForm && (
               <div className="payment-modal">
-                <h2>Continue for $4.99/month</h2>
+                <h2 className="text-white">Continue for $4.99/month</h2>
                 <StripePaymentForm newUser={values} />
               </div>
             )}
 
-            <div className="flex justify-center">
-              <Link className="link text-dark" to={{ pathname: "/login" }}>
-                Already have an account?{" "}
-                <span className="underline">Sign in</span>
-              </Link>
+            <div className="text-white text-md text-center">
+              <span> Already have an account? </span>
+              <span>
+                <Link className={styles["link"]} to={{ pathname: "/login" }}>
+                  Sign in
+                </Link>
+              </span>
             </div>
           </div>
         </div>

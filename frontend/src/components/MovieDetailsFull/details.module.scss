@@ -55,6 +55,10 @@
     box-sizing: border-box;
     // border-radius: 50px;
 
+    @media (max-width: 768px) {
+      top: 70px !important;
+    }
+
     #desc-title {
       font-weight: bolder;
       display: block;
@@ -76,7 +80,11 @@
       max-width: 800px;
       line-height: 20px;
       @media (max-width: 768px) {
-        display: none;
+        font-size: 12px;
+
+        // overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100% !important; /* Adjust as needed */
       }
     }
 
@@ -124,19 +132,16 @@
 
         span {
           margin-left: 5px;
+          @media (max-width: 768px) {
+            display: none;
+          }
         }
-      }
-    }
-
-    .like-container {
-      @media (max-width: 768px) {
-        margin-top: 10px;
       }
     }
 
     .movie-title-container {
       @media (max-width: 768px) {
-        margin-top: 10px;
+        margin-top: 0px;
         // background-color: red;
 
         font-size: 30px;

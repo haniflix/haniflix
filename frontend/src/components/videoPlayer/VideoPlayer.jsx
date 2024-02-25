@@ -34,7 +34,7 @@ import {
   ThumbsUpIcon,
 } from "../../Assets/svgs/tsSvgs";
 
-const VideoPlayer = ({ videoId, videoUrl }) => {
+const VideoPlayer = ({ videoId, videoUrl, isTrailer }) => {
   const [playtime, setPlaytime] = useState(0);
   const [seekTime, setSeekTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -58,7 +58,7 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
   const authReducer = useSelector((state) => state.auth);
   const accessToken = authReducer?.user?.accessToken;
 
-  const streamUrl = `${
+   const streamUrl = isTrailer ? videoUrl : `${
     import.meta.env.VITE_APP_API_URL
   }movies/stream/${videoId}?token=${accessToken}`;
 

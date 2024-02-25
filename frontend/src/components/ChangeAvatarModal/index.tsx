@@ -66,8 +66,6 @@ const ChangeAvatarModal = ({ show, onClose }) => {
       return;
     }
 
-    console.log("data ", data);
-
     const res = await updateUser({
       data,
       id: userId,
@@ -142,7 +140,7 @@ const ChangeAvatarModal = ({ show, onClose }) => {
             {/* Divider */}
             <div className="mb-6 border-b border-[#4B4B4B]" />
             <div
-              className="mt-5 grid grid-cols-6 gap-[13px]"
+              className="mt-5 flex flex-wrap gap-[13px]"
               aria-labelledby="modal-title"
             >
               {avatarsData?.avatars?.map((avatar, index) => {

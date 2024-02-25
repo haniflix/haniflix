@@ -14,7 +14,6 @@ export default function Watch() {
   const client = useApiClient();
   const params = useParams();
 
-
   const getMovie = (id: string) => {
     client
       .getMovie(id)
@@ -33,8 +32,6 @@ export default function Watch() {
     navigate(-1);
   };
 
-
-
   return (
     <>
       <Helmet>
@@ -42,12 +39,11 @@ export default function Watch() {
       </Helmet>
 
       <div className="watch">
-        <div
-          className="back cursor-pointer" onClick={handleGoBack}>
+        <div className="back cursor-pointer" onClick={handleGoBack}>
           <ArrowBackOutlined />
           Go Back
         </div>
-        <VideoPlayer videoId={movie?._id} videoUrl={movie?.trailer} />
+        <VideoPlayer videoId={movie?._id} videoUrl={movie?.video} isTrailer />
       </div>
     </>
   );

@@ -228,7 +228,7 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
                 >
                   <span
                     className={addClassNames(
-                      " bg-[#ffffff32] text-white flex items-center justify-center h-[35px] w-[35px] focus:ring-offset-2 focus:ring-blue-500",
+                      "bg-[#ffffff32] text-white flex items-center justify-center h-[35px] w-[35px] focus:ring-offset-2 focus:ring-blue-500",
                       "rounded-[50%] px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-[#ffffff54] focus:outline-none focus:ring-2 ",
                       "absolute top-[50px] right-[100px]"
                     )}
@@ -259,7 +259,7 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
 
   const renderLikeContainer = () => {
     return (
-      <div className={addClassNames(styles["like-container"], "flex")}>
+      <div className={addClassNames("flex mb-2")}>
         <button
           onClick={onLikeMovie}
           className={addClassNames(buttonClasses, "w-[52px] mr-2")}
@@ -445,9 +445,9 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
           }
           className={addClassNames(
             "z-[100] relative p-[13px] min-h-[300px] ",
-            "!top-[100px] sm:!top-[60px] border ",
+            "top-[100px]  border ",
             "sm:ml-[70px]",
-            "mb-[5vh] space-y-[12px]",
+            "mb-[10vh] space-y-[12px]",
             styles["info"]
           )}
         >
@@ -502,7 +502,7 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
                     )}
                   </>
                 )}
-                <span className=" text-[13px] font-[500]">
+                <span className=" text-[13px] font-[500] d--sm-none">
                   {movieData?.isInDefaultList
                     ? "Remove From My List"
                     : "Add To My List"}
@@ -510,6 +510,7 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
               </div>
             </div>
             {renderLikeContainer()}
+
             {movieData?.trailer && (
               <Link
                 className={
@@ -517,11 +518,10 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
                   addClassNames(
                     "px-7",
                     isMobile.current ? "top-[220px]" : "top-[100px]",
-                    buttonClasses,
-                    styles["like-container"]
+                    buttonClasses
                   )
                 }
-                to={`/watch-trailer/${movieData?._id}`}
+                to={`/watch-trailer/${movieData?.trailer}`}
                 style={{ textDecoration: "none" }}
               >
                 {/* <div className='scale-75'><PlayIcon /></div> */}
@@ -535,7 +535,11 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
 
           <div>{renderGenres()}</div>
 
-          <span className={styles["desc"]}>{trimmedDesc}</span>
+          <span className={styles["desc"]}>
+            {isMobile.current
+              ? `${trimmedDesc.substring(0, 40)}...`
+              : trimmedDesc}
+          </span>
         </div>
       </div>
     </div>

@@ -1,7 +1,4 @@
-import {
-  ThumbDown,
-  ThumbUp
-} from "@mui/icons-material";
+import { ThumbDown, ThumbUp } from "@mui/icons-material";
 import React, { useCallback, useEffect, useState } from "react";
 import "./listItem.scss";
 
@@ -181,8 +178,6 @@ export default function MovieListItem({
     });
   };
 
-
-
   const onLikeMovie = async () => {
     const res = await likeMovie(movie?._id);
 
@@ -343,22 +338,23 @@ export default function MovieListItem({
             </>
           )}
         </div>
-        {movie?.trailer &&
-        <Link
-          to={`/watch/${movie._id}`}
-          style={{ textDecoration: "none", color: "#fff" }}
-        >
-          <div
-            className={addClassNames(
-              "h-[43px] w-[43px] bg-[#FFFFFF33] flex",
-              "border border-[#FFFFFF33] rounded-[50%] items-center justify-center"
-            )}
+        {movie?.trailer && (
+          <Link
+            to={`/watch/${movie?.trailer}`}
+            style={{ textDecoration: "none", color: "#fff" }}
           >
-            <div className="scale-75">
-              <PlayIcon />
+            <div
+              className={addClassNames(
+                "h-[43px] w-[43px] bg-[#FFFFFF33] flex",
+                "border border-[#FFFFFF33] rounded-[50%] items-center justify-center"
+              )}
+            >
+              <div className="scale-75">
+                <PlayIcon />
+              </div>
             </div>
-          </div>
-        </Link>}
+          </Link>
+        )}
       </div>
     );
   };
