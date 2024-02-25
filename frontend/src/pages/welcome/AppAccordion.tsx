@@ -30,7 +30,7 @@ const AppAccordion: React.FC<AppAccordionProps> = ({ items }) => {
     };
 
     return (
-        <div className='mt-[50px]'>
+        <div className='mt-[50px] '>
             {items.map((item) => (
                 <Accordion
                     key={item.id}

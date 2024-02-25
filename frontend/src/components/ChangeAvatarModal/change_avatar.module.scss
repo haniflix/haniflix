@@ -1,4 +1,8 @@
 .choose-your-profile-modal {
+  img{
+      width: 80px;
+      height: 80px;
+    }
   @media (max-width: 765px) {
     margin: 10px;
 
@@ -6,6 +10,11 @@
       font-size: 18px;
       line-height: 30px;
       margin-right: 20px;
+    }
+
+    img{
+      width: 80px;
+      height: 80px;
     }
   }
 }

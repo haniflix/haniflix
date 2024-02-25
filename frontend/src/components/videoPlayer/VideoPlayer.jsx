@@ -222,10 +222,8 @@ const VideoPlayer = ({ videoId, videoUrl, isTrailer }) => {
 
 
    const opts = {
-    height: '390',
-    width: '640',
+    
     playerVars: {
-      // https://developers.google.com/youtube/player_parameters
       autoplay: 1,
     },
   };
@@ -336,7 +334,7 @@ const VideoPlayer = ({ videoId, videoUrl, isTrailer }) => {
 
   return (
     <div className="video-player-containerd  h-screen">
-     {isYouTube ? <YouTubePlayer videoId={id} /> : <CustomReactPlayer
+     {isYouTube ? <YouTubePlayer videoId={id} iframeClassName="youtube-player"  opts={opts} /> : <CustomReactPlayer
         ref={playerRef}
         url={streamUrl}
         controls

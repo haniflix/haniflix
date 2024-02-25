@@ -86,7 +86,15 @@
         text-overflow: ellipsis;
         width: 100% !important; /* Adjust as needed */
       }
+     
     }
+
+     .meta-info{
+        @media (max-width: 768px) {
+          padding-left: 10px !important;
+          padding-right: 10px !important;
+        }
+      }
 
     .buttons {
       display: flex;

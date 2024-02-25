@@ -1,48 +1,28 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 
-import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 import Logo from "../../Assets/Images/Logo.png";
-import { Link, useNavigate } from "react-router-dom";
 // import { login } from "../../context/login/apiCalls";
-import "../../Assets/css/styles.scss";
-import landingBg from "../../Assets/Images/landing-bg.png";
-import useApiClient from "../../hooks/useApiClient";
-import { useDispatch } from "react-redux";
-import { selectUser, setUser } from "../../store/reducers/auth";
-import { useAppSelector } from "../../store/hooks";
 import {
-  Accordion,
-  AccordionActions,
-  AccordionDetails,
-  AccordionSummary,
   Box,
-  Button,
-  Grid,
-  ThemeProvider,
-  createTheme,
+  createTheme
 } from "@mui/material";
-import {
-  Add,
-  ArrowDownward,
-  ArrowForward,
-  ArrowForwardIos,
-} from "@mui/icons-material";
+import "../../Assets/css/styles.scss";
 import Section from "./Section";
 import TopSection from "./TopSection";
 
-import styles from "./welcome.module.scss";
 import { addClassNames } from "../../store/utils/functions";
+import styles from "./welcome.module.scss";
 
 import createProfile from "../../Assets/Images/createProfile.png";
-import accordionBg from "../../Assets/Images/accordionBg.png";
-import watchEvrywhere from "../../Assets/Images/watchEvrywhere.png";
 import discoverImg from "../../Assets/Images/discoverImg.png";
+import watchEvrywhere from "../../Assets/Images/watchEvrywhere.png";
 
 import { ChevronDown, TranslateIcon } from "../../Assets/svgs/tsSvgs";
 import AppAccordion from "./AppAccordion";
 
-import { PiTelevisionSimpleFill } from "react-icons/pi";
 import { MdPeopleAlt } from "react-icons/md";
+import { PiTelevisionSimpleFill } from "react-icons/pi";
 
 import gradientStar from "../../Assets/Images/gradientStar.png";
 
@@ -232,6 +212,7 @@ export default function Welcome() {
           <div
             className={addClassNames(
               styles["blur_bg"],
+               styles["support-section"],
               "mx-[70px] py-[20px] px-[20px] mt-[100px] rounded-[10px] flex  gap-y-[12px] flex-col justify-center"
             )}
           >
@@ -242,7 +223,8 @@ export default function Welcome() {
               billing.
             </div>
           </div>
-          <div className="mx-[70px]">
+          <div  className={addClassNames(
+              styles["app-accordion"], "mx-[70px]")}>
             <AppAccordion items={accordionItems} />
           </div>
           <div

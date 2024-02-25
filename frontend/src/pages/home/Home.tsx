@@ -1,22 +1,14 @@
-import React, { lazy, Suspense, useCallback, useEffect, useState } from "react";
-import axios from "axios";
+import React, { Suspense, useEffect, useState } from "react";
 
-import Navbar from "../../components/navbar/Navbar";
 import Featured from "../../components/featured/Featured";
+import List from "../../components/list/List";
+import Navbar from "../../components/navbar/Navbar";
 import useApiClient from "../../hooks/useApiClient";
-import Swal from "sweetalert2";
-import Carousel from "react-multi-carousel";
-import {
-  ArrowBackIosOutlined,
-  ArrowForwardIosOutlined,
-} from "@mui/icons-material";
-import ListItem from "../../components/listItem/ListItem";
 import {
   useGetContinueWatchingListQuery,
   useGetMyListQuery,
   useGetRandomListsQuery,
 } from "../../store/rtk-query/listsApi";
-import List from "../../components/list/List";
 import { addClassNames } from "../../store/utils/functions";
 
 import "./home.scss";
@@ -102,7 +94,7 @@ const Home = ({ type = null }) => {
   };
 
   return (
-    <div className="home relative !bg-black">
+    <div className="home relative !bg-black" id="my-list">
       <Navbar onSelectMovie={(movie) => setMovieToShow(movie)} />
       <div
         style={{
@@ -128,7 +120,7 @@ const Home = ({ type = null }) => {
         >
           <div
             className="mx-[20px] sm:mx-[80px] overflow-x-hidden"
-            id="my-list"
+          
           >
             <div>
               {continueWatchingListData?.list ? (

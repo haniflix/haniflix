@@ -1,33 +1,23 @@
-import { PlayArrow, AddCircle } from "@mui/icons-material";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import axios from "axios";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2"; // Import SweetAlert 2
-import { useAppSelector } from "../../store/hooks";
-import { selectUser } from "../../store/reducers/auth";
 import useApiClient from "../../hooks/useApiClient";
 import { addClassNames } from "../../store/utils/functions";
 
-import moviePlaceholderSvg from "../../Assets/svgs/moviePlaceholder.svg";
 
 import { useSelector } from "react-redux";
+import { useAddMovieToDefaultListMutation } from "../../store/rtk-query/listsApi";
 import {
   useDislikeMovieMutation,
   useGetMovieQuery,
-  useGetRandomMoviesMutation,
-  useLikeMovieMutation,
+  useLikeMovieMutation
 } from "../../store/rtk-query/moviesApi";
-import { useAddMovieToDefaultListMutation } from "../../store/rtk-query/listsApi";
 
-import { IconButton, Typography } from "@mui/material";
 
 import {
-  Check,
-  ThumbUpAltOutlined,
-  ThumbDownOutlined,
-  ThumbUp,
   Close,
   ThumbDown,
+  ThumbUp
 } from "@mui/icons-material";
 import CircularProgress from "@mui/material-next/CircularProgress";
 import { useGetGenresQuery } from "../../store/rtk-query/genresApi";
@@ -35,17 +25,17 @@ import { useGetGenresQuery } from "../../store/rtk-query/genresApi";
 import styles from "./details.module.scss";
 
 import {
-  PlayIcon,
+  DolbyLogo,
   HeartIcon,
   HeartIconFilled,
+  PlayIcon,
   ThumbsDownIcon,
   ThumbsUpIcon,
-  DolbyLogo,
 } from "../../Assets/svgs/tsSvgs";
-import useResponsive from "../../hooks/useResponsive";
 
-import { Dialog, Disclosure, Transition } from "@headlessui/react";
+import { Dialog, Transition } from "@headlessui/react";
 import ReactPlayer from "react-player";
+import { TrailerIcon } from "../../Assets/svgs/tsSvgs/TrailerIcon";
 import useWindowSize from "../../hooks/useWindowSize";
 
 type MetaInfoItem = {
@@ -368,13 +358,13 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
     metaInfo.push({
       component: (
         <div>
-          <DolbyLogo height={23} width={60} />
+          <DolbyLogo height={15} width={30} />
         </div>
       ),
     });
 
     metaInfo.push({
-      component: <div className="font-[600]">4K</div>,
+      component: <div className="font-[500]">4K</div>,
     });
 
     if (metaInfo.length == 0) return;
@@ -387,7 +377,8 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
           return (
             <div
               key={info?.text}
-              className="px-3 capitalize py-2 bg-[#ffffff29] rounded-[30px] text-xs mr-2 mt-2"
+              className={ addClassNames("px-3 capitalize py-2 bg-[#ffffff29] rounded-[30px] text-xs mr-2 mt-2", styles["meta-info"])}
+              
             >
               {info.text || info.component}
             </div>
@@ -517,19 +508,23 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
                 className={
                   // buttonClasses
                   addClassNames(
-                    "px-7",
+                   
+                    
                     isMobile.current ? "top-[220px]" : "top-[100px]",
                     buttonClasses,
-                    styles["like-container"]
+                    styles["like-container"],
+                    width > 768 ?  "px-7" : "px-3",
                   )
                 }
                 to={`/watch-trailer/${movieData?._id}`}
                 style={{ textDecoration: "none" }}
               >
                 {/* <div className='scale-75'><PlayIcon /></div> */}
+                {width > 768 ? 
                 <span className="capitalise text-[13px] font-[500]">
                   Play Trailer
-                </span>
+                </span> :
+                <TrailerIcon />}
               </Link>
             )}
           </div>
@@ -538,9 +533,7 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
           <div>{renderGenres()}</div>
 
           <span className={styles["desc"]}>
-            {width <= 768
-              ? `${trimmedDesc.substring(0, 40)}...`
-              : trimmedDesc}
+            {trimmedDesc}
           </span>
         </div>
       </div>
