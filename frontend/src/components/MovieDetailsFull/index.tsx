@@ -385,7 +385,7 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
           return (
             <div
               key={info?.text}
-              className="px-3 capitalize py-2 bg-[#ffffff29] rounded-[30px] text-xs mr-3 mt-2"
+              className="px-3 capitalize py-2 bg-[#ffffff29] rounded-[30px] text-xs mr-2 mt-2"
             >
               {info.text || info.component}
             </div>
