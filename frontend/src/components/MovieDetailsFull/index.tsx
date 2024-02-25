@@ -357,14 +357,12 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
 
     metaInfo.push({
       component: (
-        <div>
-          <DolbyLogo height={15} width={30} />
-        </div>
+         <DolbyLogo height={15} width={30} />
       ),
     });
 
     metaInfo.push({
-      component: <div className="font-[500]">4K</div>,
+      component: <span className="font-[500]" >4K</span>,
     });
 
     if (metaInfo.length == 0) return;
@@ -372,12 +370,12 @@ export default function MovieDetailsFull({ movieId, movieDataProps }: Props) {
     //build tsx
 
     return (
-      <div className="flex flex-wrap items-center">
+      <div   className={ addClassNames("flex flex-wrap items-center", styles["meta-info"])}>
         {metaInfo?.map((info) => {
           return (
             <div
               key={info?.text}
-              className={ addClassNames("px-3 capitalize py-2 bg-[#ffffff29] rounded-[30px] text-xs mr-2 mt-2", styles["meta-info"])}
+              className={"px-3 capitalize py-2 bg-[#ffffff29] rounded-[30px] text-xs mr-2 mt-2"}
               
             >
               {info.text || info.component}

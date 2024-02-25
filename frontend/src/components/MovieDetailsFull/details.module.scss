@@ -31,7 +31,14 @@
 
   .genre-container {
     @media (max-width: 768px) {
-      margin-top: 0px !important;
+      margin-top: -5px !important;
+
+      div{
+        padding: 3px 7px !important ;
+           font-size: 10px;
+         margin-right: -7px !important;
+         
+      }
     }
   }
 
@@ -90,10 +97,17 @@
     }
 
      .meta-info{
-        @media (max-width: 768px) {
-          padding-left: 10px !important;
-          padding-right: 10px !important;
+       
+         @media (max-width: 768px) {
+           margin-top: -8px !important;
+         div{
+           padding: 5px 6px !important ;
+           font-size: 10px;
+           margin-right: 5px !important;
         }
+        
+
+       }
       }
 
     .buttons {
