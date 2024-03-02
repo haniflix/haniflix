@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NavLogo1 from "../../Assets/Images/Nav-logo.png";
 
 import { Link } from "react-router-dom";
@@ -50,9 +50,17 @@ const Navbar = (props: Props) => {
   } = useGetUserQuery(userId);
 
   const [showSettings, setShowSettings] = React.useState<boolean>(false);
-  const [showChangeAvatar, setShowChangeAvatar] =
-    React.useState<boolean>(true);
-
+  const [showChangeAvatar, setShowChangeAvatar] = React.useState<boolean>(false);
+  const [isFirstChangeAvatar, setIsFirstChangeAvatar] = React.useState<boolean>(false);
+  
+  useEffect(() => {
+    // Update the document title using the browser API
+    let frist = localStorage.getItem("fisrtAvatarTime")
+    if(first){
+      setIsFirstChangeAvatar(true);
+      setShowChangeAvatar(true);
+    }
+  },[]);
   let queryParams = {
     searchTerm,
   };
@@ -292,6 +300,7 @@ const Navbar = (props: Props) => {
         onClose={() => setShowSettings(false)}
       />
       <ChangeAvatarModal
+        first={isFirstChangeAvatar}
         show={showChangeAvatar}
         onClose={() => setShowChangeAvatar(false)}
       />
