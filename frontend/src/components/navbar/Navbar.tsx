@@ -51,7 +51,7 @@ const Navbar = (props: Props) => {
 
   const [showSettings, setShowSettings] = React.useState<boolean>(false);
   const [showChangeAvatar, setShowChangeAvatar] =
-    React.useState<boolean>(false);
+    React.useState<boolean>(true);
 
   let queryParams = {
     searchTerm,
