@@ -59,6 +59,7 @@ const Navbar = (props: Props) => {
     if(first){
       setIsFirstChangeAvatar(true);
       setShowChangeAvatar(true);
+      localStorage.setItem("fisrtAvatarTime", "false")
     }
   },[]);
   let queryParams = {
