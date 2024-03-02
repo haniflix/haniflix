@@ -15,7 +15,7 @@ import styles from "./change_avatar.module.scss";
 
 import Swal from "sweetalert2";
 
-const ChangeAvatarModal = ({ show, onClose }) => {
+const ChangeAvatarModal = ({ show, onClose, first }) => {
   const user = useAppSelector(selectUser);
 
   const userId = user?._id;
@@ -555,14 +555,14 @@ const ChangeAvatarModal = ({ show, onClose }) => {
               <h3 className="text-[25px] font-[500] leading-6 text-white">
                 Choose Your Profile Picture
               </h3>
-              <button
+              {!first && <button
                 type="button"
                 ref={closeButtonRef}
                 onClick={handleClose}
                 className="h-[40px] w-[40px] rounded-[40px] bg-[#FFFFFF40] inline-flex items-center justify-center p-2 text-gray-400 rounded-md hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
                 <CloseIcon />
-              </button>
+              </button>}
             </div>
             {/* Divider */}
             <div className="mb-6 border-b border-[#4B4B4B]" />
@@ -579,7 +579,7 @@ const ChangeAvatarModal = ({ show, onClose }) => {
                     className={addClassNames(
                       // "h-[110px] w-[110px] bg-[gray] rounded-[2px] cursor-pointer relative",
                       selectedAvatar?._id == avatar?._id
-                        ? "border border-[4px] border-[#FFFFFF]"
+                        ? "border relative border-[4px] border-[#FFFFFF]"
                         : "",
                          styles['avatar']
                     )}
