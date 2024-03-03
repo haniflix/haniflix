@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const MovieSchema = new mongoose.Schema(
   {
-    title: { type: String, required: true },
+    title: { type: String, required: true, index: true },
     desc: { type: String },
     img: { type: String },
     imgTitle: { type: String },
@@ -14,7 +14,7 @@ const MovieSchema = new mongoose.Schema(
     year: { type: String },
     limit: { type: Number },
     genre: [{ type: mongoose.Schema.Types.ObjectId, ref: "Genre" }],
-    isSeries: { type: Boolean, default: false },
+    isSeries: { type: Boolean, default: false, index: true },
     failedDuringScrape: { type: Boolean },
   },
   { timestamps: true }

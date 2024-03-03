@@ -54,14 +54,17 @@ const Navbar = (props: Props) => {
   const [isFirstChangeAvatar, setIsFirstChangeAvatar] = React.useState<boolean>(false);
   
   useEffect(() => {
-  
-    let frist = localStorage.getItem(`fisrtAvatarTime_${userId}`)
-    if(first && userId){
-      setIsFirstChangeAvatar(true);
-      setShowChangeAvatar(true);
-      localStorage.setItem(`fisrtAvatarTime_${userId}`, "false")
+    if(userId){
+      let first = localStorage.getItem(`fisrtAvatarTime_${userId}`)
+      if(!first ){
+        setIsFirstChangeAvatar(true);
+        setShowChangeAvatar(true);
+        
+      }
     }
-  },[userId]);
+
+
+  },[userId, user]);
   let queryParams = {
     searchTerm,
   };
@@ -303,7 +306,7 @@ const Navbar = (props: Props) => {
       <ChangeAvatarModal
         first={isFirstChangeAvatar}
         show={showChangeAvatar}
-        onClose={() => setShowChangeAvatar(false)}
+        onClose={() =>{ setIsFirstChangeAvatar(false);   setShowChangeAvatar(false)}}
       />
     </>
   );
