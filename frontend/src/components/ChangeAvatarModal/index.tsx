@@ -544,14 +544,14 @@ const ChangeAvatarModal = ({ show, onClose, first }) => {
         >
           <div
             className={addClassNames(
-              "relative shadow-xl rounded-lg  p-[37px]  text-left overflow-auto scrollbar-thin scrollbar-thumb-gray-200 sm:scrollbar-thumb-gray-300",
+              " shadow-xl rounded-lg  p-[37px]  text-left overflow-auto  ",
               "backdrop-blur-[13px] bg-[#FFFFFF1A] border border-[#4B4B4B]",
               "min-w-[52vw] !max-w-[1221px] max-h-[70vh]",
               styles["choose-your-profile-modal"]
             )}
           >
             {/* Top section with heading and close button */}
-            <div className="flex items-center justify-between mb-[35px]">
+            <div className="flex position-static items-center justify-between mb-[35px]">
               <h3 className="text-[25px] font-[500] leading-6 text-white">
                 Choose Your Profile Picture
               </h3>
@@ -567,7 +567,7 @@ const ChangeAvatarModal = ({ show, onClose, first }) => {
             {/* Divider */}
             <div className="mb-6 border-b border-[#4B4B4B]" />
             <div
-              className="mt-5 flex flex-wrap gap-[13px] overflow-y-auto h-[80%]"
+              className="mt-5 flex flex-wrap gap-[13px] !max-w-[1221px] max-h-[60vh] overflow-y-auto h-[80%] scrollbar-thin scrollbar-thumb-gray-200 sm:scrollbar-thumb-gray-300"
               aria-labelledby="modal-title"
             >
               {avatarsData?.avatars?.map((avatar, index) => {
