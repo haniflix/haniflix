@@ -54,14 +54,14 @@ const Navbar = (props: Props) => {
   const [isFirstChangeAvatar, setIsFirstChangeAvatar] = React.useState<boolean>(false);
   
   useEffect(() => {
-    // Update the document title using the browser API
-    let frist = localStorage.getItem("fisrtAvatarTime")
-    if(first){
+  
+    let frist = localStorage.getItem(`fisrtAvatarTime_${userId}`)
+    if(first && userId){
       setIsFirstChangeAvatar(true);
       setShowChangeAvatar(true);
-      localStorage.setItem("fisrtAvatarTime", "false")
+      localStorage.setItem(`fisrtAvatarTime_${userId}`, "false")
     }
-  },[]);
+  },[userId]);
   let queryParams = {
     searchTerm,
   };
