@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { register } from "../context/register/apiCalls";
 import { CardElement, useStripe, useElements, ExpressCheckoutElement } from "@stripe/react-stripe-js";
 
@@ -58,7 +58,7 @@ function StripePaymentForm({newUser}) {
       // `clientSecret` from the created PaymentIntent
       clientSecret,
       confirmParams: {
-        return_url: 'https://example.com/order/123/complete',
+        return_url: 'https://haniflix.com',
       },
     });
 
