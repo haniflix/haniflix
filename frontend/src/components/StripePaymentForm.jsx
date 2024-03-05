@@ -74,10 +74,10 @@ function StripePaymentForm({newUser}) {
 
 
   return (
-    <form onSubmit={handleSubmit} >
+    <form onSubmit={() => handleSubmit()} >
       <h4>
         <div style={{marginBottom: 10, color: '#fff'}}>Card Details:</div>
-        <ExpressCheckoutElement onConfirm={onConfirm} />
+        <ExpressCheckoutElement onConfirm={() => onConfirm()} />
       </h4>
       <button style={{marginTop:"20px", marginBottom:"20px", color: "#fff"}} type="submit">Subscribe</button>
     </form>
