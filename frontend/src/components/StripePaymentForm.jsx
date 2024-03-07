@@ -1,13 +1,18 @@
 import React, { useState } from "react";
 import { register } from "../context/register/apiCalls";
-import { CardElement, useStripe, useElements, ExpressCheckoutElement } from "@stripe/react-stripe-js";
+import {
+  CardElement,
+  useStripe,
+  useElements,
+  ExpressCheckoutElement,
+} from "@stripe/react-stripe-js";
+ {loadStripe} from '@stripe/stripe-js'
 
-
-function StripePaymentForm({newUser}) {
-  console.log(newUser)
+function StripePaymentForm({ newUser }) {
+  console.log(newUser);
   const stripe = useStripe();
   const elements = useElements();
-  
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -23,12 +28,9 @@ function StripePaymentForm({newUser}) {
       console.error(error);
       alert("Subscription failed. Please try again later.");
     } else {
-    
-        alert("Subscription successful!");
-        register(newUser, token);
-        
-      }
-    
+      alert("Subscription successful!");
+      register(newUser, token);
+    }
   };
   const [errorMessage, setErrorMessage] = useState();
 
@@ -36,29 +38,30 @@ function StripePaymentForm({newUser}) {
     if (!stripe) {
       // Stripe.js hasn't loaded yet.
       // Make sure to disable form submission until Stripe.js has loaded.
+      console.log("loading stripe ");
       return;
     }
 
-    const {error: submitError} = await elements.submit();
+    const { error: submitError } = await elements.submit();
     if (submitError) {
       setErrorMessage(submitError.message);
       return;
     }
 
     // Create the PaymentIntent and obtain clientSecret
-    const res = await fetch('/create-intent', {
-      method: 'POST',
+    const res = await fetch("/create-intent", {
+      method: "POST",
     });
-    const {client_secret: clientSecret} = await res.json();
+    const { client_secret: clientSecret } = await res.json();
 
     // Confirm the PaymentIntent using the details collected by the Express Checkout Element
-    const {error} = await stripe.confirmPayment({
+    const { error } = await stripe.confirmPayment({
       // `elements` instance used to create the Express Checkout Element
       elements,
       // `clientSecret` from the created PaymentIntent
       clientSecret,
       confirmParams: {
-        return_url: 'https://haniflix.com',
+        return_url: "https://haniflix.com",
       },
     });
 
@@ -72,14 +75,18 @@ function StripePaymentForm({newUser}) {
     }
   };
 
-
   return (
-    <form onSubmit={() => handleSubmit()} >
+    <form onSubmit={handleSubmit}>
       <h4>
-        <div style={{marginBottom: 10, color: '#fff'}}>Card Details:</div>
-        <ExpressCheckoutElement onConfirm={() => onConfirm()} />
+        <div style={{ marginBottom: 10, color: "#fff" }}>Card Details:</div>
+        <ExpressCheckoutElement onConfirm={onConfirm} />
       </h4>
-      <button style={{marginTop:"20px", marginBottom:"20px", color: "#fff"}} type="submit">Subscribe</button>
+      <button
+        style={{ marginTop: "20px", marginBottom: "20px", color: "#fff" }}
+        type="submit"
+      >
+        Subscribe
+      </button>
     </form>
   );
 }
