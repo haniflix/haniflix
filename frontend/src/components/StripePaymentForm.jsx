@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement } from "@stripe/react-stripe-js";
+import CheckoutForm from './CheckoutForm'
 
 function StripePaymentForm({ newUser }) {
   console.log(newUser);
@@ -22,7 +23,7 @@ function StripePaymentForm({ newUser }) {
       </h4>
       {showCheckoutForm && (
         <Elements stripe={stripePromise}>
-          <CardElement />
+          <CheckoutForm />
         </Elements>
       )}
       <button style={{ marginTop: "20px", marginBottom: "20px", color: "#fff" }} type="submit" disabled={loading}>Subscribe</button>

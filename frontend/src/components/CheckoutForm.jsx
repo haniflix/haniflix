@@ -1,5 +1,4 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { Button, Input } from "antd";
 import React, { useState } from "react";
 
 function CheckoutForm() {
@@ -16,16 +15,20 @@ function CheckoutForm() {
   // main function
   const createSubscription = async () => {
     try {
-      
       // create a payment method
-      const paymentMethod = await stripe?.createPaymentMethod({
+      const { paymentMethod, error } = await stripe.createPaymentMethod({
         type: "card",
-        card: elements?.getElement(CardElement)!,
+        card: elements.getElement(CardElement),
         billing_details: {
           name,
           email,
         },
       });
+
+      if (error) {
+        alert(error.message);
+        return;
+      }
 
       // call the backend to create subscription
       const response = await fetch("http://localhost:4000/create-subscription", {
@@ -34,18 +37,18 @@ function CheckoutForm() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          paymentMethod: paymentMethod?.paymentMethod?.id,
+          paymentMethod: paymentMethod.id,
           name,
           email,
           priceId
         }),
-      }).then((res) => res.json());
+      });
 
-      const confirmPayment = await stripe?.confirmCardPayment(
-        response.clientSecret
-      );
+      const data = await response.json();
 
-      if (confirmPayment?.error) {
+      const confirmPayment = await stripe.confirmCardPayment(data.clientSecret);
+
+      if (confirmPayment.error) {
         alert(confirmPayment.error.message);
       } else {
         alert("Success! Check your email for the invoice.");
@@ -57,10 +60,10 @@ function CheckoutForm() {
 
   return (
     <div className="grid gap-4 m-auto">
-      <input  // this should not be a text field. maybe a radio button ro something
+      <input
         placeholder="Price Id"
         type="text"
-        value={name}
+        value={priceId}
         onChange={(e) => setPriceId(e.target.value)}
       />
       <input
