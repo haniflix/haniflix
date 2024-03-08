@@ -21,12 +21,9 @@ function StripePaymentForm({ newUser }) {
       <h4>
         <div style={{ marginBottom: 10, color: '#fff' }}>Card Details:</div>
       </h4>
-      {showCheckoutForm && (
         <Elements stripe={stripePromise}>
-          <CheckoutForm />
+          <CheckoutForm name={newUser.name} email={newUser.email}/>
         </Elements>
-      )}
-      <button style={{ marginTop: "20px", marginBottom: "20px", color: "#fff" }} type="submit" disabled={loading}>Subscribe</button>
     </form>
   );
 }

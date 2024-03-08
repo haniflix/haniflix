@@ -1,11 +1,11 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import React, { useState } from "react";
 
-function CheckoutForm() {
+function CheckoutForm({ name, email }) {
   
   // collect data from the user
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  // const [name, setName] = useState("");
+  // const [email, setEmail] = useState("");
   const [priceId, setPriceId] = useState("");
   
   // stripe items
@@ -81,9 +81,7 @@ function CheckoutForm() {
       />
 
       <CardElement />
-      <button onClick={createSubscription} disabled={!stripe}>
-        Subscribe
-      </button>
+      <button onClick={createSubscription} style={{ marginTop: "20px", marginBottom: "20px", color: "#fff" }} type="submit" disabled={!stripe}>Subscribe</button>
     </div>
   );
 }
