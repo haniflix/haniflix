@@ -12,7 +12,7 @@ const listRoute = require("./routes/lists");
 const statsRoute = require("./routes/stats");
 const scraperRoute = require("./routes/scraper");
 const imagesRoute = require("./routes/images");
-const stripePayment = require("./routes/stripePayments")
+const stripeRoute= require('./routes/stripePayments')
 
 //
 const errorHandler = require("./middleware/errorHandler");
@@ -69,7 +69,7 @@ app.use("/api/genre", genreRoute);
 app.use("/api/lists", listRoute);
 app.use("/api/stats", statsRoute);
 app.use("/api/image", imagesRoute);
-app.use("/api/checkout", stripePayment);
+app.use("/api/stripe", stripeRoute);
 
 const scraperRouteWithIO = scraperRoute(io);
 app.use("/api/scraper", scraperRouteWithIO);
