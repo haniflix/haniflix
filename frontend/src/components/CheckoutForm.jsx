@@ -1,13 +1,15 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import ErrorDialog from './popup/ErrorPopup'
 
 function CheckoutForm({ name, email }) {
-  
-  // collect data from the user
-  // const [name, setName] = useState("");
-  // const [email, setEmail] = useState("");
   const [priceId, setPriceId] = useState("");
-  
+
+  useEffect(() => {
+    // Set priceId using the environment variable
+    setPriceId(import.meta.env.VITE_APP_STRIPE_SUBSCRIPTION_PRICE_ID);
+  }, []);
+
   // stripe items
   const stripe = useStripe();
   const elements = useElements();
@@ -27,6 +29,7 @@ function CheckoutForm({ name, email }) {
 
       if (error) {
         alert(error.message);
+        <ErrorDialog message={error.message}/>
         return;
       }
 
@@ -58,29 +61,24 @@ function CheckoutForm({ name, email }) {
     }
   };
 
+  const cardElementOptions = {
+    style: {
+      base: {
+        fontSize: '16px', // Adjust the font size
+        color: '#333', // Change the text color
+        '::placeholder': {
+          color: '#ccc', // Change the placeholder color
+        },
+      },
+      invalid: {
+        color: '#e74c3c', // Change the color of the invalid input
+      },
+    }
+  };
+
   return (
     <div className="grid gap-4 m-auto">
-      <input
-        placeholder="Price Id"
-        type="text"
-        value={priceId}
-        onChange={(e) => setPriceId(e.target.value)}
-      />
-      <input
-        placeholder="Name"
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <br />
-      <input
-        placeholder="Email"
-        type="text"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-
-      <CardElement />
+      <CardElement options={cardElementOptions} />
       <button onClick={createSubscription} style={{ marginTop: "20px", marginBottom: "20px", color: "#fff" }} type="submit" disabled={!stripe}>Subscribe</button>
     </div>
   );
