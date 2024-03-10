@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import Swal from "sweetalert2";
 import Logo from "../../Assets/Images/Logo.png";
 import { Link } from "react-router-dom";
-// import { login } from "../../context/login/apiCalls";
+import { login } from "../../context/login/apiCalls";
 import landingBg from "../../Assets/Images/landing-bg.png";
 import useApiClient from "../../hooks/useApiClient";
 import { useDispatch } from "react-redux";
