@@ -12,7 +12,7 @@ const listRoute = require("./routes/lists");
 const statsRoute = require("./routes/stats");
 const scraperRoute = require("./routes/scraper");
 const imagesRoute = require("./routes/images");
-const stripeRoute= require('./routes/stripePayments')
+const stripeRoute = require('./routes/stripePayments')
 
 //
 const errorHandler = require("./middleware/errorHandler");

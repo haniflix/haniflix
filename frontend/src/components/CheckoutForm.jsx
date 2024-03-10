@@ -18,6 +18,7 @@ function CheckoutForm({ name, email }) {
   const createSubscription = async () => {
     try {
       // create a payment method
+      console.log("func triggered")
       const { paymentMethod, error } = await stripe.createPaymentMethod({
         type: "card",
         card: elements.getElement(CardElement),
@@ -26,6 +27,7 @@ function CheckoutForm({ name, email }) {
           email,
         },
       });
+      console.log(paymentMethod, error)
 
       if (error) {
         alert(error.message);
@@ -73,7 +75,8 @@ function CheckoutForm({ name, email }) {
       invalid: {
         color: '#e74c3c', // Change the color of the invalid input
       },
-    }
+    },
+    hidePostalCode: true,
   };
 
   return (
