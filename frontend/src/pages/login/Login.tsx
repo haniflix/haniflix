@@ -20,6 +20,7 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 import { addClassNames } from "../../store/utils/functions";
 
 import { Helmet } from "react-helmet";
+import { error } from "console";
 
 export default function Login() {
   const emailRef = useRef();
@@ -91,16 +92,14 @@ export default function Login() {
   const onLogin = async (email: string, password: string) => {
     const res = await login({ email, password, rememberMe });
 
-    if (res?.data) {
-      console.log("Login successful");
-    }
-
-    if (!res?.data) {
-      Swal.fire({
-        title: res?.error.message || "Error encountered during login",
-        text: res?.error.message,
-        icon: "error",
-      });
+    if (!res.ok) {
+        Swal.fire({
+          title: res?.error.data.message || "Error encountered during login",
+          text: res?.error.data.message,
+          icon: "error",
+        });
+    }else{
+      console.log('login successful')
     }
   };
 

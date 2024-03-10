@@ -1,6 +1,7 @@
 export type LoginRequest = {
   email: string;
   password: string;
+  username: string;
 };
 
 export type List = {

@@ -6,11 +6,10 @@ import {
   useElements,
   ExpressCheckoutElement,
 } from "@stripe/react-stripe-js";
- {loadStripe} from '@stripe/stripe-js'
+import {loadStripe} from '@stripe/stripe-js'
 
-function StripePaymentForm({ newUser }) {
-  console.log(newUser);
-  const stripe = useStripe();
+function StripePaymentForm(props) {
+  /** const stripe = useStripe();
   const elements = useElements();
 
   const handleSubmit = async (event) => {
@@ -73,21 +72,22 @@ function StripePaymentForm({ newUser }) {
       // The payment UI automatically closes with a success animation.
       // Your customer is redirected to your `return_url`.
     }
-  };
+  };*/
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div>
       <h4>
         <div style={{ marginBottom: 10, color: "#fff" }}>Card Details:</div>
-        <ExpressCheckoutElement onConfirm={onConfirm} />
+        <ExpressCheckoutElement />
       </h4>
       <button
         style={{ marginTop: "20px", marginBottom: "20px", color: "#fff" }}
         type="submit"
+        onClick={() => props.onRegister(props.newUser.username, props.newUser.email, props.newUser.password,)}
       >
         Subscribe
       </button>
-    </form>
+    </div>
   );
 }
 

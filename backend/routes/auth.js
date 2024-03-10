@@ -1,6 +1,7 @@
 const sendMail = require("./mail/ForgotPassMail");
 const router = require("express").Router();
 const User = require("../models/User");
+const { List }= require("../models");
 const CryptoJS = require("crypto-js");
 const jwt = require("jsonwebtoken");
 const sgMail = require("@sendgrid/mail");
@@ -8,7 +9,6 @@ const dotenv = require("dotenv");
 const SENDGRID_API_KEY =
   "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";
 const email_from = "Haniflix <no-reply@haniflix.com>";
-const List = require("../models/List");
 
 dotenv.config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
@@ -36,35 +36,33 @@ router.get("/send-email", async (req, res) => {
 });
 
 router.post("/register", async (req, res) => {
-  const { user } = req.body;
-  const email = user.email;
-  const password = user.password;
+  const { username, email, password } = req.body;
 
   try {
     const { newUser, defaultList, user } = await registerUser(
-      email,
+      username,
       email,
       password
     );
 
     // Subscription logic
     const { token } = req.body; // Assuming you are passing the token from the frontend
-    const response = await subscribeUser(newUser, token.id);
+    const response = await subscribeUser(newUser);
 
-    if (response) {
+    if (response != 'Connection timed out') {
       // // Subscription successful, redirect or show a success message
       // const verifyUrl = `${demo_url}verify?otp=${newUser.otp}&email=${newUser.username}`;
       // await sendVerificationEmail(email, verifyUrl);
 
-      res.status(201).json({ statusText: "Created" });
+      res.status(200).json({ message: response});
     } else {
       // Handle subscription error
-      console.error("Subscription failed:", response.error);
+      console.error("Subscription failed:", response);
       // Delete the user and the list
-      await deleteUserAndList(newUser, defaultList);
-      res.status(203).json({
+      //await deleteUserAndList(newUser, defaultList);
+      res.status(400).json({
         error: true,
-        statusText: "Subscription failed. Please try again later.",
+        message: "Subscription failed. Please try again later.",
       });
     }
   } catch (error) {
@@ -90,8 +88,8 @@ async function deleteUserAndList(user, list) {
   }
 }
 
-async function subscribeUser(newUser, token) {
-  try {
+async function subscribeUser(newUser) {
+  /** try {
     // Create a customer in Stripe
     const customer = await stripe.customers.create({
       email: newUser.email,
@@ -116,13 +114,51 @@ async function subscribeUser(newUser, token) {
   } catch (error) {
     console.error("Stripe Subscription Error:", error);
     throw new Error("Subscription failed");
+  } */
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      mode: 'subscription',
+      line_items: [
+        {
+        price: "price_1OPzDXH7M6091XYpI3HAP0sc",
+        quantity: 1,
+        }
+      ],
+      metadata: {
+        internal_user_id: newUser._id.toString()
+      },
+      success_url: 'https://haniflix.com/login',
+      cancel_url: 'https://haniflix.com',
+    })
+    return session.url
+  } catch (error) {
+    return "Connection timed out"
   }
 }
 
-async function registerUser(username, email, password) {
-  console.log(username, email, password);
+router.post("/update-subscription", async (req, res) => {
+  let event = req.body;
+  const signature = request.headers['stripe-signature'];
+  const secret = process.env.STRIPE_SECRET_KEY
+  const { internal_user_id } = req.body
+  let subscription;
+  let status;
+  switch (event.type) {
+      case 'customer.subscription.trial_will_end':
+        break;
+      case 'customer.subscription.created':
+        subscription = event.data.object;
+        status = subscription.status;
+        break;
+  }
+})
+
+async function registerUser(username, email, password) {;
   const newUser = new User({
+    old_username: username,
     username,
+    old_email: email,
     email,
     otp: CryptoJS.lib.WordArray.random(16),
     password: CryptoJS.AES.encrypt(password, process.env.SECRET_KEY).toString(),
@@ -163,10 +199,9 @@ async function sendVerificationEmail(email, verifyUrl) {
 //LOGIN
 router.post("/login", async (req, res) => {
   try {
-    const userEmail = req.body.email.toLowerCase(); // Convert user input to lowercase
-    const user = await User.findOne({
-      email: { $regex: new RegExp("^" + userEmail + "$", "i") },
-    });
+    const userEmail = req.body.email
+    const user = await User.findOne({ email: userEmail });
+    console.log(user)
 
     if (!user) {
       res.status(400).json({ message: "Wrong email provided!" });
