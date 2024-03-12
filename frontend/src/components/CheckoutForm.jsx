@@ -12,6 +12,7 @@ function CheckoutForm({ name, email }) {
 
   // stripe items
   const stripe = useStripe();
+  console.log(stripe)
   const elements = useElements();
 
   // main function
@@ -36,7 +37,7 @@ function CheckoutForm({ name, email }) {
       }
 
       // call the backend to create subscription
-      const response = await fetch("http://localhost:4000/create-subscription", {
+      const response = await fetch("http://localhost:8800/create-subscription", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

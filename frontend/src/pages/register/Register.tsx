@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Swal from "sweetalert2";
@@ -46,48 +46,60 @@ const Register = () => {
 
   const { handleSubmit, handleChange, values, errors, touched } = formik;
 
+
   const [appHeight, setAppHeight] = React.useState(window.innerHeight);
   const [appWidth, setAppWidth] = React.useState(window.innerWidth);
   const [isMobile, setIsMobile] = React.useState(
     window.matchMedia("(pointer: coarse)").matches
   );
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [passwordError, setPasswordError] = useState("")
+  const [emailError, setEmailError] = useState("")
+  const [isSignupBtnDisabled, setIsSignupBtnDisabled] = useState(true)
+  const [isFormValid, setIsFormValid] = useState(false);
 
-  React.useEffect(() => {
-    const handleResize = () => {
-      setAppHeight(window.innerHeight); // Update appHeight
-      setAppWidth(window.innerWidth); // Update appWidth
-      setIsMobile(window.matchMedia("(pointer: coarse)").matches);
-    };
+    React.useEffect(() => {
+    // Check if there are no errors with any of the forms
+    setIsFormValid(!emailError && !passwordError);
+  }, [emailError, passwordError]);
 
-    window.addEventListener("resize", handleResize);
+  // React.useEffect(() => {
+  //   const handleResize = () => {
+  //     setAppHeight(window.innerHeight); // Update appHeight
+  //     setAppWidth(window.innerWidth); // Update appWidth
+  //     setIsMobile(window.matchMedia("(pointer: coarse)").matches);
+  //   };
 
-    return () => window.removeEventListener("resize", handleResize); // Clean up listener
-  }, [window.innerHeight, window.innerWidth]);
+  //   window.addEventListener("resize", handleResize);
 
-  const imageHeight = 1008;
-  const imageWidth = 1440;
+  //   return () => window.removeEventListener("resize", handleResize); // Clean up listener
+  // }, [window.innerHeight, window.innerWidth]);
 
-  const imageHeightInScreen = React.useMemo(() => {
-    const aspectRatio = imageHeight / imageWidth;
-    const newHeight = aspectRatio * appWidth;
-    return newHeight;
-  }, [imageHeight, imageWidth, appWidth]);
+  // const imageHeight = 1008;
+  // const imageWidth = 1440;
+
+  // const imageHeightInScreen = React.useMemo(() => {
+  //   const aspectRatio = imageHeight / imageWidth;
+  //   const newHeight = aspectRatio * appWidth;
+  //   return newHeight;
+  // }, [imageHeight, imageWidth, appWidth]);
 
   const handleStart = () => {
-    if (errors.email) {
-      showSwal("Validation Error", errors.email, "error");
-      return;
-    }
+    // if (errors.email) {
+    //   showSwal("Validation Error", errors.email, "error");
+    //   return;
+    // }
 
-    if (errors.password) {
-      showSwal("Validation Error", errors.password, "error");
-      return;
-    }
+    // if (errors.password) {
+    //   showSwal("Validation Error", errors.password, "error");
+    //   return;
+    // }
 
-    if (errors.repeatPassword) {
-      showSwal("Validation Error", errors.repeatPassword, "error");
-      return;
-    }
+    // if (errors.repeatPassword) {
+    //   showSwal("Validation Error", errors.repeatPassword, "error");
+    //   return;
+    // }
 
     // Proceed to show payment form
     setShowPaymentForm(true);
@@ -106,6 +118,42 @@ const Register = () => {
       icon: type,
     });
   };
+
+  const handleEmailChange = (event) => {
+    const value = event.target.value;
+    setEmail(value);
+
+    // Regular expression for validating email address
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(value)) {
+      setEmailError("Invalid email address");
+    } else {
+      setEmailError("");
+    }
+  };
+  const handlePasswordChange = (event) => {
+    const value = event.target.value;
+    setPassword(value);
+
+    if (value.length < 6) {
+      setPasswordError("Password must be at least 6 characters long");
+    } else {
+      setPasswordError("");
+    }
+  };
+
+  const handleRepeatPassword = (event) => {
+    const value = event.target.value;
+    if (value !== password) {
+      setPasswordError("Both passwords are different");
+    }  
+    if (value !== password && value.length < 6) {
+      setPasswordError("Password must be at least 6 characters long");
+    } else {
+      setPasswordError("");
+    }
+  };  
 
   const [showPaymentForm, setShowPaymentForm] = React.useState(false);
 
@@ -153,10 +201,11 @@ const Register = () => {
                   placeholder="Email Address"
                   id="email"
                   name="email"
-                  value={values.email}
-                  onChange={handleChange}
+                  onChange={handleEmailChange}
                 />
               </div>
+              <small className="text-red-600">{emailError.length > 1 && emailError}</small>
+
               <div className={styles["inputWrapper"]}>
                 <input
                   //fullwidth="true"
@@ -164,10 +213,11 @@ const Register = () => {
                   name="password"
                   type="password"
                   placeholder="Password"
-                  value={values.password}
-                  onChange={handleChange}
+                  onChange={handlePasswordChange}
                 />
               </div>
+               <small className="text-red-600">{passwordError.length > 0 && passwordError}</small>
+
               <div className={styles["inputWrapper"]}>
                 <input
                   //fullWidth="true"
@@ -175,15 +225,18 @@ const Register = () => {
                   name="repeatPassword"
                   type="password"
                   placeholder="Repeat Password"
-                  value={values.repeatPassword}
-                  onChange={handleChange}
+                
+                  onChange={handleRepeatPassword}
                   onKeyDown={handleKeyDown}
                 />
               </div>
+                <small className="text-red-600"> {passwordError.length > 0 && passwordError}</small>
+
 
               <button
                 className="registerButton"
                 type="button"
+                disabled={isFormValid}
                 onClick={handleStart}
                 style={{ color: "#fff" }}
               >
