@@ -5,17 +5,6 @@ const router = express.Router();
 // Initialize Stripe with your secret key
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-// Route handler for POST /create-subscription
-router.post('/create-subscription', async (req, res) => {
-  try {
-    const subscriptionDetails = await createSubscription(req.body);
-    res.json(subscriptionDetails);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'An error occurred while creating the subscription.' });
-  }
-});
-
 // Function to create a subscription
 async function createSubscription(createSubscriptionRequest) {
   try {
@@ -67,5 +56,15 @@ async function createSubscription(createSubscriptionRequest) {
   }
 }
 
+// Route handler for POST /create-subscription
+router.post('/create-subscription', async (req, res) => {
+  try {
+    const subscriptionDetails = await createSubscription(req.body);
+    res.json(subscriptionDetails);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while creating the subscription.' });
+  }
+});
 
 module.exports = router;

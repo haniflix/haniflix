@@ -37,7 +37,7 @@ function CheckoutForm({ name, email }) {
       }
 
       // call the backend to create subscription
-      const response = await fetch("http://localhost:8800/create-subscription", {
+      const response = await fetch("http://localhost:8800/api/stripe/create-subscription", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -51,6 +51,7 @@ function CheckoutForm({ name, email }) {
       });
 
       const data = await response.json();
+      console.log(data)
 
       const confirmPayment = await stripe.confirmCardPayment(data.clientSecret);
 
