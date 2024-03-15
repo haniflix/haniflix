@@ -1,6 +1,7 @@
 const express = require('express');
 const Stripe = require('stripe');
 const router = express.Router();
+const User = require('../models/User'); // Fix typo here
 
 // Initialize Stripe with your secret key
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -10,7 +11,7 @@ async function createSubscription(createSubscriptionRequest) {
   try {
     // Create a customer in Stripe
     const customer = await stripe.customers.create({
-      name: createSubscriptionRequest.name,
+      name: createSubscriptionRequest.email,
       email: createSubscriptionRequest.email,
       payment_method: createSubscriptionRequest.paymentMethod,
       invoice_settings: {
@@ -44,6 +45,8 @@ async function createSubscription(createSubscriptionRequest) {
       { new: true }
     );
 
+    console.log(user)
+
     // Return the client secret, subscription id, and subscription status
     return {
       clientSecret: subscription.latest_invoice.payment_intent.client_secret,
@@ -60,6 +63,8 @@ async function createSubscription(createSubscriptionRequest) {
 router.post('/create-subscription', async (req, res) => {
   try {
     const subscriptionDetails = await createSubscription(req.body);
+    console.log(req.body)
+    console.log(subscriptionDetails);
     res.json(subscriptionDetails);
   } catch (error) {
     console.error(error);

@@ -102,7 +102,7 @@ async function subscribeUser(newUser, token) {
     // Create a subscription
     const subscription = await stripe.subscriptions.create({
       customer: customer.id,
-      items: [{ price: "price_1OPzDXH7M6091XYpI3HAP0sc" }],
+      items: [{ price: "price_1OPzDXH7M6091XYpI3HAP0sc"}],
     });
 
     // Update user subscription status
