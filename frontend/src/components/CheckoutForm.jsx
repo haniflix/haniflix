@@ -37,7 +37,7 @@ function CheckoutForm({ name, email }) {
       }
 
       // call the backend to create subscription
-      const response = await fetch("http://localhost:8800/api/stripe/create-subscription", {
+      const response = await fetch("https://api.haniflix.com/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
