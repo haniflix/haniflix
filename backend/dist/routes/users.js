@@ -194,4 +194,5 @@ router.put("/updatePassword/:id", (req, res) => __awaiter(this, void 0, void 0, 
 //     res.status(500).json({ error: 'Subscription failed' });
 //   }
 // });
+
 module.exports = router;

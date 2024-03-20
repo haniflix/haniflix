@@ -1,6 +1,6 @@
 import axios from "axios";
 import Swal from "sweetalert2";
-const api_url = import.meta.env.VITE_APP_API_URL;
+const api_url = import.meta.env.TEST_VITE_APP_API_URL;
 
 const do_redirect = () => {
   //setTimeout(() => {

@@ -116,6 +116,9 @@
     rgba(0, 212, 255, 1) 100%
   );
 }
+.validation-error-msg {
+  color: red;
+}
 
 @keyframes pulse {
   from {
