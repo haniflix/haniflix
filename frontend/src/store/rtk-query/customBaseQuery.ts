@@ -3,12 +3,8 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 import { updateToken } from "../reducers/auth";
 
-let BASE_URL;
-if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
-    BASE_URL = "http://localhost:8800/api/";
-} else {
-    BASE_URL= process.env.VITE_APP_API_URL
-}
+const BASE_URL =
+  import.meta.env.VITE_APP_API_URL || "http://localhost:8800/api/";
 
 import Swal from "sweetalert2";
 

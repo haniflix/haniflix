@@ -8,11 +8,9 @@ import "../../Assets/css/styles.scss";
 import styles from "./register.module.scss";
 import { Link, useSearchParams } from "react-router-dom";
 import { Input } from "@mui/material";
-import { useRegisterMutation } from "../../store/rtk-query/authApi";
 
 import { Helmet } from "react-helmet";
 import { addClassNames } from "../../store/utils/functions";
-
 
 const validationSchema = Yup.object({
   email: Yup.string().email("Invalid email address").required("Required"),
@@ -25,18 +23,15 @@ const validationSchema = Yup.object({
 });
 
 const Register = () => {
-
-  const [register, registerState] = useRegisterMutation();
-
   const formik = useFormik({
     initialValues: {
-      username: "",
       email: "",
       password: "",
       repeatPassword: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
+      // Handle form submission logic
       setShowPaymentForm(true);
     },
   });
@@ -77,19 +72,6 @@ const Register = () => {
     const newHeight = aspectRatio * appWidth;
     return newHeight;
   }, [imageHeight, imageWidth, appWidth]);
-
-  const onRegister = async (username: string, email: string, password: string) => {
-    const res = await register({ username, email, password });
-    if (res != 'Subscription failed. Please try again later.' || 'Connection timed out') {
-      window.location.replace(res?.data.message,);
-    }else{
-      Swal.fire({
-          title: res?.data.message || "Error encountered during login",
-          text: res?.data.message,
-          icon: "error",
-        });
-    }
-  };
 
   const handleStart = () => {
     if (errors.email) {
@@ -167,16 +149,6 @@ const Register = () => {
             >
               <div className={styles["inputWrapper"]}>
                 <input
-                  type="text"
-                  placeholder="username"
-                  id="username"
-                  name="username"
-                  value={values.username}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className={styles["inputWrapper"]}>
-                <input
                   type="email"
                   placeholder="Email Address"
                   id="email"
@@ -222,7 +194,7 @@ const Register = () => {
             {showPaymentForm && (
               <div className="payment-modal">
                 <h2 className="text-white">Continue for $4.99/month</h2>
-                <StripePaymentForm newUser={values} onRegister={onRegister}/>
+                <StripePaymentForm newUser={values} />
               </div>
             )}
 

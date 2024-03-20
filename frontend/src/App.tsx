@@ -27,7 +27,6 @@ import { SocketProvider } from "./context/SocketContext";
 
 import * as React from 'react'
 
-
 const App = () => {
   const user = useAppSelector(selectUser);
 
