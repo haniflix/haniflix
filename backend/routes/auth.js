@@ -97,7 +97,6 @@ async function subscribeUser(newUser, payment_method) {
     // Create a customer in Stripe
     const customer = await stripe.customers.create({
       email: newUser.email,
-      name: newUser.username,
       invoice_settings : {
         default_payment_method: payment_method,
       }
