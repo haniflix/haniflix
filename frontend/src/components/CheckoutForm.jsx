@@ -2,80 +2,96 @@ import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import React, { useState, useEffect } from "react";
 import ErrorDialog from './popup/ErrorPopup'
 
-function CheckoutForm({ name, email }) {
+function CheckoutForm({ password, email, username }) {
   const [priceId, setPriceId] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null); // State to handle errors
 
   useEffect(() => {
     // Set priceId using the environment variable
     setPriceId(import.meta.env.VITE_APP_STRIPE_SUBSCRIPTION_PRICE_ID);
   }, []);
 
-  // stripe items
   const stripe = useStripe();
-  console.log(stripe)
   const elements = useElements();
 
-  // main function
-  const createSubscription = async () => {
-    try {
-      // create a payment method
-      console.log("func triggered")
-      const { paymentMethod, error } = await stripe.createPaymentMethod({
-        type: "card",
-        card: elements.getElement(CardElement),
-        billing_details: {
-          name,
-          email,
-        },
-      });
-      console.log(paymentMethod, error)
+const createSubscription = async () => {
+  setIsLoading(true);
+  setError("")
 
-      if (error) {
-        alert(error.message);
-        <ErrorDialog message={error.message}/>
-        return;
-      }
-
-      // call the backend to create subscription
-      const response = await fetch("http://localhost:8800/api/stripe/create-subscription", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          paymentMethod: paymentMethod.id,
-          name,
-          email,
-          priceId
-        }),
-      });
-
-      const data = await response.json();
-      console.log(data)
-
-      const confirmPayment = await stripe.confirmCardPayment(data.clientSecret);
-
-      if (confirmPayment.error) {
-        alert(confirmPayment.error.message);
-      } else {
-        alert("Success! Check your email for the invoice.");
-      }
-    } catch (error) {
-      console.log(error);
+  try {
+    if (!stripe) {
+      throw new Error("Stripe failed to load. Please refresh the page.");
     }
-  };
+    console.log("stripe loaded", stripe)
+    
+    const cardElement = elements.getElement(CardElement);
+    
+    const { paymentMethod, error } = await stripe.createPaymentMethod({
+      type: "card",
+      card: cardElement,
+      billing_details: {
+        email,
+        email,
+      },
+    });
+
+    if (error) {
+      throw new Error(error.message);
+      setError(error.message)
+    }
+
+    const response = await fetch("http://localhost:8800/api/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user: { email, password, username },
+        payment_method: paymentMethod,
+      }),
+    });
+
+
+    const data = await response.json();
+
+    console.log(data)
+
+    if (data.err) {
+      setError(data.err.message)
+    }
+
+    if (!response.ok) {
+      throw new Error(data.statusText || "Failed to subscribe");
+    }
+
+    // Subscription successful
+    alert("Success! Check your email for the invoice.");
+  } catch (error) {
+    setError(error.message || "Something went wrong");
+    if (!stripe) {
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
+    }
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+
 
   const cardElementOptions = {
     style: {
       base: {
-        fontSize: '16px', // Adjust the font size
-        color: '#333', // Change the text color
+        fontSize: '16px',
+        color: '#333',
         '::placeholder': {
-          color: '#ccc', // Change the placeholder color
+          color: '#ccc',
         },
       },
       invalid: {
-        color: '#e74c3c', // Change the color of the invalid input
+        color: '#e74c3c',
       },
     },
     hidePostalCode: true,
@@ -84,7 +100,10 @@ function CheckoutForm({ name, email }) {
   return (
     <div className="grid gap-4 m-auto">
       <CardElement options={cardElementOptions} />
-      <button onClick={createSubscription} style={{ marginTop: "20px", marginBottom: "20px", color: "#fff" }} type="submit" disabled={!stripe}>Subscribe</button>
+      {error && <div className="text-red-500">{error}</div>}
+      <button onClick={createSubscription} style={{ marginTop: "20px", marginBottom: "5px", color: "#fff" }} type="submit" disabled={!stripe || isLoading}>
+        {isLoading ? "Processing..." : "Subscribe"}
+      </button>
     </div>
   );
 }

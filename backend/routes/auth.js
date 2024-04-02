@@ -8,7 +8,9 @@ const dotenv = require("dotenv");
 const SENDGRID_API_KEY =
   "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";
 const email_from = "Haniflix <no-reply@haniflix.com>";
-const List = require("../models/List");
+const {List} = require("../models/index");
+// const mongoose = require("mongoose")
+// const List = require("../models/List");
 
 dotenv.config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
@@ -35,32 +37,31 @@ router.get("/send-email", async (req, res) => {
     });
 });
 
+
 router.post("/register", async (req, res) => {
-  const { user } = req.body;
+  const { user, payment_method } = req.body; // Destructure `user` and `payment_method` from the request body
   const email = user.email;
   const password = user.password;
+  const username = user.username
 
   try {
-    const { newUser, defaultList, user } = await registerUser(
+    const { newUser, defaultList, user, err } = await registerUser(
       email,
-      email,
-      password
+      password,
+      username
     );
 
-    // Subscription logic
-    const { token } = req.body; // Assuming you are passing the token from the frontend
-    const response = await subscribeUser(newUser, token.id);
+    if (err) {
+      res.status(409).json({ error: true, statusText: err.message })
+    }
+
+    const response = await subscribeUser(email, payment_method); // Pass `payment_method` to subscribeUser
+    console.log(response)
 
     if (response) {
-      // // Subscription successful, redirect or show a success message
-      // const verifyUrl = `${demo_url}verify?otp=${newUser.otp}&email=${newUser.username}`;
-      // await sendVerificationEmail(email, verifyUrl);
-
       res.status(201).json({ statusText: "Created" });
     } else {
-      // Handle subscription error
       console.error("Subscription failed:", response.error);
-      // Delete the user and the list
       await deleteUserAndList(newUser, defaultList);
       res.status(203).json({
         error: true,
@@ -90,20 +91,51 @@ async function deleteUserAndList(user, list) {
   }
 }
 
-async function subscribeUser(newUser, token) {
+async function subscribeUser(newUser, payment_method) {
+  console.log(newUser, payment_method)
   try {
     // Create a customer in Stripe
     const customer = await stripe.customers.create({
       email: newUser.email,
-      source: token, // The token ID obtained from the client-side
+      name: newUser.username,
+      invoice_settings : {
+        default_payment_method: payment_method,
+      }
     });
     console.log("Stripe Customer created:", customer);
+    
+    // THE CODE COMMENTED LIES STUPID BUGS I CANT FIND SOLUTION FOR 
 
-    // Create a subscription
-    const subscription = await stripe.subscriptions.create({
-      customer: customer.id,
-      items: [{ price: "price_1OPzDXH7M6091XYpI3HAP0sc"}],
-    });
+    // // Add the payment method to the customer
+    // const attacher = await stripe.paymentMethods.attach(payment_method.id, {
+    //   customer: customer.id,
+    // });
+
+    // console.log("attached customer id",attacher)
+
+    // // Create a subscription ---- BUGGY CODE 
+    // const subscription = await stripe.subscriptions.create({
+    //   customer: customer.id,
+    //   items: [{ price: process.env.STRIPE_SUBSCRIPTION_PRICE_ID.toString()}],
+    //   expand: ['latest_invoice.payment_intent'],
+    //   payment_settings: {
+    //     payment_method_options: {
+    //       card: {
+    //         request_three_d_secure: 'any',
+    //       },
+    //     },
+    //     payment_method_types: ['card'],
+    //     save_default_payment_method: 'on_subscription',
+    //   },
+    // });
+
+    // // BUGGUY CODE HOW DO I FIX
+
+    // console.log("Stripe Subscription Created", subscription)
+
+    const status = subscription['latest_invoice']['payment_intent']['status']
+    const client_secret = subscription['latest_invoice']['payment_intent']['client_secret']
+    console.log("status", status, "client_secret", client_secret)
 
     // Update user subscription status
     newUser.isSubscribed = true;
@@ -119,32 +151,60 @@ async function subscribeUser(newUser, token) {
   }
 }
 
-async function registerUser(username, email, password) {
-  console.log(username, email, password);
-  const newUser = new User({
-    username,
-    email,
-    otp: CryptoJS.lib.WordArray.random(16),
-    password: CryptoJS.AES.encrypt(password, process.env.SECRET_KEY).toString(),
-  });
+async function registerUser(email, password, username) {
+  try {
+    console.log(email, password, username);
+    
+    // Check if a user with the provided email or username already exists
+    const existingEmailUser = await User.findOne({ email });
+    const existingUsernameUser = await User.findOne({ username });
+    
+    // If a user with the email or username already exists, return an error
+    if (existingEmailUser || existingUsernameUser) {
+      let errorMessage = '';
+      if (existingEmailUser) errorMessage += 'This email already exists. ';
+      if (existingUsernameUser) errorMessage += 'This username already exists.';
+      console.log(errorMessage)
+      return { error: {message: errorMessage} }
+      // throw new Error(errorMessage);
+    }
 
-  const defaultList = new List({
-    title: `${username}'s Watchlist`,
-    user: newUser._id,
-  });
-
-  newUser.lists.push(defaultList._id);
-  newUser.defaultList = defaultList._id;
-  const user = await newUser.save();
-  await defaultList.save();
-
-  return { newUser, defaultList, user };
+    // If the user does not exist, create a new user
+    const newUser = new User({
+      username,
+      email,
+      otp: CryptoJS.lib.WordArray.random(16),
+      password: CryptoJS.AES.encrypt(password, process.env.SECRET_KEY).toString(),
+      old_username: username,
+      old_email: email
+    });
+  
+    const defaultList = new List({
+      title: `${username}'s Watchlist`,
+      user: newUser._id,
+    });
+  
+    console.log('defaultList', defaultList)
+  
+    newUser.lists.push(defaultList._id);
+    newUser.defaultList = defaultList._id;
+    
+    // Save the new user and default list
+    const user = await newUser.save();
+    await defaultList.save();
+  
+    return { newUser, defaultList, user, err: null };
+  } catch (error) {
+    // Return the error message if any
+    return { err: { message: error.message } };
+  }
 }
+
 
 async function sendVerificationEmail(email, verifyUrl) {
   const msg = {
     to: email,
-    from: email_from,
+    from:email_from,
     subject: "Verify your Haniflix account",
     html: `
       <div style="padding: 10px; border: solid 1px #ccc; width: 98%; box-sizing: border-box;">

@@ -22,7 +22,7 @@ function StripePaymentForm({ newUser }) {
         <div style={{ marginBottom: 10, color: '#fff' }}>Card Details:</div>
       </h4>
         <Elements stripe={stripePromise}>
-          <CheckoutForm name={newUser.name} email={newUser.email}/>
+          <CheckoutForm password={newUser.password} email={newUser.email} username={newUser.username}/>
         </Elements>
     </form>
   );

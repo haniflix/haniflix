@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 // const Movie = require("./Movie");
 const Genre = require("./Genre");
-// const List = require("./");
+// const List = require("./List");
 
 const Logger = require("../lib/logger");
 

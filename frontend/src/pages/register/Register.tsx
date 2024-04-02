@@ -8,6 +8,8 @@ import { Link, useSearchParams } from "react-router-dom";
 import { addClassNames } from "../../store/utils/functions";
 
 const Register = () => {
+  const [username, setUsername] = useState("")
+  const [usernameError, setUsernameError] = useState("")
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
@@ -47,8 +49,8 @@ const Register = () => {
   };
 
   useEffect(() => {
-    setIsFormValid(!emailError && !passwordError && !repeatPasswordError);
-  }, [emailError, passwordError, repeatPasswordError]);
+    setIsFormValid(!emailError && !passwordError && !repeatPasswordError && !usernameError);
+  }, [emailError, passwordError, repeatPasswordError, usernameError]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -61,6 +63,15 @@ const Register = () => {
     setEmail(value);
     validateEmail(value);
   };
+
+  const handleUsernameChange = (event) => {
+    const value = event.target.value
+    setUsername(value)
+    if (value.length < 6) {
+      setUsernameError("Username must be at least 6 characters long");
+    }
+    setUsernameError("")
+  }
 
   const handlePasswordChange = (event) => {
     const value = event.target.value;
@@ -103,6 +114,19 @@ const Register = () => {
               onSubmit={handleSubmit}
               style={{ maxWidth: "450px", width: "100%" }}
             >
+              <div className={styles["inputWrapper"]}>
+                <input
+                  type="text"
+                  placeholder="Username"
+                  id="username"
+                  name="username"
+                  onChange={handleUsernameChange}
+                  value={username}
+                />
+              </div>
+              <small className="text-red-600">{usernameError.length > 1 && usernameError}</small>
+
+
               <div className={styles["inputWrapper"]}>
                 <input
                   type="email"
@@ -152,7 +176,7 @@ const Register = () => {
             {showPaymentForm && (
               <div className="payment-modal">
                 <h2 className="text-white">Continue for $4.99/month</h2>
-                <StripePaymentForm newUser={{ email, password, repeatPassword }} />
+                <StripePaymentForm newUser={{ email, password, repeatPassword, username }} />
               </div>
             )}
 
