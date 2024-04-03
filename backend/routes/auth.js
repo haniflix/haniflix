@@ -42,23 +42,24 @@ router.post("/register", async (req, res) => {
   const { user, payment_method } = req.body; // Destructure `user` and `payment_method` from the request body
   const email = user.email;
   const password = user.password;
-  const username = user.username
+  const username = user.username.toLowerCase()
 
   try {
-    const { newUser, defaultList, user, err } = await registerUser(
-      email,
-      password,
-      username
-    );
+  const { newUser, defaultList, user, err } = await registerUser(
+    email,
+    password,
+    username
+  );
 
+  if (newUser) {
     if (err) {
-      res.status(409).json({ error: true, statusText: err.message })
+      res.status(409).json({ error: true, statusText: err.message });
+      return; // Return to avoid further execution
     }
 
-    const response = await subscribeUser(email, payment_method); // Pass `payment_method` to subscribeUser
-    console.log(response)
+    const response = await subscribeUser(newUser, payment_method);
 
-    if (response) {
+    if (response && !response.error) {
       res.status(201).json({ statusText: "Created" });
     } else {
       console.error("Subscription failed:", response.error);
@@ -68,10 +69,15 @@ router.post("/register", async (req, res) => {
         statusText: "Subscription failed. Please try again later.",
       });
     }
-  } catch (error) {
-    console.log(error);
-    res.status(203).json({ error: true, statusText: "Something is wrong!" });
+  } else {
+    console.log("New user does not exist");
+    res.status(404).json({ error: true, statusText: "This username or email already exists. Try another username or Signin" });
   }
+} catch (error) {
+  console.log(error);
+  res.status(500).json({ error: true, statusText: "Something went wrong!" });
+}
+
 });
 
 // Add a new function to delete the user and the list
@@ -92,10 +98,12 @@ async function deleteUserAndList(user, list) {
 }
 
 async function subscribeUser(newUser, payment_method) {
-  console.log(newUser, payment_method)
+  console.log("newUser",newUser)
+  console.log("payment_method", payment_method)
   try {
     // Create a customer in Stripe
     const customer = await stripe.customers.create({
+      name: newUser.username,
       email: newUser.email,
       invoice_settings : {
         default_payment_method: payment_method,
@@ -103,8 +111,6 @@ async function subscribeUser(newUser, payment_method) {
     });
     console.log("Stripe Customer created:", customer);
     
-    // THE CODE COMMENTED LIES STUPID BUGS I CANT FIND SOLUTION FOR 
-
     // // Add the payment method to the customer
     // const attacher = await stripe.paymentMethods.attach(payment_method.id, {
     //   customer: customer.id,
@@ -132,18 +138,18 @@ async function subscribeUser(newUser, payment_method) {
 
     // console.log("Stripe Subscription Created", subscription)
 
-    const status = subscription['latest_invoice']['payment_intent']['status']
-    const client_secret = subscription['latest_invoice']['payment_intent']['client_secret']
-    console.log("status", status, "client_secret", client_secret)
+    // const status = subscription['latest_invoice']['payment_intent']['status']
+    // const client_secret = subscription['latest_invoice']['payment_intent']['client_secret']
+    // console.log("status", status, "client_secret", client_secret)
 
-    // Update user subscription status
-    newUser.isSubscribed = true;
-    newUser.subscriptionId = subscription.id;
-    await newUser.save();
+    // // Update user subscription status
+    // newUser.isSubscribed = true;
+    // newUser.subscriptionId = subscription.id;
+    // await newUser.save();
 
-    console.log("Subscription created successfully");
+    // console.log("Subscription created successfully");
 
-    return { subscription, user: newUser };
+    // return { subscription, user: newUser };
   } catch (error) {
     console.error("Stripe Subscription Error:", error);
     throw new Error("Subscription failed");
@@ -152,8 +158,6 @@ async function subscribeUser(newUser, payment_method) {
 
 async function registerUser(email, password, username) {
   try {
-    console.log(email, password, username);
-    
     // Check if a user with the provided email or username already exists
     const existingEmailUser = await User.findOne({ email });
     const existingUsernameUser = await User.findOne({ username });
@@ -164,7 +168,7 @@ async function registerUser(email, password, username) {
       if (existingEmailUser) errorMessage += 'This email already exists. ';
       if (existingUsernameUser) errorMessage += 'This username already exists.';
       console.log(errorMessage)
-      return { error: {message: errorMessage} }
+      return { error: {message: errorMessage}, newUser:null }
       // throw new Error(errorMessage);
     }
 
@@ -177,6 +181,8 @@ async function registerUser(email, password, username) {
       old_username: username,
       old_email: email
     });
+
+    console.log("Newuser", newUser)
   
     const defaultList = new List({
       title: `${username}'s Watchlist`,
