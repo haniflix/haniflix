@@ -13,6 +13,7 @@ const statsRoute = require("./routes/stats");
 const scraperRoute = require("./routes/scraper");
 const imagesRoute = require("./routes/images");
 const stripeRoute = require('./routes/stripePayments')
+const webhookRoute = require('./routes/webhook')
 
 //
 const errorHandler = require("./middleware/errorHandler");
@@ -70,6 +71,7 @@ app.use("/api/lists", listRoute);
 app.use("/api/stats", statsRoute);
 app.use("/api/image", imagesRoute);
 app.use("/api/stripe", stripeRoute);
+app.use("/api/webhook", webhookRoute)
 
 const scraperRouteWithIO = scraperRoute(io);
 app.use("/api/scraper", scraperRouteWithIO);
