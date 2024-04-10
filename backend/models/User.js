@@ -5,10 +5,10 @@ const UserSchema = new mongoose.Schema(
     accessToken: { type: String },
     avatar: { type: String },
     fullname: { type: String },
-    username: { type: String, unique: true },
-    old_username: { type: String, unique: true },
-    email: { type: String, unique: true },
-    old_email: { type: String, unique: true },
+    username: { type: String, unique: true, required: true },
+    email: { type: String, unique: true, required: true },
+    old_username: { type: String, required: false },
+    old_email: { type: String, required: false },
     password: { type: String, required: true },
     profilePic: { type: String, defaut: "" },
     subscriptionId: { type: String, defaut: "" },
@@ -27,11 +27,12 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// TODO: uncomment later
 // pre hook to filter out soft-deleted users
-UserSchema.pre(/^find/, function (next) {
-  // Exclude soft-deleted users from queries
-  this.find({ isDeleted: { $ne: true } });
-  next();
-});
+// UserSchema.pre(/^find/, function (next) {
+//   // Exclude soft-deleted users from queries
+//   this.find({ isDeleted: { $ne: true } });
+//   next();
+// });
 
 module.exports = mongoose.model("User", UserSchema);
