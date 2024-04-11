@@ -52,19 +52,19 @@ const Navbar = (props: Props) => {
   const [showSettings, setShowSettings] = React.useState<boolean>(false);
   const [showChangeAvatar, setShowChangeAvatar] = React.useState<boolean>(false);
   const [isFirstChangeAvatar, setIsFirstChangeAvatar] = React.useState<boolean>(false);
-  
+
   useEffect(() => {
-    if(userId){
+    if (userId) {
       let first = localStorage.getItem(`fisrtAvatarTime_${userId}`)
-      if(!first ){
+      if (!first) {
         setIsFirstChangeAvatar(true);
         setShowChangeAvatar(true);
-        
+
       }
     }
 
 
-  },[userId, user]);
+  }, [userId, user]);
   let queryParams = {
     searchTerm,
   };
@@ -175,7 +175,7 @@ const Navbar = (props: Props) => {
             )}
           >
             <div className="w-full flex items-center relative px-[8px] ">
-              <div  className="cursor-pointer">
+              <div className="cursor-pointer">
                 <SearchIcon className="icon" />
               </div>
               <input
@@ -183,7 +183,7 @@ const Navbar = (props: Props) => {
                 placeholder="Search"
                 className="px-2"
                 onChange={(e) => setSearchTerm(e.target.value)}
-                
+
               />
             </div>
             <Transition
@@ -232,7 +232,7 @@ const Navbar = (props: Props) => {
             onClick={() => {
               setShowChangeAvatar(true);
             }}
-            // className="cursor-pointer bg-zinc-300 rounded-[100px] h-[45px] !w-[45px] border sm:mr-2"
+          // className="cursor-pointer bg-zinc-300 rounded-[100px] h-[45px] !w-[45px] border sm:mr-2"
           >
             <img
               src={userData?.avatar ? makeImageUrl(userData?.avatar) : NavLogo1}
@@ -306,7 +306,7 @@ const Navbar = (props: Props) => {
       <ChangeAvatarModal
         first={isFirstChangeAvatar}
         show={showChangeAvatar}
-        onClose={() =>{ setIsFirstChangeAvatar(false);   setShowChangeAvatar(false)}}
+        onClose={() => { setIsFirstChangeAvatar(false); setShowChangeAvatar(false) }}
       />
     </>
   );

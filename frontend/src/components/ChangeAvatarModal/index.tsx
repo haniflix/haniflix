@@ -26,7 +26,7 @@ const ChangeAvatarModal = ({ show, onClose, first }) => {
     refetch: refetchUserData,
   } = useGetUserQuery(userId);
 
- 
+
 
   const { data: avatarsData, isLoading: avatarsLoading } = useGetAvatarsQuery(
     {},
@@ -158,7 +158,7 @@ const ChangeAvatarModal = ({ show, onClose, first }) => {
                       selectedAvatar?._id == avatar?._id
                         ? "border relative border-[4px] border-[#FFFFFF]"
                         : "",
-                         styles['avatar']
+                      styles['avatar']
                     )}
                   >
                     {selectedAvatar?._id == avatar?._id ? (
