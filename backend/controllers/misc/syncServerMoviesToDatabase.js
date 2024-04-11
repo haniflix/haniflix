@@ -45,7 +45,12 @@ const syncServerMoviesToDatabase = async (req, res) => {
       const [title, year] = matchRes?.slice(1, 3);
 
       // Check if the movie with the same title and year exists in the database
-      const existingMovie = await Movie.findOne({ title, year });
+      const existingMovie = await Movie.findOne({
+        title: `${title} (${year})`,
+        year,
+      });
+
+      console.log("existingMovie ", existingMovie);
 
       // If movie already exists, skip
       if (existingMovie) {
@@ -70,7 +75,10 @@ const syncServerMoviesToDatabase = async (req, res) => {
         )}/${encodeURIComponent(movieFileName)}`;
 
         // Log the final result to console
-        console.log({ movieTitle: `${title} (${year})`, movieUrl });
+        console.log({
+          movieTitle: `${title} (${year})`,
+          //  , movieUrl
+        });
 
         // Save the movie to the database
         if (process.env.IS_IN_DOCKER === "is_docker") {
