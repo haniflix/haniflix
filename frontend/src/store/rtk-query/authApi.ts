@@ -16,6 +16,7 @@ export const authApi = createApi({
           body,
         };
       },
+      //transformErrorResponse: (err) => console.log(err),
     }),
   }),
 });

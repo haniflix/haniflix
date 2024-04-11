@@ -17,10 +17,10 @@ const TopSection: React.FC = () => {
           <img alt="" src="/images/popcorn.png" />
         </div>
         <div className="">
-          <h1 className="text-base sm:text-lg">
+          <h1 className="text-base sm:text-xl">
             The Haniflix you love for only $4.99/month.
           </h1>
-          <p className="text-sm sm:text-base">
+          <p className="text-sm sm:text-base sm:text-xl">
             Get our affordable and ad-free plan.
           </p>
         </div>

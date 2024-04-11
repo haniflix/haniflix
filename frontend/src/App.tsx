@@ -31,16 +31,15 @@ const App = () => {
   const user = useAppSelector(selectUser);
 
 
-
-
   return (
     <>
       <SocketProvider>
         <AppRouter />
         <CookieConsent
+          style={{ background: "rgba(0,0,0,0.7)"}}
           disableButtonStyles
           buttonClasses="gradientButton"
-          buttonStyle={{ margin: 10 }}
+          buttonStyle={{ margin: 10,}}
         >
           This website uses cookies to enhance the user experience.
         </CookieConsent>

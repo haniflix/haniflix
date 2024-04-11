@@ -1,17 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { useSelector } from "react-redux";
+import YouTubePlayer from "react-youtube";
+
 import SocketContext from "../../context/SocketContext";
 
-import { IconButton } from "@mui/material";
 import {
-  Add,
-  ThumbUpAltOutlined,
-  ThumbDownOutlined,
-  ThumbUp,
   ThumbDown,
-  Check,
+  ThumbUp
 } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
 import {
   useDislikeMovieMutation,
   useGetMovieQuery,
@@ -28,13 +26,13 @@ import { useNavigate } from "react-router-dom";
 import CustomReactPlayer from "./ReactPlayer";
 
 import {
-  HeartIconFilled,
   HeartIcon,
+  HeartIconFilled,
   ThumbsDownIcon,
   ThumbsUpIcon,
 } from "../../Assets/svgs/tsSvgs";
 
-const VideoPlayer = ({ videoId, videoUrl }) => {
+const VideoPlayer = ({ videoId, videoUrl, isTrailer }) => {
   const [playtime, setPlaytime] = useState(0);
   const [seekTime, setSeekTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -57,10 +55,22 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
 
   const authReducer = useSelector((state) => state.auth);
   const accessToken = authReducer?.user?.accessToken;
+  
+  let id='';
+  let isYouTube = false;
+  if(videoUrl && isTrailer && videoUrl.includes('youtu.')){
+    isYouTube = true;
+  }
+  if(isTrailer && videoUrl){
+    const lnks = (videoUrl).split('/')
+    id = lnks[lnks.length -1];
+    videoUrl =`https://www.youtube.com/watch?v=${lnks[lnks.length -1]}`;
+  }
 
-  const streamUrl = `${
+   const streamUrl = isTrailer ? videoUrl : `${
     import.meta.env.VITE_APP_API_URL
   }movies/stream/${videoId}?token=${accessToken}`;
+  console.log('streamUrl:', streamUrl);
 
   const { socket } = React.useContext(SocketContext);
 
@@ -210,6 +220,14 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
     // showSwal("Added to list", "", "success");
   };
 
+
+   const opts = {
+    
+    playerVars: {
+      autoplay: 1,
+    },
+  };
+
   // const getConfig = (authToken) => {
   //   const file = {
   //     // forceHLS: true,
@@ -316,7 +334,7 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
 
   return (
     <div className="video-player-containerd  h-screen">
-      <CustomReactPlayer
+     {isYouTube ? <YouTubePlayer videoId={id} iframeClassName="youtube-player"  opts={opts} /> : <CustomReactPlayer
         ref={playerRef}
         url={streamUrl}
         controls
@@ -337,7 +355,7 @@ const VideoPlayer = ({ videoId, videoUrl }) => {
           },
         }}
         // config={getConfig(accessToken)}
-      />
+      />}
       <div className="px-3">{renderExtraButtons()}</div>
     </div>
   );

@@ -1,43 +1,29 @@
-import React from "react";
-import { register } from "../context/register/apiCalls";
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import React, { useState } from "react";
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements, CardElement } from "@stripe/react-stripe-js";
+import CheckoutForm from './CheckoutForm'
 
-
-function StripePaymentForm({newUser}) {
-  console.log(newUser)
-  const stripe = useStripe();
-  const elements = useElements();
+function StripePaymentForm({ newUser }) {
+  console.log(newUser);
   
+  const [loading, setLoading] = useState(false);
+  const [showCheckoutForm, setShowCheckoutForm] = useState(false);
+  
+  const stripePromise = loadStripe(import.meta.env.VITE_APP_STRIPE_PUBLIC_KEY);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    if (!stripe || !elements) {
-      return;
-    }
-
-    const cardElement = elements.getElement(CardElement);
-
-    const { token, error } = await stripe.createToken(cardElement);
-
-    if (error) {
-      console.error(error);
-      alert("Subscription failed. Please try again later.");
-    } else {
-    
-        alert("Subscription successful!");
-        register(newUser, token);
-        
-      }
-    
+    setShowCheckoutForm(true);
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{margin:"5px", padding:"0px"}}>
+    <form onSubmit={handleSubmit}>
       <h4>
-        <div style={{marginBottom: 10}}>Card Details:</div>
-        <CardElement />
+        <div style={{ marginBottom: 10, color: '#fff' }}>Card Details:</div>
       </h4>
-      <button style={{marginTop:"20px", marginBottom:"20px", color: "#fff"}} type="submit">Subscribe</button>
+        <Elements stripe={stripePromise}>
+          <CheckoutForm password={newUser.password} email={newUser.email} username={newUser.username}/>
+        </Elements>
     </form>
   );
 }
