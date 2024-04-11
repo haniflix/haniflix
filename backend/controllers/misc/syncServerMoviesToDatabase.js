@@ -50,7 +50,7 @@ const syncServerMoviesToDatabase = async (req, res) => {
         year,
       });
 
-      console.log("existingMovie ", existingMovie);
+      //  console.log("existingMovie ", existingMovie);
 
       // If movie already exists, skip
       if (existingMovie) {
