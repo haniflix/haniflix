@@ -29,18 +29,29 @@ const syncServerMoviesToDatabase = async (req, res) => {
       const isDirectory = fs.statSync(movieFolderPath).isDirectory();
 
       // Proceed only if it's a directory
-      if (!isDirectory) continue;
+      if (!isDirectory) {
+        Logger.info(movieFolderPath + " is not a directory");
+        continue;
+      }
 
       // Extract movie title and year from folder name
-      const [title, year] = movieFolder
-        ?.match(/^(.+) \((\d{4})\)/)
-        ?.slice(1, 3);
+      const matchRes = movieFolder?.match(/^(.+) \((\d{4})\)/);
+
+      if (!matchRes) {
+        Logger.info("No Match result for folder " + movieFolderPath);
+        continue;
+      }
+
+      const [title, year] = matchRes?.slice(1, 3);
 
       // Check if the movie with the same title and year exists in the database
-      const existingMovie = await Movie.findOne({ title });
+      const existingMovie = await Movie.findOne({ title, year });
 
       // If movie already exists, skip
-      if (existingMovie) continue;
+      if (existingMovie) {
+        Logger.info("Movie exists " + `${title} (${year})` + " skipping ");
+        continue;
+      }
 
       // Get list of files in the movie folder
       const files = fs.readdirSync(path.join(moviesBasePath, movieFolder));
@@ -64,8 +75,9 @@ const syncServerMoviesToDatabase = async (req, res) => {
         // Save the movie to the database
         if (process.env.IS_IN_DOCKER === "is_docker") {
           const movie = new Movie({
-            title,
+            title: `${title} (${year})`,
             video: movieUrl,
+            year: year,
           });
           await movie.save();
         }
