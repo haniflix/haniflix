@@ -27,17 +27,16 @@ const morganMiddleware = require("./middleware/morgan");
 
 dotenv.config();
 
-const allowed_origins = "*";
-// [
-//   "http://50.62.182.51:4000",
-//   "http://admin.haniflix.com:4000",
-//   "https://admin.haniflix.com",
-//   "https://haniflix.com",
-//   "https://www.haniflix.com",
-//   "http://localhost:3000",
-//   "http://localhost:5173",
-//   "http://localhost:5174",
-// ];
+const allowed_origins = [
+  "http://50.62.182.51:4000",
+  "http://admin.haniflix.com:4000",
+  "https://admin.haniflix.com",
+  "https://haniflix.com",
+  "https://www.haniflix.com",
+  "http://localhost:3000",
+  "http://localhost:5173",
+  "http://localhost:5174",
+];
 
 const app = express();
 const server = http.createServer(app);
