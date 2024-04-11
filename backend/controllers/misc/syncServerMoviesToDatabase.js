@@ -46,7 +46,7 @@ const syncServerMoviesToDatabase = async (req, res) => {
 
       // Check if the movie with the same title and year exists in the database
       const existingMovie = await Movie.findOne({
-        title: `${title} (${year})`,
+        title: title,
         year,
       });
 
@@ -83,7 +83,7 @@ const syncServerMoviesToDatabase = async (req, res) => {
         // Save the movie to the database
         if (process.env.IS_IN_DOCKER === "is_docker") {
           const movie = new Movie({
-            title: `${title} (${year})`,
+            title: title,
             video: movieUrl,
             year: year,
           });
