@@ -62,7 +62,7 @@ const syncServerMoviesToDatabase = async (req, res) => {
         console.log({ movieTitle: `${title} (${year})`, movieUrl });
 
         // Save the movie to the database
-        if (true || process.env.IS_IN_DOCKER === "is_docker") {
+        if (process.env.IS_IN_DOCKER === "is_docker") {
           const movie = new Movie({
             title,
             video: movieUrl,
