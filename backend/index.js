@@ -12,8 +12,9 @@ const listRoute = require("./routes/lists");
 const statsRoute = require("./routes/stats");
 const scraperRoute = require("./routes/scraper");
 const imagesRoute = require("./routes/images");
-const stripeRoute = require('./routes/stripePayments')
-const webhookRoute = require('./routes/webhook')
+const miscRoute = require("./routes/misc");
+const stripeRoute = require("./routes/stripePayments");
+const webhookRoute = require("./routes/webhook");
 
 //
 const errorHandler = require("./middleware/errorHandler");
@@ -26,7 +27,7 @@ const morganMiddleware = require("./middleware/morgan");
 
 dotenv.config();
 
-const allowed_origins = '*';
+const allowed_origins = "*";
 // [
 //   "http://50.62.182.51:4000",
 //   "http://admin.haniflix.com:4000",
@@ -70,8 +71,9 @@ app.use("/api/genre", genreRoute);
 app.use("/api/lists", listRoute);
 app.use("/api/stats", statsRoute);
 app.use("/api/image", imagesRoute);
+app.use("/api/misc", miscRoute);
 app.use("/api/stripe", stripeRoute);
-app.use("/api/webhook", webhookRoute)
+app.use("/api/webhook", webhookRoute);
 
 const scraperRouteWithIO = scraperRoute(io);
 app.use("/api/scraper", scraperRouteWithIO);

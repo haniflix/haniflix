@@ -41,6 +41,7 @@ import { BiSearch } from "react-icons/bi";
 
 import { SocketContext } from 'src/contexts/SocketContext'
 import { useCheckScrapingMutation, useScrapeAllMoviesMutation, useStopScrapingMutation } from 'src/store/rtk-query/scraperApi';
+import { useSyncMoviesToDbMutation } from 'src/store/rtk-query/miscApi';
 
 
 function Movies() {
@@ -85,6 +86,7 @@ function Movies() {
 
   const [deleteMovie, deleteMovieState] = useDeleteMovieMutation()
   const [scrapeAllMovies, scrapeAllMoviesState] = useScrapeAllMoviesMutation()
+  const [syncMovies, syncMoviesState] = useSyncMoviesToDbMutation()
   const [checkScraping, checkScrapingState] = useCheckScrapingMutation()
   const [stopScraping, stopScrapingState] = useStopScrapingMutation()
 
@@ -187,6 +189,18 @@ function Movies() {
     }
   }
 
+  const onSyncMovies = async () => {
+
+    const res = await syncMovies({})
+
+    if (res?.data) {
+      toast.success('Sync completed successfully', { position: 'top-right' });
+    }
+    else {
+      toast.error(res?.error?.data?.message || 'Error encountered during sync', { position: 'top-right' });
+    }
+  }
+
 
 
   useEffect(() => {
@@ -219,7 +233,14 @@ function Movies() {
 
     return (
       <div className='w-full px-7 mt-2 flex gap-4 items-center'>
-        <div className='space-y-2'>
+        <div className='space-y-2 flex flex-col'>
+          <Button
+            className='!h-[30px] w-[200px]'
+            variant="contained" onClick={() => onSyncMovies()}>
+            {
+              syncMoviesState.isLoading ? "sync in progress.." : 'Sync Movies To Db'
+            }
+          </Button>
           <Button
             className='!h-[30px] w-[100px]'
             variant="contained" onClick={() => onScrapeAllMovies("all")}>
@@ -230,6 +251,7 @@ function Movies() {
             variant="contained" onClick={() => onScrapeAllMovies("failed_movies")}>
             Pull Red Font(s)
           </Button>
+
         </div>
         <div className='text-sm w-full flex gap-[50px] items-center'>
           {
