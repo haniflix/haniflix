@@ -22,6 +22,8 @@ import { addClassNames } from "../../../store/utils/functions";
 import { useCancelSubMutation } from "../../../store/rtk-query/usersApi";
 import { useAppSelector } from "../../../store/hooks";
 import { selectUser } from "../../../store/reducers/auth";
+import axios from "axios";
+import { BASE_URL } from "../../../utils/utils";
 
 const url = import.meta.env.VITE_APP_API_URL;
 
@@ -45,23 +47,50 @@ const SidebarSub = () => {
   };
 
   const onCancelSubscription = async () => {
-    const res = await cancelSub(userId);
+    // const res = await cancelSub(userId);
+    console.log(user);
+    console.log(BASE_URL);
+    await axios
+      .put(
+        `${BASE_URL}users/cancel-sub/${user._id}`,
+        // {},
+        { withCredentials: true }
+      )
+      .then((res) => {
+        console.log(res);
+        if (res?.data) {
+          console.log("Login successful");
+          showSwal("Subscription cancelled", res?.data?.message, "success");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (!err?.data) {
+          Swal.fire({
+            title:
+              err?.error?.data?.message ||
+              "Error encountered during cancellation",
+            text: err?.error?.data?.message,
+            icon: "error",
+          });
+        }
+      });
 
     setShowCancelModal(false);
 
-    if (res?.data) {
-      console.log("Login successful");
-      showSwal("Subscription cancelled", res?.data?.message, "success");
-    }
+    // if (res?.data) {
+    //   console.log("Login successful");
+    //   showSwal("Subscription cancelled", res?.data?.message, "success");
+    // }
 
-    if (!res?.data) {
-      Swal.fire({
-        title:
-          res?.error?.data?.message || "Error encountered during cancellation",
-        text: res?.error?.data?.message,
-        icon: "error",
-      });
-    }
+    // if (!res?.data) {
+    //   Swal.fire({
+    //     title:
+    //       res?.error?.data?.message || "Error encountered during cancellation",
+    //     text: res?.error?.data?.message,
+    //     icon: "error",
+    //   });
+    // }
 
     // client
     //   .deleteUser(user?._id)
@@ -120,18 +149,18 @@ const SidebarSub = () => {
             >
               <Close />
             </IconButton>
-            <div className="flex gap-[8px]">
-              {/* <Button
-                                variant="contained"
-                                onClick={() => {
-                                    setShowCancelModal(false)
-                                    setCancelLoading(false)
-                                }}
-                                className={styles["app_button"]}
-                                sx={{}}
-                            >
-                                Close
-                            </Button> */}
+            <div className="grid grid-cols-2 gap-[8px]">
+              <Button
+                variant="contained"
+                onClick={() => {
+                  setShowCancelModal(false);
+                  setCancelLoading(false);
+                }}
+                className={styles["app_button"]}
+                sx={{}}
+              >
+                Close
+              </Button>
               <Button
                 variant="contained"
                 color="primary"
@@ -142,7 +171,7 @@ const SidebarSub = () => {
                 {cancelSubState.isLoading ? (
                   <CircularProgress color="inherit" size={24} />
                 ) : (
-                  "Cancel"
+                  "Proceed"
                 )}
               </Button>
             </div>

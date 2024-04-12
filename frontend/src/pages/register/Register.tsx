@@ -6,10 +6,17 @@ import "../../Assets/css/styles.scss";
 import styles from "./register.module.scss";
 import { Link, useSearchParams } from "react-router-dom";
 import { addClassNames } from "../../store/utils/functions";
-
+import { ClipLoader } from "react-spinners";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 const Register = () => {
-  const [username, setUsername] = useState("")
-  const [usernameError, setUsernameError] = useState("")
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const success = searchParams.get("success");
+  const session_id = searchParams.get("session_id");
+  console.log(success);
+  const [username, setUsername] = useState("");
+  const [usernameError, setUsernameError] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
@@ -17,6 +24,8 @@ const Register = () => {
   const [passwordError, setPasswordError] = useState("");
   const [repeatPasswordError, setRepeatPasswordError] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
+  const [verifyingStatus, setVerifyingStatus] = React.useState(false);
+  const [ran, setRan] = React.useState(false);
 
   const validateEmail = (value) => {
     if (!value) {
@@ -49,7 +58,9 @@ const Register = () => {
   };
 
   useEffect(() => {
-    setIsFormValid(!emailError && !passwordError && !repeatPasswordError && !usernameError);
+    setIsFormValid(
+      !emailError && !passwordError && !repeatPasswordError && !usernameError
+    );
   }, [emailError, passwordError, repeatPasswordError, usernameError]);
 
   const handleSubmit = (event) => {
@@ -65,13 +76,13 @@ const Register = () => {
   };
 
   const handleUsernameChange = (event) => {
-    const value = event.target.value
-    setUsername(value)
+    const value = event.target.value;
+    setUsername(value);
     if (value.length < 6) {
       setUsernameError("Username must be at least 6 characters long");
     }
-    setUsernameError("")
-  }
+    setUsernameError("");
+  };
 
   const handlePasswordChange = (event) => {
     const value = event.target.value;
@@ -83,114 +94,204 @@ const Register = () => {
     const value = event.target.value;
     setRepeatPassword(value);
     validateRepeatPassword(value);
-  };  
-
+  };
+  console.log("email", email);
+  console.log("username", username);
+  console.log("password", password);
   const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const checkout = () => {
+    fetch(
+      "http://localhost:8800/api/auth/v1/create-subscription-checkout-session",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        mode: "cors",
+        body: JSON.stringify({ email, username, password }),
+      }
+    )
+      .then((res) => {
+        if (res.ok) return res.json();
+        console.log(res);
+        return res.json().then((json) => Promise.reject(json));
+      })
+      .then(({ session }) => {
+        window.location = session.url;
+      })
+      .catch((e) => {
+        console.log(e);
+        Swal.fire({
+          title: "Error",
+          text: e.statusText,
+          icon: "error",
+        });
+      });
+  };
+
+  React.useEffect(() => {
+    console.log(" i ran ");
+    if (success && !ran) {
+      console.log(ran);
+      setVerifyingStatus(true);
+      setRan(true);
+
+      axios
+        .post("  https://api.haniflix.com/api/login/auth/v1/payment-success", {
+          sessionId: session_id,
+          email,
+          password,
+          username,
+        })
+        .then((res) => {
+          // alert();
+          Swal.fire({
+            title: "Success",
+            text: "Success! Check your email for the invoice. You can proceed to login",
+            icon: "success",
+          });
+          setVerifyingStatus(false);
+          navigate("/login");
+          console.log(res.data);
+        })
+
+        .catch((e) => {
+          setVerifyingStatus(false);
+          Swal.fire({
+            title: "Success",
+            text: e.error,
+            icon: "success",
+          });
+          console.log(e.error);
+        });
+    }
+  }, []);
 
   return (
     <>
-      <div className={addClassNames(styles["loginNew"])}>
-        <div className={styles["top"]}>
-          <div className={styles["wrapper"]}>
-            <a href={"/"} className="link">
-              <img
-                className={styles["logo"]}
-                src={Logo}
-                width="100px"
-                height="100px"
-                alt=""
-              />
-            </a>
-          </div>
+      {verifyingStatus && (
+        <div className="w-screen h-screen flex items-center justify-center">
+          <ClipLoader color="white" size={"1.5rem"} />
         </div>
-
-        <div className={styles["section"]}>
-          <div className={styles["intro-section"]}>
-            <h2 className="text-white font-[500] text-[25px] m-[auto] w-[fit-content]">
-              Sign Up
-            </h2>
-            <div className="h-[1px] bg-[#4B4B4B] mt-4 mb-3" />
-            <form
-              onSubmit={handleSubmit}
-              style={{ maxWidth: "450px", width: "100%" }}
-            >
-              <div className={styles["inputWrapper"]}>
-                <input
-                  type="text"
-                  placeholder="Username"
-                  id="username"
-                  name="username"
-                  onChange={handleUsernameChange}
-                  value={username}
-                />
+      )}
+      {!verifyingStatus && (
+        <>
+          <div className={addClassNames(styles["loginNew"])}>
+            <div className={styles["top"]}>
+              <div className={styles["wrapper"]}>
+                <a href={"/"} className="link">
+                  <img
+                    className={styles["logo"]}
+                    src={Logo}
+                    width="100px"
+                    height="100px"
+                    alt=""
+                  />
+                </a>
               </div>
-              <small className="text-red-600">{usernameError.length > 1 && usernameError}</small>
+            </div>
 
+            <div className={styles["section"]}>
+              <div className={styles["intro-section"]}>
+                <h2 className="text-white font-[500] text-[25px] m-[auto] w-[fit-content]">
+                  Sign Up
+                </h2>
+                <div className="h-[1px] bg-[#4B4B4B] mt-4 mb-3" />
+                <form
+                  onSubmit={handleSubmit}
+                  style={{ maxWidth: "450px", width: "100%" }}
+                >
+                  <div className={styles["inputWrapper"]}>
+                    <input
+                      type="text"
+                      placeholder="Username"
+                      id="username"
+                      name="username"
+                      onChange={handleUsernameChange}
+                      value={username}
+                    />
+                  </div>
+                  <small className="text-red-600">
+                    {usernameError.length > 1 && usernameError}
+                  </small>
 
-              <div className={styles["inputWrapper"]}>
-                <input
-                  type="email"
-                  placeholder="Email Address"
-                  id="email"
-                  name="email"
-                  onChange={handleEmailChange}
-                  value={email}
-                />
+                  <div className={styles["inputWrapper"]}>
+                    <input
+                      type="email"
+                      placeholder="Email Address"
+                      id="email"
+                      name="email"
+                      onChange={handleEmailChange}
+                      value={email}
+                    />
+                  </div>
+                  <small className="text-red-600">
+                    {emailError.length > 1 && emailError}
+                  </small>
+
+                  <div className={styles["inputWrapper"]}>
+                    <input
+                      id="password"
+                      name="password"
+                      type="password"
+                      placeholder="Password"
+                      onChange={handlePasswordChange}
+                      value={password}
+                    />
+                  </div>
+                  <small className="text-red-600">
+                    {passwordError.length > 0 && passwordError}
+                  </small>
+
+                  <div className={styles["inputWrapper"]}>
+                    <input
+                      id="repeatPassword"
+                      name="repeatPassword"
+                      type="password"
+                      placeholder="Repeat Password"
+                      onChange={handleRepeatPassword}
+                    />
+                  </div>
+                  <small className="text-red-600">
+                    {" "}
+                    {repeatPasswordError.length > 0 && repeatPasswordError}
+                  </small>
+
+                  <button
+                    className="registerButton"
+                    type="button"
+                    disabled={!isFormValid}
+                    // onClick={handleSubmit}
+                    onClick={checkout}
+                    // checkout
+                    style={{ color: "#fff" }}
+                  >
+                    Sign Up
+                  </button>
+                </form>
+
+                {/* {showPaymentForm && (
+                  <div className="payment-modal" onClick={checkout}>
+                    <h2 className="text-white">Continue for $4.99/month</h2>
+                    {/* <StripePaymentForm newUser={{ email, password, repeatPassword, username }} /> */}
+                {/* </div> */}
+
+                <div className="text-white text-md text-center">
+                  <span> Already have an account? </span>
+                  <span>
+                    <Link
+                      className={styles["link"]}
+                      to={{ pathname: "/login" }}
+                    >
+                      Sign in
+                    </Link>
+                  </span>
+                </div>
               </div>
-              <small className="text-red-600">{emailError.length > 1 && emailError}</small>
-
-              <div className={styles["inputWrapper"]}>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="Password"
-                  onChange={handlePasswordChange}
-                  value={password}
-                />
-              </div>
-               <small className="text-red-600">{passwordError.length > 0 && passwordError}</small>
-
-              <div className={styles["inputWrapper"]}>
-                <input
-                  id="repeatPassword"
-                  name="repeatPassword"
-                  type="password"
-                  placeholder="Repeat Password"
-                  onChange={handleRepeatPassword}
-                />
-              </div>
-                <small className="text-red-600"> {repeatPasswordError.length > 0 && repeatPasswordError}</small>
-
-              <button
-                className="registerButton"
-                type="button"
-                disabled={!isFormValid}
-                onClick={handleSubmit}
-                style={{ color: "#fff" }}
-              >
-                Sign Up
-              </button>
-            </form>
-
-            {showPaymentForm && (
-              <div className="payment-modal">
-                <h2 className="text-white">Continue for $4.99/month</h2>
-                <StripePaymentForm newUser={{ email, password, repeatPassword, username }} />
-              </div>
-            )}
-
-            <div className="text-white text-md text-center">
-              <span> Already have an account? </span>
-              <span>
-                <Link className={styles["link"]} to={{ pathname: "/login" }}>
-                  Sign in
-                </Link>
-              </span>
             </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
     </>
   );
 };

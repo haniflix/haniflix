@@ -118,10 +118,7 @@ const Home = ({ type = null }) => {
         <Suspense
           fallback={<div style={{ backgroundColor: "black" }}>Loading...</div>}
         >
-          <div
-            className="mx-[20px] sm:mx-[80px] overflow-x-hidden"
-          
-          >
+          <div className="mx-[20px] sm:mx-[80px] overflow-x-hidden">
             <div>
               {continueWatchingListData?.list ? (
                 <List

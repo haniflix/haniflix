@@ -27,11 +27,12 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// TODO: uncomment later
 // pre hook to filter out soft-deleted users
-UserSchema.pre(/^find/, function (next) {
-  // Exclude soft-deleted users from queries
-  this.find({ isDeleted: { $ne: true } });
-  next();
-});
+// UserSchema.pre(/^find/, function (next) {
+//   // Exclude soft-deleted users from queries
+//   this.find({ isDeleted: { $ne: true } });
+//   next();
+// });
 
 module.exports = mongoose.model("User", UserSchema);

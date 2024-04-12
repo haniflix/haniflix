@@ -5,19 +5,208 @@ const CryptoJS = require("crypto-js");
 const jwt = require("jsonwebtoken");
 const sgMail = require("@sendgrid/mail");
 const dotenv = require("dotenv");
-const SENDGRID_API_KEY =
-  "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";
+// const SENDGRID_API_KEY =
+//   "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";
 const email_from = "Haniflix <no-reply@haniflix.com>";
-const {List} = require("../models/index");
+const { List } = require("../models/index");
 // const mongoose = require("mongoose")
 // const List = require("../models/List");
 
 dotenv.config();
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+console.log("secret", process.env.STRIPE_SECRET_KEY);
+// const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+
+const Stripe = require("stripe");
+const stripeInstance = Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: "2022-11-15", // Replace with the desired API version
+});
 
 const demo_url = "https://haniflix.com/"; // "http://localhost:3000/";
 
-sgMail.setApiKey(SENDGRID_API_KEY);
+// sgMail.setApiKey(SENDGRID_API_KEY);
+
+const stripeSession = async (plan, user_email, user_password, username) => {
+  try {
+    const session = await stripeInstance.checkout.sessions.create({
+      mode: "subscription",
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price: plan,
+          quantity: 1,
+        },
+      ],
+      success_url: `http://localhost:5173/register/?success=true&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: "http://localhost:5173/register/cancelled=true",
+      metadata: {
+        user_email,
+        user_password,
+        username,
+      },
+    });
+    return session;
+  } catch (e) {
+    return e;
+  }
+};
+router.post("/v1/create-subscription-checkout-session", async (req, res) => {
+  const { plan, customerId, email, username, password } = req.body;
+
+  console.log(req.body);
+  console.log("email", email);
+  // const emailExists = await User.find({ email: email });
+  const emailExists = await User.findOne({ email: req.body.email });
+  console.log("emailExists", emailExists);
+  if (emailExists) {
+    res.status(404).json({
+      error: true,
+      statusText: "This email already exists. Try another email",
+    });
+    return;
+  }
+  const usernameExists = await User.findOne({ username: username });
+  console.log("usernameExists", usernameExists);
+  if (usernameExists) {
+    res.status(404).json({
+      error: true,
+      statusText: "This username already exists. Try another username",
+    });
+    return;
+  }
+  try {
+    const session = await stripeSession(
+      "price_1P3kLrELZYEDPohb5ZWIbvUh",
+      email,
+      password,
+      username
+    );
+    // const user = await admin.auth().getUser(customerId);
+    console.log("session", session);
+    return res.json({ session });
+  } catch (error) {
+    res.send(error);
+  }
+});
+
+router.post("/v1/payment-success", async (req, res) => {
+  const { sessionId, email, password, username } = req.body;
+
+  console.log("body in success", req.body);
+
+  try {
+    const session = await stripeInstance.checkout.sessions.retrieve(sessionId);
+    const userExist = await User.findOne({
+      email: session.metadata.user_email,
+    });
+    if (userExist && userExist.isSubscribed) {
+      console.log("User is subscribed already");
+      return res.json({ message: "User is subscribed already" });
+    }
+    if (userExist && !userExist.isSubscribed) {
+      console.log("User has been resubscribed");
+      await User.findOneAndUpdate(
+        { email: session.metadata.user_email },
+        { isSubscribed: true }
+      );
+      return res.json({ message: "User has been resubscribed" });
+    }
+    console.log("session", session);
+    if (session.payment_status === "paid") {
+      const subscriptionId = session.subscription;
+      try {
+        const subscription = await stripeInstance.subscriptions.retrieve(
+          subscriptionId
+        );
+        console.log("subscription", subscription);
+        const newUser = await new User({
+          username: session.metadata.username,
+          email: session.metadata.user_email,
+          otp: CryptoJS.lib.WordArray.random(16),
+          password: CryptoJS.AES.encrypt(
+            session.metadata.user_password,
+            process.env.SECRET_KEY
+          ).toString(),
+          isSubscribed: true,
+          subscriptionId: subscription.id,
+          // old: username,
+          // old: email,
+        }).save();
+        // await newUser.save();
+        console.log("Newuser", newUser);
+
+        // TODO:Uncomment
+        const defaultList = new List({
+          title: `${console.log("email", email)}'s Watchlist`,
+          user: newUser._id,
+        });
+
+        console.log("defaultList", defaultList);
+
+        newUser.lists.push(defaultList._id);
+        newUser.defaultList = defaultList._id;
+
+        return res.status(200).json({ newUser });
+        // const { newUser, defaultList, user, err } = await registerUser(
+        //   email,
+        //   password,
+        //   username
+        // );
+
+        // // Update user subscription status
+
+        // console.log("newUser", newUser);
+        // console.log("user", user);
+        // newUser;
+        // await User.findByIdAndUpdate(
+        //   { _id: user._id },
+        //   { isSubscribed: true, subscriptionId: subscription.id }
+        // );
+
+        // const resUser = await User.findOne({ email });
+
+        // res.status(200).json({ resUser });
+        // console.log("newUser after", newUser);
+        // console.log("user after", user);
+        // const planId = subscription.plan.id;
+        // const planType = subscription.plan.amount === 50000 ? "basic" : "pro";
+        // const startDate = moment
+        //   .unix(subscription.current_period_start)
+        //   .format("YYYY-MM-DD");
+        // const endDate = moment
+        //   .unix(subscription.current_period_end)
+        //   .format("YYYY-MM-DD");
+        // const durationInSeconds =
+        //   subscription.current_period_end - subscription.current_period_start;
+        // const durationInDays = moment
+        //   .duration(durationInSeconds, "seconds")
+        //   .asDays();
+        // // await admin
+        // //   .database()
+        // //   .ref("users")
+        // //   .child(user.uid)
+        // console.log(
+        //   "planId",
+        //   planId,
+        //   "planType",
+        //   planType,
+        //   "planStartDate",
+        //   startDate,
+        //   "planEndDate",
+        //   endDate,
+        //   "planDuration",
+        //   durationInDays
+        // );
+      } catch (error) {
+        console.error("Error retrieving subscription:", error);
+      }
+      return res.json({ message: "Payment successful" });
+    } else {
+      return res.json({ message: "Payment failed" });
+    }
+  } catch (error) {
+    res.send(error);
+  }
+});
 
 router.get("/send-email", async (req, res) => {
   const msg = {
@@ -27,59 +216,107 @@ router.get("/send-email", async (req, res) => {
     html: "Email works!",
   };
 
-  sgMail
-    .send(msg)
-    .then((data) => {
-      res.status(201).json(data);
-    })
-    .catch((error) => {
-      res.status(203).json(error);
-    });
+  // sgMail
+  //   .send(msg)
+  //   .then((data) => {
+  //     res.status(201).json(data);
+  //   })
+  //   .catch((error) => {
+  //     res.status(203).json(error);
+  //   });
 });
-
 
 router.post("/register", async (req, res) => {
   const { user, payment_method } = req.body; // Destructure `user` and `payment_method` from the request body
   const email = user.email;
   const password = user.password;
-  const username = user.username.toLowerCase()
+  const username = user.username.toLowerCase();
 
   try {
-  const { newUser, defaultList, user, err } = await registerUser(
-    email,
-    password,
-    username
-  );
+    const { newUser, defaultList, user, err } = await registerUser(
+      email,
+      password,
+      username
+    );
 
-  if (newUser) {
-    if (err) {
-      res.status(409).json({ error: true, statusText: err.message });
-      return; // Return to avoid further execution
-    }
+    if (newUser) {
+      if (err) {
+        res.status(409).json({ error: true, statusText: err.message });
+        return; // Return to avoid further execution
+      }
 
-    const response = await subscribeUser(newUser, payment_method);
+      const response = await subscribeUser(newUser, payment_method);
 
-    if (response && !response.error) {
-      res.status(201).json({ statusText: "Created" });
+      if (response && !response.error) {
+        res.status(201).json({ statusText: "Created" });
+      } else {
+        console.error("Subscription failed:", response.error);
+        await deleteUserAndList(newUser, defaultList);
+        res.status(203).json({
+          error: true,
+          statusText: "Subscription failed. Please try again later.",
+        });
+      }
     } else {
-      console.error("Subscription failed:", response.error);
-      await deleteUserAndList(newUser, defaultList);
-      res.status(203).json({
+      console.log("New user does not exist");
+      res.status(404).json({
         error: true,
-        statusText: "Subscription failed. Please try again later.",
+        statusText:
+          "This username or email already exists. Try another username or Signin",
       });
     }
-  } else {
-    console.log("New user does not exist");
-    res.status(404).json({ error: true, statusText: "This username or email already exists. Try another username or Signin" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: true, statusText: "Something went wrong!" });
   }
-} catch (error) {
-  console.log(error);
-  res.status(500).json({ error: true, statusText: "Something went wrong!" });
-}
-
 });
 
+// router.post("/create-payment-intent", async (req, res)  => {
+//   if (!req.body.currency || !req.body.amount || !req.body.bagID) {
+//     res.status(400).json({ message: "invalid parameters" });
+//     return;
+//   }
+//   const emailIsValid = await User.findOne({ email: req.body.email });
+//   if (!bagIsValid) {
+//     res.status(400).json({ message: "No bag selected" });
+//     return;
+//   }
+//   if (!emailIsValid) {
+//     res.status(400).json({ message: "No user found" });
+//     return;
+//   }
+//   if (bagIsValid && bagIsValid.items.length == 0) {
+//     res.status(400).json({ message: "Bag is empty" });
+//     return;
+//   }
+//   if (!req.body.email) {
+//     res.status(400).json({ message: "No email provided" });
+//     return;
+//   }
+//   console.log(bagIsValid);
+
+//   try {
+//     const paymentIntent = await stripeInstance.paymentIntents.create({
+//       currency: req.body.currency,
+//       amount: req.body.amount,
+//       automatic_payment_methods: { enabled: true },
+//       metadata: { bagID: req.body.bagID, email: req.body.email },
+//     });
+
+//     // Send publishable key and PaymentIntent details to client
+//     // clientSecret: paymentIntent.client_secret,
+//     res.status(201).json({
+//       clientSecret: paymentIntent.client_secret,
+//     });
+//   } catch (e: any) {
+//     // console.log(e);
+//     return res.status(400).json({
+//       error: {
+//         message: e.message,
+//       },
+//     });
+//   }
+// })
 // Add a new function to delete the user and the list
 async function deleteUserAndList(user, list) {
   try {
@@ -98,41 +335,55 @@ async function deleteUserAndList(user, list) {
 }
 
 async function subscribeUser(newUser, payment_method) {
-  console.log("newUser",newUser)
-  console.log("payment_method", payment_method)
+  console.log("newUser", newUser);
+  console.log("payment_method", payment_method);
   try {
     // Create a customer in Stripe
-    const customer = await stripe.customers.create({
-      name: newUser.username,
+    const customer = await stripeInstance.customers.create({
+      // name: newUser.username,
       email: newUser.email,
-      invoice_settings : {
-        default_payment_method: payment_method,
-      }
+      // invoice_settings: {
+      //   default_payment_method: payment_method,
+      // },
     });
     console.log("Stripe Customer created:", customer);
-    
-    // // Add the payment method to the customer
-    // const attacher = await stripe.paymentMethods.attach(payment_method.id, {
-    //   customer: customer.id,
-    // });
 
-    // console.log("attached customer id",attacher)
+    // Add the payment method to the customer
+    const attacher = await stripeInstance.paymentMethods.attach(
+      payment_method.id,
+      {
+        customer: customer.id,
+      }
+    );
+    const updatePaymentMethod = await stripeInstance.customers.update(
+      customer.id,
+      {
+        invoice_settings: {
+          default_payment_method: payment_method.id,
+        },
+      }
+    );
 
-    // // Create a subscription ---- BUGGY CODE 
-    // const subscription = await stripe.subscriptions.create({
-    //   customer: customer.id,
-    //   items: [{ price: process.env.STRIPE_SUBSCRIPTION_PRICE_ID.toString()}],
-    //   expand: ['latest_invoice.payment_intent'],
-    //   payment_settings: {
-    //     payment_method_options: {
-    //       card: {
-    //         request_three_d_secure: 'any',
-    //       },
-    //     },
-    //     payment_method_types: ['card'],
-    //     save_default_payment_method: 'on_subscription',
-    //   },
-    // });
+    console.log("attached customer id", attacher);
+    console.log("update customer id", updatePaymentMethod);
+
+    // Create a subscription ---- BUGGY CODE
+    const subscription = await stripeInstance.subscriptions.create({
+      customer: customer.id,
+      items: [{ price: process.env.STRIPE_SUBSCRIPTION_PRICE_ID.toString() }],
+      expand: ["latest_invoice.payment_intent"],
+      payment_behavior: "default_incomplete",
+      payment_settings: {
+        payment_method_options: {
+          card: {
+            request_three_d_secure: "automatic",
+          },
+        },
+        payment_method_types: ["card"],
+        save_default_payment_method: "on_subscription",
+      },
+    });
+    console.log("subscription", subscription);
 
     // // BUGGUY CODE HOW DO I FIX
 
@@ -159,16 +410,23 @@ async function subscribeUser(newUser, payment_method) {
 async function registerUser(email, password, username) {
   try {
     // Check if a user with the provided email or username already exists
-    const existingEmailUser = await User.findOne({ email });
-    const existingUsernameUser = await User.findOne({ username });
-    
+    const existingEmailUser = await User.findOne({ old: email });
+    const existingUsernameUser = await User.findOne({ old: username });
+    console.log(
+      "existingEmailUser under resgiter fundction",
+      existingEmailUser
+    );
+    console.log(
+      "existingEmailUser under resgiter fundction",
+      existingUsernameUser
+    );
     // If a user with the email or username already exists, return an error
     if (existingEmailUser || existingUsernameUser) {
-      let errorMessage = '';
-      if (existingEmailUser) errorMessage += 'This email already exists. ';
-      if (existingUsernameUser) errorMessage += 'This username already exists.';
-      console.log(errorMessage)
-      return { error: {message: errorMessage}, newUser:null }
+      let errorMessage = "";
+      if (existingEmailUser) errorMessage += "This email already exists. ";
+      if (existingUsernameUser) errorMessage += "This username already exists.";
+      console.log(errorMessage);
+      return { error: { message: errorMessage }, newUser: null };
       // throw new Error(errorMessage);
     }
 
@@ -177,27 +435,30 @@ async function registerUser(email, password, username) {
       username,
       email,
       otp: CryptoJS.lib.WordArray.random(16),
-      password: CryptoJS.AES.encrypt(password, process.env.SECRET_KEY).toString(),
-      old_username: username,
-      old_email: email
+      password: CryptoJS.AES.encrypt(
+        password,
+        process.env.SECRET_KEY
+      ).toString(),
+      // old: username,
+      // old: email,
     });
 
-    console.log("Newuser", newUser)
-  
+    console.log("Newuser", newUser);
+
     const defaultList = new List({
       title: `${username}'s Watchlist`,
       user: newUser._id,
     });
-  
-    console.log('defaultList', defaultList)
-  
+
+    console.log("defaultList", defaultList);
+
     newUser.lists.push(defaultList._id);
     newUser.defaultList = defaultList._id;
-    
+
     // Save the new user and default list
     const user = await newUser.save();
     await defaultList.save();
-  
+
     return { newUser, defaultList, user, err: null };
   } catch (error) {
     // Return the error message if any
@@ -205,25 +466,24 @@ async function registerUser(email, password, username) {
   }
 }
 
+// async function sendVerificationEmail(email, verifyUrl) {
+//   const msg = {
+//     to: email,
+//     from: email_from,
+//     subject: "Verify your Haniflix account",
+//     html: `
+//       <div style="padding: 10px; border: solid 1px #ccc; width: 98%; box-sizing: border-box;">
+//         <img src="http://haniflix.com/static/media/Nav-logo.88a4f529159344031a96.png" style="width: 100px; display: block; margin: 10px auto 20px auto;">
+//         <p>Thank you for signing up on Haniflix. <br><br> Click on the following link to complete your signup: <br><br>${verifyUrl}<br><br></p>
+//         <footer style="color:#888; text-align: center; border-top: 1px solid #ddd; padding-top: 10px">
+//           <a href="https://haniflix.com" style="color:#888; text-decoration: none;">Haniflix.com</a>
+//         </footer>
+//       </div>
+//     `,
+//   };
 
-async function sendVerificationEmail(email, verifyUrl) {
-  const msg = {
-    to: email,
-    from:email_from,
-    subject: "Verify your Haniflix account",
-    html: `
-      <div style="padding: 10px; border: solid 1px #ccc; width: 98%; box-sizing: border-box;">
-        <img src="http://haniflix.com/static/media/Nav-logo.88a4f529159344031a96.png" style="width: 100px; display: block; margin: 10px auto 20px auto;">
-        <p>Thank you for signing up on Haniflix. <br><br> Click on the following link to complete your signup: <br><br>${verifyUrl}<br><br></p>
-        <footer style="color:#888; text-align: center; border-top: 1px solid #ddd; padding-top: 10px">
-          <a href="https://haniflix.com" style="color:#888; text-decoration: none;">Haniflix.com</a>
-        </footer>
-      </div>
-    `,
-  };
-
-  return sgMail.send(msg);
-}
+//   return sgMail.send(msg);
+// }
 
 //LOGIN
 router.post("/login", async (req, res) => {
@@ -245,6 +505,24 @@ router.post("/login", async (req, res) => {
       return;
     }
 
+    const subscription = await stripeInstance.subscriptions.retrieve(
+      user.subscriptionId
+    );
+    if (subscription.status === "active") {
+      console.log("Subscription is active");
+      // return true;
+    }
+    if (subscription.status != "active") {
+      await User.findOneAndUpdate(
+        { email: userEmail },
+        { isSubscribed: false }
+      );
+      res.status(400).json({
+        message: "User subscription has expired",
+      });
+      return;
+    }
+    console.log(subscription);
     const bytes = CryptoJS.AES.decrypt(user.password, process.env.SECRET_KEY);
     const originalPassword = bytes.toString(CryptoJS.enc.Utf8);
 
@@ -389,16 +667,16 @@ router.post("/forgot-pass", async (req, res) => {
           `,
     };
 
-    sgMail
-      .send(msg)
-      .then((data) => {
-        console.log("data ", data);
-        res.status(201).json(user);
-      })
-      .catch((error) => {
-        console.log("error ", error);
-        res.status(203).json(error);
-      });
+    // sgMail
+    //   .send(msg)
+    //   .then((data) => {
+    //     console.log("data ", data);
+    //     res.status(201).json(user);
+    //   })
+    //   .catch((error) => {
+    //     console.log("error ", error);
+    //     res.status(203).json(error);
+    //   });
   } catch (e) {
     console.log("e ", e);
     res.status(400).json({
