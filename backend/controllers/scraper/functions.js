@@ -256,25 +256,31 @@ async function scrapeMovieDetails({ _page, url }) {
 /**
  * Extracts Movie Info from reelsgood url
  *
- * @param {number} movieInfos -Array of movieInfo objects {name, year, movieId}.
- * @param {number} totalCount - Total movies count that match criteria.
- * @param {number} currentCount - The current count in the batch from mongoose
- * @param {any} io - Socket.io server instance
- * @param {Function} setProcessedCount - set processed movies count
- * @param {boolean} stopProcess - boolean to determine continuation of api call
- * @param {Function} setCallBack - Function to cancel browser
+ * @param {Object} options - Configuration object for the scraping process.
+ * @property {Array<Object>} options.movieInfos - Array of movie info objects containing details like name and year.
+ *     - `name` {string} - The name of the movie.
+ *     - `year` {number} - The year the movie was released.
+ *     - `movieId` {string} (optional) - Unique identifier for the movie (if available).
+ * @property {number} options.totalCount - Total movies count that match criteria.
+ * @property {number} options.currentCount - The current count in the batch from mongoose
+ * @property {SocketIOServer} options.io - Socket.io server instance
+ * @property {Function} options.setProcessedCount - Function to set the processed movies count
+ * @property {boolean} options.stopProcess - Boolean flag to determine continuation of the API call
+ * @property {Function} options.setCallBack - Function to potentially cancel the browser instance
+ * @returns {Promise<void>} - Resolves after completing the scraping process.
  */
-async function searchAndScrapeMovies(
+async function searchAndScrapeMovies({
   movieInfos,
   io,
   totalCount,
   currentCount,
   batchCount,
   setProcessedCount,
-  _stopProcess,
-  setCallBack
-) {
-  let stopProcess = _stopProcess;
+  stopProcess,
+  setCallBack,
+  browser: browserFromScrapeAll,
+}) {
+  // let stopProcess = _stopProcess;
   let countInCurrentBatch = 0;
   const processedMoviesData = [];
   page = pageInstanceForMultiple;
@@ -290,7 +296,8 @@ async function searchAndScrapeMovies(
   // console.log("browser ", browser);
 
   if (!browser) {
-    await initBrowser();
+    // await initBrowser();
+    browser = browserFromScrapeAll;
   }
 
   // console.log("browser after", browser);
@@ -507,15 +514,15 @@ async function searchAndScrapeMovies(
     console.log("error in browser ", error);
     Logger.error(`error in browser : ${JSON.stringify(error)}`);
 
-    if (error.name === "ProtocolError") {
-      Logger.warn(`ProtocolError, relaunching browser...`);
-      await initBrowser(); // Relaunch the browser
-    }
+    // if (error.name === "ProtocolError") {
+    //   Logger.warn(`ProtocolError, relaunching browser...`);
+    //   await initBrowser(); // Relaunch the browser
+    // }
 
-    if ((error.name = "TargetCloseError")) {
-      Logger.warn(`TargetCloseError, relaunching browser...`);
-      await initBrowser(); // Relaunch the browser
-    }
+    // if ((error.name = "TargetCloseError")) {
+    //   Logger.warn(`TargetCloseError, relaunching browser...`);
+    //   await initBrowser(); // Relaunch the browser
+    // }
   } finally {
     //  Logger.debug("Browser finally reached");
 
@@ -524,7 +531,10 @@ async function searchAndScrapeMovies(
     //close if its the final movie
     // sometimes some batches movies dont get processed at all
     if (processed >= totalCount || BATCH_SIZE * batchCount >= totalCount) {
-      await closeBrowser();
+      Logger.info(
+        "Completed Scrape All ; finally block \n; processed >= totalCount || BATCH_SIZE * batchCount >= totalCount"
+      );
+      // await closeBrowser();
     }
   }
 }

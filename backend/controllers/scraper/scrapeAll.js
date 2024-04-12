@@ -1,16 +1,20 @@
 const { searchAndScrapeMovies } = require("./functions");
 const { extractMovieInfoFromCdnUrl } = require("./helpers");
 
+const puppeteer = require("puppeteer");
+
 const Logger = require("../../lib/logger");
 
 const { Movie } = require("../../models");
 
-const BATCH_SIZE = 5;
+const BATCH_SIZE = 2;
 let isScraping = false; // Variable to track if scraping is in progress
 let totalCount = 0;
 let processedCount = 0;
 let stopProcess = false;
 let callback; // callback functions from child function
+
+let GLOBAL_BROWSER = undefined;
 
 const NODE_ENV = process.env.NODE_ENV;
 
@@ -22,8 +26,56 @@ const setCallBack = (_callback) => {
   callback = _callback;
 };
 
+async function initBrowser() {
+  try {
+    if (GLOBAL_BROWSER) {
+      return GLOBAL_BROWSER;
+    }
+
+    return await puppeteer.launch({
+      headless: NODE_ENV == "production" ? "new" : false,
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      timeout: 3 * 60 * 1000,
+      protocolTimeout: 5 * 60 * 1000,
+    });
+  } catch (error) {
+    Logger.error(`Error while initializing browser : ${error}`);
+    throw error;
+  }
+}
+
+/**
+ * @param {puppeteer.Browser} browser - A Puppeteer browser
+ */
+async function closeBrowser(browser) {
+  try {
+    console.log("browser close called");
+    if (browser) {
+      const pages = await browser.pages();
+      console.log("pages ", pages);
+
+      // const promises = pages.map((page) =>
+      //   page.waitForNetworkIdle({ idleTime: 1000 * 2, timeout: 0 })
+      // );
+      // await Promise.all(promises);
+      for (const page of pages) {
+        await page.close({ runBeforeUnload: true });
+      }
+      console.log("pages closed");
+      await browser.close();
+      console.log("browser closed");
+
+      GLOBAL_BROWSER = undefined;
+    }
+  } catch (error) {
+    Logger.error(`Error while closing browser : ${error}`);
+    throw error;
+  }
+}
+
 //CREATE
 const scrapeAllMovies = async (io, req, res) => {
+  let browser;
   try {
     const type = req.body.type;
 
@@ -37,6 +89,7 @@ const scrapeAllMovies = async (io, req, res) => {
     // Lock the API
     isScraping = true;
 
+    //default
     let query = {};
 
     if (NODE_ENV !== "production") {
@@ -53,12 +106,7 @@ const scrapeAllMovies = async (io, req, res) => {
               { duration: { $exists: false } },
             ],
           },
-          // {
-          //   $or: [
-          //     { failedDuringScrape: { $exists: false } },
-          //     { failedDuringScrape: false },
-          //   ],
-          // },
+          { failedDuringScrape: { $ne: true } }, // Exclude documents where failedDuringScrape is true
         ],
       };
     }
@@ -83,6 +131,10 @@ const scrapeAllMovies = async (io, req, res) => {
       processed: processedCount,
     });
 
+    //Init browser
+    browser = await initBrowser();
+    GLOBAL_BROWSER = browser;
+
     while (page < totalPages + 1) {
       const skip = (page - 1) * BATCH_SIZE;
       Logger.info(`Batch ${batchCount} starting -----`);
@@ -101,9 +153,7 @@ const scrapeAllMovies = async (io, req, res) => {
 
         if (movieInfo) {
           movieInfos.push(movieInfo);
-        }
-        //if movie extraction was not successful add to failed during scrape
-        else {
+        } else {
           await Movie.findByIdAndUpdate(
             movie?._id,
             {
@@ -122,17 +172,20 @@ const scrapeAllMovies = async (io, req, res) => {
         localProcessedCount++;
       }
 
-      await searchAndScrapeMovies(
+      let currentCount = localProcessedCount - BATCH_SIZE;
+
+      await searchAndScrapeMovies({
         movieInfos,
         io,
         totalCount,
         //remove batch size to ensure count is accurate
-        localProcessedCount - BATCH_SIZE,
+        currentCount,
         batchCount,
         setProcessedCount,
         stopProcess,
-        setCallBack
-      );
+        setCallBack,
+        browser,
+      });
 
       // stop in outer while loop if inner has stopped
       if (stopProcess) {
@@ -143,12 +196,19 @@ const scrapeAllMovies = async (io, req, res) => {
 
       page++;
 
+      //temp
+      // await closeBrowser(browser);
+
       Logger.info(`Batch ${batchCount} complete -----`);
       batchCount++;
     }
 
+    // Close the browser after processing the whole movies
+    await closeBrowser(browser);
+
     // Unlock the API after scraping is complete
     isScraping = false;
+
     processedCount = 0;
 
     res.status(200).json({
@@ -159,6 +219,10 @@ const scrapeAllMovies = async (io, req, res) => {
     console.log("error ", err);
 
     isScraping = false;
+
+    if (browser) {
+      await closeBrowser(browser);
+    }
 
     res.status(500).json(err);
   }
@@ -171,16 +235,6 @@ const stopScraping = (io, req, res) => {
     });
     return;
   }
-
-  // console.log("callback ", callback);
-
-  // if (callback && callback?.closeBrowser) {
-  //   callback.closeBrowser?.();
-  //   Logger.error(
-  //     "[stopscraping.controller.js] Scraping process stopped remotely."
-  //   );
-  //   stopProcess = false;
-  // }
 
   io.emit("scrapeDetails", {
     total: totalCount,
