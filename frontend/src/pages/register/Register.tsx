@@ -9,7 +9,9 @@ import { addClassNames } from "../../store/utils/functions";
 import { ClipLoader } from "react-spinners";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useLoginMutation } from "../../store/rtk-query/authApi";
 const Register = () => {
+  const [login, loginState] = useLoginMutation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const success = searchParams.get("success");
@@ -100,8 +102,10 @@ const Register = () => {
   console.log("password", password);
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const checkout = () => {
+    localStorage.setItem("haniemail", email);
+    localStorage.setItem("hanipassword", password);
     fetch(
-      "http://localhost:8800/api/auth/v1/create-subscription-checkout-session",
+      "https://api.haniflix.com/api/auth/v1/create-subscription-checkout-session",
       {
         method: "POST",
         headers: {
@@ -128,22 +132,38 @@ const Register = () => {
         });
       });
   };
+  const onLogin = async (email: string, password: string) => {
+    console.log("i tried logging in");
+    const res = await login({ email, password });
+
+    if (res?.data) {
+      console.log("Login successful");
+    }
+
+    if (!res?.data) {
+      Swal.fire({
+        title: res?.error.message || "Error encountered during login",
+        text: res?.error.message,
+        icon: "error",
+      });
+    }
+  };
 
   React.useEffect(() => {
     console.log(" i ran ");
-    if (success && !ran) {
+    if (success) {
       console.log(ran);
       setVerifyingStatus(true);
       setRan(true);
 
       axios
-        .post("  https://api.haniflix.com/api/login/auth/v1/payment-success", {
+        .post("https://api.haniflix.com/api/auth/v1/payment-success", {
           sessionId: session_id,
           email,
           password,
           username,
         })
-        .then((res) => {
+        .then(async (res) => {
           // alert();
           Swal.fire({
             title: "Success",
@@ -151,8 +171,21 @@ const Register = () => {
             icon: "success",
           });
           setVerifyingStatus(false);
-          navigate("/login");
-          console.log(res.data);
+          // navigate("/login");
+          const savedEmail = localStorage.getItem("haniemail");
+          const savedPassword = localStorage.getItem("hanipassword");
+
+          console.log(savedEmail, "savedEmail");
+          console.log(savedPassword, "savedPassword");
+          await onLogin(savedEmail, savedPassword, true);
+          // .then(() => {
+          //   console.log("i tried logging in");
+          //   // navigate("/login");
+          //   localStorage.removeItem("haniemail");
+          //   localStorage.removeItem("hanipassword");
+          // });
+          console.log(" after trying to login");
+          console.log(res.data.message);
         })
 
         .catch((e) => {
