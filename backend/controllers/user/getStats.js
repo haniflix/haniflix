@@ -7,6 +7,11 @@ const getStats = async (req, res) => {
   try {
     const data = await User.aggregate([
       {
+        $match: {
+          isDeleted: { $ne: true },
+        },
+      },
+      {
         $project: {
           month: { $month: "$createdAt" },
         },

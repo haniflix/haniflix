@@ -96,7 +96,7 @@ async function scrapeMovieDetails({ _page, url }) {
   }
 
   page.on("console", (msg) => {
-    console.log(msg.text());
+    //console.log(msg.text());
     // Logger.debug("From Puppeteer console: \n" + msg.text());
   });
 
@@ -117,7 +117,7 @@ async function scrapeMovieDetails({ _page, url }) {
       const yearOfRelease = body.querySelector(
         ".css-n6mjxq.e1r3wknn10"
       )?.textContent;
-      const title = body.querySelector(".css-xuu3cf.e3sx6uc7")?.textContent;
+      const title = body.querySelector(".css-xuu3cf.e3sx6uc8")?.textContent;
 
       let fullDescription = body.querySelector(
         ".css-49lcwn.e1qij4j11 p"
@@ -660,7 +660,7 @@ async function searchAndScrapeMovie(page, movieName, movieYear) {
     await checkPageIsReady(page);
 
     //wait until movie title is displayed on movie page
-    await page.waitForSelector(".css-xuu3cf.e3sx6uc7", {
+    await page.waitForSelector(".css-xuu3cf.e3sx6uc8", {
       timeout: 60 * 1000 * 2,
     });
 
