@@ -37,7 +37,7 @@ const stripeSession = async (plan, user_email, user_password, username) => {
         },
       ],
       success_url: `https://haniflix.com/register/?success=true&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: "https://haniflix.com/register/cancelled=true",
+      cancel_url: "https://haniflix.com/register",
       metadata: {
         user_email,
         user_password,
