@@ -36,8 +36,8 @@ const stripeSession = async (plan, user_email, user_password, username) => {
           quantity: 1,
         },
       ],
-      success_url: `http://localhost:5173/register/?success=true&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: "http://localhost:5173/register/cancelled=true",
+      success_url: `https://haniflix.com/register/?success=true&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: "https://haniflix.com/register/cancelled=true",
       metadata: {
         user_email,
         user_password,
@@ -145,7 +145,10 @@ router.post("/v1/payment-success", async (req, res) => {
         newUser.lists.push(defaultList._id);
         newUser.defaultList = defaultList._id;
 
-        return res.status(200).json({ newUser });
+        return res
+          .status(200)
+          .json({ message: "Payment successful", user: newUser });
+
         // const { newUser, defaultList, user, err } = await registerUser(
         //   email,
         //   password,
@@ -508,6 +511,8 @@ router.post("/login", async (req, res) => {
     const subscription = await stripeInstance.subscriptions.retrieve(
       user.subscriptionId
     );
+
+    console.log(subscription);
     if (subscription.status === "active") {
       console.log("Subscription is active");
       // return true;
