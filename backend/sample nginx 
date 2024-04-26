@@ -1,0 +1,16 @@
+
+// admin
+server {
+    listen 80; # Listen on port 80 (adjust if needed)
+    server_name admin.haniflix.com; # Specify the domain name
+
+    location / {
+        # Serve static files from the React app's build directory
+        root /var/www/html/haniflix-app/admin/dist;
+        # Fallback to serving index.html for all routes
+        try_files $uri /index.html;
+        index index.html index.htm;
+    }
+}
+
+//api
