@@ -102,6 +102,15 @@ const Register = () => {
   console.log("password", password);
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const checkout = () => {
+    if (
+      !isFormValid ||
+      email.length === 0 ||
+      password.length === 0 ||
+      username.length === 0 ||
+      repeatPassword.length === 0
+    ) {
+      return;
+    }
     localStorage.setItem("haniemail", email);
     localStorage.setItem("hanipassword", password);
     fetch(
