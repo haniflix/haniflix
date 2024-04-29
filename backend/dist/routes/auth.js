@@ -23,31 +23,13 @@ const router = require("express").Router();
 const User = require("../models/User");
 const CryptoJS = require("crypto-js");
 const jwt = require("jsonwebtoken");
-const sgMail = require("@sendgrid/mail");
 const dotenv = require("dotenv");
-const SENDGRID_API_KEY = "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";
 const email_from = "Haniflix <no-reply@haniflix.com>";
 const List = require("../models/List");
 dotenv.config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const demo_url = "http://localhost:3000/";
-sgMail.setApiKey(SENDGRID_API_KEY);
-router.get("/send-email", (req, res) => __awaiter(this, void 0, void 0, function* () {
-    const msg = {
-        to: "aaron@professorval.com",
-        from: email_from,
-        subject: "Email Server Test",
-        html: "Email works!",
-    };
-    sgMail
-        .send(msg)
-        .then((data) => {
-        res.status(201).json(data);
-    })
-        .catch((error) => {
-        res.status(203).json(error);
-    });
-}));
+
 router.post("/register", (req, res) => __awaiter(this, void 0, void 0, function* () {
     const { user } = req.body;
     const email = user.email;
@@ -142,25 +124,7 @@ function registerUser(username, email, password) {
         return { newUser, defaultList, user };
     });
 }
-function sendVerificationEmail(email, verifyUrl) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const msg = {
-            to: email,
-            from: email_from,
-            subject: "Verify your Haniflix account",
-            html: `
-      <div style="padding: 10px; border: solid 1px #ccc; width: 98%; box-sizing: border-box;">
-        <img src="http://haniflix.com/static/media/Nav-logo.88a4f529159344031a96.png" style="width: 100px; display: block; margin: 10px auto 20px auto;">
-        <p>Thank you for signing up on Haniflix. <br><br> Click on the following link to complete your signup: <br><br>${verifyUrl}<br><br></p>
-        <footer style="color:#888; text-align: center; border-top: 1px solid #ddd; padding-top: 10px">
-          <a href="https://haniflix.com" style="color:#888; text-decoration: none;">Haniflix.com</a>
-        </footer>
-      </div>
-    `,
-        };
-        return sgMail.send(msg);
-    });
-}
+
 //LOGIN
 router.post("/login", (req, res) => __awaiter(this, void 0, void 0, function* () {
     try {
@@ -222,47 +186,7 @@ router.post("/verify_email", (req, res) => __awaiter(this, void 0, void 0, funct
         res.status(201).json(err);
     }
 }));
-router.post("/forgot-pass", (req, res) => __awaiter(this, void 0, void 0, function* () {
-    try {
-        const user = yield User.findOne({ email: req.body.email });
-        if (user.username) {
-            const url = `${demo_url}change-password/${user._id}/${user.email}`;
-            const msg = {
-                to: req.body.email,
-                from: email_from,
-                subject: "Password Reset Link - Haniflix",
-                html: `
-          <p><strong>Hello Haniflix User,</strong></p>
-          <p>We received a request to reset your password. Click on the link below to reset your password:</p>
-          <p><a href="${url}" target="_blank">${url}</a></p>
-          <p>If you didn't request a password reset, please ignore this email.</p>
-          <p>This link will expire in 1 day for security reasons.</p>
-          <p>Thank you!</p>
-            
-                <footer style="color:#888; text-align: center; border-top: 1px solid #ddd; padding-top: 10px">
-                    <a href="https://haniflix.com" style="color:#888; text-decoration: none;"">Haniflix.com</a>
-                </footer>
-            
-            </div>
-          `,
-            };
-            sgMail
-                .send(msg)
-                .then(() => {
-                res.status(201).json(user);
-            })
-                .catch((error) => {
-                res.status(203).json(error);
-            });
-        }
-        else {
-            res.status(203).json({ error: true, statusText: "Something is wrong!" });
-        }
-    }
-    catch (e) {
-        res.status(201).json("Wrong OTP supplied!");
-    }
-}));
+
 router.put("/change-password", (req, res) => __awaiter(this, void 0, void 0, function* () {
     try {
         const user = yield User.findOne({ email: req.body.email });
