@@ -55,7 +55,12 @@ const Register = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     // Handle form submission logic here
-    setShowPaymentForm(true);
+    if (isFormValid){
+      setShowPaymentForm(true)}
+
+    setEmailError("Email field is empty")
+    setPasswordError("Password field is empty")
+    setUsernameError("Username field is empty")
   };
 
   const handleEmailChange = (event) => {
