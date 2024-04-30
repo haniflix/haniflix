@@ -87,8 +87,7 @@ async function subscribeUser(newUser, payment_method) {
       }
     });
     console.log("Stripe Customer created:", customer);
-    
-    // // Add the payment method to the customer
+  
     // const attacher = await stripe.paymentMethods.attach(payment_method.id, {
     //   customer: customer.id,
     // });
