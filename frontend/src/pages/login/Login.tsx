@@ -13,7 +13,7 @@ import { useLoginMutation } from "../../store/rtk-query/authApi";
 import { useNavigate } from "react-router-dom";
 
 import SocketContext from "../../context/SocketContext";
-
+// import styles from "../register/register.module.scss";
 import styles from "./login.module.scss";
 
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
@@ -131,17 +131,33 @@ export default function Login() {
       {/* <Helmet>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Helmet> */}
+
       <div
-        style={{
-          height: isMobile ? "100%" : "100%",
-        }}
+        // style={{
+        //   height: isMobile ? "100%" : "100%",
+        // }}
+        // <div className={styles["section"]}>
+        // <div className={styles["intro-section"]}>
         // style={{
         //   height: isMobile ? imageHeightInScreen : "100%",
         //   backgroundSize: isMobile ? "contain" : "cover",
         // }}
-        className={addClassNames(styles["loginNew"])}
+        className={`${addClassNames(styles["loginNew"])} bg-sred-50s0`}
       >
-        <div className={styles["top"]}>
+        {/* <div className={styles["top"]}>
+          <div className={styles["wrapper"]}>
+            <a href={"/"} className="link">
+              <img
+                className={styles["logo"]}
+                src={Logo}
+                width="100px"
+                height="100px"
+                alt=""
+              />
+            </a>
+          </div>
+        </div> */}
+        {/* <div className={styles["top"]}>
           <div className={styles["wrapper"]}>
             <a href={"/"} className="link">
               <img
@@ -154,12 +170,12 @@ export default function Login() {
               />
             </a>
           </div>
-        </div>
+        </div> */}
 
         <div className={styles["section"]}>
           <div
             className={addClassNames(
-              "bg-[#FFFFFF1A] rounded-[20px] px-[48px] py-[64px] ",
+              // "bg-[#FFFFFF1A] rounded-[20px] px-[48px] py-[64px] ",
               styles["intro-section"]
             )}
           >

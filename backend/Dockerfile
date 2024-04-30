@@ -5,12 +5,9 @@ WORKDIR /app
 
 COPY package*.json ./
 
-ENV PUPPETEER_SKIP_DOWNLOAD true
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
-
 RUN npm install --include=optional sharp
 
-FROM ghcr.io/puppeteer/puppeteer:latest
+FROM ghcr.io/puppeteer/puppeteer:21.9.0
 
 
 USER root
