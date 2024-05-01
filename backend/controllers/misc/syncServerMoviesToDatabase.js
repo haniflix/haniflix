@@ -35,8 +35,7 @@ const syncServerMoviesToDatabase = async (req, res) => {
       }
 
       // Extract movie title and year from folder name
-      const matchRes = movieFolder?.match(/^(.+) \((\d{4})\)/);
-
+      const matchRes = movieFolder?.match(/^(.+)\s+\(?(\d{4})\)?/);
       if (!matchRes) {
         Logger.info("No Match result for folder " + movieFolderPath);
         continue;

@@ -5,7 +5,8 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install --include=optional sharp
+RUN npm install sharp --ignore-engines
+RUN npm install
 
 FROM ghcr.io/puppeteer/puppeteer:21.9.0
 

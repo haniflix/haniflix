@@ -1,7 +1,8 @@
-version: "2.1"
 services:
   haniflix_backend:
-    build: .
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
     environment:
       NODE_ENV: production
       IS_IN_DOCKER: is_docker
@@ -16,4 +17,3 @@ services:
     ports:
       - 8800:8800
     restart: unless-stopped
-    # command: ["USER", "node", "node", "index.js"]
