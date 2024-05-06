@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import "./listItem.scss";
 
 import { Link, useNavigate } from "react-router-dom";
+import poster from "../../Assets/Images/poster.webp";
 
 import { useAddMovieToDefaultListMutation } from "../../store/rtk-query/listsApi";
 import {
@@ -11,7 +12,6 @@ import {
   useLikeMovieMutation,
 } from "../../store/rtk-query/moviesApi";
 
-import CircularProgress from "@mui/material-next/CircularProgress";
 import { addClassNames } from "../../store/utils/functions";
 
 import moviePlaceHolderSvg from "../../Assets/svgs/moviePlaceholder.svg";
@@ -27,24 +27,32 @@ import {
 } from "../../Assets/svgs/tsSvgs";
 
 import { debounce } from "lodash";
+import Icon from "../icon";
+import WatchPopup from "../../pages/watchPopup/WatchPopup";
 
 const api_url = import.meta.env.VITE_APP_API_URL;
 
 type MovieListItemProps = {
   movieId: number;
   movieObj?: any;
+  onPlayMovie?: any;
   refetchFn?: () => {};
   onHover?: (movieId: string) => {};
   layoutType?: "carousel" | "grid";
   isActive: boolean;
+  showActionOnMobile: boolean;
+  showActionButtons: boolean;
 };
 
 export default function MovieListItem({
   movieId,
   movieObj,
   onHover,
+  onPlayMovie,
   layoutType,
   refetchFn,
+  showActionOnMobile = false,
+  showActionButtons = true
 }: MovieListItemProps) {
   // const [isHovered, setIsHovered] = useState<boolean>(false);
   const [movie, setMovie] = useState<any>({});
@@ -74,7 +82,7 @@ export default function MovieListItem({
 
   const debouncedOnHover = React.useCallback(
     debounce((movie) => {
-      onHover?.(movie);
+      onHover(movie);
     }, 300),
     [] // Ensure it only gets created once
   );
@@ -82,25 +90,42 @@ export default function MovieListItem({
   const [isDivExpanded, setIsDivExpanded] = React.useState(false);
   const containerRef = React.useRef(null);
 
-  useEffect(() => {
-    const observer = new ResizeObserver((entries) => {
-      const div = entries[0].target;
-      const isExpanded = div.clientWidth > 200; // Check if width is greater than 200px
-      if (isExpanded !== isDivExpanded) {
-        // Only update if state needs to change
-        setIsDivExpanded(isExpanded);
-      }
-    });
+  // useEffect(() => {
+  //   const observer = new ResizeObserver((entries) => {
+  //     const div = entries[0].target;
+  //     const isExpanded = div.clientWidth > 200; // Check if width is greater than 200px
+  //     if (isExpanded !== isDivExpanded) {
+  //       // Only update if state needs to change
+  //       setIsDivExpanded(isExpanded);
+  //     }
+  //   });
 
-    observer.observe(containerRef.current); // Observe the div
+  //   observer.observe(containerRef.current); // Observe the div
 
-    return () => observer.disconnect(); // Clean up on unmount
-  }, [isDivExpanded]);
+  //   return () => observer.disconnect(); // Clean up on unmount
+  // }, [isDivExpanded]);
 
   // const isMobile = useRef(window.matchMedia('(pointer: coarse)').matches); // Detect mobile early
   const hoverTimer = React.useRef(null);
+  const imageRef = React.useRef(null);
   const [isHovered, setIsHovered] = React.useState(false);
 
+  const onPlayMovieClick = () => {
+    if (imageRef.current) {
+      const boundingBox = imageRef.current.getBoundingClientRect();
+
+      const x= boundingBox.x + (boundingBox.width/2);
+      const y= boundingBox.y + (boundingBox.height/2);
+
+      onPlayMovie(movie, { x, y });
+    }
+    else{
+      const x= window.innerWidth/2;
+      const y= window.innerHeight/2;
+      onPlayMovie(movie, { x, y })
+    }
+  };
+  
   // Pointer events for modern devices
   const handlePointerEnter = useCallback(() => {
     setIsHovered(true);
@@ -338,31 +363,98 @@ export default function MovieListItem({
             </>
           )}
         </div>
-     
-          <Link
-            to={`/watch/${movie?._id}`}
-            
-            style={{ textDecoration: "none", color: "#fff" }}
+
+        <Link
+          to={`/watch/${movie?._id}`}
+          style={{ textDecoration: "none", color: "#fff" }}
+        >
+          <div
+            className={addClassNames(
+              "h-[43px] w-[43px] bg-[#FFFFFF33] flex",
+              "border border-[#FFFFFF33] rounded-[50%] items-center justify-center"
+            )}
           >
-            <div
-              className={addClassNames(
-                "h-[43px] w-[43px] bg-[#FFFFFF33] flex",
-                "border border-[#FFFFFF33] rounded-[50%] items-center justify-center"
-              )}
-            >
-              <div className="scale-75">
-                <PlayIcon />
-              </div>
+            <div className="scale-75">
+              <PlayIcon />
             </div>
-          </Link>
-        
+          </div>
+        </Link>
       </div>
+    );
+  };
+
+  const renderActionButtons = () => {
+
+    //like buttons
+    return (
+      <div className={ `flex-grow ${showActionOnMobile ? !showActionButtons ? "flex !px-[14vw] !py-2 sm:hidden" : "flex ":"sm:flex hidden"} justify-between items-center px-3`}>
+
+          <button
+            onClick={onPlayMovieClick}
+            className="bg-transparent cursor-pointer"
+          >
+            <Icon name={"Play"} size={"M"} hovered />
+          </button>
+
+          <button
+            onClick={onAddToList}
+            className="bg-transparent cursor-pointer"
+          >
+            {addToMyListState?.isLoading ? (
+              <Icon name={"Loading"} size={"M"} />
+            ) : (
+              <>
+                {movie?.isInDefaultList ? (
+                  <Icon name={"Heart"} size={"M"} hovered />
+                ) : (
+                  <Icon name={"Heart"} size={"M"} />
+                )}
+              </>
+            )}
+          </button>
+          <button
+            onClick={() => {
+              onLikeMovie();
+            }}
+            className="bg-transparent cursor-pointer"
+          >
+            {likeMovieState?.isLoading ? (
+              <Icon name={"Loading"} size={"M"} />
+            ) : (
+              <>
+                {movie?.currentUserLiked ? (
+                  <Icon name={"Like"} size={"M"} hovered />
+                ) : (
+                  <Icon name={"Like"} size={"M"} />
+                )}
+              </>
+            )}
+          </button>
+          <button
+            onClick={() => {
+              onDislikeMovie();
+            }}
+            className="bg-transparent cursor-pointer"
+          >
+            {dislikeMovieState?.isLoading ? (
+              <Icon name={"Loading"} size={"M"} />
+            ) : (
+              <>
+                {movie?.currentUserDisliked ? (
+                  <Icon name={"Dislike"} size={"M"} hovered />
+                ) : (
+                  <Icon name={"Dislike"} size={"M"} />
+                )}
+              </>
+            )}
+          </button>
+        </div>
     );
   };
 
   return (
     <>
-      <div
+      {/* <div
         ref={containerRef}
         className={addClassNames(
           "listItem relative",
@@ -412,6 +504,7 @@ export default function MovieListItem({
                   <div className="font-[500] text-[11.5px] mt-[4px] mb-[1px]">
                     {movie.title}
                   </div>
+
                   <div
                     className={addClassNames(
                       "flex items-center space-x-[5px]",
@@ -442,6 +535,7 @@ export default function MovieListItem({
                     <div className="h-[10px] w-[1px] bg-[#fff]" />
                     <div className="font-[600]">4K</div>
                   </div>
+
                   {renderGenres()}
                 </div>
               </div>
@@ -449,6 +543,30 @@ export default function MovieListItem({
           </div>
         </div>
         {renderSideButtons()}
+      </div> */}
+      <div className="flex-shrink-0 flex flex-col gap-2 text-center">
+        <div 
+        ref={imageRef}
+        onPointerEnter={handlePointerEnter}
+        onPointerLeave={handlePointerLeave}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        className={`${showActionButtons ? 'aspect-[5/6]':''} w-full overflow-hidden rounded-lg xl:rounded-xl mb-1 relative max-w-[60vw] mx-auto`}>
+          <div 
+          className="absolute animate-pulse bg-[#ffffff10] w-full h-full"></div>
+          <img
+            src={imageToshow}
+            alt=""
+            className={`${showActionButtons ? 'aspect-[5/6]':''} w-full object-cover hover:scale-110 transition-all duration-300 relative z-20`}
+          />
+        </div>
+
+        {renderActionButtons()}
+
+        <p className={`${showActionOnMobile ? "block":"sm:block hidden"} text-base xl:text-lg leading-tight`}>{movie.title}</p>
+
+        <p className={`${showActionOnMobile ? "block":"sm:block hidden"} text-sm xl:text-base text-muted leading-none`}>{movie.year}</p>
+
       </div>
     </>
   );

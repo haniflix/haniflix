@@ -16,15 +16,16 @@
 
 .inputWrapper {
   height: 45px;
-  border-radius: 5px;
-  background-color: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+  background-color: #121619;
+  border: 1px solid #636363;
   color: #000;
   outline: none;
   display: flex;
   align-items: center;
   margin-bottom: 10px;
-  width: 100%;
+  width: 30%;
+  min-width: min(320px, 80vw);
   padding-left: 10px;
   padding-right: 10px;
 
@@ -41,26 +42,7 @@
 
 .input_label {
   font-size: 15px;
-  line-height: 24px;
+  line-height: 30px;
   font-weight: 400;
+  color: #636363;
 }
-
-.app_button {
-  height: 40px;
-  width: 100%;
-  margin-top: 48px;
-  margin: 5px auto 10px auto;
-  border-radius: 5px;
-  background-color: rgba(255, 255, 255, 0.2) !important;
-  color: #fff;
-  border: 1px solid #ffffff33 !important;
-  font-size: 18px;
-  font-weight: 500;
-  cursor: pointer;
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.35);
-  }
-}
-
-// }

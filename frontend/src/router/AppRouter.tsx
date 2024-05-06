@@ -99,14 +99,15 @@ const AppRouter = (props) => {
                 <Route element={<ProtectedRoutes />}>
                     {/* <Route index element={<Home />} /> */}
                     <Route path="movies" element={<Home type="movies" />} />
-                    <Route path="tv-shows" element={<Home type="series" />} />
+                    <Route path="tv-shows" element={<Home type="TV series" />} />
                     <Route path="movie/:movieId" element={<Movie />} />
 
                     <Route path="series" element={<Home type="series" />} />
                     <Route path="new-and-popular" element={<Home />} />
                     <Route path="watch/:id" element={<Watch />} />
                     <Route path="watch-trailer/:id" element={<WatchTrailer />} />
-                    <Route path="my-list" element={<MyLists />} />
+                    <Route path="my-list" element={<Home type={"my list"} />} />
+                    {/* <Route path="my-list" element={<MyLists />} /> */}
                     <Route path="search" element={<SearchPage />} />
                     <Route path="genre/:id" element={<GenrePage />} />
                     <Route path="settings" element={<AccSettings />} />

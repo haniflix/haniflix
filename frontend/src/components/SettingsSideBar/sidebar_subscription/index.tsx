@@ -14,7 +14,6 @@ import {
 import { Close } from "@mui/icons-material";
 
 import Swal from "sweetalert2";
-
 import styles from "../sidebar.module.scss";
 
 import CircularProgress from "@mui/material-next/CircularProgress";
@@ -24,10 +23,12 @@ import { useAppSelector } from "../../../store/hooks";
 import { selectUser } from "../../../store/reducers/auth";
 import axios from "axios";
 import { BASE_URL } from "../../../utils/utils";
+import ModelPopup from "../../ModelPopup";
+import { motion, AnimatePresence } from "framer-motion";
 
 const url = import.meta.env.VITE_APP_API_URL;
 
-const SidebarSub = () => {
+const SidebarSub = ({variantGroup}) => {
   const user = useAppSelector(selectUser);
   const accessToken = user?.accessToken;
 
@@ -150,30 +151,25 @@ const SidebarSub = () => {
               <Close />
             </IconButton>
             <div className="grid grid-cols-2 gap-[8px]">
-              <Button
-                variant="contained"
+              <button
                 onClick={() => {
                   setShowCancelModal(false);
                   setCancelLoading(false);
                 }}
-                className={styles["app_button"]}
-                sx={{}}
+                className={"theme_button"}
               >
                 Close
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
+              </button>
+              <button
                 onClick={() => onCancelSubscription()}
-                className={addClassNames(styles["app_button"], "!mx-[0]")}
-                sx={{ color: "#fff", width: "130px !important" }}
+                className={"theme_button_danger"}
               >
                 {cancelSubState.isLoading ? (
                   <CircularProgress color="inherit" size={24} />
                 ) : (
                   "Proceed"
                 )}
-              </Button>
+              </button>
             </div>
           </Paper>
         </div>
@@ -181,22 +177,57 @@ const SidebarSub = () => {
     );
   };
 
+  const { tabVariant, tabChildVariant, parentTransition } = variantGroup;
+
   return (
-    <div>
-      {/* Divider */}
-      <div className="mb-6 border-b border-[#4B4B4B]" />
-      <Button
-        className={styles["app_button"]}
-        fullWidth
-        variant="contained"
-        onClick={() => {
-          setShowCancelModal(true);
-        }}
-      >
-        Cancel Subscription
-      </Button>
-      {renderSubCancelModal()}
-    </div>
+ <motion.div
+      key="uniqueSubscription"
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      variants={tabVariant}
+      transition={parentTransition}
+    >
+       <motion.div variants={tabChildVariant}>
+       <div className="mb-6 border-b border-[#4B4B4B]" />
+     
+     <button
+       className={"theme_button_danger"}
+       onClick={() => {
+         setShowCancelModal(true);
+       }}
+     >
+       End Subscription
+     </button>
+
+      </motion.div>
+
+      <AnimatePresence>
+        {showCancelModal && (
+          <ModelPopup>
+            <p className="text-lg mb-2">End subscription</p>
+            <p className="text-base text-muted">Are you sure to end your subscription?</p>
+
+            <div className="mt-10 flex gap-5 justify-center">
+              <button
+                className="theme_button"
+                onClick={() => setShowCancelModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="theme_button_danger"
+                onClick={() => setShowCancelModal(false)}
+              >
+                Proceed
+              </button>
+            </div>
+          </ModelPopup>
+        )}
+      </AnimatePresence>
+
+      {/* {renderSubCancelModal()} */}
+    </motion.div>
   );
 };
 

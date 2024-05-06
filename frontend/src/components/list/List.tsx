@@ -13,6 +13,8 @@ import { selectUser } from "../../store/reducers/auth";
 import MovieListItem from "../MovieListItem/index";
 import { addClassNames } from "../../store/utils/functions";
 import useResponsive from "../../hooks/useResponsive";
+import NextPlump from "../../Assets/svgs/Icons/NextPlump.svg";
+import PrevPlump from "../../Assets/svgs/Icons/PrevPlump.svg";
 
 import styles from "./list.module.scss";
 import { Movie } from "../../store/types";
@@ -21,13 +23,16 @@ interface ListProps {
   list: any;
   onDelete?: Function;
   onEdit?: Function;
-  onHoverMovie?: (movie: Movie) => {};
+  onHoverMovie?: any;
+  onPlayMovie?: any;
 }
 
 const List: React.FC<ListProps> = ({
   list,
   onDelete,
   onEdit,
+  onHoverMovie,
+  onPlayMovie,
   ...otherProps
 }) => {
   const user = useAppSelector(selectUser);
@@ -44,31 +49,31 @@ const List: React.FC<ListProps> = ({
       items: 4,
     },
     tablet: {
-      breakpoint: { max: 1024, min: 464 },
+      breakpoint: { max: 1024, min: 500 },
       items: 4,
     },
     mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 1,
+      breakpoint: { max: 500, min: 0 },
+      items: 2,
     },
   };
 
   const { isMobile } = useResponsive();
 
-  const onHoverMovie = (movie: Movie) => {
-    // const movieIndex = list?.content?.findIndex(id => id == movieId)
-    otherProps?.onHoverMovie?.(movie);
+  const handleHover = (movie: Movie) => {
+    onHoverMovie?.(movie);
+  };
+ 
+  const onClickPlayMovie = (movie: Movie, axis: any) => {
+    onPlayMovie?.(movie, axis);
   };
 
   return (
     <>
       <div className={styles["list"]}>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <div
-            className={addClassNames(styles["listTitle"], " text-white mt-10")}
-          >
-            {list?.title}
-          </div>
+        <div className="flex justify-between gap-5 mb-2 xl:mb-5">
+        <p className="text-muted text-base xl:text-lg">{list?.title}</p>
+          
           <div>
             {onEdit ? (
               <span style={{ cursor: "pointer" }} onClick={() => onEdit()}>
@@ -82,28 +87,32 @@ const List: React.FC<ListProps> = ({
             ) : null}
           </div>
         </div>
+
         <div className={styles["wrapper"]}>
           <Carousel
             ref={carouselRef}
             responsive={responsive}
             centerMode={true}
             containerClass={addClassNames(isMobile ? "" : "overflow-visible")}
-            customLeftArrow={
-              <ArrowBackIosOutlined
-                className={addClassNames(styles["sliderArrow"], styles["left"])}
-              />
-            }
             customRightArrow={
-              <ArrowForwardIosOutlined
-                className={addClassNames(
-                  styles["sliderArrow"],
-                  styles["right"]
-                )}
-              />
+              <div className={addClassNames(
+                styles["sliderArrow"],
+                styles["right"]
+              )}>
+                <img src={NextPlump} alt="" />
+              </div>
+            }
+            customLeftArrow={
+              <div className={addClassNames(
+                styles["sliderArrow"],
+                styles["left"]
+              )}>
+                <img src={PrevPlump} alt="" />
+              </div>
             }
             itemClass={addClassNames(
-              "!w-[135px] hover:!w-[340px] transition-all duration-200",
-              `mr-[15px] carousel-item`
+              "!w-[120px] sm:!w-[11vw]",
+              `mr-[10px] sm:mr-[2vw] carousel-item`
             )}
           >
             {list?.content?.map((movieId, i) => {
@@ -115,10 +124,12 @@ const List: React.FC<ListProps> = ({
                   index={i}
                   movieId={movieId}
                   // movieObj={list}
-                  onHover={onHoverMovie}
+                  onHover={handleHover}
+                  onPlayMovie={onClickPlayMovie}
                 />
               );
             })}
+          
           </Carousel>
         </div>
       </div>

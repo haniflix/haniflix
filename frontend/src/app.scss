@@ -67,3 +67,49 @@ body {
   width: 100% !important;
   height: 90vh !important;
 }
+
+.theme_button_small,
+.theme_button,
+.theme_button_danger {
+  width: fit-content;
+  padding: 0 22px;
+  min-width: 120px;
+  height: 40px;
+  border-radius: 10px;
+  background-color: #EA1B1B10;
+  color: #EA1B1B;
+  border: 2px solid #EA1B1B60;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #EA1B1B30;
+  }
+}
+
+.theme_button{
+  background-color: #00805A;
+  color: #fff;
+  border: none;
+  
+  &:hover {
+    background-color: #13B8A6;
+  }
+}
+
+.theme_button_small{
+  background-color: #00805A;
+  color: #fff;
+  border: none;
+  min-width: 0px;
+  padding: 0 12px;
+  height: 30px;
+  font-size: 14px;
+  font-weight: 400;
+  
+  &:hover {
+    background-color: #13B8A6;
+  }
+}
