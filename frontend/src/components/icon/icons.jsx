@@ -1,0 +1,49 @@
+// icons.js
+import SparkPlump from "../../Assets/svgs/Icons/SparkPlump.svg";
+import SparkFilledPlump from "../../Assets/svgs/Icons/SparkFilledPlump.svg";
+import PlayPlump from "../../Assets/svgs/Icons/PlayPlump.svg";
+import PlayFilledPlump from "../../Assets/svgs/Icons/PlayFilledPlump.svg";
+import HomePlump from "../../Assets/svgs/Icons/HomePlump.svg";
+import HomeFilledPlump from "../../Assets/svgs/Icons/HomeFilledPlump.svg";
+import TVPlump from "../../Assets/svgs/Icons/TVPlump.svg";
+import TVFilledPlump from "../../Assets/svgs/Icons/TVFilledPlump.svg";
+import MoviesPlump from "../../Assets/svgs/Icons/MoviesPlump.svg";
+import MoviesFilledPlump from "../../Assets/svgs/Icons/MoviesFilledPlump.svg";
+import HeartPlump from "../../Assets/svgs/Icons/HeartPlump.svg";
+import HeartFilledPlump from "../../Assets/svgs/Icons/HeartFilledPlump.svg";
+import LikePlump from "../../Assets/svgs/Icons/LikePlump.svg";
+import LikeFilledPlump from "../../Assets/svgs/Icons/LikeFilledPlump.svg";
+import DislikePlump from "../../Assets/svgs/Icons/DislikePlump.svg";
+import DislikeFilledPlump from "../../Assets/svgs/Icons/DislikeFilledPlump.svg";
+import LogoutPlump from "../../Assets/svgs/Icons/LogoutPlump.svg";
+import LogoutFilledPlump from "../../Assets/svgs/Icons/LogoutFilledPlump.svg";
+import SettingPlump from "../../Assets/svgs/Icons/SettingPlump.svg";
+import SettingFilledPlump from "../../Assets/svgs/Icons/SettingFilledPlump.svg";
+import SearchPlump from "../../Assets/svgs/Icons/SearchPlump.svg";
+import SearchFilledPlump from "../../Assets/svgs/Icons/SearchFilledPlump.svg";
+import ClosePlump from "../../Assets/svgs/Icons/ClosePlump.svg";
+import CloseFilledPlump from "../../Assets/svgs/Icons/CloseFilledPlump.svg";
+import UserPlump from "../../Assets/svgs/Icons/UserPlump.svg";
+import UserFilledPlump from "../../Assets/svgs/Icons/UserFilledPlump.svg";
+import PasswordPlump from "../../Assets/svgs/Icons/PasswordPlump.svg";
+import PasswordFilledPlump from "../../Assets/svgs/Icons/PasswordFilledPlump.svg";
+import FormPlump from "../../Assets/svgs/Icons/FormPlump.svg";
+import FormFilledPlump from "../../Assets/svgs/Icons/FormFilledPlump.svg";
+
+export const IconsList = {
+  Spark : [SparkPlump, SparkFilledPlump],
+  Play : [PlayPlump, PlayFilledPlump],
+  Home : [HomePlump, HomeFilledPlump],
+  TV : [TVPlump, TVFilledPlump],
+  Movies : [MoviesPlump, MoviesFilledPlump],
+  Heart : [HeartPlump, HeartFilledPlump],
+  Like : [LikePlump, LikeFilledPlump],
+  Dislike : [DislikePlump, DislikeFilledPlump],
+  Logout : [LogoutPlump, LogoutFilledPlump],
+  Setting : [SettingPlump, SettingFilledPlump],
+  Search : [SearchPlump, SearchFilledPlump],
+  Close : [ClosePlump, CloseFilledPlump],
+  User : [UserPlump, UserFilledPlump],
+  Password : [PasswordPlump, PasswordFilledPlump],
+  Form : [FormPlump, FormFilledPlump],
+};

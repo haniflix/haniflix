@@ -36,7 +36,8 @@
 
 .list {
   width: 100%;
-  margin: -15px auto;
+  flex-shrink: 0;
+  overflow: hidden;
 
   .listTitle {
     color: white;
@@ -50,25 +51,60 @@
     position: relative;
 
     .sliderArrow {
-      width: 50px;
+      width: 80px;
       height: 100%;
-      background-color: rgb(22, 22, 22, 0.5);
       color: white;
       position: absolute;
       z-index: 99;
       top: 0;
       bottom: 0;
-      margin: auto;
       cursor: pointer;
 
+      display: flex;
+      align-items: center;
+      
       &.left {
         left: 0;
-      }
-
-      &.right {
+        justify-content: flex-start;
         right: 0;
       }
+      
+      &.right {
+        right: 0px;
+        justify-content: flex-end;
+      }
+      
+      &::before{
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        pointer-events: none;
+      }
+      
+      &.left::before{
+        background: linear-gradient(to right, #0B0F12 10% , #0B0F1200);
+      }
+      &.right::before{
+        background: linear-gradient(to left, #0B0F12 10% , #0B0F1200);
+      }
+
+      & > *{
+        position: relative;
+        z-index: 100;
+        opacity: 0.8;
+        transition: all 0.5s ease;
+
+        display: block;
+        width: 22px;
+      }
+      &:hover > *{
+        opacity: 1;
+      }
     }
+    
     .container {
       margin-left: 50px;
       display: flex;
@@ -78,4 +114,22 @@
       transition: all 1s ease;
     }
   }
+}
+
+
+@media (max-width:500px) {
+  .list {
+    .wrapper {
+  
+      .sliderArrow {
+        width: 50px;
+       
+        & > *{
+          width: 14px;
+        }
+      }
+     
+    }
+  }
+  
 }

@@ -29,12 +29,14 @@ import styles from "../sidebar.module.scss";
 import { addClassNames } from "../../../store/utils/functions";
 
 import CircularProgress from "@mui/material-next/CircularProgress";
+import ModelPopup from "../../ModelPopup";
+import { motion, AnimatePresence } from "framer-motion";
 
 import NavLogo1 from "../../../Assets/Images/Nav-logo.png";
 
 const url = import.meta.env.VITE_APP_API_URL;
 
-const SidebarAccount = () => {
+const SidebarAccount = ({variantGroup}) => {
   const user = useAppSelector(selectUser);
   const accessToken = user?.accessToken;
 
@@ -211,30 +213,25 @@ const SidebarAccount = () => {
               <Close />
             </IconButton>
             <div className="flex gap-[8px]">
-              <Button
-                variant="contained"
+              <button
                 onClick={() => {
                   setShowDeleteModal(false);
                   setDeleteLoading(false);
                 }}
-                className={styles["app_button"]}
-                sx={{}}
+                className={"theme_button"}
               >
                 Cancel
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
+              </button>
+              <button
                 onClick={() => onDeleteAccount()}
-                className={addClassNames(styles["app_button"], "!mx-[0]")}
-                sx={{ color: "#fff" }}
+                className={"theme_button_danger"}
               >
                 {deleteLoading ? (
                   <CircularProgress color="inherit" size={24} />
                 ) : (
                   "Delete"
                 )}
-              </Button>
+              </button>
             </div>
           </Paper>
         </div>
@@ -242,91 +239,116 @@ const SidebarAccount = () => {
     );
   };
 
+  const {tabVariant, tabChildVariant, parentTransition} = variantGroup;
+
   return (
-    <>
-      {/* <div className="flex gap-[8px] my-3 items-center">
-                <span>
-                    Hi, {userData?.username}
-                </span>
-                <div className='h-[48px] w-[48px]'>
-                    <img
-                        src={userData?.avatar ? makeImageUrl(userData?.avatar) : NavLogo1}
-                        className="h-full w-full rounded-[30px]"
-                    />
+    <motion.div
+      key="uniqueAccount"
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      variants={tabVariant}
+      transition={parentTransition}
+    >
+      <motion.div variants={tabChildVariant}>
+        <Formik
+          initialValues={userDetails}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmitUserDetails}
+        >
+          {({ isSubmitting, errors, touched }) => (
+            <Form>
+              <div>
+                <label className={styles["input_label"]}>Username</label>
+                <div className={styles["inputWrapper"]}>
+                  <Field
+                    id="name"
+                    name="name"
+                    label="Name"
+                    margin="normal"
+                    variant="outlined"
+                  />
                 </div>
-            </div> */}
-      <Formik
-        initialValues={userDetails}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmitUserDetails}
-      >
-        {({ isSubmitting, errors, touched }) => (
-          <Form>
-            <div>
-              <label className={styles["input_label"]}>Username</label>
-              <div className={styles["inputWrapper"]}>
-                <Field
-                  id="name"
-                  name="name"
-                  label="Name"
-                  margin="normal"
-                  variant="outlined"
-                />
+                {errors.name && touched.name && (
+                  <div className="text-[red] text-xs">{errors.name}</div>
+                )}
               </div>
-              {errors.name && touched.name && (
-                <div className="text-[red] text-xs">{errors.name}</div>
-              )}
-            </div>
-            <div>
-              <label className={styles["input_label"]}>Email</label>
-              <div className={styles["inputWrapper"]}>
-                <Field
-                  id="email"
-                  name="email"
-                  label="E-mail"
-                  margin="normal"
-                  variant="outlined"
-                />
+              <div>
+                <label className={styles["input_label"]}>Email</label>
+                <div className={styles["inputWrapper"]}>
+                  <Field
+                    id="email"
+                    name="email"
+                    label="E-mail"
+                    margin="normal"
+                    variant="outlined"
+                  />
+                </div>
+                {errors.email && touched.email && (
+                  <div className="text-[red] text-xs">{errors.email}</div>
+                )}
               </div>
-              {errors.email && touched.email && (
-                <div className="text-[red] text-xs">{errors.email}</div>
-              )}
+
+              {/* Divider */}
+              <div className="my-5 border-b border-[#4B4B4B]" />
+
+              <button
+                className={"theme_button mt-10"}
+                type="submit"
+                disabled={isSubmitting || loading}
+              >
+                {loading ? (
+                  <CircularProgress color="inherit" size={24} />
+                ) : (
+                  "Save Changes"
+                )}
+              </button>
+            </Form>
+          )}
+        </Formik>
+      </motion.div>
+
+      <motion.div className="mt-5" variants={tabChildVariant}>
+          <button
+            className={"theme_button_danger"}
+            onClick={() => {
+              setShowDeleteModal(true);
+            }}
+          >
+            Delete Account
+          </button>
+        </motion.div>
+
+      <AnimatePresence>
+        {deleteAccount && (
+          <ModelPopup>
+            <p className="text-lg mb-2">Delete Account</p>
+            <p className="text-base text-muted">
+              Are you sure to delete your account?
+            </p>
+
+            <div className="mt-10 flex gap-5 justify-center">
+              <button
+                className="theme_button"
+                onClick={() => {
+                  setShowDeleteModal(false);
+                  setDeleteLoading(false);
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                className="theme_button_danger"
+                onClick={() => onDeleteAccount()}
+              >
+                Delete
+              </button>
             </div>
-
-            {/* Divider */}
-            <div className="my-5 border-b border-[#4B4B4B]" />
-
-            <Button
-              className={styles["app_button"]}
-              type="submit"
-              fullWidth
-              variant="contained"
-              disabled={isSubmitting || loading}
-              sx={{ mt: 2, mb: 2, color: "#fff" }}
-            >
-              {loading ? (
-                <CircularProgress color="inherit" size={24} />
-              ) : (
-                "Save Changes"
-              )}
-            </Button>
-          </Form>
+          </ModelPopup>
         )}
-      </Formik>
-      {/* spacer */}
-      <div className="h-5" />
-      <Button
-        className={styles["app_button"]}
-        fullWidth
-        variant="contained"
-        onClick={() => {
-          setShowDeleteModal(true);
-        }}
-      >
-        Delete Account
-      </Button>
-      {renderDeleteAccModal()}
-    </>
+      </AnimatePresence>
+      {/* {renderDeleteAccModal()} */}
+    </motion.div>
   );
 };
 
