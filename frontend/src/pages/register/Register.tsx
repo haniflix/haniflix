@@ -10,6 +10,9 @@ import { ClipLoader } from "react-spinners";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../store/rtk-query/authApi";
+
+const api_url = import.meta.env.VITE_APP_API_URL;
+
 const Register = () => {
   const [login, loginState] = useLoginMutation();
   const navigate = useNavigate();
@@ -97,15 +100,24 @@ const Register = () => {
     setRepeatPassword(value);
     validateRepeatPassword(value);
   };
-  console.log("email", email);
-  console.log("username", username);
-  console.log("password", password);
+  // console.log("email", email);
+  // console.log("username", username);
+  // console.log("password", password);
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const checkout = () => {
+
+    if (!email || !password ) {
+      validateEmail(email)
+      validatePassword(password)
+      validateRepeatPassword('value')
+      return 
+    }
+
     localStorage.setItem("haniemail", email);
     localStorage.setItem("hanipassword", password);
+    console.log(api_url)
     fetch(
-      "https://api.haniflix.com/api/auth/v1/create-subscription-checkout-session",
+      api_url + "auth/v1/create-subscription-checkout-session",
       {
         method: "POST",
         headers: {
@@ -135,7 +147,7 @@ const Register = () => {
   const onLogin = async (email: string, password: string) => {
     console.log("i tried logging in");
     const res = await login({ email, password });
-
+    console.log(res)
     if (res?.data) {
       console.log("Login successful");
     }
@@ -157,7 +169,7 @@ const Register = () => {
       setRan(true);
 
       axios
-        .post("https://api.haniflix.com/api/auth/v1/payment-success", {
+        .post(api_url + "auth/v1/payment-success", {
           sessionId: session_id,
           email,
           password,
@@ -177,7 +189,7 @@ const Register = () => {
 
           console.log(savedEmail, "savedEmail");
           console.log(savedPassword, "savedPassword");
-          await onLogin(savedEmail, savedPassword, true);
+          await onLogin(savedEmail, savedPassword);
           // .then(() => {
           //   console.log("i tried logging in");
           //   // navigate("/login");

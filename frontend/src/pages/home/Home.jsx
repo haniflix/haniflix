@@ -185,9 +185,9 @@ const Home = ({ type = null }) => {
     },
   ];
 
-  const duplicateArray = lists.map((singleItem) => ({
+  const duplicateArray = (lists || []).map((singleItem) => ({
     ...singleItem,
-    content: continueWatchingListData?.list.content,
+    content: continueWatchingListData?.list?.content,
   }));
 
   const test = false;
@@ -451,9 +451,8 @@ const Home = ({ type = null }) => {
           {/* leftPanel */}
           <div
             style={{ boxShadow: "10px 0px 30px 0 #111" }}
-            className={`${leftPanelSize} absolute h-[calc(100vh-20px)] ${
-              isLeftPanelOpen ? "left-[10px]" : "sm:left-[10px] -left-[100vw]"
-            } top-[10px] overflow-hidden bg-dark2 rounded-xl z-[9]`}
+            className={`${leftPanelSize} absolute h-[calc(100vh-20px)] ${isLeftPanelOpen ? "left-[10px]" : "sm:left-[10px] -left-[100vw]"
+              } top-[10px] overflow-hidden bg-dark2 rounded-xl z-[9]`}
           >
             <div className="leftBlob1"></div>
             <div className="leftBlob2"></div>
@@ -509,9 +508,8 @@ const Home = ({ type = null }) => {
                       >
                         <Icon name={item.icon} hovered={isActiveTab} />
                         <p
-                          className={`${
-                            isActiveTab ? "text-white" : "text-muted"
-                          } text-base xl:text-xl transition-all duration-500 group-hover:text-white`}
+                          className={`${isActiveTab ? "text-white" : "text-muted"
+                            } text-base xl:text-xl transition-all duration-500 group-hover:text-white`}
                         >
                           {item.title}
                         </p>
@@ -562,8 +560,8 @@ const Home = ({ type = null }) => {
                     {showProfilepic
                       ? "Profile Picture"
                       : showSettings
-                      ? "Setting"
-                      : type || "home"}
+                        ? "Setting"
+                        : type || "home"}
                   </span>
                   {showSettings && (
                     <button
@@ -616,9 +614,8 @@ const Home = ({ type = null }) => {
                           >
                             <Icon name={item.icon} hovered={isActiveTab} />
                             <p
-                              className={`${
-                                isActiveTab ? "text-white" : "text-muted"
-                              } text-base xl:text-xl transition-all duration-500 group-hover:text-white whitespace-nowrap`}
+                              className={`${isActiveTab ? "text-white" : "text-muted"
+                                } text-base xl:text-xl transition-all duration-500 group-hover:text-white whitespace-nowrap`}
                             >
                               {item.title}
                             </p>
@@ -627,11 +624,10 @@ const Home = ({ type = null }) => {
                       })}
                     </div>
                     <div
-                      className={`relative flex items-center gap-2 py-3 rounded-xl overflow-hidden group transition-all duration-500 ${
-                        hasSearch
-                          ? "w-72 px-3 bg-dark"
-                          : "bg-dark sm:bg-transparent px-3 sm:px-0 w-72 sm:w-6 hover:w-72 hover:px-3 hover:bg-dark"
-                      }`}
+                      className={`relative flex items-center gap-2 py-3 rounded-xl overflow-hidden group transition-all duration-500 ${hasSearch
+                        ? "w-72 px-3 bg-dark"
+                        : "bg-dark sm:bg-transparent px-3 sm:px-0 w-72 sm:w-6 hover:w-72 hover:px-3 hover:bg-dark"
+                        }`}
                     >
                       <Icon name={"Search"} />
                       <input
@@ -722,8 +718,8 @@ const Home = ({ type = null }) => {
                                   movieId={movie._id}
                                   onHover={onHoverOverMovie}
                                   onPlayMovie={onPlayMovie}
-                                  // movieObj={list}
-                                  // onHover={onHoverMovie}
+                                // movieObj={list}
+                                // onHover={onHoverMovie}
                                 />
                               </div>
                             );
@@ -757,8 +753,8 @@ const Home = ({ type = null }) => {
                                 index={i}
                                 movieId={movie?._id}
                                 onHover={onHoverOverMovie}
-                                // movieObj={list}
-                                // onHover={onHoverMovie}
+                              // movieObj={list}
+                              // onHover={onHoverMovie}
                               />
                             </div>
                           );
@@ -817,9 +813,8 @@ const Home = ({ type = null }) => {
 
           {/* rightPanel */}
           <div
-            className={`${rightPanelSize} absolute h-[calc(100vh-20px)] ${
-              movieToShow ? "right-[10px]" : "sm:right-[10px] -right-[100vw]"
-            } top-[10px] overflow-hidden bg-dark2 rounded-xl z-[5]`}
+            className={`${rightPanelSize} absolute h-[calc(100vh-20px)] ${movieToShow ? "right-[10px]" : "sm:right-[10px] -right-[100vw]"
+              } top-[10px] overflow-hidden bg-dark2 rounded-xl z-[5]`}
           >
             <div className="rightBlob1"></div>
             <div className="w-full h-full relative z-[6] overflow-y-auto CustomScroller">
@@ -837,7 +832,7 @@ const Home = ({ type = null }) => {
                     </button>
                   </div>
                   <MovieDetailPanel
-                  type={type==="TV series"?"TV series":"Movie"}
+                    type={type === "TV series" ? "TV series" : "Movie"}
                     movieToShow={movieToShow}
                     onPlayMovie={onPlayMovie}
                     onHoverMovie={onHoverOverMovie}

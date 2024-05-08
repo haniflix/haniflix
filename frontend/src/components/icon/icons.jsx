@@ -1,7 +1,7 @@
 // icons.js
 import SparkPlump from "../../Assets/svgs/Icons/SparkPlump.svg";
 import SparkFilledPlump from "../../Assets/svgs/Icons/SparkFilledPlump.svg";
-import PlayPlump from "../../Assets/svgs/Icons/PlayPlump.svg";
+import PlayPlump from "../../Assets/svgs/Icons/PLayPlump.svg";
 import PlayFilledPlump from "../../Assets/svgs/Icons/PlayFilledPlump.svg";
 import HomePlump from "../../Assets/svgs/Icons/HomePlump.svg";
 import HomeFilledPlump from "../../Assets/svgs/Icons/HomeFilledPlump.svg";
