@@ -47,7 +47,7 @@ const scrapeAllMovies = async (io, req, res) => {
               { title: { $exists: false } },
               { desc: { $exists: false } },
               { img: { $exists: false } },
-              { imgTitle: { $exists: false } },
+              // { imgTitle: { $exists: false } },
               { year: { $exists: false } },
               { ageRating: { $exists: false } },
               { duration: { $exists: false } },
@@ -96,9 +96,7 @@ const scrapeAllMovies = async (io, req, res) => {
 
       for (const movie of batch) {
         const cdnUrl = movie.video; // Update with the correct field containing CDN URL
-
-        const movieInfo = extractMovieInfoFromCdnUrl(cdnUrl, movie?._id);
-
+        const movieInfo = extractMovieInfoFromCdnUrl(cdnUrl, movie?._id, movie);
         if (movieInfo) {
           movieInfos.push(movieInfo);
         }

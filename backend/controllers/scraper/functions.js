@@ -114,10 +114,11 @@ async function scrapeMovieDetails({ _page, url }) {
     ]);
 
     let movieDetails = await page.$eval("body", async (body) => {
-      const yearOfRelease = body.querySelector(
-        ".css-n6mjxq.e1r3wknn10"
+      let yearOfRelease = body.querySelector(
+        ".e1dskkhw7.css-1i5l3f2.e83cah30"
       )?.textContent;
-      const title = body.querySelector(".css-xuu3cf.e3sx6uc8")?.textContent;
+      yearOfRelease = yearOfRelease?.replace("(", "")?.replace(")", "");
+      const title = body.querySelector(".css-hiz1q1.e3s42hj0")?.textContent;
 
       let fullDescription = body.querySelector(
         ".css-49lcwn.e1qij4j11 p"
@@ -134,20 +135,25 @@ async function scrapeMovieDetails({ _page, url }) {
       let description = movieDescParts[0]?.trim();
 
       let ageRating = body
-        .querySelector('span[title="Maturity rating"]')
-        ?.textContent?.trim();
-      ageRating = ageRating?.replace("Rated:", "");
+        .querySelector(".css-si6acb.eytn0nr3")
+        ?.textContent;
 
-      let genre = Array.from(
-        body.querySelectorAll(".css-1szmslw.e1r3wknn1 a")
-      )?.map((link) => link?.textContent);
+      const genreDiv = body.querySelector(".css-swt64r.ex9d9ik0");
+      let genre = []
+      if (genreDiv) {
+        const links = genreDiv.querySelectorAll("a");
 
+        for (let i = 0; i < Math.min(links.length, 2); i++) {
+          const link = links[i];
+          genre.push(link.textContent); 
+        }
+      }
       const duration = body.querySelector(
-        ".css-1szmslw.e1r3wknn1:last-child"
+        ".css-1r35rcf.e1dskkhw11"
       )?.textContent;
 
       //last item is not a genre
-      genre = genre?.slice(0, -1);
+      // genre = genre?.slice(0, -1);
 
       // const imageUrl = body.querySelector(".css-18pmxw3.edbh37f1")?.src;
 
@@ -410,6 +416,7 @@ async function searchAndScrapeMovies(
               year: addedMovie?.yearOfRelease,
               genre: genreIds,
             };
+            console.log("addedMovie: ", addedMovie)
 
             // add final check to ensure movie matches the name before adding details to db
             let pulledMovieName = addedMovie?.title;
@@ -660,7 +667,7 @@ async function searchAndScrapeMovie(page, movieName, movieYear) {
     await checkPageIsReady(page);
 
     //wait until movie title is displayed on movie page
-    await page.waitForSelector(".css-xuu3cf.e3sx6uc8", {
+    await page.waitForSelector(".css-hiz1q1.e3s42hj0", {
       timeout: 60 * 1000 * 2,
     });
 
