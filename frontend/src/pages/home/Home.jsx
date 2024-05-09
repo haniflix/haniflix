@@ -745,7 +745,7 @@ const Home = ({ type = null }) => {
                         variants={tabChildVariant}
                         className="flex flex-wrap gap-[2vw]"
                       >
-                        {myListData?.[0].content.map((movie, i) => {
+                        {myListData?.[0]?.content.map((movie, i) => {
                           return (
                             <div className="!w-[24vw] sm!w-[11vw]">
                               <MovieListItem

@@ -80,13 +80,21 @@ const Register = () => {
     validateEmail(value);
   };
 
+  const validateUsername = (value) => {
+    if (!value) {
+      setUsernameError("Username is required");
+    } else if (value.length < 6) {
+      setUsernameError("Username must be at least 6 characters long");
+    } else {
+      setUsernameError("");
+    }
+  };
+
+
   const handleUsernameChange = (event) => {
     const value = event.target.value;
     setUsername(value);
-    if (value.length < 6) {
-      setUsernameError("Username must be at least 6 characters long");
-    }
-    setUsernameError("");
+    validateUsername(value)
   };
 
   const handlePasswordChange = (event) => {
@@ -106,11 +114,12 @@ const Register = () => {
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const checkout = () => {
 
-    if (!email || !password ) {
+    if (!email || !password) {
       validateEmail(email)
       validatePassword(password)
-      validateRepeatPassword('value')
-      return 
+      validateRepeatPassword('')
+      validateUsername('')
+      return
     }
 
     localStorage.setItem("haniemail", email);
