@@ -20,7 +20,7 @@ let browser; // Declare browser instance globally
 async function initBrowser() {
   try {
     browser = await puppeteer.launch({
-      headless: NODE_ENV == "production" ? "new" : false,
+      headless: NODE_ENV === "production" ? true : false,
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
       timeout: 3 * 60 * 1000,
       protocolTimeout: 5 * 60 * 1000,
