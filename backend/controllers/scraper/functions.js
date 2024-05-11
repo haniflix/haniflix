@@ -145,7 +145,7 @@ async function scrapeMovieDetails({ _page, url }) {
 
         for (let i = 0; i < Math.min(links.length, 2); i++) {
           const link = links[i];
-          genre.push(link.textContent); 
+          genre.push(link.textContent);
         }
       }
       const duration = body.querySelector(
@@ -158,7 +158,7 @@ async function scrapeMovieDetails({ _page, url }) {
       // const imageUrl = body.querySelector(".css-18pmxw3.edbh37f1")?.src;
 
       let sourceElements = body?.querySelectorAll(
-        "picture.css-cxmmyk.edbh37f0 source"
+        ".css-109aoyr.eytn0nr12 picture.css-cxmmyk.edbh37f0 source"
       );
 
       //set imageurl with smallest image
