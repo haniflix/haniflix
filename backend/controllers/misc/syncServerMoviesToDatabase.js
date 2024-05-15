@@ -17,78 +17,40 @@ const syncServerMoviesToDatabase = async (req, res) => {
   try {
     const moviesBasePath = getBasePath();
 
-    // Get list of folders (movies) in the base path
     const movies = fs.readdirSync(moviesBasePath);
 
-    // Iterate through each movie folder
     for (const movieFolder of movies) {
-      // Construct the full path to the movie folder
       const movieFolderPath = path.join(moviesBasePath, movieFolder);
-
-      // Check if the item is a directory
-      const isDirectory = fs.statSync(movieFolderPath).isDirectory();
-
-      // Proceed only if it's a directory
-      if (!isDirectory) {
-        Logger.info(movieFolderPath + " is not a directory");
+      const isFile = fs.statSync(movieFolderPath).isFile();
+      if (!isFile) {
+        Logger.info(movieFolderPath + " is not a file");
         continue;
       }
 
-      // Extract movie title and year from folder name
-      const matchRes = movieFolder?.match(/^(.+)\s+\(?(\d{4})\)?/);
+      const matchRes = movieFolder?.match(/^(.+?)\.(\d{4})\..+$/);
       if (!matchRes) {
-        Logger.info("No Match result for folder " + movieFolderPath);
+        Logger.info("No Match result for file " + movieFolderPath);
         continue;
       }
 
       const [title, year] = matchRes?.slice(1, 3);
 
-      // Check if the movie with the same title and year exists in the database
       const existingMovie = await Movie.findOne({
         title: title,
         year,
       });
 
-      //  console.log("existingMovie ", existingMovie);
-
-      // If movie already exists, skip
       if (existingMovie) {
         Logger.info("Movie exists " + `${title} (${year})` + " skipping ");
         continue;
       }
 
-      // Get list of files in the movie folder
-      const files = fs.readdirSync(path.join(moviesBasePath, movieFolder));
-
-      // Find the movie file in the files list (any file type)
-      const movieFile = files.find((file) =>
-        /\.(mp4|avi|mkv|mov)$/i.test(file)
-      );
-
-      // If movie file exists, construct the URL
-      if (movieFile) {
-        const movieFileName = movieFile;
-        const urlPrefix = "https://cdn.haniflix.com/movies/";
-        const movieUrl = `${urlPrefix}${encodeURIComponent(
-          movieFolder
-        )}/${encodeURIComponent(movieFileName)}`;
-
-        // Log the final result to console
-        console.log({
-          movieTitle: `${title} (${year})`,
-          //  , movieUrl
-        });
-
-        // Save the movie to the database
-        if (process.env.IS_IN_DOCKER === "is_docker") {
-          const movie = new Movie({
-            title: title,
-            video: movieUrl,
-            year: year,
-          });
-          await movie.save();
-        }
-      }
+      const movie = new Movie({
+        title: title,
+        video: 'https://cdn.haniflix.com/movies/' + movieFolder,
+        year: year,
+      });
+      await movie.save();
     }
 
     // Send response
