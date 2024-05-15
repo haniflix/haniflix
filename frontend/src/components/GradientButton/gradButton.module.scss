@@ -1,0 +1,40 @@
+.app_button {
+    border: 2px solid;
+    border-image-source: linear-gradient(94.55deg, #14FA9B -3.86%, #128EE9 100%);
+    border-image-slice: 1;
+    border-radius: 100px !important;
+    padding: 8px 20px;
+    background: linear-gradient(95.79deg, #14FA9B 53.93%, #128EE9 77.59%) border-box;
+    -webkit-mask:
+      linear-gradient(#fff 0 0) padding-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    font-size: 20px;
+    font-weight: 500;
+    cursor: pointer;
+    background-color: transparent;
+    color: #fff;
+  
+    @media (max-width: 768px) {
+      font-size: 15px;
+    }
+  }
+  
+  .button-body {
+    display: flex;
+    max-width: 160px;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .button-text {
+    position: absolute; /* Fixed the syntax */
+    /* Add your styles for button text here */
+    cursor: pointer;
+    
+    @media (max-width: 768px) {
+      font-size: 15px !important;
+    }
+  }
+  

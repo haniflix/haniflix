@@ -54,6 +54,8 @@ export default function MovieListItem({
   showActionOnMobile = false,
   showActionButtons = true
 }: MovieListItemProps) {
+  // console.log(movieId, movieObj)
+
   // const [isHovered, setIsHovered] = useState<boolean>(false);
   const [movie, setMovie] = useState<any>({});
 
@@ -74,8 +76,10 @@ export default function MovieListItem({
     error,
   } = useGetMovieQuery(movieId, {
     //skip if movieObj is defined
-    skip: movieObj,
+    // skip: movieObj,
   });
+  // console.log("movieData: ", movieData)
+  // console.log("error: ", error)
 
   const { data: genresData, isLoading: genresLoading } =
     useGetGenresQuery(null);
@@ -114,18 +118,18 @@ export default function MovieListItem({
     if (imageRef.current) {
       const boundingBox = imageRef.current.getBoundingClientRect();
 
-      const x= boundingBox.x + (boundingBox.width/2);
-      const y= boundingBox.y + (boundingBox.height/2);
+      const x = boundingBox.x + (boundingBox.width / 2);
+      const y = boundingBox.y + (boundingBox.height / 2);
 
       onPlayMovie(movie, { x, y });
     }
-    else{
-      const x= window.innerWidth/2;
-      const y= window.innerHeight/2;
+    else {
+      const x = window.innerWidth / 2;
+      const y = window.innerHeight / 2;
       onPlayMovie(movie, { x, y })
     }
   };
-  
+
   // Pointer events for modern devices
   const handlePointerEnter = useCallback(() => {
     setIsHovered(true);
@@ -387,68 +391,68 @@ export default function MovieListItem({
 
     //like buttons
     return (
-      <div className={ `flex-grow ${showActionOnMobile ? !showActionButtons ? "flex !px-[14vw] !py-2 sm:hidden" : "flex ":"sm:flex hidden"} justify-between items-center px-3`}>
+      <div className={`flex-grow ${showActionOnMobile ? !showActionButtons ? "flex !px-[14vw] !py-2 sm:hidden" : "flex " : "sm:flex hidden"} justify-between items-center px-3`}>
 
-          <button
-            onClick={onPlayMovieClick}
-            className="bg-transparent cursor-pointer"
-          >
-            <Icon name={"Play"} size={"M"} hovered />
-          </button>
+        <button
+          onClick={onPlayMovieClick}
+          className="bg-transparent cursor-pointer"
+        >
+          <Icon name={"Play"} size={"M"} hovered />
+        </button>
 
-          <button
-            onClick={onAddToList}
-            className="bg-transparent cursor-pointer"
-          >
-            {addToMyListState?.isLoading ? (
-              <Icon name={"Loading"} size={"M"} />
-            ) : (
-              <>
-                {movie?.isInDefaultList ? (
-                  <Icon name={"Heart"} size={"M"} hovered />
-                ) : (
-                  <Icon name={"Heart"} size={"M"} />
-                )}
-              </>
-            )}
-          </button>
-          <button
-            onClick={() => {
-              onLikeMovie();
-            }}
-            className="bg-transparent cursor-pointer"
-          >
-            {likeMovieState?.isLoading ? (
-              <Icon name={"Loading"} size={"M"} />
-            ) : (
-              <>
-                {movie?.currentUserLiked ? (
-                  <Icon name={"Like"} size={"M"} hovered />
-                ) : (
-                  <Icon name={"Like"} size={"M"} />
-                )}
-              </>
-            )}
-          </button>
-          <button
-            onClick={() => {
-              onDislikeMovie();
-            }}
-            className="bg-transparent cursor-pointer"
-          >
-            {dislikeMovieState?.isLoading ? (
-              <Icon name={"Loading"} size={"M"} />
-            ) : (
-              <>
-                {movie?.currentUserDisliked ? (
-                  <Icon name={"Dislike"} size={"M"} hovered />
-                ) : (
-                  <Icon name={"Dislike"} size={"M"} />
-                )}
-              </>
-            )}
-          </button>
-        </div>
+        <button
+          onClick={onAddToList}
+          className="bg-transparent cursor-pointer"
+        >
+          {addToMyListState?.isLoading ? (
+            <Icon name={"Loading"} size={"M"} />
+          ) : (
+            <>
+              {movie?.isInDefaultList ? (
+                <Icon name={"Heart"} size={"M"} hovered />
+              ) : (
+                <Icon name={"Heart"} size={"M"} />
+              )}
+            </>
+          )}
+        </button>
+        <button
+          onClick={() => {
+            onLikeMovie();
+          }}
+          className="bg-transparent cursor-pointer"
+        >
+          {likeMovieState?.isLoading ? (
+            <Icon name={"Loading"} size={"M"} />
+          ) : (
+            <>
+              {movie?.currentUserLiked ? (
+                <Icon name={"Like"} size={"M"} hovered />
+              ) : (
+                <Icon name={"Like"} size={"M"} />
+              )}
+            </>
+          )}
+        </button>
+        <button
+          onClick={() => {
+            onDislikeMovie();
+          }}
+          className="bg-transparent cursor-pointer"
+        >
+          {dislikeMovieState?.isLoading ? (
+            <Icon name={"Loading"} size={"M"} />
+          ) : (
+            <>
+              {movie?.currentUserDisliked ? (
+                <Icon name={"Dislike"} size={"M"} hovered />
+              ) : (
+                <Icon name={"Dislike"} size={"M"} />
+              )}
+            </>
+          )}
+        </button>
+      </div>
     );
   };
 
@@ -545,27 +549,27 @@ export default function MovieListItem({
         {renderSideButtons()}
       </div> */}
       <div className="flex-shrink-0 flex flex-col gap-2 text-center">
-        <div 
-        ref={imageRef}
-        onPointerEnter={handlePointerEnter}
-        onPointerLeave={handlePointerLeave}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-        className={`${showActionButtons ? 'aspect-[5/6]':''} w-full overflow-hidden rounded-lg xl:rounded-xl mb-1 relative max-w-[60vw] mx-auto`}>
-          <div 
-          className="absolute animate-pulse bg-[#ffffff10] w-full h-full"></div>
+        <div
+          ref={imageRef}
+          onPointerEnter={handlePointerEnter}
+          onPointerLeave={handlePointerLeave}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          className={`${showActionButtons ? 'aspect-[5/6]' : ''} w-full overflow-hidden rounded-lg xl:rounded-xl mb-1 relative max-w-[60vw] mx-auto`}>
+          <div
+            className="absolute animate-pulse bg-[#ffffff10] w-full h-full"></div>
           <img
             src={imageToshow}
             alt=""
-            className={`${showActionButtons ? 'aspect-[5/6]':''} w-full object-cover hover:scale-110 transition-all duration-300 relative z-20`}
+            className={`${showActionButtons ? 'aspect-[5/6]' : ''} w-full object-cover hover:scale-110 transition-all duration-300 relative z-20`}
           />
         </div>
 
         {renderActionButtons()}
 
-        <p className={`${showActionOnMobile ? "block":"sm:block hidden"} text-base xl:text-lg leading-tight`}>{movie.title}</p>
+        <p className={`${showActionOnMobile ? "block" : "sm:block hidden"} text-base xl:text-lg leading-tight`}>{movie.title}</p>
 
-        <p className={`${showActionOnMobile ? "block":"sm:block hidden"} text-sm xl:text-base text-muted leading-none`}>{movie.year}</p>
+        <p className={`${showActionOnMobile ? "block" : "sm:block hidden"} text-sm xl:text-base text-muted leading-none`}>{movie.year}</p>
 
       </div>
     </>

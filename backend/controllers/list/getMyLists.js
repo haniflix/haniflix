@@ -7,12 +7,12 @@ const getMyLists = async (req, res) => {
     const defaultList = await List.findOne({
       _id: user.defaultList,
       //adminList: false,
-    });
+    })
     const nonDefaultLists = await List.find({
       user: user._id,
       //adminList: false,
       _id: { $not: { $eq: user.defaultList } },
-    });
+    })
 
     res
       .status(200)

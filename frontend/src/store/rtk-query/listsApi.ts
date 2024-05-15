@@ -11,6 +11,7 @@ export const listsApi = authApi.injectEndpoints({
       providesTags: ["Lists"],
     }),
     getMyList: builder.query({
+      keepUnusedDataFor: 0,
       query: (params) => ({
         url: "lists/my-list",
         params,

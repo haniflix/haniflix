@@ -267,7 +267,6 @@ const MyLists = () => {
       });
   };
 
-
   return (
     <>
       <Navbar />

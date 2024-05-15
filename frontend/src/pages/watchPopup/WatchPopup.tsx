@@ -39,7 +39,7 @@ export default function WatchPopup({movieToPlay, onLeaveMovie}) {
           <ArrowBackOutlined />
           Go Back
         </div>
-        <VideoPlayer videoId={movie?._id} videoUrl={movie?.video} isTrailer={false} />
+        <VideoPlayer videoId={movieToPlay?._id} videoUrl={movieToPlay?.video} isTrailer={false} />
       </div>
     </>
   );

@@ -36,14 +36,26 @@ const App = () => {
       <SocketProvider>
         <AppRouter />
         <CookieConsent
-          style={{ background: "rgba(0,0,0,0.7)"}}
+          style={{
+            borderRadius: '15px 15px 0px 0px',
+            boxShadow: '0px -10px 15px -5px rgb(255 255 255 / 15%)',
+            padding: "10px",
+            background: 'url("/images/Frame.png") repeat center center',
+            backgroundSize: 'cover',
+            backgroundAttachment: 'fixed',
+            backgroundColor: '#0E061E',
+          }}
           disableButtonStyles
           buttonClasses="gradientButton"
-          buttonStyle={{ margin: 10,}}
+          buttonStyle={{
+            margin: 10,
+            backgroundColor: "white",
+            color: 'black'
+          }}
         >
           This website uses cookies to enhance the user experience.
         </CookieConsent>
-      </SocketProvider>
+      </SocketProvider >
     </>
   );
 };

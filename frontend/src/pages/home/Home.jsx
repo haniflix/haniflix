@@ -90,9 +90,15 @@ const Home = ({ type = null }) => {
       }
     );
 
-  const { data: myListData, isLoading: myListLoading } = useGetMyListQuery({
+  const { data: myListData, isLoading: myListLoading, refetch: refetchmyList } = useGetMyListQuery({
     searchTerms: "",
   });
+  useEffect(() => {
+    refetchmyList();
+    console.log('myListData: ', myListData)
+  }, []);
+
+
 
   const [movieToShow, setMovieToShow] = React.useState(undefined);
 
@@ -446,17 +452,50 @@ const Home = ({ type = null }) => {
         </div>
       ) : undefined}
 
-      <div className="home flex p-3 gap-3 bg-dark relative">
+      <div className="home flex p-3 gap-3 relative">
+
+        <div className="rightBlob1" style={{
+          left: '-20%',
+          top: '0',
+          width: '25vw',
+          height: '25vw',
+          filter: "blur(150px)",
+          opacity: "0.5"
+        }}></div>
+        <div className="rightBlob1" style={{
+          left: '10%',
+          top: '15%',
+          width: '25vw',
+          height: '25vw',
+          filter: "blur(150px)",
+          opacity: "0.5"
+        }}></div>
+
+        <div className="centerBlob2" style={{
+          top: '90%',
+          right: "10%",
+          height: "40vw",
+          width: "40vw",
+          opacity: ".60"
+        }}></div>
+        <div className="centerBlob3" style={{
+          top: '85%',
+          right: "90%",
+          height: "40vw",
+          width: "40vw",
+          opacity: ".60"
+        }}></div>
+
         <div className="fixed left-0 top-0 right-0 bottom-0">
           {/* leftPanel */}
           <div
-            style={{ boxShadow: "10px 0px 30px 0 #111" }}
+            // style={{ boxShadow: "10px 0px 30px 0 #111" }}
             className={`${leftPanelSize} absolute h-[calc(100vh-20px)] ${isLeftPanelOpen ? "left-[10px]" : "sm:left-[10px] -left-[100vw]"
-              } top-[10px] overflow-hidden bg-dark2 rounded-xl z-[9]`}
+              } top-[10px] overflow-hidden z-[9]`}
           >
-            <div className="leftBlob1"></div>
+            {/* <div className="leftBlob1"></div>
             <div className="leftBlob2"></div>
-            <div className="leftBlob3"></div>
+            <div className="leftBlob3"></div> */}
 
             <div className="w-full h-full relative z-[10] overflow-y-auto CustomScroller">
               <div
@@ -545,11 +584,11 @@ const Home = ({ type = null }) => {
 
           {/* centerPanel */}
           <div
-            className={`${centerPanelSize} h-[calc(100vh-20px)] absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 overflow-hidden bg-dark2 rounded-xl`}
+            className={`${centerPanelSize} h-[calc(100vh-20px)] absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 overflow-hidden`}
           >
-            <div className="centerBlob1"></div>
+            {/* <div className="centerBlob1"></div>
             <div className="centerBlob3"></div>
-            <div className="centerBlob2"></div>
+            <div className="centerBlob2"></div> */}
 
             <div className="w-full h-full relative z-[1] overflow-y-scroll CustomScroller">
               <div
@@ -745,15 +784,16 @@ const Home = ({ type = null }) => {
                         variants={tabChildVariant}
                         className="flex flex-wrap gap-[2vw]"
                       >
+
                         {myListData?.[0]?.content.map((movie, i) => {
                           return (
                             <div className="!w-[24vw] sm!w-[11vw]">
                               <MovieListItem
                                 key={i}
                                 index={i}
-                                movieId={movie?._id}
+                                movieId={movie}
                                 onHover={onHoverOverMovie}
-                              // movieObj={list}
+                                onPlayMovie={onPlayMovie}
                               // onHover={onHoverMovie}
                               />
                             </div>
@@ -814,9 +854,9 @@ const Home = ({ type = null }) => {
           {/* rightPanel */}
           <div
             className={`${rightPanelSize} absolute h-[calc(100vh-20px)] ${movieToShow ? "right-[10px]" : "sm:right-[10px] -right-[100vw]"
-              } top-[10px] overflow-hidden bg-dark2 rounded-xl z-[5]`}
+              } top-[10px] overflow-hiddenz-[5]`}
           >
-            <div className="rightBlob1"></div>
+            {/* <div className="rightBlob1"></div> */}
             <div className="w-full h-full relative z-[6] overflow-y-auto CustomScroller">
               <AnimatePresence>
                 <div

@@ -6,7 +6,6 @@ const getMovieById = async (req, res) => {
   //router.get("/find/:id", verify, async (req, res) => {
   try {
     const movie = await Movie.findById(req.params.id);
-
     if (!movie) {
       return res.status(400).send({
         message: "Movie not found",

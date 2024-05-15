@@ -7,7 +7,8 @@ import {
 
 import styles from './welcome.module.scss'
 import { addClassNames } from "../../store/utils/functions";
-
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 interface AccordionItem {
     id: string;
@@ -38,27 +39,39 @@ const AppAccordion: React.FC<AppAccordionProps> = ({ items }) => {
                     onChange={handleExpand(item.id)}
                     className={
                         addClassNames(
-                            styles["blur_bg"],
+                            styles["faq_box"],
                             'mb-2 !rounded-[10px]'
                         )
                     }
                 >
                     <AccordionSummary
-                        expandIcon={
+                        expandIcon={expanded === item.id ?
+
                             <div className="scale-[0.7]">
-                                <ChevronDown />
+                                <RemoveIcon className={
+                                    addClassNames(
+                                        styles["plus-icon"],
+                                    )
+                                } />
+                            </div> :
+                            <div className="scale-[0.7]">
+                                <AddIcon className={
+                                    addClassNames(
+                                        styles["plus-icon"],
+                                    )
+                                } />
                             </div>
                         }
                         aria-controls={`${item.id}-content`}
                         id={`${item.id}-header`}
                     >
-                        <p className='text-white text-[20px]'>{item.title}</p>
+                        <p className='text-white text-[24px]'>{item.title}</p>
                     </AccordionSummary>
                     <AccordionDetails
                         className=' relative'
                     >
                         <div
-                            className='bg-[#292929] h-[1px]  absolute top-0 right-[20px] left-[20px]'
+                            className='bg-[#292929]  absolute top-0 right-[20px] left-[20px]'
                         />
                         <div className=''>
 
@@ -72,8 +85,9 @@ const AppAccordion: React.FC<AppAccordionProps> = ({ items }) => {
                         </div>
                     </AccordionDetails>
                 </Accordion>
-            ))}
-        </div>
+            ))
+            }
+        </div >
     );
 };
 

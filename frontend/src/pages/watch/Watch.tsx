@@ -15,6 +15,7 @@ export default function Watch() {
   const params = useParams();
 
   const getMovie = (id: string) => {
+    console.log('id',id)
     client
       .getMovie(id)
       .then((res) => {
@@ -26,12 +27,12 @@ export default function Watch() {
   };
 
   useEffect(() => {
+    console.log('params: ', params)
     getMovie(params.id);
   }, [params.id]);
   const handleGoBack = () => {
     navigate(-1);
   };
-
   return (
     <>
       <Helmet>

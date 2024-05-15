@@ -231,6 +231,37 @@ const Register = () => {
       {!verifyingStatus && (
         <>
           <div className={addClassNames(styles["loginNew"])}>
+            <div className="rightBlob1" style={{
+              left: '-20%',
+              top: '0',
+              width: '25vw',
+              height: '25vw',
+              filter: "blur(150px)",
+              opacity: "0.5"
+            }}></div>
+            <div className="rightBlob1" style={{
+              left: '10%',
+              top: '15%',
+              width: '25vw',
+              height: '25vw',
+              filter: "blur(150px)",
+              opacity: "0.5"
+            }}></div>
+
+            <div className="centerBlob2" style={{
+              top: '90%',
+              right: "10%",
+              height: "40vw",
+              width: "40vw",
+              opacity: ".60"
+            }}></div>
+            <div className="centerBlob3" style={{
+              top: '85%',
+              right: "90%",
+              height: "40vw",
+              width: "40vw",
+              opacity: ".60"
+            }}></div>
             <div className={styles["top"]}>
               <div className={styles["wrapper"]}>
                 <a href={"/"} className="link">
@@ -247,10 +278,10 @@ const Register = () => {
 
             <div className={styles["section"]}>
               <div className={styles["intro-section"]}>
-                <h2 className="text-white font-[500] text-[25px] m-[auto] w-[fit-content]">
+                <h2 className="text-white font-[500] text-[42px] m-[auto] w-[fit-content] gradient-text" >
                   Sign Up
                 </h2>
-                <div className="h-[1px] bg-[#4B4B4B] mt-4 mb-3" />
+                <br />
                 <form
                   onSubmit={handleSubmit}
                   style={{ maxWidth: "450px", width: "100%" }}

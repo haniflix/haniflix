@@ -10,6 +10,7 @@ import { selectUser, setUser } from "../../store/reducers/auth";
 import { useAppSelector } from "../../store/hooks";
 import { useLoginMutation } from "../../store/rtk-query/authApi";
 
+
 import { useNavigate } from "react-router-dom";
 
 import SocketContext from "../../context/SocketContext";
@@ -20,6 +21,7 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 import { addClassNames } from "../../store/utils/functions";
 
 import { Helmet } from "react-helmet";
+import { Box } from "@mui/material";
 
 export default function Login() {
   const emailRef = useRef();
@@ -132,6 +134,7 @@ export default function Login() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Helmet> */}
 
+
       <div
         // style={{
         //   height: isMobile ? "100%" : "100%",
@@ -144,6 +147,63 @@ export default function Login() {
         // }}
         className={`${addClassNames(styles["loginNew"])} bg-sred-50s0`}
       >
+        <Box
+          className={addClassNames(styles["top"], "ml-[40px] mr-[40px]")}
+
+        // style={{ maxWidth: 1200, marginLeft: "auto", marginRight: "auto" }}
+        >
+          <div
+            className={addClassNames(
+              styles["wrapper"],
+              " flex items-center justify-between "
+            )}
+          >
+            <Link to={"/"} className={styles["link"]}>
+              <img
+                // className={styles["logo"]}
+                src={Logo}
+                width="130px"
+                height="100px"
+                //height="100px"
+                alt="App logo"
+                loading="lazy"
+              />
+            </Link>
+
+          </div>
+        </Box>
+        <div className="rightBlob1" style={{
+          left: '-20%',
+          top: '0',
+          width: '25vw',
+          height: '25vw',
+          filter: "blur(150px)",
+          opacity: "0.5"
+        }}></div>
+        <div className="rightBlob1" style={{
+          left: '10%',
+          top: '15%',
+          width: '25vw',
+          height: '25vw',
+          filter: "blur(150px)",
+          opacity: "0.5"
+        }}></div>
+        
+        <div className="centerBlob2" style={{
+          top: '90%',
+          right: "10%",
+          height: "40vw",
+          width: "40vw",
+          opacity: ".60"
+        }}></div>
+        <div className="centerBlob3" style={{
+          top: '85%',
+          right: "90%",
+          height: "40vw",
+          width: "40vw",
+          opacity: ".60"
+        }}></div>
+        
         {/* <div className={styles["top"]}>
           <div className={styles["wrapper"]}>
             <a href={"/"} className="link">
@@ -179,10 +239,10 @@ export default function Login() {
               styles["intro-section"]
             )}
           >
-            <h2 className="text-white font-[500] text-[25px] m-[auto] w-[fit-content]">
+            <h2 className="text-white font-[500] text-[42px] m-[auto] w-[fit-content] gradient-text" >
               Sign In
             </h2>
-            <div className="h-[1px] bg-[#4B4B4B] mt-4 mb-3" />
+            <br/>
             <div className={styles["inputWrapper"]}>
               <input
                 type="email"
@@ -225,7 +285,7 @@ export default function Login() {
                   )}
                   checked={rememberMe}
                   onClick={() => setRememberMe(!rememberMe)}
-                  onChange={() => {}}
+                  onChange={() => { }}
                 />
                 <label htmlFor="rememberMe" className="text-sm text-white">
                   Remember Me

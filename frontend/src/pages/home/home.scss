@@ -1,9 +1,14 @@
-.home{
+.home {
     overflow: hidden;
     height: 100%;
+    background: url("/images/Frame.png") repeat center center;
+    background-size: cover;
+    background-attachment: fixed;
+    background-color: #0E061E;
+
 }
 
-.centerBlob1{
+.centerBlob1 {
     position: absolute;
     left: 0;
     bottom: 20%;
@@ -18,7 +23,7 @@
     animation: rotate 20s linear infinite;
 }
 
-.centerBlob2{
+.centerBlob2 {
     position: absolute;
     right: -5%;
     top: -5%;
@@ -33,7 +38,7 @@
     animation: rotate2 20s linear infinite;
 }
 
-.centerBlob3{
+.centerBlob3 {
     position: absolute;
     right: 20%;
     top: -10%;
@@ -50,33 +55,41 @@
 
 
 @keyframes rotate {
-    0%, 100%{
-        transform: translate(-30%,0%) rotate(-30deg) ;
+
+    0%,
+    100% {
+        transform: translate(-30%, 0%) rotate(-30deg);
     }
-    30%{
-        transform: translate(-40%,30%) rotate(-10deg) ;
+
+    30% {
+        transform: translate(-40%, 30%) rotate(-10deg);
     }
-    60%{
-        transform: translate(-50%,50%) rotate(10deg) ;
+
+    60% {
+        transform: translate(-50%, 50%) rotate(10deg);
     }
 }
 
 @keyframes rotate2 {
-    0%, 100%{
+
+    0%,
+    100% {
         width: 20vw;
-        transform: translate(60%,-50%) scale(1) ;
+        transform: translate(60%, -50%) scale(1);
     }
-    33%{
+
+    33% {
         width: 40vw;
         transform: translate(30%, -20%) scale(0.8);
     }
-    66%{
+
+    66% {
         width: 20vw;
         transform: translate(60%, -20%) scale(1.4);
     }
 }
 
-.leftBlob1{
+.leftBlob1 {
     position: absolute;
     right: 50%;
     top: -20%;
@@ -91,7 +104,7 @@
     animation: leftrotate1 20s linear infinite;
 }
 
-.leftBlob2{
+.leftBlob2 {
     position: absolute;
     left: -70%;
     bottom: -20%;
@@ -100,12 +113,13 @@
     height: 20vw;
 
     min-width: 250px;
-        min-height: 300px;
+    min-height: 300px;
     border-radius: 100%;
     filter: blur(80px);
     animation: leftrotate2 15s linear infinite;
 }
-.leftBlob3{
+
+.leftBlob3 {
     position: absolute;
     right: -30%;
     bottom: -20%;
@@ -113,8 +127,8 @@
     width: 12vw;
     height: 15vw;
 
-        min-width: 150px;
-        min-height: 200px;
+    min-width: 150px;
+    min-height: 200px;
     border-radius: 100%;
     filter: blur(80px);
     animation: leftrotate2 20s linear infinite;
@@ -122,33 +136,41 @@
 
 
 @keyframes leftrotate1 {
-    0%, 100%{
-        transform: translate(50%, 0%) rotate(0deg) ;
+
+    0%,
+    100% {
+        transform: translate(50%, 0%) rotate(0deg);
     }
-    30%{
-        transform: translate(50%,15%) rotate(180deg) ;
+
+    30% {
+        transform: translate(50%, 15%) rotate(180deg);
     }
-    60%{
-        transform: translate(50%,0%) rotate(360deg) ;
+
+    60% {
+        transform: translate(50%, 0%) rotate(360deg);
     }
 }
 
 
 @keyframes leftrotate2 {
-    0%, 100%{
-        transform: translate(0%, 0%) rotate(0deg) ;
+
+    0%,
+    100% {
+        transform: translate(0%, 0%) rotate(0deg);
     }
-    30%{
-        transform: translate(10%,10%) rotate(360deg) ;
+
+    30% {
+        transform: translate(10%, 10%) rotate(360deg);
     }
-    60%{
-        transform: translate(-20%,-10%) rotate(360deg) ;
+
+    60% {
+        transform: translate(-20%, -10%) rotate(360deg);
     }
 }
 
 
 
-.rightBlob1{
+.rightBlob1 {
     position: absolute;
     right: 50%;
     bottom: -20%;
@@ -162,14 +184,19 @@
     filter: blur(50px);
     animation: rightrotate1 20s linear infinite;
 }
+
 @keyframes rightrotate1 {
-    0%, 100%{
-        transform: translate(50%, 0%) rotate(0deg) ;
+
+    0%,
+    100% {
+        transform: translate(50%, 0%) rotate(0deg);
     }
-    30%{
-        transform: translate(50%,-15%) rotate(180deg) ;
+
+    30% {
+        transform: translate(50%, -15%) rotate(180deg);
     }
-    60%{
-        transform: translate(50%,0%) rotate(360deg) ;
+
+    60% {
+        transform: translate(50%, 0%) rotate(360deg);
     }
 }

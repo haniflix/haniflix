@@ -1,8 +1,8 @@
 .loginNew {
-  background: url("/images/welcomePageBg1.webp") repeat center center;
-  background-size: contain;
+  background: url("/images/Frame.png") repeat center center;
+  background-size: cover;
   background-attachment: fixed;
-
+  background-color: #0E061E;
   color: white;
   height: 100%;
   display: flex;
@@ -11,10 +11,13 @@
   justify-content: center;
   padding: 0px 20px;
 
+  overflow: hidden !important;
+  position: relative;
   .top {
     position: fixed;
     top: 5px;
     left: 10px;
+    z-index: 99;
     margin-top: 40px;
     margin-left: 32px;
 
@@ -27,34 +30,36 @@
     box-sizing: border-box;
     height: 100vh;
     width: 100%;
-    // background-color: rgba(0, 0, 0, 0.75);
+    // background-color: #FFFFFF1A;
     border-bottom: solid 1px #555;
     color: #000;
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 9;
   }
+
   .intro-section {
     max-width: 95%;
-    border-radius: 10px;
-    width: 500px;
-    padding: 50px 30px;
-    background-color: rgba(255, 255, 255, 0.13);
-    backdrop-filter: blur(15px);
-    box-sizing: border-box;
+    min-width: 400px;
+    // border-radius: 10px;
+    // width: 500px;
+    // padding: 50px 30px;
+    // background-color: rgba(255, 255, 255, 0.13);
+    // // opacity: 0.5;
+    // backdrop-filter: blur(15px);
+    // box-sizing: border-box;
   }
 
   .inputWrapper {
-    height: 45px;
-    border-radius: 5px;
-    background-color: rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    color: #000;
-    outline: none;
+    height: 55px;
     display: flex;
     align-items: center;
-
-    margin: 10px auto;
+    background-color: transparent;
+    border: 2px solid;
+    border-image-source: linear-gradient(94.55deg, #14FA9B -3.86%, #128EE9 100%);
+    border-image-slice: 1;
+    margin: 40px auto;
     width: 100%;
     padding-left: 10px;
     padding-right: 10px;
@@ -71,14 +76,17 @@
   }
 
   button {
-    height: 40px;
+    height: 55px;
     width: 100%;
-    margin-top: 48px;
+    margin-top: 68px;
     margin: 5px auto 10px auto;
     border-radius: 5px;
-    background-color: rgba(255, 255, 255, 0.2);
-    color: #fff;
-    border: none;
+    background-color: transparent;
+    border: 2px solid;
+    border-image-source: linear-gradient(94.55deg, #14FA9B -3.86%, #128EE9 100%);
+    border-image-slice: 1;
+    color: #ffffff;
+    // border: none;
     font-size: 18px;
     font-weight: 500;
     cursor: pointer;

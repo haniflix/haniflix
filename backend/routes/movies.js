@@ -19,7 +19,7 @@ router.get("/find/:id", verify, moviesController.findMovie);
 router.get("/random", verify, moviesController.getRandomMovie);
 
 //GET SINGLE
-router.get("/:id", verify, moviesController.getMovieById);
+router.get("/:id", verify, moviesController.getMovieById);  
 
 //GET ALL
 router.get("/", verify, moviesController.getMovies);

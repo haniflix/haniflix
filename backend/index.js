@@ -2,6 +2,9 @@ const express = require("express");
 
 const http = require("http");
 const dotenv = require("dotenv");
+const logger = require('morgan')
+const morgan = require('morgan')
+
 
 //routes
 const authRoute = require("./routes/auth");
@@ -59,6 +62,8 @@ const PORT = process.env.PORT || 8800;
 
 app.options("*", cors({ origin: allowed_origins, optionsSuccessStatus: 200 }));
 app.use(cors({ origin: allowed_origins, optionsSuccessStatus: 200 }));
+app.use(morgan('tiny'))
+app.use(logger('dev'))
 
 app.use(express.json());
 app.use(morganMiddleware);

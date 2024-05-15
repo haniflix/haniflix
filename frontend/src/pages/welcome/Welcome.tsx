@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../Assets/Images/Logo.png";
 // import { login } from "../../context/login/apiCalls";
 import {
@@ -8,23 +8,23 @@ import {
   createTheme
 } from "@mui/material";
 import "../../Assets/css/styles.scss";
-import Section from "./Section";
-import TopSection from "./TopSection";
 
 import { addClassNames } from "../../store/utils/functions";
 import styles from "./welcome.module.scss";
-
-import createProfile from "../../Assets/Images/createProfile.png";
-import discoverImg from "../../Assets/Images/discoverImg.png";
-import watchEvrywhere from "../../Assets/Images/watchEvrywhere.png";
 
 import { ChevronDown, TranslateIcon } from "../../Assets/svgs/tsSvgs";
 import AppAccordion from "./AppAccordion";
 
 import { MdPeopleAlt } from "react-icons/md";
-import { PiTelevisionSimpleFill } from "react-icons/pi";
+import { PiTiktokLogoFill } from "react-icons/pi";
 
-import gradientStar from "../../Assets/Images/gradientStar.png";
+import { PiTwitterLogoFill } from "react-icons/pi";
+import { PiInstagramLogoFill } from "react-icons/pi";
+import { FaFacebookF } from "react-icons/fa";
+import CustomButton from "../../components/GradientButton";
+import ImageTicker from "../../components/TickerImages";
+import GradientStarIcon from "../../components/GradientStars";
+
 
 const darkTheme = createTheme({
   palette: {
@@ -48,6 +48,19 @@ export default function Welcome() {
     setExpanded((curr) => (curr == panel ? "none" : panel));
   };
 
+  const images = [
+    "https://img.rgstatic.com/content/movie/b3c57191-35fb-4cc7-9f6f-351566bee2fa/poster-185.jpg",
+    "https://img.rgstatic.com/content/movie/c77578d5-2736-4da6-9e8e-269509c5ef61/poster-185.webp",
+    "https://img.rgstatic.com/content/movie/7a7e9292-8bd8-4223-b1c5-671b7e2cb6f8/poster-185.webp",
+    "https://img.rgstatic.com/content/movie/0e1d4611-31e0-4fb9-aeb8-18e45aa3924b/poster-185.webp",
+    'https://img.rgstatic.com/content/movie/c88a48d6-68b8-43f3-8891-e5038371705d/poster-185.webp',
+    'https://img.rgstatic.com/content/movie/faffaca7-7850-4381-8002-0d07517cbb0d/poster-185.webp',
+    'https://img.rgstatic.com/content/movie/7217441d-fe26-4313-9b8e-32adc49a6aec/poster-185.webp',
+    'https://img.rgstatic.com/content/movie/e615349d-102c-497e-ac32-fb651a858553/poster-185.webp',
+    'https://img.rgstatic.com/content/movie/326395f3-3c7c-44e9-812e-6cbb88396f2d/poster-185.webp',
+    'https://img.rgstatic.com/content/movie/3a9a800d-b80a-4e4c-ab9e-c8a9e538410c/poster-185.webp',
+
+  ];
   const accordionItems = [
     {
       id: "panel1",
@@ -84,13 +97,35 @@ export default function Welcome() {
     },
   ];
 
+  const reviews = [{
+    name: "Sarah D -",
+    description: `"I've tried several streaming services, but none compare to Haniflix. The recommendations are spot on, and I love how easy it is to navigate through the content. It's become a staple in our household!"`,
+    stars: 5
+  },
+  {
+    name: "Michael R -",
+    description: `"Haniflix has completely changed the way I watch TV. The original content is top-notch, and I find myself eagerly waiting for new releases. Plus, the ability to watch anywhere, anytime is a game-changer!"`,
+    stars: 5
+  },
+  {
+    name: "David M -",
+    description: `"I was hesitant to try another streaming service, but Haniflix exceeded my expectations. The variety of options is impressive, and I appreciate the personalized suggestions. It's become my go-to for entertainment!"`,
+    stars: 5
+  }]
+
+  const socialIcons = [
+    { Icon: PiTiktokLogoFill, url: '#' },
+    { Icon: PiTwitterLogoFill, url: '#' },
+    { Icon: PiInstagramLogoFill, url: '#' },
+    { Icon: FaFacebookF, url: '#' }
+  ];
   return (
     <div className={styles["welcomePage"]}>
       <div className="absolute pointer-events-none top-0 right-0 left-0 h-[60px] bg-gradient-to-b from-black to-transparent"></div>
       <Box
         className={addClassNames(styles["top"], "ml-[40px] mr-[40px]")}
 
-        // style={{ maxWidth: 1200, marginLeft: "auto", marginRight: "auto" }}
+      // style={{ maxWidth: 1200, marginLeft: "auto", marginRight: "auto" }}
       >
         <div
           className={addClassNames(
@@ -102,7 +137,7 @@ export default function Welcome() {
             <img
               // className={styles["logo"]}
               src={Logo}
-              width="100px"
+              width="130px"
               height="100px"
               //height="100px"
               alt="App logo"
@@ -110,7 +145,7 @@ export default function Welcome() {
             />
           </a>
           <div className="flex items-center space-x-[10px]">
-            <button
+            {/* <button
               className={addClassNames(
                 styles["app_button"],
                 "!w-[fit-content] px-[12px] flex items-center space-x-[7px]"
@@ -119,141 +154,181 @@ export default function Welcome() {
               <TranslateIcon className="mr-2" />
               English
               <ChevronDown />
-            </button>
-            <button
-              className={addClassNames(
-                styles["app_button"],
-                styles["sign_in_button"]
-              )}
-              onClick={() => navigate("/login")}
-            >
-              Sign In
-            </button>
+            </button> */}
+
+            <CustomButton text="Sign In" onClick={() => navigate("/login")} />
           </div>
         </div>
       </Box>
 
+      <div className="rightBlob1" style={{
+        left: '-20%',
+        top: '0',
+        width: '25vw',
+        height: '25vw',
+        filter: "blur(150px)",
+        opacity: "0.5"
+      }}></div>
       <div className={styles["get-started-section"]}>
-        <h1>Unlimited movies, TV shows, and more</h1>
-        <p style={{ marginBottom: 25 }}>
-          Plan is only $4.99/month. Watch anywhere. Cancel anytime.
-        </p>
-        <p style={{ marginBottom: 10 }}>
-          Ready to watch? Enter your email to create or restart your membership.
-        </p>
-        <div
-          className={addClassNames(
-            "flex w-[50%] mx-[auto]",
-            styles["inputWrapper"]
-          )}
-        >
-          <input
-            type="email"
-            placeholder="Email Address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <button className={styles["app_button"]} onClick={onSignUp}>
-            Get Started
-          </button>
-        </div>
+        <h1>Discover The  <span className="gradient-text">Ultimate </span>Streaming Service</h1>
+        <br />
+        <CustomButton text="Get Started" onClick={onSignUp} />
       </div>
+      <br />
+      <div className={styles["middle-gradient-section"]}></div>
+      <div className={styles["middle-text-section"]}>
+        <div className={styles["middle-text-innersection"]}>
+          <h1>
+            Unlimited Ad-Free Award-Winning 4K Movies TV shows and more anywhere on any device <span className="gradient-text">for Only $4.99/Month</span>
+          </h1>
+        </div>
 
-      <TopSection />
+        {/* <div className="centerBlob1"></div> */}
+        <div className="centerBlob3" style={{
+          right: '20%',
+          top: '6%',
+        }}></div>
+        <div className="centerBlob2" style={{
+          top: '17%',
+          height: "40vw"
+        }}></div>
+        <div className="centerBlob3" style={{
+          right: '0%',
+          top: '35%',
+          height: "40vw",
+          opacity: "0.4"
+        }}></div>
 
-      <Section
-        title="Discover the ultimate streaming service"
-        description="Unlimited award-winning TV shows, movies, and more in 4k and ad-free on any device for only $4.99/month!"
-        imageUrl={discoverImg}
-        imagePosition="right"
-        icon={
-          <div className="h-[56px] w-[56px] mb-[25px]">
-            <img alt="" src={gradientStar} />
-          </div>
-        }
-      />
+        <div className="centerBlob2" style={{
+          top: '35%',
+          right: "100%",
+          height: "40vw",
+          opacity: ".60"
+        }}></div>
+        <div className="centerBlob2" style={{
+          top: '90%',
+          right: "10%",
+          height: "40vw",
+          width: "40vw",
+          opacity: ".60"
+        }}></div>
+        <div className="centerBlob3" style={{
+          top: '85%',
+          right: "90%",
+          height: "40vw",
+          width: "40vw",
+          opacity: ".60"
+        }}></div>
+        <br />
+        <br />
+        <br />
+        <center>
+          <img src="/images/homeSS.png" style={{
+            zIndex: "10",
+            position: 'relative'
+          }} />
+        </center>
+        <br />
+        <br />
+        <center>
+          <h1><span className="gradient-text">Popular </span></h1>
+        </center>
+        <div style={{
+          maxWidth: "1120px",
+          margin: 'auto',
+          padding: "40px 0px"
+        }}>
+          <ImageTicker images={images} />
+        </div>
 
-      <Section
-        title="Watch everywhere"
-        description="Watch on Smart TVs, Playstation, Xbox, Chromecast, Apple TV, Blu-ray players, and more."
-        imageUrl={watchEvrywhere}
-        imagePosition="left"
-        icon={
-          <div
-            className={addClassNames(
-              "h-[56px] w-[56px] mb-[25px] flex items-center justify-center rounded-[50%]",
-              styles["section_icon_wrapper"]
-            )}
-          >
-            <PiTelevisionSimpleFill />
-          </div>
-        }
-      />
+        <br />
+        <br />
+        <center>
+          <h1>See What Our <br /><span className="gradient-text">Users </span>Are Saying</h1>
+        </center>
+        <br />
+        <br />
+        <br />
 
-      <Section
-        title="Create profiles for kids"
-        description="Send kids on adventures with their favorite characters in a space made for just them — free with your membership"
-        imageUrl={createProfile}
-        imagePosition="right"
-        icon={
-          <div
-            className={addClassNames(
-              "h-[56px] w-[56px] mb-[25px] flex items-center justify-center rounded-[50%]",
-              styles["section_icon_wrapper"]
-            )}
-          >
-            <MdPeopleAlt />
-          </div>
-        }
-      />
-
-      <div className="bg-black ">
-        <div className={styles["footer-wrapper"]}>
-          <div
-            className={addClassNames(
-              styles["blur_bg"],
-               styles["support-section"],
-              "mx-[70px] py-[20px] px-[20px] mt-[100px] rounded-[10px] flex  gap-y-[12px] flex-col justify-center"
-            )}
-          >
-            <div className="mb-[3px] text-[22px]">Support</div>
-            <div className="text-[20px]">Frequently asked questions</div>
-            <div className="text-[20px]">
-              Everything you need to know about the product, subscription and
-              billing.
+        <div className="flex justify-center">
+          <div className="w-full lg px-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {reviews.map(x => <div className={styles["reviews-box"] + ` p-4`}>
+                <p className="gradient-text2" style={{ fontSize: '24px' }}>{x.name}</p>
+                <p>{x.description}</p>
+                <div style={{ display: 'flex' }}>
+                  {Array.from({ length: x.stars }, () => 0).map(() => <GradientStarIcon />)}
+                </div>
+              </div>)}
             </div>
           </div>
-          <div  className={addClassNames(
-              styles["app-accordion"], "mx-[70px]")}>
-            <AppAccordion items={accordionItems} />
-          </div>
-          <div
-            className={addClassNames(
-              styles["get-started-section"],
-              "mx-[70px] py-[20px] px-[45px] mt-[100px] rounded-[10px] flex items-center flex-col justify-center"
-            )}
-          >
-            <div className="text-[25px] text-center mb-[24px]">
-              Ready to watch? Enter your email to create or restart your
-              membership.
-            </div>
+        </div>
 
-            <div
-              className={addClassNames(
-                "flex w-[50%] mx-[auto]",
-                styles["inputWrapper"]
-              )}
-            >
-              <input
-                type="email"
-                placeholder="Email Address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <button className={styles["app_button"]} onClick={onSignUp}>
-                Get Started
-              </button>
-            </div>
+
+        <br />
+        <br />
+        <br />
+        <br />
+        <center>
+          <h1>Frequently Ask <span className="gradient-text">Questions </span></h1>
+        </center>
+        <br />
+
+
+        <div className={addClassNames(
+          styles["app-accordion"], "mx-[70px]")}>
+          <AppAccordion items={accordionItems} />
+        </div>
+
+        <br />
+        <br />
+        <br />
+        <center>
+          <h1>Join <span className="gradient-text">Haniflix </span>Today</h1>
+          <br />
+
+          <CustomButton text="Get Started" onClick={onSignUp} />
+          <br />
+          <br />
+          <img
+            src={Logo}
+            width="170px"
+            alt="App logo"
+            loading="lazy"
+          />
+        </center>
+        <br />
+        <div className="flex items-center justify-between  max-w-250px mx-auto" style={{ maxWidth: '250px' }}>
+          {socialIcons.map((item, index) => (
+            <Link key={index} to={item.url}>
+              <svg width="50" height="50" viewBox="0 0 24 24">
+                {/* Define the linear gradient */}
+                <defs>
+                  <linearGradient id="starGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="53.93%" stopColor="#14FA9B" />
+                    <stop offset="77.59%" stopColor="#128EE9" />
+                  </linearGradient>
+                </defs>
+
+                {/* Border circle */}
+                <circle cx="12" cy="12" r="11" fill="transparent" stroke='url(#starGradient)' strokeWidth="1" />
+
+                {/* Your SVG icon with gradient fill */}
+                <g transform="translate(7 7) scale(0.6)" >
+                  <item.Icon style={{ fill: 'url(#starGradient)' }} className={styles["socialIcons"]} />
+                </g>
+              </svg>
+            </Link>
+          ))}
+        </div>
+        <hr style={{ marginTop: "30px", marginBottom: "30px" }} />
+        <div className={addClassNames(
+          styles["footer-hme"], "flex justify-between")}>
+          <div className="flex-none"> {/* Left column */}
+            <p>© 2024 HANIFLIX . All rights reserved.</p>
+          </div>
+          <div className="flex-none"> {/* Right column */}
+            <Link to='/privacy-policy'>Privacy Policy</Link>  <Link to='/terms-service'>Terms & Service</Link>
           </div>
         </div>
       </div>

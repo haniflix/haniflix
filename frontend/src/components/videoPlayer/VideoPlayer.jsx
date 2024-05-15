@@ -52,24 +52,23 @@ const VideoPlayer = ({ videoId, videoUrl, isTrailer }) => {
     refetchOnMountOrArgChange: true,
     skip: !videoId,
   });
-
+  console.log("videoId: ", videoId)
   const authReducer = useSelector((state) => state.auth);
   const accessToken = authReducer?.user?.accessToken;
-  
-  let id='';
+
+  let id = '';
   let isYouTube = false;
-  if(videoUrl && isTrailer && videoUrl.includes('youtu.')){
+  if (videoUrl && isTrailer && videoUrl.includes('youtu.')) {
     isYouTube = true;
   }
-  if(isTrailer && videoUrl){
+  if (isTrailer && videoUrl) {
     const lnks = (videoUrl).split('/')
-    id = lnks[lnks.length -1];
-    videoUrl =`https://www.youtube.com/watch?v=${lnks[lnks.length -1]}`;
+    id = lnks[lnks.length - 1];
+    videoUrl = `https://www.youtube.com/watch?v=${lnks[lnks.length - 1]}`;
   }
 
-   const streamUrl = isTrailer ? videoUrl : `${
-    import.meta.env.VITE_APP_API_URL
-  }movies/stream/${videoId}?token=${accessToken}`;
+  const streamUrl = isTrailer ? videoUrl : `${import.meta.env.VITE_APP_API_URL
+    }movies/stream/${videoId}?token=${accessToken}`;
   console.log('streamUrl:', streamUrl);
 
   const { socket } = React.useContext(SocketContext);
@@ -221,8 +220,8 @@ const VideoPlayer = ({ videoId, videoUrl, isTrailer }) => {
   };
 
 
-   const opts = {
-    
+  const opts = {
+
     playerVars: {
       autoplay: 1,
     },
@@ -334,7 +333,7 @@ const VideoPlayer = ({ videoId, videoUrl, isTrailer }) => {
 
   return (
     <div className="video-player-containerd  h-screen">
-     {isYouTube ? <YouTubePlayer videoId={id} iframeClassName="youtube-player"  opts={opts} /> : <CustomReactPlayer
+      {isYouTube ? <YouTubePlayer videoId={id} iframeClassName="youtube-player" opts={opts} /> : <CustomReactPlayer
         ref={playerRef}
         url={streamUrl}
         controls
@@ -354,7 +353,7 @@ const VideoPlayer = ({ videoId, videoUrl, isTrailer }) => {
             },
           },
         }}
-        // config={getConfig(accessToken)}
+      // config={getConfig(accessToken)}
       />}
       <div className="px-3">{renderExtraButtons()}</div>
     </div>

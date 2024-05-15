@@ -5,7 +5,7 @@ import Icon from "../icon";
 import { useGetGenresQuery } from "../../store/rtk-query/genresApi";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function MovieDetailPanel({ movieToShow, onPlayMovie , onHoverMovie, type}) {
+export default function MovieDetailPanel({ movieToShow, onPlayMovie, onHoverMovie, type }) {
   const imageToshow = React.useMemo(() => {
     return movieToShow?.img ? movieToShow?.img : moviePlaceHolderSvg;
   }, [movieToShow]);
@@ -39,7 +39,7 @@ export default function MovieDetailPanel({ movieToShow, onPlayMovie , onHoverMov
   const handleHover = (movie) => {
     // onHoverMovie?.(movie);
   };
- 
+
   const onClickPlayMovie = (movie, axis) => {
     onPlayMovie?.(movie, axis);
   };
@@ -50,52 +50,41 @@ export default function MovieDetailPanel({ movieToShow, onPlayMovie , onHoverMov
   const renderGenres = () => {
     let genreTextArr = [];
 
-    //movie genres Array[] can be just an _id or the full mongoDb document for genre
-
-    if (movieToShow?.genre?.[0]?._id) {
-      genreTextArr = movieToShow?.genre
-        ?.map((genreObj) => {
-          return genreObj?.title;
-        })
-        .filter((text) => text != undefined);
-    } else {
-      genreTextArr = movieToShow?.genre
-        ?.map((genreId) => {
-          const genreObj = genresData?.genres?.find((_genre) => {
-            return genreId == _genre?._id;
-          });
-
-          return genreObj?.title;
-        })
-        .filter((text) => text != undefined);
+    if (movieToShow?.genre) {
+      genreTextArr = movieToShow.genre.map((genre) => {
+        const genreObj = typeof genre === 'object' ? genre : genresData.genres.find(_genre => _genre._id === genre);
+        return genreObj?.title;
+      }).filter(text => text !== undefined);
     }
+
+    return genreTextArr;
   }
 
   return (
-    
-    <motion.div 
-    key={movieToShow?._id}
-    initial="hidden"
-    animate="visible"
-    exit="exit"
-    variants={tabVariant}
-    transition={parentTransition}
-    className="flex flex-col gap-5 relative z-10">
+
+    <motion.div
+      key={movieToShow?._id}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      variants={tabVariant}
+      transition={parentTransition}
+      className="flex flex-col gap-5 relative z-10">
 
       {movieToShow && <p className="text-main text-center capitalize">{type}</p>}
 
       {movieToShow && (
         <motion.div variants={tabChildVariant}>
-            <MovieListItem
+          <MovieListItem
             showActionOnMobile={true}
-              movieId={movieToShow?._id}
-              showActionButtons={false}
-              // movieObj={list}
-              // onHover={onHoverMovie}
+            movieId={movieToShow?._id}
+            showActionButtons={false}
+            // movieObj={list}
+            // onHover={onHoverMovie}
 
-              onHover={handleHover}
-              onPlayMovie={onClickPlayMovie}
-            />
+            onHover={handleHover}
+            onPlayMovie={onClickPlayMovie}
+          />
         </motion.div>
       )}
 
@@ -110,12 +99,12 @@ export default function MovieDetailPanel({ movieToShow, onPlayMovie , onHoverMov
         <motion.div variants={tabChildVariant}>
           <p className="text-lg">Rating</p>
           <p className="text-muted text-base mt-1 flex gap-8">
-          <span className="flex items-center gap-2" >
-          <Icon name={"Like"} size={"M"}/>{movieToShow?.likesCount}
-          </span>
-          <span className="flex items-center gap-2">
-          <Icon name={"Dislike"} size={"M"} />{movieToShow?.dislikesCount}
-          </span> 
+            <span className="flex items-center gap-2" >
+              <Icon name={"Like"} size={"M"} />{movieToShow?.likesCount}
+            </span>
+            <span className="flex items-center gap-2">
+              <Icon name={"Dislike"} size={"M"} />{movieToShow?.dislikesCount}
+            </span>
           </p>
         </motion.div>
       )}
@@ -137,7 +126,7 @@ export default function MovieDetailPanel({ movieToShow, onPlayMovie , onHoverMov
       {movieToShow && (
         <motion.div variants={tabChildVariant}>
           <p className="text-lg">Genre</p>
-          <p className="text-muted text-base mt-1">{renderGenres()}</p>
+          <p className="text-muted text-base mt-1">{renderGenres().join().replace(',',', ')}</p>
         </motion.div>
       )}
     </motion.div>
