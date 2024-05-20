@@ -42,6 +42,9 @@ export default function Login() {
   const [login, loginState] = useLoginMutation();
 
   const { handleUserLogin } = React.useContext(SocketContext);
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [isFormValid, setIsFormValid] = useState(false);
 
   const [appHeight, setAppHeight] = React.useState(window.innerHeight);
   const [appWidth, setAppWidth] = React.useState(window.innerWidth);
@@ -79,10 +82,33 @@ export default function Login() {
   };
 
   const validateEmail = (email) => {
-    return true;
-    const emailReg = /^([\w-.]+@([\w-]+\.)+[\w-]{2,6})?$/;
-    return emailReg.test(email);
+    if (!email) {
+      setEmailError("Email address is required");
+    } else if (!/^\S+@\S+\.\S+$/.test(email)) {
+      setEmailError("Invalid email address");
+    } else {
+      setEmailError("");
+      return true;
+    }
   };
+  const validatePassword = (value) => {
+    if (!value) {
+      setPasswordError("Password is required");
+    } else if (value.length < 6) {
+      setPasswordError("Password must be at least 6 characters long");
+    } else {
+      setPasswordError("");
+      return true
+    }
+  };
+
+
+  useEffect(() => {
+    setIsFormValid(
+      !emailError && !passwordError
+    );
+  }, [emailError, passwordError]);
+
 
   // useEffect(() => {
   //   if (user != null) {
@@ -107,15 +133,15 @@ export default function Login() {
   };
 
   const handleStart = useCallback(() => {
-    if (!validateEmail(email)) {
-      showSwal("", "Invalid email entered!", "error");
-      return false;
-    }
-    if (password.length < 1) {
-      showSwal("", "Your passwords is too short!", "error");
-      return false;
+
+    if (!email || !password) {
+      validateEmail(email)
+      validatePassword(password)
+      return
     }
     // const user = { email, password };
+
+
     // console.log("user : ", user)
     // return;
 
@@ -235,31 +261,44 @@ export default function Login() {
             <h2 className="text-white font-[500] text-[42px] m-[auto] w-[fit-content] gradient-text" >
               Sign In
             </h2>
-            <div className={styles["inputWrapper"]}>
-              <input
-                type="email"
-                placeholder="Email Address"
-                ref={emailRef}
-                value={email}
-                onKeyDown={handleKeyDown}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div className={styles["inputWrapper"]}>
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Password"
-                // ref={passwordRef}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onKeyDown={handleKeyDown}
-              />
-              <div
-                className="cursor-pointer mr-2 text-white"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <FaRegEye /> : <FaRegEyeSlash />}
+
+            <div className={styles["OutWrapper"]}>
+              <div className={styles["inputWrapper"]}>
+                <input
+                  type="email"
+                  placeholder="Email Address"
+                  ref={emailRef}
+                  value={email}
+                  onKeyDown={handleKeyDown}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </div>
+
+              <small className="text-red-600">
+                {emailError.length > 1 && emailError}
+              </small>
+            </div>
+            <div className={styles["OutWrapper"]}>
+              <div className={styles["inputWrapper"]}>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  // ref={passwordRef}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                />
+                <div
+                  className="cursor-pointer mr-2 text-white"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <FaRegEye /> : <FaRegEyeSlash />}
+                </div>
+              </div>
+
+              <small className="text-red-600">
+                {passwordError.length > 1 && passwordError}
+              </small>
             </div>
 
             <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -302,6 +341,7 @@ export default function Login() {
                 background: '#14f59e1f',
                 color: '#14f59e',
               }}
+              disabled={!isFormValid}
               onClick={handleStart}>
               Sign In
             </button>

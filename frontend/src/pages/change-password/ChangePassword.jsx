@@ -25,11 +25,23 @@ export default function ChangePassword() {
   const [emailId] = useState(email);
   console.log(id, email);
 
+  const [passwordError, setPasswordError] = React.useState("");
+  const [repeatPasswordError, setRepeatPasswordError] = React.useState("");
   const [appHeight, setAppHeight] = React.useState(window.innerHeight);
   const [appWidth, setAppWidth] = React.useState(window.innerWidth);
   const [isMobile, setIsMobile] = React.useState(
     window.matchMedia("(pointer: coarse)").matches
   );
+
+  const [isFormValid, setIsFormValid] = useState(false);
+
+
+  React.useEffect(() => {
+    setIsFormValid(
+      !passwordError && !repeatPasswordError
+    );
+  }, [passwordError, repeatPasswordError]);
+
 
   React.useEffect(() => {
     const handleResize = () => {
@@ -57,10 +69,12 @@ export default function ChangePassword() {
 
   const handleStart = () => {
     if (passwordRef.current.value !== repeatPasswordRef.current.value) {
-      showSwal("", "Both passwords do not match!", "error");
+      setPasswordError("Passwords do not match");
+      setRepeatPasswordError("Passwords do not match");
       return false;
     } else if (repeatPasswordRef.current.value.length < 6) {
-      showSwal("", "Password must contain at least 6 characters!", "error");
+      setPasswordError("Password is required");
+      setRepeatPasswordError("Password is required");
       repeatPasswordRef.current.focus();
       return false;
     } else {
@@ -142,16 +156,32 @@ export default function ChangePassword() {
             <h2 className="text-white font-[500] text-[42px] m-[auto] w-[fit-content] gradient-text" >
               Change Password
             </h2>
-            <div className={styles["inputWrapper"]}>
-              <input type="password" placeholder="Password" ref={passwordRef} />
+
+            <div className={styles["OutWrapper"]}>
+              <div className={styles["inputWrapper"]}>
+                <input type="password" placeholder="Password" ref={passwordRef} />
+              </div>
+
+              <small className="text-red-600">
+                {passwordError.length > 0 && passwordError}
+              </small>
             </div>
-            <div className={styles["inputWrapper"]}>
-              <input
-                type="password"
-                placeholder="Repeat Password"
-                ref={repeatPasswordRef}
-              />
-              <br />
+
+            <div className={styles["OutWrapper"]}>
+              <div className={styles["inputWrapper"]}>
+                <input
+                  type="password"
+                  placeholder="Repeat Password"
+                  ref={repeatPasswordRef}
+                />
+                <br />
+
+              </div>
+
+              <small className="text-red-600">
+                {" "}
+                {repeatPasswordError.length > 0 && repeatPasswordError}
+              </small>
             </div>
             <button
               className={"theme_button_danger"}
@@ -160,6 +190,7 @@ export default function ChangePassword() {
                 background: '#14f59e1f',
                 color: '#14f59e',
               }}
+              disabled={!isFormValid}
               onClick={handleStart}>
               Confirm
             </button>

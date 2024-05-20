@@ -67,6 +67,11 @@
     }
   }
 
+  
+  .OutWrapper {
+    margin: 25px auto;
+  }
+
   .inputWrapper {
     height: 55px;
     display: flex;
@@ -75,7 +80,7 @@
     border: 2px solid;
     border-image-source: linear-gradient(94.55deg, #14FA9B -3.86%, #128EE9 100%);
     border-image-slice: 1;
-    margin: 35px auto;
+    // margin: 35px auto;
     width: 100%;
     padding-left: 10px;
     padding-right: 10px;

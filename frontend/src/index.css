@@ -64,3 +64,11 @@ body,
 .CustomScroller *:-webkit-scrollbar-thumb:hover {
   background: #13B8A650;
 }
+
+
+@media (max-width: 768px) {
+  .cookiebanner {
+    background: url("/images/mbhome.jpg") !important;
+    background-size: cover !important;
+  }
+}

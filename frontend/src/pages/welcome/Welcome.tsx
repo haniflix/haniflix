@@ -165,14 +165,14 @@ export default function Welcome() {
         </div>
       </Box>
 
-      <div className="rightBlob1" style={{
+      {/* <div className="rightBlob1" style={{
         left: '-20%',
         top: '0',
         width: '25vw',
         height: '25vw',
         filter: "blur(150px)",
         opacity: "0.5"
-      }}></div>
+      }}></div> */}
       <div className={styles["get-started-section"]}>
         <h1>Discover The  <span className="gradient-text">Ultimate </span>Streaming Service</h1>
         <br />

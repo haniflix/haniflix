@@ -291,61 +291,70 @@ const Register = () => {
                   onSubmit={handleSubmit}
                   style={{ maxWidth: "450px", width: "100%" }}
                 >
-                  <div className={styles["inputWrapper"]}>
-                    <input
-                      type="text"
-                      placeholder="Username"
-                      id="username"
-                      name="username"
-                      onChange={handleUsernameChange}
-                      value={username}
-                    />
-                  </div>
-                  <small className="text-red-600">
-                    {usernameError.length > 1 && usernameError}
-                  </small>
+                  <div className={styles["OutWrapper"]}>
+                    <div className={styles["inputWrapper"]}>
+                      <input
+                        type="text"
+                        placeholder="Username"
+                        id="username"
+                        name="username"
+                        onChange={handleUsernameChange}
+                        value={username}
+                      />
+                    </div>
 
-                  <div className={styles["inputWrapper"]}>
-                    <input
-                      type="email"
-                      placeholder="Email Address"
-                      id="email"
-                      name="email"
-                      onChange={handleEmailChange}
-                      value={email}
-                    />
+                    <small className="text-red-600">
+                      {usernameError.length > 1 && usernameError}
+                    </small>
                   </div>
-                  <small className="text-red-600">
-                    {emailError.length > 1 && emailError}
-                  </small>
 
-                  <div className={styles["inputWrapper"]}>
-                    <input
-                      id="password"
-                      name="password"
-                      type="password"
-                      placeholder="Password"
-                      onChange={handlePasswordChange}
-                      value={password}
-                    />
+                  <div className={styles["OutWrapper"]}>
+                    <div className={styles["inputWrapper"]}>
+                      <input
+                        type="email"
+                        placeholder="Email Address"
+                        id="email"
+                        name="email"
+                        onChange={handleEmailChange}
+                        value={email}
+                      />
+                    </div>
+                    <small className="text-red-600">
+                      {emailError.length > 1 && emailError}
+                    </small>
                   </div>
-                  <small className="text-red-600">
-                    {passwordError.length > 0 && passwordError}
-                  </small>
 
-                  <div className={styles["inputWrapper"]}>
-                    <input
-                      id="repeatPassword"
-                      name="repeatPassword"
-                      type="password"
-                      placeholder="Repeat Password"
-                      onChange={handleRepeatPassword}
-                    />
+                  <div className={styles["OutWrapper"]}>
+                    <div className={styles["inputWrapper"]}>
+                      <input
+                        id="password"
+                        name="password"
+                        type="password"
+                        placeholder="Password"
+                        onChange={handlePasswordChange}
+                        value={password}
+                      />
+                    </div>
+                    <small className="text-red-600">
+                      {passwordError.length > 0 && passwordError}
+                    </small>
                   </div>
-                  <small className="text-red-600">
-                    {" "}
-                    {repeatPasswordError.length > 0 && repeatPasswordError}
-                  </small>
+
+                  <div className={styles["OutWrapper"]}>
+                    <div className={styles["inputWrapper"]}>
+                      <input
+                        id="repeatPassword"
+                        name="repeatPassword"
+                        type="password"
+                        placeholder="Repeat Password"
+                        onChange={handleRepeatPassword}
+                      />
+                    </div>
+                    <small className="text-red-600">
+                      {" "}
+                      {repeatPasswordError.length > 0 && repeatPasswordError}
+                    </small>
+                  </div>
                   <button
                     className={"theme_button_danger"}
                     style={{

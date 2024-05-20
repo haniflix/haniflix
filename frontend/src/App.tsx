@@ -36,6 +36,7 @@ const App = () => {
       <SocketProvider>
         <AppRouter />
         <CookieConsent
+          containerClasses="cookiebanner"
           style={{
             borderRadius: '15px 15px 0px 0px',
             boxShadow: '0px -10px 15px -5px rgb(255 255 255 / 15%)',

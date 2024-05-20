@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Swal from "sweetalert2";
 import Logo from "../../Assets/Images/Logo.png";
 import "../../Assets/css/styles.scss";
@@ -11,10 +11,8 @@ import { Helmet } from "react-helmet";
 import { addClassNames } from "../../store/utils/functions";
 import { Box } from "@mui/material";
 
-const validateEmail = (email) => {
-  var emailReg = /^([\w-.]+@([\w-]+\.)+[\w-]{2,6})?$/;
-  return emailReg.test(email);
-};
+
+
 
 const showSwal = (title, message, type) => {
   Swal.fire({
@@ -32,6 +30,14 @@ export default function ForgotPassword() {
   const [isMobile, setIsMobile] = React.useState(
     window.matchMedia("(pointer: coarse)").matches
   );
+  const [emailError, setEmailError] = useState("");
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  React.useEffect(() => {
+    setIsFormValid(
+      !emailError
+    );
+  }, [emailError]);
 
   React.useEffect(() => {
     const handleResize = () => {
@@ -45,6 +51,18 @@ export default function ForgotPassword() {
     return () => window.removeEventListener("resize", handleResize); // Clean up listener
   }, [window.innerHeight, window.innerWidth]);
 
+
+  const validateEmail = (email) => {
+    if (!email) {
+      setEmailError("Email address is required");
+    } else if (!/^\S+@\S+\.\S+$/.test(email)) {
+      setEmailError("Invalid email address");
+    } else {
+      setEmailError("");
+      return true;
+    }
+  };
+
   const imageHeight = 1008;
   const imageWidth = 1440;
 
@@ -55,42 +73,32 @@ export default function ForgotPassword() {
   }, [imageHeight, imageWidth, appWidth]);
 
   const handleStart = async () => {
-    if (emailRef.current.value.length < 5) {
+    if (!emailRef.current.value) {
+      validateEmail(emailRef.current.value)
+      return
+    }
+    const user = {
+      username: emailRef.current.value,
+      email: emailRef.current.value,
+    };
+
+    const response = (await forgot(user))?.response;
+    console.log("res", response?.data);
+
+    if (response.status === 200) {
+      console.log("Password reset email sent successfully!");
       Swal.fire({
-        title: "",
-        icon: "error",
-        text: "Your email is invalid!",
-      }).then((x) => {
-        emailRef.current.focus();
+        title: "Hurray!",
+        text: "Your reset link has been sent to email!",
+        icon: "success",
+        timer: 1500,
       });
-      return false;
-    } else if (!validateEmail(emailRef.current.value)) {
-      showSwal("", "Invalid email entered!", "error");
-      return false;
+
+      do_redirect();
     } else {
-      const user = {
-        username: emailRef.current.value,
-        email: emailRef.current.value,
-      };
-
-      const response = (await forgot(user))?.response;
-      console.log("res", response?.data);
-
-      if (response.status === 200) {
-        console.log("Password reset email sent successfully!");
-        Swal.fire({
-          title: "Hurray!",
-          text: "Your reset link has been sent to email!",
-          icon: "success",
-          timer: 1500,
-        });
-
-        do_redirect();
-      } else {
-        // API call failed due to unexpected status code
-        console.error("Unexpected error:", response.data?.statusText);
-        showSwal("Error encountered", response?.data?.statusText, "error");
-      }
+      // API call failed due to unexpected status code
+      console.error("Unexpected error:", response.data?.statusText);
+      showSwal("Error encountered", response?.data?.statusText, "error");
     }
   };
 
@@ -188,13 +196,20 @@ export default function ForgotPassword() {
             <h2 className="text-white font-[500] text-[42px] m-[auto] w-[fit-content] gradient-text" >
               Forgot Password
             </h2>
-            <div className={styles["inputWrapper"]}>
-              <input
-                type="email"
-                placeholder="Email Address"
-                ref={emailRef}
-                onKeyDown={handleKeyDown}
-              />
+
+            <div className={styles["OutWrapper"]}>
+              <div className={styles["inputWrapper"]}>
+                <input
+                  type="email"
+                  placeholder="Email Address"
+                  ref={emailRef}
+                  onKeyDown={handleKeyDown}
+                />
+              </div>
+
+              <small className="text-red-600">
+                {emailError.length > 1 && emailError}
+              </small>
             </div>
             <button
               className={"theme_button_danger"}
@@ -203,6 +218,7 @@ export default function ForgotPassword() {
                 background: '#14f59e1f',
                 color: '#14f59e',
               }}
+              disabled={!isFormValid}
               onClick={handleStart}
             >
               Submit
