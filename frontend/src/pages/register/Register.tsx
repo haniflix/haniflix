@@ -10,6 +10,7 @@ import { ClipLoader } from "react-spinners";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../store/rtk-query/authApi";
+import { Box } from "@mui/material";
 
 const api_url = import.meta.env.VITE_APP_API_URL;
 
@@ -262,26 +263,30 @@ const Register = () => {
               width: "40vw",
               opacity: ".60"
             }}></div>
-            <div className={styles["top"]}>
-              <div className={styles["wrapper"]}>
-                <a href={"/"} className="link">
-                  <img
-                    className={styles["logo"]}
-                    src={Logo}
-                    width="100px"
-                    height="100px"
-                    alt=""
-                  />
+            <Box
+              className={addClassNames(styles["top"], "ml-[40px] mr-[40px]")}
+
+            // style={{ maxWidth: 1200, marginLeft: "auto", marginRight: "auto" }}
+            >
+              <div
+                className={addClassNames(
+                  styles["wrapper"],
+                  " flex items-center justify-between "
+                )}
+              >
+                <a href={"/"} style={{ textDecoration: "none" }} className={styles["link"]}>
+                  <h1> <span style={{ fontWeight: '700', fontSize: "20px" }} className="gradient-text">HANIFLIX</span></h1>
+
                 </a>
+
               </div>
-            </div>
+            </Box>
 
             <div className={styles["section"]}>
               <div className={styles["intro-section"]}>
                 <h2 className="text-white font-[500] text-[42px] m-[auto] w-[fit-content] gradient-text" >
                   Sign Up
                 </h2>
-                <br />
                 <form
                   onSubmit={handleSubmit}
                   style={{ maxWidth: "450px", width: "100%" }}
@@ -341,18 +346,28 @@ const Register = () => {
                     {" "}
                     {repeatPasswordError.length > 0 && repeatPasswordError}
                   </small>
-
                   <button
+                    className={"theme_button_danger"}
+                    style={{
+                      borderColor: '#14f59e',
+                      background: '#14f59e1f',
+                      color: '#14f59e',
+                    }}
+                    disabled={!isFormValid}
+                    onClick={checkout}
+                  >
+                    Sign Up
+                  </button>
+
+                  {/* <button
                     className="registerButton"
                     type="button"
-                    disabled={!isFormValid}
                     // onClick={handleSubmit}
-                    onClick={checkout}
                     // checkout
                     style={{ color: "#fff" }}
                   >
                     Sign Up
-                  </button>
+                  </button> */}
                 </form>
 
                 {/* {showPaymentForm && (

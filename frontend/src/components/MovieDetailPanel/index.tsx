@@ -1,0 +1,288 @@
+import React, { useState } from "react";
+import moviePlaceHolderSvg from "../../Assets/svgs/moviePlaceholder.svg";
+import MovieListItem from "../MovieListItem";
+import Icon from "../icon";
+import { useGetGenresQuery } from "../../store/rtk-query/genresApi";
+import { motion, AnimatePresence } from "framer-motion";
+import "./movieDetails.scss";
+import { useAddMovieToDefaultListMutation } from "../../store/rtk-query/listsApi";
+import { useDislikeMovieMutation, useLikeMovieMutation } from "../../store/rtk-query/moviesApi";
+import CustomButton from "../GradientButton";
+
+
+
+export default function MovieDetailPanel({ movieToShow, onPlayMovie, onHoverMovie, type, refetch }) {
+  const imageToshow = React.useMemo(() => {
+    return movieToShow?.imgTitle ? movieToShow?.imgTitle : moviePlaceHolderSvg;
+  }, [movieToShow]);
+  const [addToMyList, addToMyListState] = useAddMovieToDefaultListMutation();
+
+  const [likeMovie, likeMovieState] = useLikeMovieMutation();
+  const [dislikeMovie, dislikeMovieState] = useDislikeMovieMutation();
+  const [isLike, setIsLike] = useState<boolean | null>(null);
+
+  const tabVariant = {
+    hidden: {},
+    visible: {},
+    exit: {},
+  };
+
+  const tabChildVariant = {
+    hidden: {
+      opacity: 0,
+      y: -10,
+      transition: { duration: 0.5, ease: [0.65, 0, 0.35, 1] },
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: [0.65, 0, 0.35, 1] },
+    },
+    exit: {
+      opacity: 0,
+      y: 10,
+      transition: { duration: 0.5, ease: [0.65, 0, 0.35, 1] },
+    },
+  };
+
+  const parentTransition = { staggerChildren: 0.05 };
+
+  const handleHover = (movie) => {
+    // onHoverMovie?.(movie);
+  };
+  const showActionOnMobile = false
+  const showActionButtons = true
+
+  const showSwal = (title, message, type) => {
+    Swal.fire({
+      title: title ?? "",
+      text: message,
+      icon: type,
+    });
+  };
+
+
+  const onAddToList = async () => {
+    const res = await addToMyList(movieToShow?._id);
+
+    if (!res?.data) {
+      showSwal("Error encountered", "", "error");
+      return;
+    }
+    if (refetch) {
+      refetch();
+    } else {
+      refetch?.();
+    }
+    //  showSwal("Added to list", '', 'success')
+  };
+
+  const renderActionButtons = () => {
+
+    //like buttons
+    return (
+      <div className={`flex-grow ${showActionOnMobile ? !showActionButtons ? "flex !px-[14vw] !py-2" : "flex " : "flex min-w-[180px]"} justify-between items-center px-3`}>
+        <button
+          onClick={onAddToList}
+          className="bg-transparent cursor-pointer"
+        >
+          {addToMyListState?.isLoading ? (
+            <Icon name={"Loading"} size={"M"} />
+          ) : (
+            <>
+              {movieToShow?.isInDefaultList ? (
+                <Icon name={"Heart"} size={"M"} hovered />
+              ) : (
+                <Icon name={"Heart"} size={"M"} />
+              )}
+            </>
+          )}
+        </button>
+        <button
+          onClick={() => {
+            onLikeMovie();
+          }}
+          className="bg-transparent cursor-pointer"
+        >
+
+          <span className="flex items-center gap-2">
+            {likeMovieState?.isLoading ? (
+              <Icon name={"Loading"} size={"M"} />
+            ) : (
+              <>
+                {movieToShow?.currentUserLiked ? (
+                  <Icon name={"Like"} size={"M"} hovered />
+                ) : (
+                  <Icon name={"Like"} size={"M"} />
+                )} {movieToShow?.likesCount}
+              </>
+            )}
+          </span>
+        </button>
+        <button
+          onClick={() => {
+            onDislikeMovie();
+          }}
+          className="bg-transparent cursor-pointer"
+        >
+
+          <span className="flex items-center gap-2">
+            {dislikeMovieState?.isLoading ? (
+              <Icon name={"Loading"} size={"M"} />
+            ) : (
+              <>
+                {movieToShow?.currentUserDisliked ? (
+                  <Icon name={"Dislike"} size={"M"} hovered />
+                ) : (
+                  <Icon name={"Dislike"} size={"M"} />
+                )} {movieToShow?.dislikesCount}
+              </>
+            )}
+          </span>
+        </button>
+      </div>
+    );
+
+
+  };
+  const applyLikeInFrontend = (action: "like" | "dislike") => {
+    setIsLike((cur) => {
+      if (cur == null && action == "like") return true;
+      if (cur == null && action == "dislike") return false;
+      if (cur == true && action == "like") return null;
+      if (cur == true && action == "dislike") return false;
+      if (cur == false && action == "like") return true;
+      if (cur == false && action == "dislike") return null;
+    });
+  };
+
+  const onLikeMovie = async () => {
+    const res = await likeMovie(movieToShow?._id);
+
+    if (!res?.data) {
+      showSwal("Error Liking movie", "", "error");
+      return;
+    }
+    // applyLikeInFrontend("like");
+    if (refetch) {
+      refetch();
+    } else {
+      refetch?.();
+    }
+  };
+
+  const onDislikeMovie = async () => {
+    const res = await dislikeMovie(movieToShow?._id);
+
+    if (!res?.data) {
+      showSwal("Error disliking movie", "", "error");
+      return;
+    }
+
+    applyLikeInFrontend("dislike");
+    if (refetch) {
+      refetch();
+    } else {
+      refetch?.();
+    }
+  };
+
+  const onClickPlayMovie = (movie, axis) => {
+    onPlayMovie?.(movie, axis);
+  };
+
+  const { data: genresData, isLoading: genresLoading } =
+    useGetGenresQuery(null);
+
+  const renderGenres = () => {
+    let genreTextArr = [];
+
+    if (movieToShow?.genre) {
+      genreTextArr = movieToShow.genre.map((genre) => {
+        const genreObj = typeof genre === 'object' ? genre : genresData.genres.find(_genre => _genre._id === genre);
+        return genreObj?.title;
+      }).filter(text => text !== undefined);
+    }
+
+    return genreTextArr;
+  }
+
+  return (
+
+    <motion.div
+      key={movieToShow?._id}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      variants={tabVariant}
+      transition={parentTransition}
+      className="flex flex-col gap-5 relative z-10">
+
+
+
+      <img
+        src={movieToShow?.imgTitle}
+        style={{ width: '100%', maxHeight: "400px", objectFit: "cover" }}
+      />
+
+      {movieToShow && (
+        <motion.div variants={tabChildVariant}>
+          <div className="modalpopup-data">
+            <div className="modalpopup-like">
+              <button
+                className={"theme_button_danger"}
+                style={{
+                  borderColor: '#14f59e',
+                  background: '#14f59e1f',
+                  color: '#14f59e',
+                }}
+                onClick={onClickPlayMovie}
+              >
+                Play
+              </button>
+
+              {renderActionButtons()}
+            </div>
+            <div className="modalpopup-like">
+              <p className="text-base modalpopup-text">{movieToShow?.year}</p>
+              <p className="text-base modalpopup-text">{movieToShow?.duration}</p>
+              <p className="text-base modalpopup-text">{movieToShow?.ageRating}</p>
+            </div>
+            <p className="text-base capitalize">{renderGenres().join().replace(',', ' • ')}</p>
+          </div>
+        </motion.div>)}
+
+
+      {movieToShow && (
+        <motion.div variants={tabChildVariant}>
+          {/* <p className="text-lg">Description</p> */}
+          <p className="text-base modalpopup-description">{movieToShow?.desc}</p>
+        </motion.div>
+      )}
+      {/* 
+      {movieToShow && (
+        <motion.div variants={tabChildVariant}>
+          <p className="text-lg">Rating</p>
+        </motion.div>
+      )}
+
+      {movieToShow && (
+        <motion.div variants={tabChildVariant}>
+          <p className="text-lg">Duration</p>
+        </motion.div>
+      )}
+
+      {movieToShow && (
+        <motion.div variants={tabChildVariant}>
+          <p className="text-lg">Age Rating</p>
+        </motion.div>
+      )}
+
+      {movieToShow && (
+        <motion.div variants={tabChildVariant}>
+          <p className="text-lg">Genre</p>
+        </motion.div>
+      )} */}
+    </motion.div>
+  );
+}

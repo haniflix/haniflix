@@ -9,6 +9,7 @@ import styles from "./forgot.module.scss";
 
 import { Helmet } from "react-helmet";
 import { addClassNames } from "../../store/utils/functions";
+import { Box } from "@mui/material";
 
 const validateEmail = (email) => {
   var emailReg = /^([\w-.]+@([\w-]+\.)+[\w-]{2,6})?$/;
@@ -150,19 +151,24 @@ export default function ForgotPassword() {
           width: "40vw",
           opacity: ".60"
         }}></div>
-        <div className={styles["top"]}>
-          <div className={styles["wrapper"]}>
-            <a href={"/"} className={styles["link"]}>
-              <img
-                className={styles["logo"]}
-                src={Logo}
-                width="100px"
-                height="100px"
-                alt=""
-              />
+        <Box
+          className={addClassNames(styles["top"], "ml-[40px] mr-[40px]")}
+
+        // style={{ maxWidth: 1200, marginLeft: "auto", marginRight: "auto" }}
+        >
+          <div
+            className={addClassNames(
+              styles["wrapper"],
+              " flex items-center justify-between "
+            )}
+          >
+            <a href={"/"} style={{ textDecoration: "none" }} className={styles["link"]}>
+              <h1> <span style={{ fontWeight: '700', fontSize: "20px" }} className="gradient-text">HANIFLIX</span></h1>
+
             </a>
+
           </div>
-        </div>
+        </Box>
 
         {/*<div className="section">
           <div className="intro-section">
@@ -180,9 +186,8 @@ export default function ForgotPassword() {
         <div className={styles["section"]}>
           <div className={styles["intro-section"]}>
             <h2 className="text-white font-[500] text-[42px] m-[auto] w-[fit-content] gradient-text" >
-              Forgot Password?
+              Forgot Password
             </h2>
-            <br />
             <div className={styles["inputWrapper"]}>
               <input
                 type="email"
@@ -192,8 +197,12 @@ export default function ForgotPassword() {
               />
             </div>
             <button
-              className={styles["registerButton"]}
-              style={{ color: "#fff" }}
+              className={"theme_button_danger"}
+              style={{
+                borderColor: '#14f59e',
+                background: '#14f59e1f',
+                color: '#14f59e',
+              }}
               onClick={handleStart}
             >
               Submit

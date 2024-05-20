@@ -1,0 +1,33 @@
+.modalpopup-data {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    
+    flex-wrap: wrap;
+  }
+  .modalpopup-like{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    min-width: 220px;
+    @media (max-width: 768px) {
+      padding-top: 10px;
+      padding-bottom: 10px;
+      justify-content: space-between;
+
+    }
+  }
+  .modalpopup-text{
+    @media (max-width: 768px) {
+      padding-bottom: 10px;
+
+    }
+  }
+  .modalpopup-description{
+    @media (max-width: 768px) {
+      margin-top: -5px;
+
+    }
+  }

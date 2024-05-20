@@ -22,12 +22,12 @@ import poster from "../../Assets/Images/poster.webp";
 import { motion, AnimatePresence } from "framer-motion";
 import { useGetMoviesQuery } from "../../store/rtk-query/moviesApi";
 import MovieListItem from "../../components/MovieListItem";
-import MovieDetailPanel from "../../components/MovieDetailPanel";
 import { Link, useLocation } from "react-router-dom";
 import WatchPopup from "../watchPopup/WatchPopup";
 import ChangeAvatarModal from "../../components/ChangeAvatarModal";
 import SettingsSidebar from "../../components/SettingsSideBar";
 import ModelPopup from "../../components/ModelPopup";
+import MovieDetailPanel from "../../components/MovieDetailPanel";
 
 const responsiveCarousel = {
   superLargeDesktop: {
@@ -595,13 +595,13 @@ const Home = ({ type = null }) => {
                 className={`w-full h-fit flex-grow flex-shrink rounded-2xl p-6 xl:p-10 flex flex-col gap-10 sm:gap-6 xl:gap-10`}
               >
                 <h1 className="relative z-10 text-5xl font-semibold capitalize flex justify-between items-center">
-                  <span>
+                  {/* <span>
                     {showProfilepic
                       ? "Profile Picture"
                       : showSettings
                         ? "Setting"
                         : type || "home"}
-                  </span>
+                  </span> */}
                   {showSettings && (
                     <button
                       className="hidden sm:block"

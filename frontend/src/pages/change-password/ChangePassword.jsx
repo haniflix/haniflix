@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 
 import { Helmet } from "react-helmet";
 import { addClassNames } from "../../store/utils/functions";
+import { Box } from "@mui/material";
 
 const showSwal = (title, message, type) => {
   Swal.fire({
@@ -79,28 +80,68 @@ export default function ChangePassword() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Helmet> */}
       <div
-        style={{
-          height: isMobile ? imageHeightInScreen : "100%",
-          backgroundSize: isMobile ? "contain" : "cover",
-        }}
+        // style={{
+        //   height: isMobile ? imageHeightInScreen : "100%",
+        //   backgroundSize: isMobile ? "contain" : "cover",
+        // }}
         className={addClassNames(styles["loginNew"])}
       >
-        <div className={styles["top"]}>
-          <div className={styles["wrapper"]}>
-            <a href={"/"} className={styles["link"]}>
-              <img
-                className={styles["logo"]}
-                src={Logo}
-                width="100px"
-                height="100px"
-                alt=""
-              />
+        <Box
+          className={addClassNames(styles["top"], "ml-[40px] mr-[40px]")}
+
+        // style={{ maxWidth: 1200, marginLeft: "auto", marginRight: "auto" }}
+        >
+          <div
+            className={addClassNames(
+              styles["wrapper"],
+              " flex items-center justify-between "
+            )}
+          >
+            <a href={"/"} style={{ textDecoration: "none" }} className={styles["link"]}>
+              <h1> <span style={{ fontWeight: '700', fontSize: "20px" }} className="gradient-text">HANIFLIX</span></h1>
+
             </a>
+
           </div>
-        </div>
+        </Box>
+        <div className="rightBlob1" style={{
+          left: '-20%',
+          top: '0',
+          width: '25vw',
+          height: '25vw',
+          filter: "blur(150px)",
+          opacity: "0.5"
+        }}></div>
+        <div className="rightBlob1" style={{
+          left: '10%',
+          top: '15%',
+          width: '25vw',
+          height: '25vw',
+          filter: "blur(150px)",
+          opacity: "0.5"
+        }}></div>
+
+        <div className="centerBlob2" style={{
+          top: '90%',
+          right: "10%",
+          height: "40vw",
+          width: "40vw",
+          opacity: ".60"
+        }}></div>
+        <div className="centerBlob3" style={{
+          top: '85%',
+          right: "90%",
+          height: "40vw",
+          width: "40vw",
+          opacity: ".60"
+        }}></div>
+
 
         <div className={styles["section"]}>
           <div className={styles["intro-section"]}>
+            <h2 className="text-white font-[500] text-[42px] m-[auto] w-[fit-content] gradient-text" >
+              Change Password
+            </h2>
             <div className={styles["inputWrapper"]}>
               <input type="password" placeholder="Password" ref={passwordRef} />
             </div>
@@ -112,14 +153,24 @@ export default function ChangePassword() {
               />
               <br />
             </div>
-            <button className="registerButton" onClick={handleStart}>
+            <button
+              className={"theme_button_danger"}
+              style={{
+                borderColor: '#14f59e',
+                background: '#14f59e1f',
+                color: '#14f59e',
+              }}
+              onClick={handleStart}>
               Confirm
             </button>
             <br />
-            <div className="flex justify-center">
-              <Link className="link text-dark" to={{ pathname: "/login" }}>
-                Already registered? <span className="underline">Login</span>
-              </Link>
+            <div className="text-white text-md text-center">
+              <span>Remember password? </span>
+              <span>
+                <Link className={styles["link"]} to={{ pathname: "/login" }}>
+                  Sign in
+                </Link>
+              </span>
             </div>
           </div>
         </div>

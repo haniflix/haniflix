@@ -1,6 +1,14 @@
 .loginNew {
-  background: url("/images/Frame.png") repeat center center;
+  
+  background: url("/images/home0.jpeg") repeat center center;
   background-size: cover;
+
+
+  @media (max-width: 768px) {
+      background: url("/images/mbhome.jpg");
+      background-size: cover;
+  }
+
   background-attachment: fixed;
   background-color: #0E061E;
   color: white;
@@ -13,6 +21,7 @@
 
   overflow: hidden !important;
   position: relative;
+
   .top {
     position: fixed;
     top: 5px;
@@ -42,13 +51,20 @@
   .intro-section {
     max-width: 95%;
     min-width: 400px;
-    // border-radius: 10px;
-    // width: 500px;
-    // padding: 50px 30px;
-    // background-color: rgba(255, 255, 255, 0.13);
-    // // opacity: 0.5;
-    // backdrop-filter: blur(15px);
-    // box-sizing: border-box;
+
+    @media (max-width: 768px) {
+      max-width: 95%;
+      min-width: 300px;
+      width: 100%;
+    }
+
+    h2 {
+
+      @media (max-width: 768px) {
+        font-size: 30px !important;
+      }
+
+    }
   }
 
   .inputWrapper {
@@ -59,7 +75,7 @@
     border: 2px solid;
     border-image-source: linear-gradient(94.55deg, #14FA9B -3.86%, #128EE9 100%);
     border-image-slice: 1;
-    margin: 40px auto;
+    margin: 35px auto;
     width: 100%;
     padding-left: 10px;
     padding-right: 10px;
@@ -95,6 +111,7 @@
   span {
     color: lightgray;
   }
+
   .link {
     color: #fff !important;
     text-decoration: underline;
@@ -116,17 +133,16 @@
   padding: 10px;
   margin: 20px auto -10px auto;
   background: rgb(0, 255, 177);
-  background: -moz-linear-gradient(
-    90deg,
-    rgba(0, 255, 177, 1) 36%,
-    rgba(0, 212, 255, 1) 100%
-  );
+  background: -moz-linear-gradient(90deg,
+      rgba(0, 255, 177, 1) 36%,
+      rgba(0, 212, 255, 1) 100%);
 }
 
 @keyframes pulse {
   from {
     transform: scale(0.8);
   }
+
   to {
     transform: scale(1.2);
   }

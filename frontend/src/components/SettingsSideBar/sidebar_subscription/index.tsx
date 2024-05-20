@@ -28,7 +28,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const url = import.meta.env.VITE_APP_API_URL;
 
-const SidebarSub = ({variantGroup}) => {
+const SidebarSub = ({ variantGroup }) => {
   const user = useAppSelector(selectUser);
   const accessToken = user?.accessToken;
 
@@ -180,7 +180,7 @@ const SidebarSub = ({variantGroup}) => {
   const { tabVariant, tabChildVariant, parentTransition } = variantGroup;
 
   return (
- <motion.div
+    <motion.div
       key="uniqueSubscription"
       initial="hidden"
       animate="visible"
@@ -188,17 +188,17 @@ const SidebarSub = ({variantGroup}) => {
       variants={tabVariant}
       transition={parentTransition}
     >
-       <motion.div variants={tabChildVariant}>
-       <div className="mb-6 border-b border-[#4B4B4B]" />
-     
-     <button
-       className={"theme_button_danger"}
-       onClick={() => {
-         setShowCancelModal(true);
-       }}
-     >
-       End Subscription
-     </button>
+      <motion.div variants={tabChildVariant}>
+        <div className="mb-6 border-b mt-[-15px] border-[#4B4B4B]" />
+
+        <button
+          className={"theme_button_danger"}
+          onClick={() => {
+            setShowCancelModal(true);
+          }}
+        >
+          End Subscription
+        </button>
 
       </motion.div>
 

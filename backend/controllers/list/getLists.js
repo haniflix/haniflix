@@ -8,36 +8,49 @@ const getLists = async (req, res) => {
   try {
     if (typeQuery) {
       if (genreQuery) {
-        /*list = await List.aggregate([
-            { $sample: { size: 10000 } },
-            { $sort: { _id: 1 }},
-            { $match: { type: typeQuery, genre: genreQuery, adminList: true } },
-          ]);*/
         list = await List.find({
           adminList: true,
           type: typeQuery,
           genre: genreQuery,
+        }, {
+          title: 1,
+          type: 1,
+          genre: 1,
+          content: { $slice: 20 },
+          user: 1,
+          adminList: 1,
+          automaticallyAdded: 1,
+          createdAt: 1,
+          updatedAt: 1,
         }).sort({ _id: 1 });
       } else {
-        /*list = await List.aggregate([
-            { $sample: { size: 10000 } },
-            { $sort: { _id: 1 }},
-            { $match: { type: typeQuery, adminList: true } },
-          ]);*/
-        list = await List.find({ adminList: true, type: typeQuery }).sort({
+        list = await List.find({ adminList: true, type: typeQuery }, {
+          title: 1,
+          type: 1,
+          genre: 1,
+          content: { $slice: 20 },
+          user: 1,
+          adminList: 1,
+          automaticallyAdded: 1,
+          createdAt: 1,
+          updatedAt: 1,
+        }).sort({
           _id: 1,
         });
       }
     } else {
-      //list = await List.aggregate([{ $sample: { size: 10 } }]);
-      list = await List.find({ adminList: true }).sort({ _id: 1 });
-      /*list = await List.aggregate([
-            { $sort: { createdAt: 1 }},
-        { $sample: { size: 10000 } },
-            { $match: { adminList: true } },
-        ]);*/
+      list = await List.find({ adminList: true }, {
+        title: 1,
+        type: 1,
+        genre: 1,
+        content: { $slice: 20 },
+        user: 1,
+        adminList: 1,
+        automaticallyAdded: 1,
+        createdAt: 1,
+        updatedAt: 1,
+      }).sort({ _id: 1 });
     }
-    // res.status(200).json(list.filter((l) => l.adminList));
     res.status(200).json(list);
   } catch (err) {
     res.status(500).json(err);

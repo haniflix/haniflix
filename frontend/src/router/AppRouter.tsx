@@ -36,6 +36,8 @@ import Swal from 'sweetalert2'
 import GenrePage from '../pages/genres/GenrePage';
 import Movie from '../pages/movie/index';
 import WatchTrailer from '../pages/watch-trailer/Watch-trailer';
+import HomeNew from '../pages/home/HomeNew';
+import Settings from '../pages/settings';
 
 
 const AppRouter = (props) => {
@@ -76,7 +78,13 @@ const AppRouter = (props) => {
 
                 <Route element={<GuestRoutes />}>
 
-                    <Route path="/" element={user ? <Home /> : <Welcome />} />
+                    <Route path="/" element={user ? <HomeNew /> : <Welcome />} />
+                    {/* <Route path="/new" element={<HomeNew />} /> */}
+
+                    <Route
+                        path="/settings"
+                        element={user ? <Settings /> : <Navigate to="/" />}
+                    />
                     <Route
                         path="/register"
                         element={user ? <Navigate to="/" /> : <Register />}

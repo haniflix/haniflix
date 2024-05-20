@@ -79,7 +79,7 @@ const GenreResults = () => {
     data: moviesData,
     isLoading: moviesLoading,
     isFetching,
-    refetch,
+      refetch,
     error,
   } = useGetMoviesQuery(queryParams, {
     pollingInterval: 10000,

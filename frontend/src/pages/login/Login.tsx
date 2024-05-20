@@ -158,17 +158,10 @@ export default function Login() {
               " flex items-center justify-between "
             )}
           >
-            <Link to={"/"} className={styles["link"]}>
-              <img
-                // className={styles["logo"]}
-                src={Logo}
-                width="130px"
-                height="100px"
-                //height="100px"
-                alt="App logo"
-                loading="lazy"
-              />
-            </Link>
+            <a href={"/"} style={{ textDecoration: "none" }} className={styles["link"]}>
+              <h1> <span style={{ fontWeight: '700', fontSize: "20px" }} className="gradient-text">HANIFLIX</span></h1>
+
+            </a>
 
           </div>
         </Box>
@@ -188,7 +181,7 @@ export default function Login() {
           filter: "blur(150px)",
           opacity: "0.5"
         }}></div>
-        
+
         <div className="centerBlob2" style={{
           top: '90%',
           right: "10%",
@@ -203,7 +196,7 @@ export default function Login() {
           width: "40vw",
           opacity: ".60"
         }}></div>
-        
+
         {/* <div className={styles["top"]}>
           <div className={styles["wrapper"]}>
             <a href={"/"} className="link">
@@ -242,7 +235,6 @@ export default function Login() {
             <h2 className="text-white font-[500] text-[42px] m-[auto] w-[fit-content] gradient-text" >
               Sign In
             </h2>
-            <br/>
             <div className={styles["inputWrapper"]}>
               <input
                 type="email"
@@ -303,7 +295,14 @@ export default function Login() {
                 </span>
               </div>
             </div>
-            <button className={styles["loginButton"]} onClick={handleStart}>
+            <button
+              className={"theme_button_danger"}
+              style={{
+                borderColor: '#14f59e',
+                background: '#14f59e1f',
+                color: '#14f59e',
+              }}
+              onClick={handleStart}>
               Sign In
             </button>
             <div className="text-white text-md text-center">

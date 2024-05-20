@@ -1,0 +1,9 @@
+.modalpopbg {
+    background: url("/images/home0.jpeg") repeat center center;
+    background-size: cover;
+
+    @media (max-width: 768px) {
+        background: url("/images/mbhome.jpg") repeat center center;
+        background-size: cover;
+    }
+}

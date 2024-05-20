@@ -1,11 +1,30 @@
 .home {
     overflow: hidden;
     height: 100%;
-    background: url("/images/Frame.png") repeat center center;
-    background-size: cover;
     background-attachment: fixed;
     background-color: #0E061E;
 
+    background: url("/images/home0.jpeg") repeat center center;
+    background-size: cover;
+
+
+    @media (max-width: 768px) {
+        background: url("/images/mbhome.jpg");
+        background-size: cover;
+    }
+
+}
+
+.signout-modal{   
+}
+.searchresult {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.homedarkbg {
+    background-color: #00000040;
 }
 
 .centerBlob1 {

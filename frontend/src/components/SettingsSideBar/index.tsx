@@ -134,7 +134,7 @@ const SettingsSidebar = ({ show, onClose, variantGroup }) => {
     );
 
   return (
-    <div className="mt-3 flex flex-col gap-10">
+    <div className="mt-3 flex flex-col gap-5">
       <div className="flex gap-10 flex-wrap" style={{rowGap:"20px"}}>
         {tabs.map((item, index) => {
           let isActiveTab = (index === activeTab);

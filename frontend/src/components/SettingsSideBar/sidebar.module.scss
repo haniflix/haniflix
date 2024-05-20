@@ -15,23 +15,22 @@
 }
 
 .inputWrapper {
-  height: 45px;
-  border-radius: 10px;
-  background-color: #121619;
-  border: 1px solid #636363;
-  color: #000;
-  outline: none;
+  height: 55px;
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
-  width: 30%;
-  min-width: min(320px, 80vw);
+  background-color: transparent;
+  border: 2px solid;
+  border-image-source: linear-gradient(94.55deg, #14FA9B -3.86%, #128EE9 100%);
+  border-image-slice: 1;
+  margin-bottom: 20px;
+  width: 100%;
   padding-left: 10px;
   padding-right: 10px;
 
   &::placeholder {
     color: #000;
   }
+
 
   input {
     width: 100%;

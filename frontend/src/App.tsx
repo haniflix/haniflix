@@ -40,17 +40,17 @@ const App = () => {
             borderRadius: '15px 15px 0px 0px',
             boxShadow: '0px -10px 15px -5px rgb(255 255 255 / 15%)',
             padding: "10px",
-            background: 'url("/images/Frame.png") repeat center center',
+            background: 'url("/images/home0.jpeg") center',
             backgroundSize: 'cover',
             backgroundAttachment: 'fixed',
             backgroundColor: '#0E061E',
           }}
           disableButtonStyles
-          buttonClasses="gradientButton"
+          buttonClasses="theme_button_danger"
           buttonStyle={{
-            margin: 10,
-            backgroundColor: "white",
-            color: 'black'
+            borderColor: '#14f59e',
+            background: '#14f59e1f',
+            color: '#14f59e',
           }}
         >
           This website uses cookies to enhance the user experience.

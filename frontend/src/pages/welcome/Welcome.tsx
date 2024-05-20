@@ -134,15 +134,8 @@ export default function Welcome() {
           )}
         >
           <a href={"/"} className={styles["link"]}>
-            <img
-              // className={styles["logo"]}
-              src={Logo}
-              width="130px"
-              height="100px"
-              //height="100px"
-              alt="App logo"
-              loading="lazy"
-            />
+            <h1> <span style={{ fontWeight: '700', fontSize: "20px" }} className="gradient-text">HANIFLIX</span></h1>
+
           </a>
           <div className="flex items-center space-x-[10px]">
             {/* <button
@@ -156,7 +149,18 @@ export default function Welcome() {
               <ChevronDown />
             </button> */}
 
-            <CustomButton text="Sign In" onClick={() => navigate("/login")} />
+
+            <button
+              className={"theme_button_danger"}
+              style={{
+                borderColor: '#14f59e',
+                background: '#14f59e1f',
+                color: '#14f59e',
+              }}
+              onClick={() => navigate("/login")}
+            >
+              Sign In
+            </button>
           </div>
         </div>
       </Box>
@@ -172,19 +176,30 @@ export default function Welcome() {
       <div className={styles["get-started-section"]}>
         <h1>Discover The  <span className="gradient-text">Ultimate </span>Streaming Service</h1>
         <br />
-        <CustomButton text="Get Started" onClick={onSignUp} />
+
+        <button
+          className={"theme_button_danger"}
+          style={{
+            borderColor: '#14f59e',
+            background: '#14f59e1f',
+            color: '#14f59e',
+          }}
+          onClick={onSignUp}
+        >
+          Get Started
+        </button>
       </div>
-      <br />
+
       <div className={styles["middle-gradient-section"]}></div>
       <div className={styles["middle-text-section"]}>
         <div className={styles["middle-text-innersection"]}>
           <h1>
-            Unlimited Ad-Free Award-Winning 4K Movies TV shows and more anywhere on any device <span className="gradient-text">for Only $4.99/Month</span>
+            Unlimited Ad-Free Award-Winning 4K Movies TV Shows And More Anywhere On Any Device<span className="gradient-text"> For Only $4.99/Month</span>
           </h1>
         </div>
 
         {/* <div className="centerBlob1"></div> */}
-        <div className="centerBlob3" style={{
+        {/* <div className="centerBlob3" style={{
           right: '20%',
           top: '6%',
         }}></div>
@@ -218,37 +233,36 @@ export default function Welcome() {
           height: "40vw",
           width: "40vw",
           opacity: ".60"
-        }}></div>
-        <br />
-        <br />
-        <br />
+        }}></div> */}
+
         <center>
           <img src="/images/homeSS.png" style={{
             zIndex: "10",
             position: 'relative'
           }} />
         </center>
-        <br />
-        <br />
+
+
         <center>
           <h1><span className="gradient-text">Popular </span></h1>
         </center>
         <div style={{
           maxWidth: "1120px",
           margin: 'auto',
-          padding: "40px 0px"
+          padding: "40px 0px",
+          marginBottom: "60px"
         }}>
           <ImageTicker images={images} />
         </div>
 
-        <br />
-        <br />
+
+
         <center>
-          <h1>See What Our <br /><span className="gradient-text">Users </span>Are Saying</h1>
+          <h1>See What Our  <span className="gradient-text">Users </span>Are Saying</h1>
         </center>
-        <br />
-        <br />
-        <br />
+
+
+
 
         <div className="flex justify-center">
           <div className="w-full lg px-4">
@@ -265,14 +279,14 @@ export default function Welcome() {
         </div>
 
 
-        <br />
-        <br />
-        <br />
-        <br />
+
+
+
+
         <center>
           <h1>Frequently Ask <span className="gradient-text">Questions </span></h1>
         </center>
-        <br />
+
 
 
         <div className={addClassNames(
@@ -280,24 +294,34 @@ export default function Welcome() {
           <AppAccordion items={accordionItems} />
         </div>
 
-        <br />
-        <br />
-        <br />
+
+
+
         <center>
           <h1>Join <span className="gradient-text">Haniflix </span>Today</h1>
-          <br />
 
-          <CustomButton text="Get Started" onClick={onSignUp} />
-          <br />
-          <br />
-          <img
+          <button
+            className={"theme_button_danger"}
+            style={{
+              borderColor: '#14f59e',
+              background: '#14f59e1f',
+              color: '#14f59e',
+              marginBottom: '35px'
+            }}
+            onClick={onSignUp}
+          >
+            Get Started
+          </button>
+
+
+          {/* <img
             src={Logo}
             width="170px"
             alt="App logo"
             loading="lazy"
-          />
+          /> */}
         </center>
-        <br />
+
         <div className="flex items-center justify-between  max-w-250px mx-auto" style={{ maxWidth: '250px' }}>
           {socialIcons.map((item, index) => (
             <Link key={index} to={item.url}>
@@ -321,7 +345,7 @@ export default function Welcome() {
             </Link>
           ))}
         </div>
-        <hr style={{ marginTop: "30px", marginBottom: "30px" }} />
+        <hr style={{ marginTop: "35px", marginBottom: "35px" }} />
         <div className={addClassNames(
           styles["footer-hme"], "flex justify-between")}>
           <div className="flex-none"> {/* Left column */}

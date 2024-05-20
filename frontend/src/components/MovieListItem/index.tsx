@@ -5,6 +5,8 @@ import "./listItem.scss";
 import { Link, useNavigate } from "react-router-dom";
 import poster from "../../Assets/Images/poster.webp";
 
+import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
 import { useAddMovieToDefaultListMutation } from "../../store/rtk-query/listsApi";
 import {
   useDislikeMovieMutation,
@@ -16,7 +18,7 @@ import { addClassNames } from "../../store/utils/functions";
 
 import moviePlaceHolderSvg from "../../Assets/svgs/moviePlaceholder.svg";
 import { useGetGenresQuery } from "../../store/rtk-query/genresApi";
-
+import CloseIcon from '@mui/icons-material/Close';
 import {
   DolbyLogo,
   HeartIcon,
@@ -29,8 +31,28 @@ import {
 import { debounce } from "lodash";
 import Icon from "../icon";
 import WatchPopup from "../../pages/watchPopup/WatchPopup";
+import { AnimatePresence } from "framer-motion";
+import MovieDetailPanel from "../MovieDetailPanel";
+import Swal from "sweetalert2";
+import { CircularProgress } from "@mui/material";
 
 const api_url = import.meta.env.VITE_APP_API_URL;
+
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '0',
+  left: '0',
+  // transform: 'translate(-50%, -50%)',
+  width: '100%',
+  height: "100%",
+  // background: 'url("/images/home0.jpeg") repeat center center',
+  backgroundSize: 'cover',
+  backgroundAttachment: 'fixed',
+  backgroundColor: '#0E061E',
+  border: '2px solid #000',
+  boxShadow: 24,
+  padding: '10px',
+};
 
 type MovieListItemProps = {
   movieId: number;
@@ -59,6 +81,7 @@ export default function MovieListItem({
   // const [isHovered, setIsHovered] = useState<boolean>(false);
   const [movie, setMovie] = useState<any>({});
 
+  const [openModal, setOpenModal] = useState(false);
   const [isLike, setIsLike] = useState<boolean | null>(null);
   const [trailer, setTrailer] = useState<string>("");
   const navigate = useNavigate();
@@ -115,6 +138,7 @@ export default function MovieListItem({
   const [isHovered, setIsHovered] = React.useState(false);
 
   const onPlayMovieClick = () => {
+    setOpenModal(false)
     if (imageRef.current) {
       const boundingBox = imageRef.current.getBoundingClientRect();
 
@@ -183,9 +207,9 @@ export default function MovieListItem({
     if (movieObj) {
       setMovie(movieObj);
     }
-
     if (!movieData) return;
     setMovie(movieData);
+    // console.log(movieData)
   }, [movieData, movieObj]);
 
   const showSwal = (title, message, type) => {
@@ -555,23 +579,51 @@ export default function MovieListItem({
           onPointerLeave={handlePointerLeave}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
-          className={`${showActionButtons ? 'aspect-[5/6]' : ''} w-full overflow-hidden rounded-lg xl:rounded-xl mb-1 relative max-w-[60vw] mx-auto`}>
+          className={`w-full overflow-hidden rounded-lg xl:rounded-xl mb-1 relative max-w-[60vw] mx-auto`}>
           <div
             className="absolute animate-pulse bg-[#ffffff10] w-full h-full"></div>
           <img
+            onClick={() => setOpenModal(true)}
             src={imageToshow}
             alt=""
-            className={`${showActionButtons ? 'aspect-[5/6]' : ''} w-full object-cover hover:scale-110 transition-all duration-300 relative z-20`}
+            className={`${showActionButtons ? '' : ''} w-full object-cover hover:scale-110 transition-all duration-300 relative z-20`}
           />
+          {/* /aspect-[5/6]  */}
         </div>
 
-        {renderActionButtons()}
+        {/* {renderActionButtons()} */}
 
-        <p className={`${showActionOnMobile ? "block" : "sm:block hidden"} text-base xl:text-lg leading-tight`}>{movie.title}</p>
+        {/* <p className={`${showActionOnMobile ? "block" : "sm:block hidden"} text-base xl:text-lg leading-tight`}>{movie.title}</p> */}
 
-        <p className={`${showActionOnMobile ? "block" : "sm:block hidden"} text-sm xl:text-base text-muted leading-none`}>{movie.year}</p>
+        {/* <p className={`${showActionOnMobile ? "block" : "sm:block hidden"} text-sm xl:text-base text-muted leading-none`}>{movie.year}</p> */}
 
       </div>
+      {openModal && <Modal
+        keepMounted
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        aria-labelledby="keep-mounted-modal-title"
+        aria-describedby="keep-mounted-modal-description"
+      >
+        <Box sx={style} className={addClassNames('modalMovieDetails')}>
+          <CloseIcon onClick={() => setOpenModal(false)} className={addClassNames('crossModal')} />
+          <div style={{ maxWidth: "900px", margin: "auto" }} className="w-full h-full relative z-[6] overflow-y-auto CustomScroller">
+            <AnimatePresence>
+              <div
+                className={`w-full h-fit rounded-2xl  flex-shrink-0 py-10 px-4 xl:px-8 flex flex-col gap-5`}
+              >
+                <MovieDetailPanel
+                  type={"Movie"}
+                  movieToShow={movie}
+                  onPlayMovie={onPlayMovieClick}
+                  onHoverMovie={onHover}
+                  refetch={refetch}
+                />
+              </div>
+            </AnimatePresence>
+          </div>
+        </Box>
+      </Modal>}
     </>
   );
 }

@@ -6,6 +6,11 @@
   background-repeat: no-repeat;
   background-color: #010202;
 
+  
+  @media (max-width: 768px) {
+    background-position: right;
+  }
+
   .section_icon_wrapper {
     background: linear-gradient(110deg, #0065ad 0%, #21f69b 50%, #0065ad 100%);
   }
@@ -162,6 +167,10 @@
     max-width: 1120px;
     margin: auto;
     line-height: 2em;
+
+    h1{
+      margin-bottom: 35px !important;
+    }
   }
 
   .middle-gradient-section {
@@ -178,9 +187,9 @@
 
   .middle-text-section {
     background: rgb(1, 2, 2);
-    padding: 100px;
+    padding: 15px;
     position: relative;
-    background-image: url('/images/bghome.png');
+    background-image: url('/images/mbhome.jpg');
     overflow-y: hidden;
     overflow-x: hidden;
     background-size: cover;
@@ -196,9 +205,12 @@
       z-index: 2;
       position: relative;
 
+      margin-bottom: 35px !important;
+      margin-top: 35px !important;
       @media (max-width: 768px) {
         font-size: 24px;
-        margin-bottom: 15px;
+        margin-bottom: 35px !important;
+        margin-top: 35px !important;
       }
     }
   }

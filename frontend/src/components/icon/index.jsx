@@ -6,8 +6,8 @@ export default function Icon({ name, size = "L", hovered = false }) {
   let width, height;
 
   if (size === "M") {
-    width = "w-[18px] xl:w-[22px]";
-    height = "h-[18px] xl:h-[22px]";
+    width = "w-[34px] xl:w-[34px]";
+    height = "h-[34px] xl:h-[34px]";
   } else if (size === "S") {
     width = "w-[14px] xl:w-[16px]";
     height = "h-[14px] xl:h-[16px]";

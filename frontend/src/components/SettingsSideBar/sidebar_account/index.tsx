@@ -36,7 +36,7 @@ import NavLogo1 from "../../../Assets/Images/Nav-logo.png";
 
 const url = import.meta.env.VITE_APP_API_URL;
 
-const SidebarAccount = ({variantGroup}) => {
+const SidebarAccount = ({ variantGroup }) => {
   const user = useAppSelector(selectUser);
   const accessToken = user?.accessToken;
 
@@ -239,7 +239,7 @@ const SidebarAccount = ({variantGroup}) => {
     );
   };
 
-  const {tabVariant, tabChildVariant, parentTransition} = variantGroup;
+  const { tabVariant, tabChildVariant, parentTransition } = variantGroup;
 
   return (
     <motion.div
@@ -293,7 +293,12 @@ const SidebarAccount = ({variantGroup}) => {
               <div className="my-5 border-b border-[#4B4B4B]" />
 
               <button
-                className={"theme_button mt-10"}
+                className={"theme_button_danger mt-[10px]"}
+                style={{
+                  borderColor: '#14f59e',
+                  background: '#14f59e1f',
+                  color: '#14f59e',
+                }}
                 type="submit"
                 disabled={isSubmitting || loading}
               >
@@ -308,7 +313,7 @@ const SidebarAccount = ({variantGroup}) => {
         </Formik>
       </motion.div>
 
-      <motion.div className="mt-5" variants={tabChildVariant}>
+      <motion.div className="mt-[25px]" variants={tabChildVariant}>
           <button
             className={"theme_button_danger"}
             onClick={() => {
@@ -347,8 +352,8 @@ const SidebarAccount = ({variantGroup}) => {
           </ModelPopup>
         )}
       </AnimatePresence>
-      {/* {renderDeleteAccModal()} */}
-    </motion.div>
+      {/* {renderDeleteAccModal()} */ }
+    </motion.div >
   );
 };
 

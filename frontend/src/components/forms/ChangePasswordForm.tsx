@@ -63,9 +63,15 @@ const ChangePasswordForm = ({ formik, isLoading }) => {
         {/* Divider */}
         <div className="my-6 border-b border-[#4B4B4B]" />
         <button
-          className={"theme_button mt-10"}
+          className={"theme_button_danger  mt-[5px]"}
+          style={{
+            borderColor: '#14f59e',
+            background: '#14f59e1f',
+            color: '#14f59e',
+          }}
+          type="submit"
           onClick={formik.handleSubmit}
-          // disabled={isSubmitting || loading}
+        // disabled={isSubmitting || loading}
         >
           {isLoading ? (
             <div className="text-white">

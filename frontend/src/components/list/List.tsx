@@ -10,7 +10,6 @@ import "react-multi-carousel/lib/styles.css";
 import ListItem from "../listItem/ListItem";
 import { useAppSelector } from "../../store/hooks";
 import { selectUser } from "../../store/reducers/auth";
-import MovieListItem from "../MovieListItem/index";
 import { addClassNames } from "../../store/utils/functions";
 import useResponsive from "../../hooks/useResponsive";
 import NextPlump from "../../Assets/svgs/Icons/NextPlump.svg";
@@ -18,6 +17,13 @@ import PrevPlump from "../../Assets/svgs/Icons/PrevPlump.svg";
 
 import styles from "./list.module.scss";
 import { Movie } from "../../store/types";
+import { AnimatePresence } from "framer-motion";
+import MovieDetailPanel from "../MovieDetailPanel";
+import { useGetMovieQuery } from "../../store/rtk-query/moviesApi";
+import MovieListItem from "../MovieListItem";
+
+
+
 
 interface ListProps {
   list: any;
@@ -25,6 +31,8 @@ interface ListProps {
   onEdit?: Function;
   onHoverMovie?: any;
   onPlayMovie?: any;
+  ifTitle?: any;
+  isObject?: Boolean;
 }
 
 const List: React.FC<ListProps> = ({
@@ -33,8 +41,11 @@ const List: React.FC<ListProps> = ({
   onEdit,
   onHoverMovie,
   onPlayMovie,
+  ifTitle,
+  isObject,
   ...otherProps
 }) => {
+
   const user = useAppSelector(selectUser);
 
   const carouselRef = useRef();
@@ -63,7 +74,7 @@ const List: React.FC<ListProps> = ({
   const handleHover = (movie: Movie) => {
     onHoverMovie?.(movie);
   };
- 
+
   const onClickPlayMovie = (movie: Movie, axis: any) => {
     onPlayMovie?.(movie, axis);
   };
@@ -72,8 +83,8 @@ const List: React.FC<ListProps> = ({
     <>
       <div className={styles["list"]}>
         <div className="flex justify-between gap-5 mb-2 xl:mb-5">
-        <p className="text-muted text-base xl:text-lg">{list?.title}</p>
-          
+          <p className="text-base xl:text-lg">{ifTitle || list?.title}</p>
+
           <div>
             {onEdit ? (
               <span style={{ cursor: "pointer" }} onClick={() => onEdit()}>
@@ -93,6 +104,12 @@ const List: React.FC<ListProps> = ({
             ref={carouselRef}
             responsive={responsive}
             centerMode={true}
+            additionalTransfrom={0}
+            draggable
+            keyBoardControl
+            rewind={false}
+            rewindWithAnimation={false}
+            swipeable
             containerClass={addClassNames(isMobile ? "" : "overflow-visible")}
             customRightArrow={
               <div className={addClassNames(
@@ -119,19 +136,22 @@ const List: React.FC<ListProps> = ({
               if (!movieId) return;
 
               return (
+
                 <MovieListItem
+                  onClick
                   key={i}
                   index={i}
                   movieId={movieId}
-                  // movieObj={list}
+                  movieObj={isObject ? movieId : null}
                   onHover={handleHover}
                   onPlayMovie={onClickPlayMovie}
                 />
               );
             })}
-          
+
           </Carousel>
         </div>
+
       </div>
     </>
   );
