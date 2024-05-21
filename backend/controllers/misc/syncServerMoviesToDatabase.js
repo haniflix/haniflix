@@ -27,17 +27,26 @@ const syncServerMoviesToDatabase = async (req, res) => {
         continue;
       }
 
-      const matchRes = movieFolder?.match(/^(.+?)\.(\d{4})\..+$/);
+      let matchRes = movieFolder?.match(/^(.+?)\.(\d{4})\./);
+
+      if (!matchRes) {
+        matchRes = movieFolder?.match(/^(.+?)\s+\(?(\d{4})\)?/);
+      }
+      if (!matchRes) {
+        matchRes = movieFolder?.match(/^(.+?)\.(720p|1080p|BluRay|BRRip|HDRip|x264|X264|AAC|mkv|mp4)/);
+      }
+
+
       if (!matchRes) {
         Logger.info("No Match result for file " + movieFolderPath);
         continue;
       }
 
-      const [title, year] = matchRes?.slice(1, 3);
-
+      let [title, year] = matchRes?.slice(1, 3);
+      title = title.replace(/\./g, ' ');
       const existingMovie = await Movie.findOne({
         title: title,
-        year,
+        year: year || '',
       });
 
       if (existingMovie) {

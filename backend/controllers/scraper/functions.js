@@ -20,7 +20,7 @@ let browser; // Declare browser instance globally
 async function initBrowser() {
   try {
     browser = await puppeteer.launch({
-      headless: NODE_ENV === "production" ? true : false,
+      headless: "new",
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
       timeout: 3 * 60 * 1000,
       protocolTimeout: 5 * 60 * 1000,
@@ -67,6 +67,7 @@ async function scrapeMovieDetails({ _page, url }) {
   //if _page is set url will not be set
   // and vice versa
 
+
   let browserInitializedLocally = false;
 
   if (!browser) {
@@ -101,6 +102,7 @@ async function scrapeMovieDetails({ _page, url }) {
   });
 
   try {
+
     //wait for large image
     const waitLargeImg = async () => {
       await page.waitForSelector("picture.css-cxmmyk.edbh37f0 link", {
@@ -113,7 +115,9 @@ async function scrapeMovieDetails({ _page, url }) {
       new Promise((resolve) => setTimeout(resolve, 15 * 1000)),
     ]);
 
+
     let movieDetails = await page.$eval("body", async (body) => {
+
       let yearOfRelease = body.querySelector(
         ".e1dskkhw7.css-1i5l3f2.e83cah30"
       )?.textContent;
@@ -142,10 +146,11 @@ async function scrapeMovieDetails({ _page, url }) {
       let genre = []
       if (genreDiv) {
         const links = genreDiv.querySelectorAll("a");
+        const filteredLinks = Array.from(links).filter(link => link.getAttribute('href').startsWith('/movies/genre'));
 
-        for (let i = 0; i < Math.min(links.length, 2); i++) {
-          const link = links[i];
-          genre.push(link.textContent); 
+        for (let i = 0; i < Math.min(filteredLinks.length, 2); i++) {
+          const link = filteredLinks[i];
+          genre.push(link.textContent);
         }
       }
       const duration = body.querySelector(
@@ -156,36 +161,39 @@ async function scrapeMovieDetails({ _page, url }) {
       // genre = genre?.slice(0, -1);
 
       // const imageUrl = body.querySelector(".css-18pmxw3.edbh37f1")?.src;
+      // console.log("first: ", imageUrl)
+      // console.log("FUNCTION CHECK")
 
-      let sourceElements = body?.querySelectorAll(
-        "picture.css-cxmmyk.edbh37f0 source"
-      );
+      // let sourceElements = body?.querySelectorAll(
+      //   "picture.css-cxmmyk.edbh37f0 source"
+      // );
 
       //set imageurl with smallest image
-      let imageUrl = undefined;
-      let largestPosterSize = 0;
-      let sourceUrls;
-      let sourceSrcSets = [];
+      // let imageUrl = undefined;
+      // let largestPosterSize = 0;
+      // let sourceUrls;
+      // let sourceSrcSets = [];
 
-      sourceElements.forEach((sourceElement) => {
-        const srcset = sourceElement?.getAttribute("srcset");
-        sourceSrcSets.push(srcset);
-        sourceUrls = srcset
-          ?.split(",")
-          .filter((item) => item?.includes("poster"))
-          .map((item) => {
-            const [url, size] = item?.trim()?.split(" ");
-            return { url, size: parseInt(size) || 0 };
-          });
+      // sourceElements.forEach((sourceElement) => {
+      //   const srcset = sourceElement?.getAttribute("srcset");
+      //   sourceSrcSets.push(srcset);
+      //   sourceUrls = srcset
+      //     ?.split(",")
+      //     .filter((item) => item?.includes("poster"))
+      //     .map((item) => {
+      //       const [url, size] = item?.trim()?.split(" ");
+      //       return { url, size: parseInt(size) || 0 };
+      //     });
 
-        //for background image
-        sourceUrls?.forEach(({ url, size }) => {
-          if (size > largestPosterSize) {
-            largestPosterSize = size;
-            imageUrl = url;
-          }
-        });
-      });
+      //   //for background image
+      //   sourceUrls?.forEach(({ url, size }) => {
+      //     if (size > largestPosterSize) {
+      //       largestPosterSize = size;
+      //       console.log("loopimageUrl: ", imageUrl)
+      //       imageUrl = url;
+      //     }
+      //   });
+      // });
 
       let linkSourceElements = body?.querySelectorAll(
         "picture.css-cxmmyk.edbh37f0 link"
@@ -212,10 +220,9 @@ async function scrapeMovieDetails({ _page, url }) {
         });
       });
 
-      if (!imageUrl) {
-        imageUrl = body.querySelector(".css-18pmxw3.edbh37f1")?.src;
-      }
-
+      // if (!imageUrl) {
+      const imageUrl = body.querySelector(".eytn0nr13 .css-18pmxw3.edbh37f1")?.src;
+      // }
       if (!largestImageUrl || !largestImageUrl?.includes("backdrop")) {
         largestImageUrl = imageUrl?.replace(/poster-\d+/, "backdrop-1280");
       }
@@ -240,7 +247,7 @@ async function scrapeMovieDetails({ _page, url }) {
     console.log("movieDetails ", movieDetails);
 
     // Return the extracted data
-    return movieDetails;
+    return await movieDetails;
   } catch (error) {
     console.error("Error scraping movie details:", error);
     Logger.error("Error scraping movie details:" + error);
