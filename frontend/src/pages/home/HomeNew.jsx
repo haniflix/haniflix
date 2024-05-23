@@ -349,12 +349,11 @@ const HomeNew = ({ type = null }) => {
                         <div className="w-full h-full relative z-[1] overflow-y-scroll CustomScroller">
 
                             <div
-                                className={`w-full h-fit flex-grow flex-shrink rounded-2xl p-6 xl:p-10 flex flex-col gap-10 sm:gap-6 xl:gap-10`}
+                                className={`w-full h-fit flex-grow flex-shrink rounded-2xl p-6 xl:p-10 flex flex-col gap-4 sm:gap-6 xl:gap-10`}
                             >
 
-                                <div className="flex gap-2 flex-col-reverse sm:flex-row justify-between relative z-10">
+                                <div className="flex gap-2 sm:flex-row justify-between relative z-10">
                                     <div className="flex gap-6">
-
                                         <button onClick={handleLogoutClick}>
                                             <Icon name={"Logout"} hovered={showLogout} />
                                         </button>
@@ -362,21 +361,22 @@ const HomeNew = ({ type = null }) => {
                                             <Icon name={"Setting"} hovered={showSettings} />
                                         </button>
                                     </div>
-                                    <div
-                                        className={`relative flex items-center gap-2 py-3 rounded-xl overflow-hidden group transition-all duration-500 ${hasSearch
-                                            ? "w-72 px-3 bg-dark"
-                                            : "bg-dark sm:bg-transparent px-3 sm:px-0 w-72 sm:w-6 hover:w-72 hover:px-3 hover:bg-dark"
-                                            }`}
-                                    >
-                                        <Icon name={"Search"} />
-                                        <input
-                                            type="text"
-                                            placeholder="Search"
-                                            className="min-w-0 bg-transparent placeholder:text-muted text-white w-56 absolute left-12"
-                                            value={searchTerm}
-                                            onChange={handleInputChange}
-                                        />
-                                    </div>
+
+                                        <div
+                                            className={`inputWrapperHover relative flex items-center gap-2 py-3  overflow-hidden group transition-all duration-500 ${hasSearch
+                                                ? "inputWrapper w-72 px-3 bg-dark"
+                                                : "bg-dark sm:bg-transparent px-3 sm:px-0 w-72 sm:w-6 hover:w-72 hover:px-3 hover:bg-dark"
+                                                }`}
+                                        >
+                                            <Icon name={"Search"} />
+                                                <input
+                                                    type="text"
+                                                    placeholder="Search"
+                                                    className="min-w-0 bg-transparent placeholder:text-muted text-white w-56 absolute left-12"
+                                                    value={searchTerm}
+                                                    onChange={handleInputChange}
+                                                />
+                                        </div>
                                 </div>
 
 
@@ -395,7 +395,7 @@ const HomeNew = ({ type = null }) => {
                                         </motion.div>
                                     </>
                                 ) : undefined}
-                                {continueWatchingListData?.list ? (
+                                {continueWatchingListData?.list[0]?.content?.length > 0 ? (
                                     <>
                                         <motion.div variants={tabChildVariant}>
                                             <List

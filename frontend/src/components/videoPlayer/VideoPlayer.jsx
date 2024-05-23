@@ -32,7 +32,7 @@ import {
   ThumbsUpIcon,
 } from "../../Assets/svgs/tsSvgs";
 
-const VideoPlayer = ({ videoId, videoUrl, isTrailer }) => {
+const VideoPlayer = ({ videoId, videoUrl, isTrailer, isEnded = () => { } }) => {
   const [playtime, setPlaytime] = useState(0);
   const [seekTime, setSeekTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -171,6 +171,9 @@ const VideoPlayer = ({ videoId, videoUrl, isTrailer }) => {
 
   const handleEnded = () => {
     setTimeout(() => {
+      if (typeof isEnded === 'function') {
+        isEnded();
+      }
       navigate("/"); // Redirect to homepage after 2 seconds
     }, 2000);
   };
@@ -355,7 +358,7 @@ const VideoPlayer = ({ videoId, videoUrl, isTrailer }) => {
         }}
       // config={getConfig(accessToken)}
       />}
-      <div className="px-3">{renderExtraButtons()}</div>
+      {/* <div className="px-3">{renderExtraButtons()}</div> */}
     </div>
   );
 };

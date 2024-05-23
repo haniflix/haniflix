@@ -26,6 +26,7 @@
     "@vitejs/plugin-react-swc": "^3.5.0",
     "api-client": "../api-client",
     "axios": "^1.6.2",
+    "crypto-es": "^2.1.0",
     "dotenv": "^16.3.1",
     "formik": "^2.4.5",
     "framer-motion": "^11.1.7",

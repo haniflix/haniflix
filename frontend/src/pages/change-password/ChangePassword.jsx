@@ -118,7 +118,7 @@ export default function ChangePassword() {
 
           </div>
         </Box>
-        <div className="rightBlob1" style={{
+        {/* <div className="rightBlob1" style={{
           left: '-20%',
           top: '0',
           width: '25vw',
@@ -148,7 +148,7 @@ export default function ChangePassword() {
           height: "40vw",
           width: "40vw",
           opacity: ".60"
-        }}></div>
+        }}></div> */}
 
 
         <div className={styles["section"]}>

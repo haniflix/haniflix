@@ -128,7 +128,7 @@ export default function ForgotPassword() {
         }
         className={addClassNames(styles["loginNew"])}
       >
-        <div className="rightBlob1" style={{
+        {/* <div className="rightBlob1" style={{
           left: '-20%',
           top: '0',
           width: '25vw',
@@ -158,7 +158,7 @@ export default function ForgotPassword() {
           height: "40vw",
           width: "40vw",
           opacity: ".60"
-        }}></div>
+        }}></div> */}
         <Box
           className={addClassNames(styles["top"], "ml-[40px] mr-[40px]")}
 

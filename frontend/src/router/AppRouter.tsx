@@ -38,6 +38,7 @@ import Movie from '../pages/movie/index';
 import WatchTrailer from '../pages/watch-trailer/Watch-trailer';
 import HomeNew from '../pages/home/HomeNew';
 import Settings from '../pages/settings';
+import ThankYouPage from '../pages/thank-you';
 
 
 const AppRouter = (props) => {
@@ -88,6 +89,10 @@ const AppRouter = (props) => {
                     <Route
                         path="/register"
                         element={user ? <Navigate to="/" /> : <Register />}
+                    />
+                    <Route
+                        path="/thank-you"
+                        element={<ThankYouPage />}
                     />
                     <Route
                         path="/forgot-pass"

@@ -191,7 +191,7 @@ export default function Login() {
 
           </div>
         </Box>
-        <div className="rightBlob1" style={{
+        {/* <div className="rightBlob1" style={{
           left: '-20%',
           top: '0',
           width: '25vw',
@@ -221,7 +221,7 @@ export default function Login() {
           height: "40vw",
           width: "40vw",
           opacity: ".60"
-        }}></div>
+        }}></div> */}
 
         {/* <div className={styles["top"]}>
           <div className={styles["wrapper"]}>
@@ -341,7 +341,7 @@ export default function Login() {
                 background: '#14f59e1f',
                 color: '#14f59e',
               }}
-              disabled={!isFormValid}
+              disabled={!isFormValid} 
               onClick={handleStart}>
               Sign In
             </button>

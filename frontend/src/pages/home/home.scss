@@ -15,8 +15,8 @@
 
 }
 
-.signout-modal{   
-}
+.signout-modal {}
+
 .searchresult {
     display: flex;
     flex-wrap: wrap;
@@ -153,6 +153,36 @@
     animation: leftrotate2 20s linear infinite;
 }
 
+.inputWrapper {
+    // height: 55px;
+    border: 2px solid;
+    border-image-source: linear-gradient(94.55deg, #14FA9B -3.86%, #128EE9 100%);
+    border-image-slice: 1;
+    background-color: transparent !important;
+}
+
+.inputWrapperHover:hover,
+.inputWrapperHover:active,
+.inputWrapperHover:focus {
+    // height: 55px;
+    border: 2px solid;
+    border-image-source: linear-gradient(94.55deg, #14FA9B -3.86%, #128EE9 100%);
+    border-image-slice: 1;
+    background-color: transparent !important;
+}
+
+.inputWrapperHover {
+    margin: 2px 0x !important;
+    @media (max-width: 768px) {
+        margin-top: 20px;
+        margin-bottom: 10px;
+        // width: 100% !important;
+        border: 2px solid;
+        border-image-source: linear-gradient(94.55deg, #14FA9B -3.86%, #128EE9 100%);
+        border-image-slice: 1;
+        background-color: transparent !important;
+    }
+}
 
 @keyframes leftrotate1 {
 

@@ -7,7 +7,7 @@ import useApiClient from "../../hooks/useApiClient";
 
 import { Helmet } from "react-helmet";
 
-export default function WatchPopup({movieToPlay, onLeaveMovie}) {
+export default function WatchPopup({ movieToPlay, onLeaveMovie }) {
   const navigate = useNavigate();
   const [movie, setMovie] = useState<any>(null);
   const client = useApiClient();
@@ -39,7 +39,7 @@ export default function WatchPopup({movieToPlay, onLeaveMovie}) {
           <ArrowBackOutlined />
           Go Back
         </div>
-        <VideoPlayer videoId={movieToPlay?._id} videoUrl={movieToPlay?.video} isTrailer={false} />
+        <VideoPlayer isEnded={onLeaveMovie} videoId={movieToPlay?._id} videoUrl={movieToPlay?.video} isTrailer={false} />
       </div>
     </>
   );
