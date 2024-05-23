@@ -317,6 +317,7 @@ const HomeNew = ({ type = null }) => {
 
     return (
         <>
+            <div id="background_wrap"></div>
             <div className="home flex p-3 gap-3 relative">
                 <div className=" homedarkbg fixed left-0 top-0 right-0 bottom-0">
                     <AnimatePresence>
@@ -354,29 +355,29 @@ const HomeNew = ({ type = null }) => {
 
                                 <div className="flex gap-2 sm:flex-row justify-between relative z-10">
                                     <div className="flex gap-6">
-                                        <button onClick={handleLogoutClick}>
+                                        <button onClick={handleLogoutClick} onTouchStart={(e) => { e.preventDefault(); handleLogoutClick(); }}>
                                             <Icon name={"Logout"} hovered={showLogout} />
                                         </button>
-                                        <button onClick={() => navigate('/settings')}>
+                                        <button onClick={() => navigate('/settings')} onTouchStart={(e) => { e.preventDefault(); navigate('/settings') }}>
                                             <Icon name={"Setting"} hovered={showSettings} />
                                         </button>
                                     </div>
 
-                                        <div
-                                            className={`inputWrapperHover relative flex items-center gap-2 py-3  overflow-hidden group transition-all duration-500 ${hasSearch
-                                                ? "inputWrapper w-72 px-3 bg-dark"
-                                                : "bg-dark sm:bg-transparent px-3 sm:px-0 w-72 sm:w-6 hover:w-72 hover:px-3 hover:bg-dark"
-                                                }`}
-                                        >
-                                            <Icon name={"Search"} />
-                                                <input
-                                                    type="text"
-                                                    placeholder="Search"
-                                                    className="min-w-0 bg-transparent placeholder:text-muted text-white w-56 absolute left-12"
-                                                    value={searchTerm}
-                                                    onChange={handleInputChange}
-                                                />
-                                        </div>
+                                    <div
+                                        className={`inputWrapperHover relative flex items-center gap-2 py-3  overflow-hidden group transition-all duration-500 ${hasSearch
+                                            ? "inputWrapper w-72 px-3 bg-dark"
+                                            : "bg-dark sm:bg-transparent px-3 sm:px-0 w-72 sm:w-6 hover:w-72 hover:px-3 hover:bg-dark"
+                                            }`}
+                                    >
+                                        <Icon name={"Search"} />
+                                        <input
+                                            type="text"
+                                            placeholder="Search"
+                                            className="min-w-0 bg-transparent placeholder:text-muted text-white w-56 absolute left-12"
+                                            value={searchTerm}
+                                            onChange={handleInputChange}
+                                        />
+                                    </div>
                                 </div>
 
 

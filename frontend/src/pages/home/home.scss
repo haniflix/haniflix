@@ -1,7 +1,7 @@
 .home {
     overflow: hidden;
     height: 100%;
-    background-attachment: fixed;
+    background-attachment: cover;
     background-color: #0E061E;
 
     background: url("/images/home0.jpeg") repeat center center;
@@ -13,6 +13,21 @@
         background-size: cover;
     }
 
+}
+#background_wrap {
+    z-index: -1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-size: 100%;
+    background-image: url('/images/home0.jpeg');
+    background-attachment: fixed;
+    @media (max-width: 768px) {
+        background: url("/images/mbhome.jpg");
+        background-attachment: fixed;
+    }
 }
 
 .signout-modal {}
