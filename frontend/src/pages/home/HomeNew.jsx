@@ -395,7 +395,7 @@ const HomeNew = ({ type = null }) => {
                                         </motion.div>
                                     </>
                                 ) : undefined}
-                                {continueWatchingListData?.list[0]?.content?.length > 0 ? (
+                                {continueWatchingListData?.list?.[0]?.content?.length > 0 ? (
                                     <>
                                         <motion.div variants={tabChildVariant}>
                                             <List

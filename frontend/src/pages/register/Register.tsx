@@ -125,6 +125,7 @@ const Register = () => {
 
     localStorage.setItem("haniemail", email);
     localStorage.setItem("hanipassword", password);
+    localStorage.setItem("haniusername", username);
     console.log(api_url)
     fetch(
       api_url + "auth/v1/create-subscription-checkout-session",
