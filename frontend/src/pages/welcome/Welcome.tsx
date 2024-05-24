@@ -120,25 +120,26 @@ export default function Welcome() {
     { Icon: FaFacebookF, url: '#' }
   ];
   return (
-    <div className={styles["welcomePage"]}>
-      <div className="absolute pointer-events-none top-0 right-0 left-0 h-[60px] bg-gradient-to-b from-black to-transparent"></div>
-      <Box
-        className={addClassNames(styles["top"], "ml-[40px] mr-[40px]")}
+    <div className={styles["welcomePage-outer"]}>
+      <div className={styles["welcomePage"] + ' w-full h-full relative z-[1] overflow-y-scroll CustomScroller'}>
+        <div className="absolute pointer-events-none top-0 right-0 left-0 h-[60px] bg-gradient-to-b from-black to-transparent"></div>
+        <Box
+          className={addClassNames(styles["top"], "ml-[40px] mr-[40px]")}
 
-      // style={{ maxWidth: 1200, marginLeft: "auto", marginRight: "auto" }}
-      >
-        <div
-          className={addClassNames(
-            styles["wrapper"],
-            " flex pt-9  items-center justify-between "
-          )}
+        // style={{ maxWidth: 1200, marginLeft: "auto", marginRight: "auto" }}
         >
-          <a href={"/"} className={styles["link"]}>
-            <h1> <span style={{ fontWeight: '700', fontSize: "20px" }} className="gradient-text">HANIFLIX</span></h1>
+          <div
+            className={addClassNames(
+              styles["wrapper"],
+              " flex pt-9  items-center justify-between "
+            )}
+          >
+            <a href={"/"} className={styles["link"]}>
+              <h1> <span style={{ fontWeight: '700', fontSize: "20px" }} className="gradient-text">HANIFLIX</span></h1>
 
-          </a>
-          <div className="flex items-center space-x-[10px]">
-            {/* <button
+            </a>
+            <div className="flex items-center space-x-[10px]">
+              {/* <button
               className={addClassNames(
                 styles["app_button"],
                 "!w-[fit-content] px-[12px] flex items-center space-x-[7px]"
@@ -150,22 +151,22 @@ export default function Welcome() {
             </button> */}
 
 
-            <button
-              className={"theme_button_danger"}
-              style={{
-                borderColor: '#14f59e',
-                background: '#14f59e1f',
-                color: '#14f59e',
-              }}
-              onClick={() => navigate("/login")}
-            >
-              Sign In
-            </button>
+              <button
+                className={"theme_button_danger"}
+                style={{
+                  borderColor: '#14f59e',
+                  background: '#14f59e1f',
+                  color: '#14f59e',
+                }}
+                onClick={() => navigate("/login")}
+              >
+                Sign In
+              </button>
+            </div>
           </div>
-        </div>
-      </Box>
+        </Box>
 
-      {/* <div className="rightBlob1" style={{
+        {/* <div className="rightBlob1" style={{
         left: '-20%',
         top: '0',
         width: '25vw',
@@ -173,33 +174,33 @@ export default function Welcome() {
         filter: "blur(150px)",
         opacity: "0.5"
       }}></div> */}
-      <div className={styles["get-started-section"]}>
-        <h1>Discover The  <span className="gradient-text">Ultimate </span>Streaming Service</h1>
-        <br />
+        <div className={styles["get-started-section"]}>
+          <h1>Discover The  <span className="gradient-text">Ultimate </span>Streaming Service</h1>
+          <br />
 
-        <button
-          className={"theme_button_danger"}
-          style={{
-            borderColor: '#14f59e',
-            background: '#14f59e1f',
-            color: '#14f59e',
-          }}
-          onClick={onSignUp}
-        >
-          Get Started
-        </button>
-      </div>
-
-      <div className={styles["middle-gradient-section"]}></div>
-      <div className={styles["middle-text-section"]}>
-        <div className={styles["middle-text-innersection"]}>
-          <h1>
-            Unlimited Ad-Free Award-Winning 4K Movies TV Shows And More Anywhere On Any Device<span className="gradient-text"> For Only $4.99/Month</span>
-          </h1>
+          <button
+            className={"theme_button_danger"}
+            style={{
+              borderColor: '#14f59e',
+              background: '#14f59e1f',
+              color: '#14f59e',
+            }}
+            onClick={onSignUp}
+          >
+            Get Started
+          </button>
         </div>
 
-        {/* <div className="centerBlob1"></div> */}
-        {/* <div className="centerBlob3" style={{
+        <div className={styles["middle-gradient-section"]}></div>
+        <div className={styles["middle-text-section"]}>
+          <div className={styles["middle-text-innersection"]}>
+            <h1>
+              Unlimited Ad-Free Award-Winning 4K Movies TV Shows And More Anywhere On Any Device<span className="gradient-text"> For Only $4.99/Month</span>
+            </h1>
+          </div>
+
+          {/* <div className="centerBlob1"></div> */}
+          {/* <div className="centerBlob3" style={{
           right: '20%',
           top: '6%',
         }}></div>
@@ -235,124 +236,125 @@ export default function Welcome() {
           opacity: ".60"
         }}></div> */}
 
-        <center>
-          <img src="/images/homeSS.png" style={{
-            zIndex: "10",
-            position: 'relative'
-          }} />
-        </center>
+          <center>
+            <img src="/images/homeSS.png" style={{
+              zIndex: "10",
+              position: 'relative'
+            }} />
+          </center>
 
 
-        <center>
-          <h1><span className="gradient-text">Popular </span></h1>
-        </center>
-        <div style={{
-          maxWidth: "1120px",
-          margin: 'auto',
-          padding: "40px 0px",
-          marginBottom: "60px"
-        }}>
-          <ImageTicker images={images} />
-        </div>
-
-
-
-        <center>
-          <h1>See What Our  <span className="gradient-text">Users </span>Are Saying</h1>
-        </center>
+          <center>
+            <h1><span className="gradient-text">Popular </span></h1>
+          </center>
+          <div style={{
+            maxWidth: "1120px",
+            margin: 'auto',
+            padding: "40px 0px",
+            marginBottom: "60px"
+          }}>
+            <ImageTicker images={images} />
+          </div>
 
 
 
+          <center>
+            <h1>See What Our  <span className="gradient-text">Users </span>Are Saying</h1>
+          </center>
 
-        <div className="flex justify-center">
-          <div className="w-full lg px-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {reviews.map(x => <div className={styles["reviews-box"] + ` p-4`}>
-                <p className="gradient-text2" style={{ fontSize: '24px' }}>{x.name}</p>
-                <p>{x.description}</p>
-                <div style={{ display: 'flex' }}>
-                  {Array.from({ length: x.stars }, () => 0).map(() => <GradientStarIcon />)}
-                </div>
-              </div>)}
+
+
+
+          <div className="flex justify-center">
+            <div className="w-full lg px-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {reviews.map(x => <div className={styles["reviews-box"] + ` p-4`}>
+                  <p className="gradient-text2" style={{ fontSize: '24px' }}>{x.name}</p>
+                  <p>{x.description}</p>
+                  <div style={{ display: 'flex' }}>
+                    {Array.from({ length: x.stars }, () => 0).map(() => <GradientStarIcon />)}
+                  </div>
+                </div>)}
+              </div>
             </div>
           </div>
-        </div>
 
 
 
 
 
 
-        <center>
-          <h1>Frequently Ask <span className="gradient-text">Questions </span></h1>
-        </center>
+          <center>
+            <h1>Frequently Ask <span className="gradient-text">Questions </span></h1>
+          </center>
 
 
 
-        <div className={addClassNames(
-          styles["app-accordion"], "mx-[70px]")}>
-          <AppAccordion items={accordionItems} />
-        </div>
+          <div className={addClassNames(
+            styles["app-accordion"], "mx-[70px]")}>
+            <AppAccordion items={accordionItems} />
+          </div>
 
 
 
 
-        <center>
-          <h1>Join <span className="gradient-text">Haniflix </span>Today</h1>
+          <center>
+            <h1>Join <span className="gradient-text">Haniflix </span>Today</h1>
 
-          <button
-            className={"theme_button_danger"}
-            style={{
-              borderColor: '#14f59e',
-              background: '#14f59e1f',
-              color: '#14f59e',
-              marginBottom: '35px'
-            }}
-            onClick={onSignUp}
-          >
-            Get Started
-          </button>
+            <button
+              className={"theme_button_danger"}
+              style={{
+                borderColor: '#14f59e',
+                background: '#14f59e1f',
+                color: '#14f59e',
+                marginBottom: '35px'
+              }}
+              onClick={onSignUp}
+            >
+              Get Started
+            </button>
 
 
-          {/* <img
+            {/* <img
             src={Logo}
             width="170px"
             alt="App logo"
             loading="lazy"
           /> */}
-        </center>
+          </center>
 
-        <div className="flex items-center justify-between  max-w-250px mx-auto" style={{ maxWidth: '250px' }}>
-          {socialIcons.map((item, index) => (
-            <Link key={index} to={item.url}>
-              <svg width="50" height="50" viewBox="0 0 24 24">
-                {/* Define the linear gradient */}
-                <defs>
-                  <linearGradient id="starGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="53.93%" stopColor="#14FA9B" />
-                    <stop offset="77.59%" stopColor="#128EE9" />
-                  </linearGradient>
-                </defs>
+          <div className="flex items-center justify-between  max-w-250px mx-auto" style={{ maxWidth: '250px' }}>
+            {socialIcons.map((item, index) => (
+              <Link key={index} to={item.url}>
+                <svg width="50" height="50" viewBox="0 0 24 24">
+                  {/* Define the linear gradient */}
+                  <defs>
+                    <linearGradient id="starGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="53.93%" stopColor="#14FA9B" />
+                      <stop offset="77.59%" stopColor="#128EE9" />
+                    </linearGradient>
+                  </defs>
 
-                {/* Border circle */}
-                <circle cx="12" cy="12" r="11" fill="transparent" stroke='url(#starGradient)' strokeWidth="1" />
+                  {/* Border circle */}
+                  <circle cx="12" cy="12" r="11" fill="transparent" stroke='url(#starGradient)' strokeWidth="1" />
 
-                {/* Your SVG icon with gradient fill */}
-                <g transform="translate(7 7) scale(0.6)" >
-                  <item.Icon style={{ fill: 'url(#starGradient)' }} className={styles["socialIcons"]} />
-                </g>
-              </svg>
-            </Link>
-          ))}
-        </div>
-        <hr style={{ marginTop: "35px", marginBottom: "35px" }} />
-        <div className={addClassNames(
-          styles["footer-hme"], "flex justify-between")}>
-          <div className="flex-none"> {/* Left column */}
-            <p>© 2024 HANIFLIX . All rights reserved.</p>
+                  {/* Your SVG icon with gradient fill */}
+                  <g transform="translate(7 7) scale(0.6)" >
+                    <item.Icon style={{ fill: 'url(#starGradient)' }} className={styles["socialIcons"]} />
+                  </g>
+                </svg>
+              </Link>
+            ))}
           </div>
-          <div className="flex-none"> {/* Right column */}
-            <Link to='/privacy-policy'>Privacy Policy</Link>  <Link to='/terms-service'>Terms & Service</Link>
+          <hr style={{ marginTop: "35px", marginBottom: "35px" }} />
+          <div className={addClassNames(
+            styles["footer-hme"], "flex justify-between")}>
+            <div className="flex-none"> {/* Left column */}
+              <p>© 2024 HANIFLIX . All rights reserved.</p>
+            </div>
+            <div className="flex-none"> {/* Right column */}
+              <Link to='/privacy-policy'>Privacy Policy</Link>  <Link to='/terms-service'>Terms & Service</Link>
+            </div>
           </div>
         </div>
       </div>
