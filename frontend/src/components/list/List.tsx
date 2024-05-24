@@ -81,7 +81,7 @@ const List: React.FC<ListProps> = ({
 
   return (
     <>
-      <div className={styles["list"]}>
+      {list?.content?.length > 0 && <div className={styles["list"]}>
         <div className="flex justify-between gap-5 mb-2 xl:mb-5">
           <p className="text-base xl:text-lg">{ifTitle || list?.title}</p>
 
@@ -152,7 +152,7 @@ const List: React.FC<ListProps> = ({
           </Carousel>
         </div>
 
-      </div>
+      </div>}
     </>
   );
 };
