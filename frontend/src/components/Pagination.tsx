@@ -28,10 +28,10 @@ const Pagination = (props) => {
                 }
                 renderOnZeroPageCount={null}
                 containerClassName="flex flex-wrap sm:flex-nowrap gap-y-1"
-                pageClassName="text-black h-[36px] w-[36px] shadow-sm mx-[1px] rounded-sm flex bg-[#F1F1F1] "
-                activeClassName="!bg-[#5569ff] text-white"
-                nextClassName="text-black ml-[3px] shadow-sm rounded-[3px] flex items-center justify-center px-3 bg-[#F1F1F1]"
-                previousClassName="text-black mr-[3px] shadow-sm rounded-[3px] flex items-center justify-center px-3 bg-[#F1F1F1]"
+                pageClassName="text-black h-[36px] w-[36px] shadow-sm mx-[1px] rounded-sm flex bg-[#14f59e] text-black "
+                activeClassName="!bg-[#128ee8] text-white"
+                nextClassName="text-black ml-[3px] shadow-sm rounded-[3px] flex items-center justify-center px-3 bg-[#14f59e]"
+                previousClassName="text-black mr-[3px] shadow-sm rounded-[3px] flex items-center justify-center px-3 bg-[#14f59e]"
                 pageLinkClassName="w-full h-full flex items-center justify-center"
             />
         </div>

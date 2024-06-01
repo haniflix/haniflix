@@ -95,6 +95,7 @@ function Movies() {
     : 0;
 
   React.useEffect(() => {
+    refetch()
     onCheckScraping()
   }, [])
 
@@ -246,11 +247,11 @@ function Movies() {
             variant="contained" onClick={() => onScrapeAllMovies("all")}>
             Pull All
           </Button>
-          <Button
+          {/* <Button
             className='!h-[30px] w-[150px]'
             variant="contained" onClick={() => onScrapeAllMovies("failed_movies")}>
             Pull Red Font(s)
-          </Button>
+          </Button> */}
 
         </div>
         <div className='text-sm w-full flex gap-[50px] items-center'>

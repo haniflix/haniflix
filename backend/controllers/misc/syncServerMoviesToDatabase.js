@@ -44,10 +44,15 @@ const syncServerMoviesToDatabase = async (req, res) => {
 
       let [title, year] = matchRes?.slice(1, 3);
       title = title.replace(/\./g, ' ');
-      const existingMovie = await Movie.findOne({
+      let existingMovie = await Movie.findOne({
         title: title,
         year: year || '',
       });
+      if (!existingMovie) {
+        existingMovie = await Movie.findOne({
+          video: 'https://cdn.haniflix.com/movies/' + movieFolder
+        });
+      }
 
       if (existingMovie) {
         Logger.info("Movie exists " + `${title} (${year})` + " skipping ");

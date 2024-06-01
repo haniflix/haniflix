@@ -53,15 +53,15 @@ const List: React.FC<ListProps> = ({
   const responsive = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 3000 },
-      items: 4,
+      items: 7,
     },
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
-      items: 4,
+      items: 7,
     },
     tablet: {
       breakpoint: { max: 1024, min: 500 },
-      items: 4,
+      items: 7,
     },
     mobile: {
       breakpoint: { max: 500, min: 0 },
@@ -103,18 +103,23 @@ const List: React.FC<ListProps> = ({
           <Carousel
             ref={carouselRef}
             responsive={responsive}
-            centerMode={true}
-            additionalTransfrom={0}
-            draggable
-            keyBoardControl
-            rewind={false}
+            // centerMode={true}
+            rewind={true}
             rewindWithAnimation={false}
+            additionalTransfrom={0}
+            shouldResetAutoplay
+            slidesToSlide={2}
+
+            infinite={false}
+            centerMode={false}
+            draggable
+            // infinite
             swipeable
             containerClass={addClassNames(isMobile ? "" : "overflow-visible")}
             customRightArrow={
               <div className={addClassNames(
                 styles["sliderArrow"],
-                styles["right"]
+                styles["right"],
               )}>
                 <img src={NextPlump} alt="" />
               </div>
@@ -128,8 +133,8 @@ const List: React.FC<ListProps> = ({
               </div>
             }
             itemClass={addClassNames(
-              "!w-[120px] sm:!w-[11vw]",
-              `mr-[10px] sm:mr-[2vw] carousel-item`
+              // "!w-[120px] sm:!w-[11vw]",
+              `p-2 carousel-item`
             )}
           >
             {list?.content?.map((movieId, i) => {

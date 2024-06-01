@@ -65,35 +65,32 @@ export default function Welcome() {
     {
       id: "panel1",
       title: "What is Haniflix?",
-      content: `Haniflix is a streaming service that offers a wide variety of award-winning TV shows, movies, anime, documentaries, and more on thousands of internet-connected devices.
-      You can watch as much as you want, whenever you want without a single commercial – all for one low monthly price. There's always something new to discover and new TV shows and movies are added every week!`,
+      content: `Haniflix is the ultimate streaming service offering thousands of award-winning 4K movies & TV show ad-free FOR ONLY 99₵/MONTH!`,
     },
     {
       id: "panel2",
       title: "How much does Haniflix cost?",
-      content: `Watch Haniflix on your smartphone, tablet, Smart TV, laptop, or streaming device, all for one fixed monthly fee. Plan is only $4.99/month. No extra costs, no contracts.`,
+      content: `Stream thousands of movies & TV shows FOR ONLY 99₵/MONTH!`,
     },
     {
       id: "panel3",
       title: "Where can I watch?",
-      content: `Watch anywhere, anytime. Sign in with your Haniflix account to watch instantly on the web at Haniflix.com from your personal computer or on any internet-connected device that offers the Haniflix app, including smart TVs, smartphones, tablets, streaming media players and game consoles.
-\n\nYou can also download your favorite shows only on iOS, Android, or Windows devices. Use downloads to watch while you're on the go and without an internet connection. Take Haniflix with you anywhere.`,
+      content: `Sign in with your Haniflix account to watch instantly on the web at www.haniflix.com anywhere on any device including computers, smart TVs, smart phones, tablets, streaming media players, and game consoles FOR ONLY 99₵/MONTH!`,
     },
     {
       id: "panel4",
       title: "How do I cancel?",
-      content: `Haniflix is flexible. There are no pesky contracts and no commitments. You can easily cancel your account online in two clicks. There are no cancellation fees – start or stop your account anytime.`,
+      content: `Haniflix is flexible. There are no pesky contracts or commitments. You can easily cancel your account online in two clicks. There are no cancellation fees. Start or stop your account anytime. Stream worry free FOR ONLY 99₵/MONTH!`,
     },
     {
       id: "panel5",
       title: "What can I watch on Haniflix?",
-      content: `Haniflix has an extensive library of feature films, documentaries, TV shows, anime, award-winning Haniflix originals, and more. Watch as much as you want, anytime you want.`,
+      content: `Haniflix has thousands of award-winning 4K movies & TV shows in all genres including action & adventure, animation, biography, children, crime, documentary, drama, family, fantasy, horror, mystery, romance, science-fiction, sport, thriller, and western FOR ONLY 99₵/MONTH!`,
     },
     {
       id: "panel6",
       title: "Is Haniflix good for kids?",
-      content: `The Haniflix Kids experience is included in your membership to give parents control while kids enjoy family-friendly TV shows and movies in their own space.
-      Kids profiles come with PIN-protected parental controls that let you restrict the maturity rating of content kids can watch and block specific titles you don’t want kids to see.`,
+      content: `Haniflix offers thousands of movies for kids FOR ONLY 99₵/MONTH!`,
     },
   ];
 
@@ -195,7 +192,7 @@ export default function Welcome() {
         <div className={styles["middle-text-section"]}>
           <div className={styles["middle-text-innersection"]}>
             <h1>
-              Unlimited Ad-Free Award-Winning 4K Movies TV Shows And More Anywhere On Any Device<span className="gradient-text"> For Only $4.99/Month</span>
+            Unlimited • Ad-Free • Award-Winning • 4K Movies & TV Shows <b className="gradient-text"> FOR ONLY 99₵/MONTH</b>
             </h1>
           </div>
 

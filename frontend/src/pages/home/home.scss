@@ -30,8 +30,6 @@
     }
 }
 
-.signout-modal {}
-
 .searchresult {
     display: flex;
     flex-wrap: wrap;
@@ -176,9 +174,7 @@
     background-color: transparent !important;
 }
 
-.inputWrapperHover:hover,
-.inputWrapperHover:active,
-.inputWrapperHover:focus {
+.inputWrapperHover{
     // height: 55px;
     border: 2px solid;
     border-image-source: linear-gradient(94.55deg, #14FA9B -3.86%, #128EE9 100%);
@@ -189,8 +185,9 @@
 .inputWrapperHover {
     margin: 2px 0x !important;
     @media (max-width: 768px) {
-        margin-top: 20px;
-        margin-bottom: 10px;
+        margin-top: 10px;
+        // margin-bottom: 10px;
+        // margin-left: 20px;
         // width: 100% !important;
         border: 2px solid;
         border-image-source: linear-gradient(94.55deg, #14FA9B -3.86%, #128EE9 100%);

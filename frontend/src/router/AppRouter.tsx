@@ -80,7 +80,7 @@ const AppRouter = (props) => {
                 <Route element={<GuestRoutes />}>
 
                     <Route path="/" element={user ? <HomeNew /> : <Welcome />} />
-                    {/* <Route path="/new" element={<HomeNew />} /> */}
+                    <Route path="genre/:id" element={user ? <GenrePage /> : <Navigate to="/" />} />
 
                     <Route
                         path="/settings"
@@ -122,7 +122,6 @@ const AppRouter = (props) => {
                     <Route path="my-list" element={<Home type={"my list"} />} />
                     {/* <Route path="my-list" element={<MyLists />} /> */}
                     <Route path="search" element={<SearchPage />} />
-                    <Route path="genre/:id" element={<GenrePage />} />
                     <Route path="settings" element={<AccSettings />} />
                     <Route path="edit-profile" element={<EditProfile />} />
                 </Route>

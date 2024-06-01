@@ -1,0 +1,16 @@
+.home {
+    overflow: hidden;
+    height: 100%;
+    background-attachment: cover;
+    background-color: #0E061E;
+
+    background: url("/images/home0.jpeg") repeat center center;
+    background-size: cover;
+
+
+    @media (max-width: 768px) {
+        background: url("/images/mbhome.jpg");
+        background-size: cover;
+    }
+
+}

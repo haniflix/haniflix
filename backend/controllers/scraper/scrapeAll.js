@@ -39,16 +39,16 @@ const scrapeAllMovies = async (io, req, res) => {
 
     let query = {};
 
-    if (NODE_ENV !== "production") {
+    if (NODE_ENV === "production") {
       query = {
         $and: [
           {
             $or: [
-              { title: { $exists: false } },
+              // { title: { $exists: false } },
               { desc: { $exists: false } },
               { img: { $exists: false } },
               // { imgTitle: { $exists: false } },
-              { year: { $exists: false } },
+              // { year: { $exists: false } },
               { ageRating: { $exists: false } },
               { duration: { $exists: false } },
             ],

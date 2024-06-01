@@ -1,28 +1,14 @@
-import React, { useState, useEffect } from "react";
-
+import { useState, useMemo } from "react";
 import { makeStyles } from "@mui/styles";
-import axios from "axios";
-import SearchListItem from "../components/search/searchlistItem/SearchListItem";
-
-import { addClassNames } from "../store/utils/functions";
-import { useGetMoviesQuery } from "../store/rtk-query/moviesApi";
-
-import { useParams } from "react-router-dom";
-import Pagination from "./Pagination";
-import { useGetGenresQuery } from "../store/rtk-query/genresApi";
-import MovieListItem from "./MovieListItem/index";
-
+import { useNavigate, useParams } from "react-router-dom";
 import {
-  TextField,
   Grid,
-  Container,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
 } from "@mui/material";
-
-const api_url = import.meta.env.VITE_APP_API_URL;
+import Pagination from "./Pagination";
+import MovieListItem from "./MovieListItem";
+import { useGetGenresQuery } from "../store/rtk-query/genresApi";
+import { useGetMoviesQuery } from "../store/rtk-query/moviesApi";
+import Icon from "./icon";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,31 +29,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const getCurrentYear = () => new Date().getFullYear(); // Get current year dynamically
+const getCurrentYear = () => new Date().getFullYear();
 
-const years = Array.from(
-  { length: getCurrentYear() - 1900 + 1 },
-  (_, i) => 1900 + i
-).reverse(); // Generate years in descending order
+const years = Array.from({ length: getCurrentYear() - 1900 + 1 }, (_, i) => 1900 + i).reverse();
 
 const GenreResults = () => {
   const classes = useStyles();
-  const [movies, setMovies] = useState([]);
   const [search, setSearch] = useState("");
-  const [movieYear, setMovieYear] = useState<undefined | number>(undefined);
-
+  const [movieYear, setMovieYear] = useState<number | undefined>(undefined);
+  const navigate = useNavigate()
   const { id: genreId } = useParams();
-  const { data: genresData, isLoading: genresLoading } = useGetGenresQuery(
-    {},
-    {
-      refetchOnMountOrArgChange: true,
-    }
-  );
+  const { data: genresData, isLoading: genresLoading, error: genresError } = useGetGenresQuery({}, { refetchOnMountOrArgChange: true });
 
   const itemsPerPage = 20;
-  const [page, setPage] = React.useState(1);
+  const [page, setPage] = useState(1);
 
-  let queryParams = {
+  const queryParams = {
     genreId,
     perPage: itemsPerPage,
     page,
@@ -75,13 +52,7 @@ const GenreResults = () => {
     ...(movieYear && { movieYear }),
   };
 
-  const {
-    data: moviesData,
-    isLoading: moviesLoading,
-    isFetching,
-      refetch,
-    error,
-  } = useGetMoviesQuery(queryParams, {
+  const { data: moviesData, isLoading: moviesLoading, error: moviesError, refetch } = useGetMoviesQuery(queryParams, {
     pollingInterval: 10000,
     refetchOnMountOrArgChange: true,
   });
@@ -90,11 +61,9 @@ const GenreResults = () => {
     ? Math.ceil(moviesData.totalMovies / queryParams.perPage)
     : 0;
 
-  const selectedGenre = React.useMemo(() => {
-    if (!genresData) return;
-
-    let selected = genresData?.genres?.find((item) => item?._id == genreId);
-    return selected;
+  const selectedGenre = useMemo(() => {
+    if (!genresData) return undefined;
+    return genresData?.genres?.find((item) => item?._id === genreId);
   }, [genresData, genreId]);
 
   const handlePageChange = (data) => {
@@ -109,86 +78,93 @@ const GenreResults = () => {
 
   const handleYearChange = (e) => {
     const year = e.target?.value;
-    // console.log('year ', e)
     setMovieYear(year);
   };
 
+
+  if (genresError || moviesError) {
+    return <div>Error loading data</div>;
+  }
+
   return (
-    <Container className={classes.root}>
-      <div className="w-full flex justify-end gap-[4px]  !mt-11 sm:!mt-2">
-        <TextField
-          placeholder="Search movies"
-          className={addClassNames(
-            // classes.input,
-            "bg-white h-[45px]"
-          )}
-          variant="outlined"
-          onChange={handleSearch}
-          InputProps={{
-            style: {
-              color: "black",
-              height: 45,
-            },
-          }}
-        />
-        <FormControl>
-          <InputLabel id="year-select-label">Age</InputLabel>
 
-          <Select
-            id="year-select"
-            value={movieYear || ""}
-            label="Year"
-            onChange={handleYearChange}
-            className="bg-white h-[45px] w-[90px] text-black"
-            InputProps={{
-              style: {
-                color: "black",
-                height: 45,
-              },
-            }}
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            {years.map((year) => (
-              <MenuItem key={year} value={year}>
-                {year}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </div>
+    <div className={`home flex p-3 gap-3 relative`}>
+      <div className=" homedarkbg p-4 m-auto fixed left-0 top-0 right-0 bottom-0">
+        <div className="w-full h-full relative z-[1] overflow-x-hidden	 overflow-y-scroll CustomScroller">
+          <div className="w-full h-fit flex-grow flex-shrink rounded-2xl p-6 xl:p-10 flex flex-col gap-4 sm:gap-6 xl:gap-5">
 
-      <div className="text-4xl font-bold mt-11 sm:mt-2 capitalize">
-        {selectedGenre?.title}
-      </div>
+            <div className="flex gap-2 sm:flex-row justify-between relative z-10">
+              <div className="flex gap-6 text-white ">
+                <button className="text-white " onClick={() => navigate('/')} onTouchStart={(e) => { e.preventDefault(); navigate('/') }}>
+                  <Icon name={"Home"} />
+                </button>
+              </div>
 
-      {moviesData?.movies?.length === 0 &&
-        (search !== "" || movieYear !== undefined) && (
-          <h1 className="text-white mt-6">No Movies Found...</h1>
-        )}
+              <div
+                className={`inputWrapperHover relative flex items-center w-72 px-3 bg-dark gap-2 py-3  overflow-hidden group duration-500`}
+              >
+                <Icon name={"Search"} />
+                <input
+                  type="text"
+                  placeholder="Search"
+                  className="min-w-0 bg-transparent placeholder:text-muted text-white w-56 absolute left-12"
+                  value={search}
+                  onChange={handleSearch}
+                />
+              </div>
+            </div>
 
-      <Grid container spacing={2} className="!mt-3 sm:!mx-[20px] relative">
-        {moviesData?.movies?.map((movie, index) => (
-          <Grid item xs={6} sm={6} md={4} lg={3} key={index}>
-            <div className="relative hover:z-[200] shadow-md">
-              <MovieListItem
-                movieObj={movie}
-                refetchFn={refetch}
-                layoutType="grid"
+            {/* <FormControl>
+              <InputLabel id="year-select-label">Year</InputLabel>
+              <Select
+                id="year-select"
+                value={movieYear || ""}
+                label="Year"
+                onChange={handleYearChange}
+                className="bg-white h-[45px] w-[90px] text-black"
+                sx={{ color: 'black' }}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                {years.map((year) => (
+                  <MenuItem key={year} value={year}>
+                    {year}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl> */}
+
+            <p className="text-base xl:text-lg capitalize">{selectedGenre?.title}</p>
+            {moviesData?.movies?.length === 0 &&
+              (search !== "" || movieYear !== undefined) && (
+                <h1 className="text-white mt-6">No Movies Found...</h1>
+              )}
+
+            <Grid container spacing={2} className="mt-3 sm:mx-[20px] relative">
+              {moviesData?.movies?.map((movie, index) => (
+                <Grid item xs={6} md={12 / 7} key={index}>
+                  <div className="relative hover:z-[200] shadow-md">
+                    <MovieListItem
+                      movieObj={movie}
+                      refetchFn={refetch}
+                      layoutType="grid"
+                    />
+                  </div>
+                </Grid>
+              ))}
+            </Grid>
+            <div className="flex items-center justify-center">
+              <Pagination
+                onPageChange={handlePageChange}
+                pageCount={pageCount}
+                itemsPerPage={itemsPerPage}
               />
             </div>
-          </Grid>
-        ))}
-      </Grid>
-      <div className={"flex items-center justify-center"}>
-        <Pagination
-          onPageChange={handlePageChange}
-          pageCount={pageCount}
-          itemsPerPage={itemsPerPage}
-        />
+          </div>
+        </div>
       </div>
-    </Container>
+    </div>
   );
 };
 

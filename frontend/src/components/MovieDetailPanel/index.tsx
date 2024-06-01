@@ -224,6 +224,7 @@ export default function MovieDetailPanel({ movieToShow, onPlayMovie, onHoverMovi
         src={movieToShow?.imgTitle}
         style={{ width: '100%', maxHeight: "400px", objectFit: "cover" }}
       />
+      <p className="text-base ">{movieToShow?.title}</p>
 
       {movieToShow && (
         <motion.div variants={tabChildVariant}>
@@ -243,15 +244,13 @@ export default function MovieDetailPanel({ movieToShow, onPlayMovie, onHoverMovi
 
               {renderActionButtons()}
             </div>
-            <div className="modalpopup-like">
-              <p className="text-base modalpopup-text">{movieToShow?.year}</p>
-              <p className="text-base modalpopup-text">{movieToShow?.duration}</p>
-              <p className="text-base modalpopup-text">{movieToShow?.ageRating}</p>
-            </div>
-            <p className="text-base capitalize">{renderGenres().join().replace(',', ' • ')}</p>
+
           </div>
         </motion.div>)}
 
+      <div className="">
+        <span className="text-base modalpopup-text mr-2">{movieToShow?.year}</span> • <span className="text-base modalpopup-text ml-2 mr-2">{movieToShow?.duration}</span> •  <span className="text-base modalpopup-text ml-2 mr-2">{movieToShow?.ageRating}</span> •  <span className="text-base capitalize ml-2 mr-2">{renderGenres().join().replace(',', ' • ')}</span>
+      </div>
 
       {movieToShow && (
         <motion.div variants={tabChildVariant}>

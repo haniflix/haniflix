@@ -27,6 +27,7 @@ import WatchPopup from "../watchPopup/WatchPopup";
 import ChangeAvatarModal from "../../components/ChangeAvatarModal";
 import SettingsSidebar from "../../components/SettingsSideBar";
 import ModelPopup from "../../components/ModelPopup";
+import GenresDropdown from "../../components/GenresDropdown";
 
 const responsiveCarousel = {
     superLargeDesktop: {
@@ -350,24 +351,22 @@ const HomeNew = ({ type = null }) => {
                         <div className="w-full h-full relative z-[1] overflow-y-scroll CustomScroller">
 
                             <div
-                                className={`w-full h-fit flex-grow flex-shrink rounded-2xl p-6 xl:p-10 flex flex-col gap-4 sm:gap-6 xl:gap-10`}
+                                className={`w-full h-fit flex-grow flex-shrink rounded-2xl p-6 xl:p-10 flex flex-col gap-4 sm:gap-6 xl:gap-5`}
                             >
 
-                                <div className="flex gap-2 sm:flex-row justify-between relative z-10">
-                                    <div className="flex gap-6">
+                                <div className="flex gap-2 flex-col md:flex-row sm:flex-row justify-between relative z-10">
+                                    <div className="flex gap-6 items-center">
                                         <button onClick={handleLogoutClick} onTouchStart={(e) => { e.preventDefault(); handleLogoutClick(); }}>
                                             <Icon name={"Logout"} hovered={showLogout} />
                                         </button>
                                         <button onClick={() => navigate('/settings')} onTouchStart={(e) => { e.preventDefault(); navigate('/settings') }}>
                                             <Icon name={"Setting"} hovered={showSettings} />
                                         </button>
+                                            <GenresDropdown />
                                     </div>
 
                                     <div
-                                        className={`inputWrapperHover relative flex items-center gap-2 py-3  overflow-hidden group transition-all duration-500 ${hasSearch
-                                            ? "inputWrapper w-72 px-3 bg-dark"
-                                            : "bg-dark sm:bg-transparent px-3 sm:px-0 w-72 sm:w-6 hover:w-72 hover:px-3 hover:bg-dark"
-                                            }`}
+                                        className={`inputWrapperHover relative flex items-center w-72 px-3 bg-dark gap-2 py-3  overflow-hidden group duration-500`}
                                     >
                                         <Icon name={"Search"} />
                                         <input
@@ -378,6 +377,7 @@ const HomeNew = ({ type = null }) => {
                                             onChange={handleInputChange}
                                         />
                                     </div>
+
                                 </div>
 
 

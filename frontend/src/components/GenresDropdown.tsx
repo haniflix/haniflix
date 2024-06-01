@@ -39,7 +39,7 @@ function GenresDropdown() {
     }
 
     return (
-        <div className="relative w-[fit-content] bg-[black] ml-3 sm:ml-[50px] mb-1">
+        <div className="relative w-[fit-content] z-10">
             <button
                 ref={dropdownButtonRef}
                 className={
@@ -66,9 +66,9 @@ function GenresDropdown() {
                             addClassNames(
                                 // 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3',
                                 "absolute grid ",
-                                `  grid-flow-col`,
-                                'bg-black w-[52vw] sm:w-[270px] md:w-[400px]',
-                                'p-3 gap-y-2 sm:gap-y-[0px]'
+                                ` grid-flow-row	 md:grid-flow-col`,
+                                'bg-slate-950/[.9] w-[52vw] sm:w-[270px] md:w-[800px]',
+                                'p-4 gap-y-2 sm:gap-y-[0px]'
                             )
                         }>
                         {genres?.map((genre) => (
