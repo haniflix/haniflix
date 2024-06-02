@@ -173,6 +173,8 @@ export default function Login() {
         // }}
         className={`${addClassNames(styles["loginNew"])} bg-sred-50s0`}
       >
+        <div className="absolute pointer-events-none top-0 right-0 left-0 h-[60px] bg-gradient-to-b from-black to-transparent"></div>
+
         <Box
           className={addClassNames(styles["top"], "ml-[40px] mr-[40px]")}
 
@@ -341,7 +343,7 @@ export default function Login() {
                 background: '#14f59e1f',
                 color: '#14f59e',
               }}
-              disabled={!isFormValid} 
+              disabled={!isFormValid}
               onClick={handleStart}>
               Sign In
             </button>

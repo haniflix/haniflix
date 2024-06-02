@@ -39,7 +39,7 @@ function GenresDropdown() {
     }
 
     return (
-        <div className="relative w-[fit-content] z-10">
+        <div className="relative w-[fit-content] z-50">
             <button
                 ref={dropdownButtonRef}
                 className={

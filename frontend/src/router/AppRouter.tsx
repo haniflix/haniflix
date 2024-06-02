@@ -39,6 +39,8 @@ import WatchTrailer from '../pages/watch-trailer/Watch-trailer';
 import HomeNew from '../pages/home/HomeNew';
 import Settings from '../pages/settings';
 import ThankYouPage from '../pages/thank-you';
+import PrivacyPage from '../pages/privacy-policy/Privacy';
+import TermsPage from '../pages/privacy-policy/Terms';
 
 
 const AppRouter = (props) => {
@@ -94,6 +96,12 @@ const AppRouter = (props) => {
                         path="/thank-you"
                         element={<ThankYouPage />}
                     />
+
+                    <Route path="/privacy-policy" element={<PrivacyPage />} />
+                    <Route path="/terms-service" element={<TermsPage />} />
+
+
+
                     <Route
                         path="/forgot-pass"
                         element={user ? <Navigate to="/" /> : <ForgotPassword />}

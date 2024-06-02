@@ -121,6 +121,8 @@ const ThankYouPage = () => {
     return (
         <>
             <div className="loginNew">
+            <div className="absolute pointer-events-none top-0 right-0 left-0 h-[60px] bg-gradient-to-b from-black to-transparent"></div>
+
                 <Box
                     className="top ml-[40px] mr-[40px]"
                 >

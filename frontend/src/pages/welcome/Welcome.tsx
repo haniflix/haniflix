@@ -90,7 +90,7 @@ export default function Welcome() {
     {
       id: "panel6",
       title: "Is Haniflix good for kids?",
-      content: `Haniflix offers thousands of movies for kids FOR ONLY 99₵/MONTH!`,
+      content: `Haniflix offers thousands of movies & TV shows for kids FOR ONLY 99₵/MONTH!`,
     },
   ];
 

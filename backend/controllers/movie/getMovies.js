@@ -37,6 +37,11 @@ const getMovies = async (req, res) => {
           },
         },
       });
+      aggregationPipeline.push({
+        $sort: {
+          title: 1,
+        },
+      });
     }
 
     // Filter by genre if genreId is provided
@@ -46,6 +51,11 @@ const getMovies = async (req, res) => {
           genre: mongoose.Types.ObjectId(genreId),
         },
       });
+      aggregationPipeline.push({
+        $sort: {
+          title: 1,
+        },
+      });
     }
 
     //filter by movie year if present
@@ -53,6 +63,11 @@ const getMovies = async (req, res) => {
       aggregationPipeline.push({
         $match: {
           year: movieYear?.trim(),
+        },
+      });
+      aggregationPipeline.push({
+        $sort: {
+          title: 1,
         },
       });
     }

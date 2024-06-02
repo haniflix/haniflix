@@ -128,6 +128,8 @@ export default function ForgotPassword() {
         }
         className={addClassNames(styles["loginNew"])}
       >
+                <div className="absolute pointer-events-none top-0 right-0 left-0 h-[60px] bg-gradient-to-b from-black to-transparent"></div>
+
         {/* <div className="rightBlob1" style={{
           left: '-20%',
           top: '0',

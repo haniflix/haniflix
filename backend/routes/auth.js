@@ -75,7 +75,7 @@ router.post("/v1/create-subscription-checkout-session", async (req, res) => {
   }
   try {
     const session = await stripeSession(
-      "price_1P3kLrELZYEDPohb5ZWIbvUh",
+      "price_1PMqr5ELZYEDPohbO0e82vnc",
       email,
       password,
       username

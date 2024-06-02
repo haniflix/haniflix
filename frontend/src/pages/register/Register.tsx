@@ -264,6 +264,8 @@ const Register = () => {
               width: "40vw",
               opacity: ".60"
             }}></div> */}
+                    <div className="absolute pointer-events-none top-0 right-0 left-0 h-[60px] bg-gradient-to-b from-black to-transparent"></div>
+
             <Box
               className={addClassNames(styles["top"], "ml-[40px] mr-[40px]")}
 
