@@ -160,7 +160,7 @@ const GenreResults = () => {
           )}
         </AnimatePresence>
         <div className="w-full h-full relative z-[1] overflow-x-hidden	 overflow-y-scroll CustomScroller">
-          <div className="w-[calc(100%-20px)] h-[calc(100vh-20px)] absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 overflow-hidden">
+          <div className="w-[calc(100%-20px)] h-[calc(100vh-20px)] absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
             <div className="w-full h-fit flex-grow flex-shrink rounded-2xl p-6 xl:p-10 flex flex-col gap-4 sm:gap-6 xl:gap-5">
 
               <div className="flex gap-2 sm:flex-row justify-between relative z-10">
