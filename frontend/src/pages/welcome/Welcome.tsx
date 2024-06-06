@@ -192,14 +192,14 @@ export default function Welcome() {
         <div className={styles["middle-text-section"]}>
           <div className={styles["middle-text-innersection"]}>
             <h1 className="font-semibold"> 
-              Unlimited <span className="gradient-text"> • </span> Ad-Free <span className="gradient-text"> • </span>  Award-Winning <span className="gradient-text"> • </span>  4K Movies & TV Shows <b className="gradient-text"> FOR ONLY 99₵/MONTH</b>
+              Unlimited <span className="gradient-text"> • </span> Ad-Free <span className="gradient-text"> • </span>  Award-Winning <span className="gradient-text"> • </span>  4K Movies & TV Shows <span className="gradient-text"> FOR ONLY 99₵/MONTH</span>
               <br />
               <br />
-              Join <b className="gradient-text"> 1M+ Satisfied</b>  Users
+              Join <span className="gradient-text"> 1M+ Satisfied</span>  Users
 
               <br />
               <br />
-              Enjoy <b className="gradient-text">1 Month Free Trial</b>
+              Enjoy <span className="gradient-text">1 Month Free Trial</span>
             </h1>
           </div>
 

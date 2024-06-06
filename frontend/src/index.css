@@ -68,7 +68,7 @@ body,
 
 @media (max-width: 768px) {
   .cookiebanner {
-    background: url("/images/mbhome.jpg") !important;
-    background-size: cover !important;
+    /* background: url("/images/mbhome.jpg") !important;
+    background-size: cover !important; */
   }
 }

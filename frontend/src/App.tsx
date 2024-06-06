@@ -42,8 +42,8 @@ const App = () => {
             boxShadow: '0px -10px 15px -5px rgb(255 255 255 / 15%)',
             padding: "10px",
             // background: 'url("/images/home0.jpeg") center',
-            backgroundSize: 'cover',
-            backgroundAttachment: 'fixed',
+            // backgroundSize: 'cover',
+            // backgroundAttachment: 'fixed',
             // backgroundColor: '#0E061E',
           }}
           disableButtonStyles
