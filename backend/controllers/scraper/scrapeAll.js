@@ -41,26 +41,20 @@ const scrapeAllMovies = async (io, req, res) => {
 
     if (NODE_ENV === "production") {
       query = {
-        $and: [
-          {
-            $or: [
-              // { title: { $exists: false } },
-              { desc: { $exists: false } },
-              { img: { $exists: false } },
-              // { imgTitle: { $exists: false } },
-              // { year: { $exists: false } },
-              { ageRating: { $exists: false } },
-              { duration: { $exists: false } },
-            ],
-          },
-          // {
-          //   $or: [
-          //     { failedDuringScrape: { $exists: false } },
-          //     { failedDuringScrape: false },
-          //   ],
-          // },
+        $or: [
+          // { title: { $exists: false } },
+          { desc: { $exists: false } },
+          { desc: '' },
+          { img: { $exists: false } },
+          { img: '' },
+          // { imgTitle: { $exists: false } },
+          // { year: { $exists: false } },
+          { ageRating: { $exists: false } },
+          { ageRating: '' },
+          { duration: { $exists: false } },
+          { duration: '' },
         ],
-      };
+      }
     }
 
     if (type == "failed_movies") {
@@ -71,7 +65,7 @@ const scrapeAllMovies = async (io, req, res) => {
 
     // Get the total count of movies that match the filter
     totalCount = await Movie.countDocuments(query);
-
+    console.log("totalCount: ", totalCount)
     let page = 1;
     let totalPages = Math.ceil(totalCount / BATCH_SIZE);
     let localProcessedCount = 0;

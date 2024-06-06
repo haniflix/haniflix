@@ -191,8 +191,15 @@ export default function Welcome() {
         <div className={styles["middle-gradient-section"]}></div>
         <div className={styles["middle-text-section"]}>
           <div className={styles["middle-text-innersection"]}>
-            <h1>
-            Unlimited • Ad-Free • Award-Winning • 4K Movies & TV Shows <b className="gradient-text"> FOR ONLY 99₵/MONTH</b>
+            <h1 className="font-semibold"> 
+              Unlimited <span className="gradient-text"> • </span> Ad-Free <span className="gradient-text"> • </span>  Award-Winning <span className="gradient-text"> • </span>  4K Movies & TV Shows <b className="gradient-text"> FOR ONLY 99₵/MONTH</b>
+              <br />
+              <br />
+              Join <b className="gradient-text"> 1M+ Satisfied</b>  Users
+
+              <br />
+              <br />
+              Enjoy <b className="gradient-text">1 Month Free Trial</b>
             </h1>
           </div>
 
@@ -242,7 +249,7 @@ export default function Welcome() {
 
 
           <center>
-            <h1><span className="gradient-text">Popular </span></h1>
+            <h1  className="font-semibold"><span className="gradient-text">Popular </span></h1>
           </center>
           <div style={{
             maxWidth: "1120px",
@@ -256,7 +263,7 @@ export default function Welcome() {
 
 
           <center>
-            <h1>See What Our  <span className="gradient-text">Users </span>Are Saying</h1>
+            <h1  className="font-semibold">See What Our  <span className="gradient-text">Users </span>Are Saying</h1>
           </center>
 
 
@@ -282,7 +289,7 @@ export default function Welcome() {
 
 
           <center>
-            <h1>Frequently Ask <span className="gradient-text">Questions </span></h1>
+            <h1  className="font-semibold">Frequently Ask <span className="gradient-text">Questions </span></h1>
           </center>
 
 
@@ -296,7 +303,7 @@ export default function Welcome() {
 
 
           <center>
-            <h1>Join <span className="gradient-text">Haniflix </span>Today</h1>
+            <h1  className="font-semibold">Join <span className="gradient-text">HANIFLIX </span>Today</h1>
 
             <button
               className={"theme_button_danger"}
@@ -350,7 +357,7 @@ export default function Welcome() {
               <p>© 2024 HANIFLIX . All rights reserved.</p>
             </div>
             <div className="flex-none"> {/* Right column */}
-              <Link to='/privacy-policy'>Privacy Policy</Link>  <Link to='/terms-service'>Terms & Service</Link>
+              <Link  className="font-semibold" to='/privacy-policy'>Privacy Policy</Link>  <Link  className="font-semibold" to='/terms-service'>Terms & Service</Link>
             </div>
           </div>
         </div>

@@ -11,7 +11,7 @@ import { useLoginMutation } from "../../store/rtk-query/authApi";
 const ThankYouPage = () => {
     const navigate = useNavigate()
     const [searchParams] = useSearchParams();
-    const success = searchParams.get("success") === "true";
+    const success = searchParams.get("success");
     const session_id = searchParams.get("session_id");
     const [login, loginState] = useLoginMutation();
 
@@ -42,7 +42,7 @@ const ThankYouPage = () => {
                             "custom_data":
                             {
                                 "currency": "USD",
-                                "value": 4.99
+                                "value": 0.99
                             }
                         }
                     ],

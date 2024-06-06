@@ -443,7 +443,7 @@ const HomeNew = ({ type = null }) => {
 
                 <AnimatePresence>
                     {showLogout && (
-                        <ModelPopup className="signout-modal">
+                        <ModelPopup className="signout-modal bg-slate-950/[.9]">
                             <CloseIcon onClick={handleLogoutCancel} className={addClassNames('crossModal')} />
 
                             <p className="text-lg mb-2">Sign Out</p>

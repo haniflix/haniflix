@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useGetGenresQuery } from '../store/rtk-query/genresApi';
 import { addClassNames } from '../store/utils/functions';
-
 import { MdOutlineArrowDropDown } from "react-icons/md";
 import useResponsive from '../hooks/useResponsive';
 
@@ -56,7 +55,8 @@ function GenresDropdown() {
             </button>
             <div
                 ref={dropdownContentRef}
-                className='relative'>
+                className='relative'
+                style={{ transform: 'translateZ(0)' }}>
                 {isOpen && numOfGridRows !== undefined && (
                     <ul
                         style={{
@@ -64,9 +64,8 @@ function GenresDropdown() {
                         }}
                         className={
                             addClassNames(
-                                // 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3',
                                 "absolute grid z-50",
-                                ` grid-flow-row	 md:grid-flow-col`,
+                                ` grid-flow-row md:grid-flow-col`,
                                 'bg-slate-950/[.9] w-[52vw] sm:w-[270px] md:w-[800px]',
                                 'p-4 gap-y-2 sm:gap-y-[0px]'
                             )
