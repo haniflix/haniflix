@@ -15,7 +15,7 @@ mongoose
     .connect((_a = process.env.MONGO_URL) !== null && _a !== void 0 ? _a : "", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useFindAndModify: false,
+    // useFindAndModify: false,
 })
     .then(() => console.log("DB Connection Successfull"))
     .catch((err) => {
